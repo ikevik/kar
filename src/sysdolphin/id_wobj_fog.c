@@ -635,27 +635,30 @@ void FogUpdateFunc(void* obj, u32 type, f32* fval)
     }
 }
 
-#ifdef NONMATCHING /* 97.8% */
+static inline BOOL decref(HSD_Obj* obj)
+{
+    u16 ref_count = obj->ref_count;
+    BOOL noref = ref_count == 0xffff;
+    if (noref) {
+        return noref;
+    }
+    obj->ref_count--;
+    return ref_count == 0;
+}
+
 void FogRelease(HSD_Class* o)
 {
     HSD_Fog* fog = (HSD_Fog*) o;
     HSD_FogAdj* adj = fog->fog_adj;
     if (adj != NULL) {
-        int zero = (adj->parent.ref_count == (u16) -1);
-        if (!zero) {
-            zero = (adj->parent.ref_count-- == 0);
-        }
-        if (zero) {
-            if (adj != NULL) {
-                HSD_CLASS_METHOD(adj)->release((HSD_Class*) adj);
-                HSD_CLASS_METHOD(adj)->destroy((HSD_Class*) adj);
-            }
+        if (decref(&adj->parent) && adj != NULL) {
+            HSD_CLASS_METHOD(adj)->release((HSD_Class*) adj);
+            HSD_CLASS_METHOD(adj)->destroy((HSD_Class*) adj);
         }
     }
     HSD_AObjRemove(fog->aobj);
     HSD_OBJECT_PARENT_INFO(&hsdFog)->release(o);
 }
-#endif
 
 void FogInfoInit(void)
 {

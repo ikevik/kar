@@ -74,23 +74,36 @@ void fn_8042A29C(HSD_GObj* gobj)
     }
 }
 
-void fn_8042A2E4(HSD_Obj* obj);
-#if 0 /* not yet matching */
+static inline BOOL decref(HSD_Obj* obj)
+{
+    u16 ref_count = obj->ref_count;
+    BOOL noref = ref_count == 0xffff;
+    if (noref) {
+        return noref;
+    }
+    obj->ref_count--;
+    return ref_count == 0;
+}
+
 void fn_8042A2E4(HSD_Obj* obj)
 {
     if (obj != NULL) {
-        int destroy = obj->ref_count == (u16) HSD_OBJ_NOREF;
-        if (destroy != 0) {
-        } else {
-            destroy = obj->ref_count-- == 0;
-        }
-        if (destroy && obj != NULL) {
+        if (decref(obj) && obj != NULL) {
             HSD_CLASS_METHOD(obj)->release((HSD_Class*) obj);
             HSD_CLASS_METHOD(obj)->destroy((HSD_Class*) obj);
         }
     }
 }
-#endif
+
+void fn_8042A37C(HSD_Obj* obj)
+{
+    if (obj != NULL) {
+        if (decref(obj) && obj != NULL) {
+            HSD_CLASS_METHOD(obj)->release((HSD_Class*) obj);
+            HSD_CLASS_METHOD(obj)->destroy((HSD_Class*) obj);
+        }
+    }
+}
 
 void fn_8042A414(void* head)
 {
