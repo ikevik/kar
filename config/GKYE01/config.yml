@@ -1,0 +1,7 @@
+object: sys/main.dol
+hash: 977533bb96e6a16e127946396489be1b4164ac42
+symbols: config/GKYE01/symbols.txt
+splits: config/GKYE01/splits.txt
+object_base: orig/GKYE01
+# Linker version; verify against .comment of the original objects
+mw_comment_version: 8

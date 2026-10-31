@@ -20,3 +20,15 @@ out.txt
 tools/mwcc_compiler
 tools/yychr/
 test.bat
+
+# dtk workflow
+orig/*/*
+!orig/*/.gitkeep
+.ninja_*
+build.ninja
+ctx.*
+*.ctx
+objdiff.json
+__pycache__
+.cache/
+.mypy_cache
