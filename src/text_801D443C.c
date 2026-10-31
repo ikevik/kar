@@ -15934,20 +15934,6 @@ void __assert();
 void fn_80230474();
 
 
-void fn_80230474(r3) int r3; {
-int t0;
-int r31;
-int r4;
-int r5;
-r31 = r3;
-if (r31 < 5) goto L_802304A8;
-r3 = (int)lbl_804B4CDC;
-r4 = 1605;
-r5 = (int)lbl_804B4CF0;
-__assert(r3, r4, r5);
-L_802304A8:
-t0 = fn_8022D248(r31);
-}
 extern char lbl_804B0E54[];
 extern char lbl_804B0F58[];
 extern char lbl_804B1730[];
@@ -21643,55 +21629,6 @@ int fn_800D4690();
 int fn_800D4844();
 
 
-int fn_801E6FB8(r3) int r3; {
-int t0;
-int t1;
-float t2;
-float t3;
-float f0;
-float f1;
-int r0;
-int r4;
-int r5;
-r5 = r3;
-r4 = lbl_805DD848;
-f1 = *(float*)(r3 + 1640);
-f0 = *(float*)(r4 + 12);
-if (!(f1 >= f0)) goto L_801E6FF8;
-*(int*)(r5 + 7064) = 0;
-r0 = (*(int*)(r5 + 7060) + 1);
-t0 = *(int*)(r5 + 7060);
-*(int*)(r5 + 7060) = r0;
-goto L_801E702C;
-L_801E6FF8:
-if (!(f1 <= (-f0))) goto L_801E7020;
-*(int*)(r5 + 7060) = 0;
-r0 = (*(int*)(r5 + 7064) + 1);
-t1 = *(int*)(r5 + 7064);
-*(int*)(r5 + 7064) = r0;
-goto L_801E702C;
-L_801E7020:
-r0 = 0;
-*(int*)(r5 + 7064) = r0;
-*(int*)(r5 + 7060) = r0;
-L_801E702C:
-r3 = *(int*)(lbl_805DD848 + 176);
-if (*(int*)(r5 + 7060) != r3) goto L_801E7050;
-r3 = *(int*)(r5 + 6984);
-t2 = *(float*)(r5 + 6988);
-r3 = fn_800D4844(r3, r4, r5, t2);
-goto L_801E7070;
-L_801E7050:
-if (*(int*)(r5 + 7064) != r3) goto L_801E706C;
-r3 = *(int*)(r5 + 6984);
-t3 = *(float*)(r5 + 6988);
-r3 = fn_800D4690(r3, r4, r5, t3);
-goto L_801E7070;
-L_801E706C:
-r3 = -1;
-L_801E7070:
-return r3;
-}
 extern char lbl_804B5708[];
 extern char lbl_804B6088[];
 extern char lbl_804B8CA8[];
@@ -22748,6 +22685,143 @@ fn_8038CB78(r3, r4);
 L_80288304:
 return r31;
 }
+void fn_8019248C();
+void fn_8022D6B4();
 
 
+void fn_80250890();
 
+
+void fn_80114544();
+void fn_801EF8A4();
+float fn_801FFFA4();
+void fn_80210930();
+void fn_80210A74();
+void fn_8023E224();
+void fn_8043332C();
+void fn_80433F00();
+
+
+int fn_801EF7D4(r3) int r3; {
+int t0;
+int r3_1;
+t0 = fn_801CF1B8(r3, *(float*)(*(int*)(r3 + 1616) + 348));
+if (((unsigned)__cntlzw(t0) >> 5) == 0) goto L_801EF830;
+r3_1 = *(unsigned char*)(r3 + 3124);
+if ((((unsigned)r3_1 >> 6) & 0x1) != 0) goto L_801EF814;
+if ((((unsigned)r3_1 >> 5) & 0x1) == 0) goto L_801EF820;
+L_801EF814:
+fn_801EF908(r3);
+goto L_801EF828;
+L_801EF820:
+fn_801EF8A4(r3);
+L_801EF828:
+return 1;
+L_801EF830:
+return 0;
+}
+
+void fn_8020429C(r3) int r3; {
+int r31;
+int r3_1;
+r31 = *(int*)(r3 + 44);
+fn_801FECD4(*(int*)(r3 + 40));
+r3_1 = *(int*)(r31 + 4);
+if ((unsigned)r3_1 == (unsigned)0) goto L_802042D4;
+fn_801FECD4(*(int*)(r3_1 + 40));
+L_802042D4:
+fn_80114544(r3);
+*(int*)(r31 + 2392) = 1;
+}
+
+void fn_80210930(r3) int r3; {
+int t0;
+int t1;
+int t2;
+float t3;
+int r0;
+int r31;
+int r3_1;
+r31 = *(int*)(*(int*)(r3 + 20) + 4);
+t0 = fn_80200D10(r3);
+if (t0 == 0) goto L_80210968;
+t1 = *(short*)(r3 + 2892);
+t2 = (*(short*)(r3 + 2892) + 1);
+*(unsigned short*)(r3 + 2892) = t2;
+L_80210968:
+r3_1 = *(int*)(r3 + 1320);
+if (r3_1 == -1) goto L_802109B8;
+r0 = *(short*)(r3 + 2892);
+if (r0 == 0) return;
+if (r0 < 0) goto L_802109AC;
+if (r0 >= 7) goto L_802109AC;
+t3 = fn_801FFFA4(r3_1, (r3 + 760));
+if (!(t3 < *(float*)(r31 + 24))) return;
+fn_80210A74(r3);
+return;
+L_802109AC:
+fn_80210A74(r3);
+return;
+L_802109B8:
+fn_80210A74(r3);
+}
+
+void fn_8023E224(r3, r4) int r3; int r4; {
+int t0;
+int r4_1;
+t0 = fn_80236C20(r3, r4);
+if (t0 != 0) return;
+fn_8043332C();
+HSD_CObjGetCurrent();
+if ((unsigned)r4 != (unsigned)0) goto L_8023E25C;
+r4_1 = 0;
+goto L_8023E270;
+L_8023E25C:
+if ((unsigned)r4 != (unsigned)1) goto L_8023E26C;
+r4_1 = 1;
+goto L_8023E270;
+L_8023E26C:
+r4_1 = 2;
+L_8023E270:
+fn_80433F00(2, r4_1);
+}
+extern char cityTrialCheckToSpawnStar[];
+extern char lbl_804B0F38[];
+extern char lbl_804B0F48[];
+extern float lbl_805E1CC4;
+extern float lbl_805E1CC8;
+extern float lbl_805E1D48;
+extern float lbl_805E1D4C;
+extern float lbl_805E1D50;
+extern float lbl_805E1D54;
+extern float lbl_805E1D60;
+extern float lbl_805E1D68;
+extern float lbl_805E1D6C;
+extern float lbl_805E1D70;
+extern float lbl_805E1D74;
+extern float lbl_805E1D78;
+extern float lbl_805E1D7C;
+extern float lbl_805E1EE0;
+extern float lbl_805E1EE4;
+extern float lbl_805E1F50;
+extern float lbl_805E1F54;
+extern float lbl_805E2580;
+extern float lbl_805E2588;
+extern float lbl_805E258C;
+extern float lbl_805E2590;
+int fn_802205E8();
+
+
+int fn_802205E8(r3) int r3; {
+int t0;
+int t1;
+int r12;
+t0 = *(int*)(r3 + 32);
+t1 = *(int*)*(int*)(r3 + 32);
+*(KS4*)(r3 + 244) = *(KS4*)(t1 + 0);
+r12 = *(int*)(*(int*)((int)lbl_804B4338 + (*(int*)(r3 + 4) << 2)) + 12);
+if ((unsigned)r12 == (unsigned)0) goto L_80220644;
+r3 = ((int(*)())r12)();
+L_80220644:
+return r3;
+}
