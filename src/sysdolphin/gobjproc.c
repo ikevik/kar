@@ -54,6 +54,8 @@ u32 fn_80428618(s32 n)
     return 0;
 }
 
+void fn_80428684(HSD_GObjProc* proc);
+#if 0 /* not yet matching */
 void fn_80428684(HSD_GObjProc* proc)
 {
     HSD_GObj* g;
@@ -107,7 +109,10 @@ after:
             lbl_805DE338 = proc;
     }
 }
+#endif
 
+void fn_804287DC(HSD_GObjProc* proc);
+#if 0 /* not yet matching */
 void fn_804287DC(HSD_GObjProc* proc)
 {
     HSD_GObj* gobj = proc->gobj;
@@ -137,6 +142,7 @@ void fn_804287DC(HSD_GObjProc* proc)
     if (proc->next != NULL)
         proc->next->prev = proc->prev;
 }
+#endif
 
 HSD_GObjProc* HSD_GObj_AddProc(HSD_GObj* gobj, void (*cb)(HSD_GObj*), u8 pri)
 {
@@ -154,9 +160,12 @@ HSD_GObjProc* HSD_GObj_AddProc(HSD_GObj* gobj, void (*cb)(HSD_GObj*), u8 pri)
     return proc;
 }
 
+void fn_8042898C(HSD_GObjProc* proc);
+#if 0 /* not yet matching */
 void fn_8042898C(HSD_GObjProc* proc)
 {
     HSD_GObj* gobj;
+    HSD_GObjProc* p;
 
     if (!lbl_8058C1F4.b0 && proc == lbl_805DE340) {
         lbl_8058C1F4.b2 = 1;
@@ -164,17 +173,20 @@ void fn_8042898C(HSD_GObjProc* proc)
     }
     gobj = proc->gobj;
     fn_804287DC(proc);
-    if (gobj->proc == proc) {
+    p = gobj->proc;
+    if (p == proc) {
         gobj->proc = proc->child;
     } else {
-        HSD_GObjProc* p = gobj->proc;
         while (p->child != proc)
             p = p->child;
         p->child = proc->child;
     }
     HSD_ObjFree(&lbl_8058C1C8, proc);
 }
+#endif
 
+void func_80428AD8(HSD_GObj* gobj);
+#if 0 /* not yet matching */
 void func_80428AD8(HSD_GObj* gobj)
 {
     HSD_GObjProc* proc = gobj->proc;
@@ -185,3 +197,4 @@ void func_80428AD8(HSD_GObj* gobj)
         proc = next;
     }
 }
+#endif
