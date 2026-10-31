@@ -1,3 +1,4 @@
+#pragma dont_inline on
 typedef unsigned char u8;
 typedef unsigned long u32;
 typedef signed long s32;
