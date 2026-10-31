@@ -155,6 +155,52 @@ void fn_8048846C() {
     }
     *(Big8488*)lbl_805C3C40 = *(Big8488*)lbl_8048C9C0;
 }
+extern void fn_8047B020();
+extern int fn_80488938();
+void fn_8048723C() {
+    int v;
+    int r;
+    *(Big8488*)lbl_805C3C40 = *(Big8488*)lbl_8048C9C0;
+    if (fn_803EB940(0, 2, &v) == 0 || v != 0x4020200) {
+        r = 0;
+    } else {
+        r = 1;
+    }
+    if (r == 1) {
+        fn_8047B020();
+    }
+}
+void fn_804872CC(a, b, c) int a; int b; int c; {
+    if (fn_80488938() == 0) {
+        *(Big8488*)lbl_805C3C40 = *(Big8488*)lbl_8048C9C0;
+        G32(0x8434) = a;
+        G32(0x8438) = b;
+        G32(0x842C) = c;
+        fn_8047B020();
+    }
+}
+void fn_804884EC(p, t, src) char* p; int t; void* src; {
+    switch (t) {
+    case 1:
+    case 2:
+    case 4:
+        *(int*)(p + 0) = t;
+        *(int*)(p + 8) = 0;
+        *(int*)(p + 4) = 1;
+        *(char*)(p + 0xC) = t;
+        return;
+    case 0:
+        *(int*)(p + 8) = 0x14;
+        break;
+    case 3:
+        *(int*)(p + 8) = 0x15C;
+        break;
+    }
+    *(int*)(p + 0) = t;
+    *(int*)(p + 4) = *(int*)(p + 8) + 1;
+    *(char*)(p + 0xC) = t;
+    memmove(p + 0xD, src, *(int*)(p + 8));
+}
 int fn_80487C0C() {
     int en = OSDisableInterrupts();
     int v = *(unsigned char*)((int)lbl_805C3C40 + 0x39);
