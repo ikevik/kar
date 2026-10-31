@@ -611,10 +611,12 @@ extern u8 lbl_80559BF4[];
 extern const float lbl_805E1040;
 extern u32 lbl_805DD820;
 extern u32 lbl_805DD81C;
-extern const float lbl_805E1088;
+extern u8 lbl_804ADBF4[];
+extern u8 lbl_804ADBE4[];
 extern u32 lbl_805DD810;
-extern const float lbl_805E10A0;
 extern u32 lbl_805DD814;
+extern const float lbl_805E1088;
+extern const float lbl_805E10A0;
 extern const float lbl_805E10A4;
 extern u8 lbl_80559F7C[];
 extern u32 lbl_805DD840;
@@ -911,12 +913,17 @@ extern const float lbl_805E19A0;
 extern const float lbl_805E19A4;
 extern const float lbl_805E19C0;
 extern const float lbl_805E19C4;
+extern u8 lbl_804B081C[];
+extern u8 lbl_804B080C[];
+extern u32 lbl_805DD838;
+extern u32 lbl_805DD848;
+extern u32 lbl_805DD83C;
+extern u32 lbl_805DD844;
 extern u8 lbl_8055A03C[];
 extern u32 lbl_805D6FB8;
 extern u32 lbl_805D6FC0;
 extern const float lbl_805E19E8;
 extern u32 lbl_805DE340;
-extern u32 lbl_805DD848;
 extern u8 lbl_804B07E0[];
 extern u32 lbl_805D6F90;
 extern const float lbl_805E1A00;
@@ -1917,6 +1924,8 @@ u32 fn_80079988(void);
 void fn_8007A2A0(u32, u32);
 void fn_8007A2C0(u32, u32);
 void fn_800799BC(u32);
+void lbLoadArchive(u32, ...);
+void fn_80072C90(u32, u32, u32, u32, u32, u32, u32, u32);
 void fn_80190760(void);
 void fn_801907BC(u32);
 void fn_8019079C(u32);
@@ -2024,7 +2033,10 @@ void fn_801C80A4(u32);
 void fn_801C80C8(u32);
 void fn_801C80EC(u32);
 u32 fn_801C878C(u32);
-void fn_8019D330();
+void fn_8019D330(u32, u32, u32);
+void fn_801C8234(u32, u32);
+void fn_8022D0CC(u32, u32);
+void fn_801C8258(u32, u32);
 u32 fn_801C82EC();
 void fn_801A89D8(u32, u32);
 void fn_80193F98(void);
@@ -2095,6 +2107,7 @@ void fn_8018C824(u32);
 void fn_80195FA8(u32, u32);
 void fn_80196F78(void);
 void fn_80197008(void);
+void fn_8019E30C(u32, u32, u32, u32, u32, u32, u32, u32, float, float, float);
 void fn_8019C15C(u32, u32);
 void fn_8019BFF8(u32, u32);
 void fn_80190B40(u32, u32, u32);
@@ -2137,11 +2150,20 @@ void fn_8019FC60(void);
 void fn_8019FC80(void);
 void fn_8018E580();
 void fn_80192E10(void);
+u32 fn_8022C9D8(u32);
+void fn_801C75D4(u32, u32);
+void fn_801C7568(u32, u32);
+void fn_801C77C8(u32, u32);
+float fn_801C7E54(u32);
+void fn_800B8F30(u32);
+void fn_800B9070(u32, u32);
 u32 fn_80198B00();
 void fn_80193830();
 void fn_80199C14(void);
 void fn_80193004();
 void fn_8019F894(u32, u32, u32);
+void fn_80190948(u32, u32, u32);
+u32 fn_801C75F4(u32, u32, float, float);
 u32 fn_801C7AE4(u32);
 float fn_801C7AF4(u32);
 void fn_80199684();
@@ -2252,7 +2274,6 @@ void fn_801AAEB8(void);
 void fn_801AAED8(void);
 void fn_801AAEF8(void);
 void fn_801AAF18(void);
-u32 fn_801C75F4(u32, u32, float, float);
 void fn_801AAF70(void);
 void fn_801AAFF8(u32);
 void fn_801AABBC(u32);
@@ -2449,6 +2470,7 @@ void fn_801B13AC(void);
 void fn_801B1420(void);
 void fn_801B13EC(u32);
 void fn_801A6F64(void);
+void fn_801A9580(u32, u32, u32);
 u32 fn_801B161C(u32);
 void fn_801B15E8(void);
 void fn_801B1654(void);
@@ -2460,6 +2482,7 @@ void fn_801B18F4(void);
 void fn_801B1914(void);
 void fn_801B1934(void);
 void fn_801B1974(void);
+u32 fn_801B1994(u32);
 void fn_801B1548(void);
 void fn_801B1568(void);
 void fn_801B1588(void);
@@ -2538,6 +2561,7 @@ void fn_801B6630(void);
 void fn_801B5E34(u32, u32);
 u32 fn_801AA008(u32);
 void fn_801B69F0(void);
+void fn_801A9FE8(u32, u32);
 u32 fn_801B67F0(void);
 u32 fn_801B6B7C(u32);
 void fn_801B6BB4(void);
@@ -2548,6 +2572,7 @@ void fn_801B6E18(void);
 void fn_801B6E38(void);
 void fn_801B6FB0(void);
 void fn_801B71E4(void);
+void fn_801AA198(u32, u32, u32);
 u32 fn_801B737C(u32);
 void fn_801B73B4(void);
 void fn_801B74EC(u32);
@@ -2774,7 +2799,6 @@ void fn_801D7308(u32);
 void fn_801E0D8C(u32, float);
 void fn_801D10D4(u32);
 void fn_801DB320(u32);
-void lbLoadArchive(u32, ...);
 void fn_801CC238(u32);
 void fn_801E1E84(u32);
 void fn_801E0E28(u32);
@@ -22552,6 +22576,24 @@ void fn_801903DC(u32 p3) {
     fn_800799BC(v1);
 }
 
+u32 fn_80190418(void) {
+    u32 loc8[2];
+    u32 v1;
+    u32 v2;
+    lbLoadArchive(0, (u32)lbl_804ADBE4, ((u32)loc8), (u32)lbl_804ADBF4, 0);
+    v1 = M32(((u32)loc8));
+    lbl_805DD810 = v1;
+    v2 = M32(v1);
+    lbl_805DD814 = v2;
+    return v1;
+}
+
+void fn_8019065C(u32 p3) {
+    u32 loc8[2];
+    M32(((u32)loc8)) = 0;
+    fn_80072C90(2, p3, 4, 4, 0, 1, 4, 32);
+}
+
 void fn_80190708(p3) u32 p3; {
     float v1;
     u32 s31;
@@ -27720,7 +27762,7 @@ void fn_801A8B90(u32 p3, u32 p4) {
     fn_801A2DE0(s31);
 }
 
-void fn_801A9580(void) {
+void fn_801A9580(u32 p3, u32 p4, u32 p5) {
     fn_80225824();
 }
 
@@ -27751,7 +27793,7 @@ void fn_801A9C38(u32 p3) {
     fn_8019BFB4(s31, 41, 0);
 }
 
-void fn_801A9FE8(void) {
+void fn_801A9FE8(u32 p3, u32 p4) {
     fn_80228F08();
 }
 
@@ -27759,7 +27801,7 @@ u32 fn_801AA008(u32 p3) {
     fn_8022A244();
 }
 
-void fn_801AA198(void) {
+void fn_801AA198(u32 p3, u32 p4, u32 p5) {
     fn_8022A544();
 }
 
@@ -37514,6 +37556,33 @@ void fn_801C69F0(u32 p3) {
     fn_801DB320(s31);
 }
 
+u32 vcLoadCommon(void) {
+    u32 loc8[2];
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    lbLoadArchive(0, (u32)lbl_804B080C, ((u32)loc8), (u32)lbl_804B081C, 0);
+    v1 = M32(((u32)loc8));
+    lbl_805DD838 = v1;
+    v2 = M32(v1);
+    lbl_805DD848 = v2;
+    v3 = M32((v1+8));
+    lbl_805DD840 = v3;
+    v4 = M32((v1+12));
+    lbl_805DD83C = v4;
+    v5 = M32((v1+16));
+    lbl_805DD844 = v5;
+    return v1;
+}
+
+void fn_801C6E3C(u32 p3) {
+    u32 loc8[2];
+    M32(((u32)loc8)) = 0;
+    fn_80072C90(2, p3, 4, 4, 0, 1, 4, 2);
+}
+
 void fn_801C71A8(u32 p3) {
     u32 s31;
     u32 c0;
@@ -38225,13 +38294,13 @@ void fn_801C8210(u32 p3, u32 p4, u32 p5) {
     fn_801CACF4(v1);
 }
 
-void fn_801C8234(u32 p3) {
+void fn_801C8234(u32 p3, u32 p4) {
     u32 v1;
     v1 = M32((p3+44));
     fn_801CADDC(v1);
 }
 
-void fn_801C8258(u32 p3) {
+void fn_801C8258(u32 p3, u32 p4) {
     u32 s31;
     s31 = M32((p3+44));
     fn_801E098C((s31+2536));
