@@ -470,3 +470,65 @@ double fn_803BCEEC(double x, int* eptr)
     *(int*)&x = hx;
     return x;
 }
+
+extern const double lbl_805E5700;
+extern double fn_803BC698(int iy, double x, double y);
+extern double fn_803BB750(double x, double y);
+
+
+double fn_803BCCD0(double x)
+{
+    double y[2];
+    int n, ix;
+
+    ix = *(int*)&x;
+    ix &= 0x7fffffff;
+    if (ix <= 0x3fe921fb) {
+        return fn_803BB750(x, lbl_805E5700);
+    } else if (ix >= 0x7ff00000) {
+        return x - x;
+    } else {
+        n = fn_803BB3B0(x, y);
+        switch (n & 3) {
+        case 0:
+            return fn_803BB750(y[0], y[1]);
+        case 1:
+            return -fn_803BC698(1, y[0], y[1]);
+        case 2:
+            return -fn_803BB750(y[0], y[1]);
+        default:
+            return fn_803BC698(1, y[0], y[1]);
+        }
+    }
+}
+
+extern const double lbl_805E5658;
+extern const double lbl_805E5660;
+extern const double lbl_805E5668;
+extern const double lbl_805E5670;
+extern const double lbl_805E5678;
+extern const double lbl_805E5680;
+extern const double lbl_805E5688;
+
+#pragma fp_contract on
+double fn_803BC698(int iy, double x, double y)
+{
+    double z, r, v;
+    int ix;
+
+    ix = *(int*)&x;
+    ix &= 0x7fffffff;
+    if (ix < 0x3e400000) {
+        if ((int)x == 0) {
+            return x;
+        }
+    }
+    z = x * x;
+    v = z * x;
+    r = lbl_805E5658 + z * (lbl_805E5660 + z * (lbl_805E5668 + z * (lbl_805E5670 + lbl_805E5678 * z)));
+    if (iy == 0) {
+        return x + v * (lbl_805E5680 + z * r);
+    }
+    return x - ((z * (lbl_805E5688 * y - v * r) - y) - lbl_805E5680 * v);
+}
+#pragma fp_contract off
