@@ -100,7 +100,14 @@ extern void MD5Update();
 extern void MD5Final();
 extern int fn_803B38AC();
 extern int fn_804838C0();
-extern int fn_80483B34();
+extern int fn_803B38C4();
+extern int fn_803B6C88(const char*, const char*, ...);
+extern char* strchr();
+extern char* fn_80482DC4();
+extern char lbl_804F8AF0[];
+extern char lbl_80534C08[];
+extern char lbl_805DD260[8];
+extern char lbl_805DD2C8[4];
 extern char lbl_80534C54[];
 extern char lbl_805DD2BC[8];
 typedef struct QNode {
@@ -200,6 +207,131 @@ char* fn_80482980(p, out) char* p; char** out; {
     return p;
 }
 #pragma dont_inline on
+#if 0 /* 99.9% */
+int fn_80482730(a, b) void* a; void* b; {
+    if (*(unsigned int*)((char*)a + 0) != *(unsigned int*)((char*)b + 0)) {
+        if (*(unsigned int*)((char*)a + 0) < *(unsigned int*)((char*)b + 0)) {
+            return -1;
+        }
+        return 1;
+    }
+    if (*(unsigned short*)((char*)a + 4) != *(unsigned short*)((char*)b + 4)) {
+        if (*(unsigned short*)((char*)a + 4) < *(unsigned short*)((char*)b + 4)) {
+            return -1;
+        }
+        return 1;
+    }
+    if (*(unsigned short*)((char*)a + 6) != *(unsigned short*)((char*)b + 6)) {
+        if (*(unsigned short*)((char*)a + 6) < *(unsigned short*)((char*)b + 6)) {
+            return -1;
+        }
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 8) != *(unsigned char*)((char*)b + 8)) {
+        if (*(unsigned char*)((char*)a + 8) < *(unsigned char*)((char*)b + 8)) {
+            return -1;
+        }
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 9) != *(unsigned char*)((char*)b + 9)) {
+        if (*(unsigned char*)((char*)a + 9) < *(unsigned char*)((char*)b + 9)) {
+            return -1;
+        }
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 10) < *(unsigned char*)((char*)b + 10)) {
+        return -1;
+    }
+    if (*(unsigned char*)((char*)a + 10) > *(unsigned char*)((char*)b + 10)) {
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 11) < *(unsigned char*)((char*)b + 11)) {
+        return -1;
+    }
+    if (*(unsigned char*)((char*)a + 11) > *(unsigned char*)((char*)b + 11)) {
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 12) < *(unsigned char*)((char*)b + 12)) {
+        return -1;
+    }
+    if (*(unsigned char*)((char*)a + 12) > *(unsigned char*)((char*)b + 12)) {
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 13) < *(unsigned char*)((char*)b + 13)) {
+        return -1;
+    }
+    if (*(unsigned char*)((char*)a + 13) > *(unsigned char*)((char*)b + 13)) {
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 14) < *(unsigned char*)((char*)b + 14)) {
+        return -1;
+    }
+    if (*(unsigned char*)((char*)a + 14) > *(unsigned char*)((char*)b + 14)) {
+        return 1;
+    }
+    if (*(unsigned char*)((char*)a + 15) < *(unsigned char*)((char*)b + 15)) {
+        return -1;
+    }
+    if (*(unsigned char*)((char*)a + 15) > *(unsigned char*)((char*)b + 15)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+#endif
+char* fn_80482A3C(str, start, len) char* str; char** start; int* len; {
+    *start = 0;
+    *len = 0;
+    while (*str != 0 && (fn_803B38C4(*str) || fn_803B38AC(*str) || strchr(lbl_80534C08, *str) != 0)) {
+        if (*start == 0) {
+            *start = str;
+        }
+        str++;
+        (*len)++;
+    }
+    return str;
+}
+int fn_80485AD8(s) char* s; {
+    char* dst = s;
+    char* start = s;
+    while (*s != 0) {
+        if (*s == 0x25 && (lbl_804F8AF0[(unsigned char)s[1]] & 0x20) && (lbl_804F8AF0[(unsigned char)s[2]] & 0x20)) {
+            int v;
+            if (fn_803B6C88(s + 1, lbl_805DD2C8, &v) == 1) {
+                s += 3;
+                *dst++ = v;
+            }
+        } else {
+            *dst++ = *s++;
+        }
+    }
+    *dst = 0;
+    return dst - start;
+}
+int fn_80483B34(a, b, out) char* a; char* b; char* out; {
+    int n = 0;
+    char* cur;
+    char* q;
+    char* p = fn_80482DC4(a, b);
+    (void)&q;
+    if (p != 0 && *p == 0x3d) {
+        p = fn_80482980(p, &cur);
+        if (cur != 0) {
+            if (*cur != 0x3d) {
+                cur = 0;
+            } else {
+                fn_80482980(p + 1, &cur);
+            }
+        }
+        if (cur != 0) {
+            while (strchr(lbl_805DD260, *cur) == 0 && *cur != 0) {
+                out[n++] = *cur++;
+            }
+        }
+    }
+    out[n] = 0;
+    return n;
+}
 int fn_8048530C() {
     return lbl_805DE6D0;
 }
@@ -219,7 +351,7 @@ extern void OSExitThread();
 extern void fn_804830A4();
 extern void fn_80482598();
 extern void fn_8048263C();
-extern void fn_80482730();
+extern int fn_80482730();
 
 void fn_80483C1C() {
     fn_804830A4();
@@ -244,7 +376,6 @@ void fn_80486E84(a, b) int a; int* b; {
 }
 
 /* ---- w3f batch 2 ---- */
-extern char* strchr();
 extern int sprintf(char*, const char*, ...);
 extern void fn_803B8048();
 extern char lbl_805DD268;
