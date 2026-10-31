@@ -29,7 +29,7 @@ extern u32 lbl_805D5120;
 extern u8 lbl_804957C8[];
 extern u8 lbl_804957E0[];
 extern u8 lbl_804957EC[];
-extern u8 lbl_80495800[];
+extern u8 lbl_80495800[][10];
 extern u8 lbl_80495814[];
 extern u8 lbl_80495850[];
 extern u32 lbl_805D5124;
@@ -907,3 +907,13 @@ void fn_80009070(void) {}
 
 
 
+
+void fn_8000631C(void) {
+    u8* g = (u8*)gmGetGlobalP();
+    *(void**)(g + 2036) = (void*)fn_80005F14;
+    *(void**)(g + 2040) = (void*)fn_80005FD4;
+}
+
+u32 fn_8000B9BC(s8 a, s8 b) { return lbl_80495800[a][b]; }
+u32 gmGet_80536EDC_Array(s8 i) { return lbl_805359D8[i + 0x1504]; }
+s8 fn_8000AF5C(void) { return *(s8*)fn_800081FC() == 2; }
