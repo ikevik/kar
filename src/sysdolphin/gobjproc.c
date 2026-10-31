@@ -2,11 +2,6 @@
 #include <functions.h>
 #include <sysdolphin/gobj.h>
 
-extern u8 __files[];
-extern s32 lbl_805DE30C;
-extern void* lbl_805DE308;
-extern void* lbl_805DE310;
-extern void* lbl_805DE314;
 extern HSD_GObjProc* lbl_805DE338;
 extern s32 lbl_805DE33C;
 extern HSD_GObjProc* lbl_805DE340;
@@ -18,29 +13,6 @@ extern char lbl_80504DA0[];
 extern char lbl_80504DAC[];
 extern char lbl_805DCDB0[6];
 extern u32* OSGetStackPointer(void);
-extern void fn_80428430();
-
-void* fn_804285AC(void* arg)
-{
-    void* old = lbl_805DE314;
-    if (lbl_805DE30C == 0) {
-        if (lbl_805DE308 == NULL) {
-            lbl_805DE308 = *(void**) (__files + 0x90);
-        }
-        *(void**) (__files + 0x90) = fn_80428430;
-        __files[0x5A] = 0;
-        lbl_805DE30C = 1;
-    }
-    lbl_805DE314 = arg;
-    return old;
-}
-
-void* fn_80428608(void* arg)
-{
-    void* old = lbl_805DE310;
-    lbl_805DE310 = arg;
-    return old;
-}
 
 u32 fn_80428618(s32 n)
 {

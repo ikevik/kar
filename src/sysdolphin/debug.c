@@ -3,9 +3,12 @@
 
 extern u8 lbl_8058BEC8[];
 extern char lbl_805DCDA8[8];
-extern void (*lbl_805DE308)(int, int, int, int);
-extern void (*lbl_805DE310)(void*, ...);
-extern void (*lbl_805DE314)(int, int);
+void (*lbl_805DE308)(int, int, int, int);
+s32 lbl_805DE30C;
+void (*lbl_805DE310)(void*, ...);
+void (*lbl_805DE314)(int, int);
+extern u8 __files[];
+int fn_80428430(int a, int b, int* c, int d);
 extern void fn_803D4BBC(void);
 extern void OSReport(const char*, ...);
 extern void OSPanic(const char*, int, const char*, ...);
@@ -76,4 +79,26 @@ void HSD_Panic(const char* file, int line, const char* msg)
         lbl_805DE310(lbl_8058BEC8);
     }
     OSPanic(file, line, msg);
+}
+
+void* fn_804285AC(void* arg)
+{
+    void* old = lbl_805DE314;
+    if (lbl_805DE30C == 0) {
+        if (lbl_805DE308 == NULL) {
+            lbl_805DE308 = *(void**) (__files + 0x90);
+        }
+        *(void**) (__files + 0x90) = fn_80428430;
+        __files[0x5A] = 0;
+        lbl_805DE30C = 1;
+    }
+    lbl_805DE314 = arg;
+    return old;
+}
+
+void* fn_80428608(void* arg)
+{
+    void* old = lbl_805DE310;
+    lbl_805DE310 = arg;
+    return old;
 }

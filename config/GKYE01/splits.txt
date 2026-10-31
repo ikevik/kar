@@ -603,13 +603,24 @@ sysdolphin/robj.c:
 	.sbss       start:0x805DE2D8 end:0x805DE2E0
 	.sdata2     start:0x805E5CB8 end:0x805E5CF0
 
-sysdolphin/id_wobj_fog.c:
-	.text       start:0x8041A53C end:0x8041B9C4
-	.data       start:0x805041C8 end:0x80504388
+sysdolphin/id.c:
+	.text       start:0x8041A53C end:0x8041A7F8
 	.bss        start:0x8058BC68 end:0x8058BE28
-	.sdata      start:0x805DCC88 end:0x805DCCE0
-	.sbss       start:0x805DE2E0 end:0x805DE2F0
-	.sdata2     start:0x805E5CF0 end:0x805E5D38
+	.sdata      start:0x805DCC88 end:0x805DCC98
+
+sysdolphin/wobj.c:
+	.text       start:0x8041A7F8 end:0x8041B0D0
+	.data       start:0x805041C8 end:0x80504270
+	.sdata      start:0x805DCC98 end:0x805DCCC0
+	.sbss       start:0x805DE2E0 end:0x805DE2E8
+	.sdata2     start:0x805E5CF0 end:0x805E5D10
+
+sysdolphin/fog.c:
+	.text       start:0x8041B0D0 end:0x8041B9C4
+	.data       start:0x80504270 end:0x80504388
+	.sdata      start:0x805DCCC0 end:0x805DCCE0
+	.sbss       start:0x805DE2E8 end:0x805DE2F0
+	.sdata2     start:0x805E5D10 end:0x805E5D38
 
 sysdolphin/pref.c:
 	.text       start:0x8041B9C4 end:0x8041BC10
@@ -655,7 +666,7 @@ sysdolphin/class.c:
 	.text       start:0x80420540 end:0x804216C0
 	.data       start:0x805047E4 end:0x80504938
 	.sdata      start:0x805DCD50 end:0x805DCD68
-	.sbss       start:0x805DE2F8 end:0x805DE30C
+	.sbss       start:0x805DE2F8 end:0x805DE308
 
 sysdolphin/hash.c:
 	.text       start:0x804216C0 end:0x804217C0
@@ -674,16 +685,16 @@ sysdolphin/texpdag.c:
 	.sdata      start:0x805DCD98 end:0x805DCDA8
 
 sysdolphin/debug.c:
-	.text       start:0x80428398 end:0x804285AC
+	.text       start:0x80428398 end:0x80428618
 	.data       start:0x80504D70 end:0x80504DA0
-	.bss        start:0x8058BEC8 end:0x8058C408
+	.bss        start:0x8058BEC8 end:0x8058C190
 	.sdata      start:0x805DCDA8 end:0x805DCDB0
+	.sbss       start:0x805DE308 end:0x805DE318
 
 sysdolphin/gobjproc.c:
-	.text       start:0x804285AC end:0x80428C50
+	.text       start:0x80428618 end:0x80428C50
 	.data       start:0x80504DA0 end:0x80504DD8
 	.sdata      start:0x805DCDB0 end:0x805DCDB8
-	.sbss       start:0x805DE30C end:0x805DE358
 
 sysdolphin/gobjplink.c:
 	.text       start:0x80428C50 end:0x804293F4
@@ -704,6 +715,8 @@ sysdolphin/gobj.c:
 sysdolphin/particle.c:
 	.text       start:0x8042A1A8 end:0x8042AD44
 	.data       start:0x80504F30 end:0x80504FB0
+	.bss        start:0x8058C190 end:0x8058C408
+	.sbss       start:0x805DE318 end:0x805DE358
 
 text_8042AD44.c:
 	.text       start:0x8042AD44 end:0x804407E0
