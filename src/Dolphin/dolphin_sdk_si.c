@@ -1,5 +1,7 @@
 #include "dolphin/sdk_common.h"
 
+#pragma inline_depth(1)
+
 volatile u32 __SIRegs[] : 0xcc006400;
 volatile u16 __VIRegs[] : 0xcc002000;
 
@@ -61,6 +63,7 @@ static SICallback TypeCallback[4][4];
 static void* RDSTHandler[4];
 static BOOL InputBufferValid[4];
 static u32 InputBuffer[4][2];
+static u32 InputBufferVcount[4];
 static u32 SamplingRate;
 
 BOOL fn_803E876C(void)
@@ -101,6 +104,54 @@ u32 SISetXY(u32 x, u32 y)
     return poll;
 }
 #pragma dont_inline reset
+
+BOOL fn_803E8E08(BOOL enable)
+{
+    BOOL enabled;
+    BOOL rc;
+    u32 reg;
+    int i;
+
+    enabled = OSDisableInterrupts();
+    reg = __SIRegs[13];
+    rc = (reg & 0x08000000) ? TRUE : FALSE;
+    if (enable) {
+        for (i = 0; i < 4; ++i) {
+            InputBufferVcount[i] = 0;
+        }
+        reg |= 0x08000000;
+    } else {
+        reg &= ~0x08000000;
+    }
+    reg &= ~0x80000001;
+    __SIRegs[13] = reg;
+    OSRestoreInterrupts(enabled);
+    return rc;
+}
+
+BOOL fn_803E8EA0(void* handler)
+{
+    BOOL enabled;
+    int i;
+
+    enabled = OSDisableInterrupts();
+    for (i = 0; i < 4; ++i) {
+        if (RDSTHandler[i] == handler) {
+            OSRestoreInterrupts(enabled);
+            return TRUE;
+        }
+    }
+    for (i = 0; i < 4; ++i) {
+        if (RDSTHandler[i] == 0) {
+            RDSTHandler[i] = handler;
+            fn_803E8E08(TRUE);
+            OSRestoreInterrupts(enabled);
+            return TRUE;
+        }
+    }
+    OSRestoreInterrupts(enabled);
+    return FALSE;
+}
 
 u32 fn_803E942C(u32 poll)
 {
@@ -169,6 +220,39 @@ BOOL fn_803E9534(s32 chan)
         return TRUE;
     }
     return FALSE;
+}
+
+u32 fn_803E9608(s32 chan, void* data)
+{
+    BOOL rc;
+    BOOL enabled;
+
+    enabled = OSDisableInterrupts();
+    fn_803E9534(chan);
+    rc = InputBufferValid[chan];
+    InputBufferValid[chan] = FALSE;
+    if (rc) {
+        ((u32*)data)[0] = InputBuffer[chan][0];
+        ((u32*)data)[1] = InputBuffer[chan][1];
+    }
+    OSRestoreInterrupts(enabled);
+    return rc;
+}
+
+extern BOOL fn_803E9114(s32 chan, u32 output, u32 outputBytes, void* input, u32 inputBytes,
+                        SICallback callback);
+
+void fn_803E96CC(OSAlarm* alarm, OSContext* context)
+{
+    s32 chan = alarm - Alarm;
+    SIPacket* packet = &Packet[chan];
+
+    if (packet->chan != -1) {
+        if (fn_803E9114(packet->chan, packet->output, packet->outputBytes, packet->input,
+                        packet->inputBytes, packet->callback)) {
+            packet->chan = -1;
+        }
+    }
 }
 
 void SISetSamplingRate(u32 msec)
