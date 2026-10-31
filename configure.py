@@ -453,7 +453,8 @@ config.libs = [
             Object(NonMatching, "IPSocket.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "text_8047DB6C.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "IPIgmp.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "text_80482598.c", mw_version="GC/1.3.2"),
+            Object(NonMatching, "text_80482598.c", mw_version="GC/1.2.5n"),
+            Object(NonMatching, "text_804871EC.c"),
         ],
     ),
     Lib(

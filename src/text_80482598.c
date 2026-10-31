@@ -44,74 +44,8 @@ extern void memset();
 int fn_8048530C() {
     return lbl_805DE6D0;
 }
-
 int fn_804858FC() {
     return (int)lbl_805C2AF8;
-}
-
-void fn_80487674() {
-    OSWakeupThread(((int)lbl_805C3C40 + 136));
-}
-
-void fn_80487D4C() {
-    OSWakeupThread(((int)lbl_805C3C40 + 200));
-}
-
-void fn_80488268() {
-    OSWakeupThread(((int)lbl_805C3C40 + 256));
-}
-
-int fn_8048841C() {
-    return *(int*)((int)lbl_805C3C40 + 248);
-}
-
-void fn_80489224() {
-    int t0;
-    t0 = OSDisableInterrupts();
-    memset((int)lbl_805CCA40, 0, 96);
-    OSRestoreInterrupts(t0);
-}
-
-void fn_80489270() {
-    int t0;
-    int t1;
-    t0 = OSDisableInterrupts();
-    memset((int)lbl_805CCA40, 0, 96);
-    t1 = OSRestoreInterrupts(t0);
-    fn_80485064((int)lbl_805CC3C8, 3);
-    fn_80486D58();
-}
-
-void fn_804892D0() {
-    fn_80485314((int)lbl_80535238);
-}
-
-void fn_804893D8() {
-    fn_80485180();
-}
-
-void fn_80487D00() {
-int t0;
-int m0;
-m0 = *(int*)((int)lbl_805C3C40 + 128);
-if (*(int*)((int)lbl_805C3C40 + 128) == 1) {
-t0 = *(int*)((int)lbl_805C3C40 + 128);
-fn_803DA558(((int)lbl_805C3C40 + 272), 0);
-*(int*)((int)lbl_805C3C40 + 128) = 0;
-m0 = 0;
-}
-}
-
-void fn_8048821C() {
-int t0;
-int m0;
-m0 = *(int*)((int)lbl_805C3C40 + 192);
-if (*(int*)((int)lbl_805C3C40 + 192) == 1) {
-t0 = *(int*)((int)lbl_805C3C40 + 192);
-fn_803DA558(((int)lbl_805C3C40 + 272), 0);
-*(int*)((int)lbl_805C3C40 + 192) = 0;
-m0 = 0;
-}
 }
 
 /* ---- w3f batch 1 ---- */
@@ -131,103 +65,21 @@ extern void fn_80482730();
 void fn_80483C1C() {
     fn_804830A4();
 }
-
 void fn_804859C8() {
     fn_80482598();
 }
-
 void fn_804859E8() {
     fn_8048263C();
 }
-
 void fn_80485AB8() {
     fn_80482730();
 }
-
 void fn_80486D58() {
     if (lbl_805DE6FC == 1) {
         lbl_805DE6FC = 2;
         OSWakeupThread(&lbl_805DE6E8);
     }
 }
-
 void fn_80486E84(a, b) int a; int* b; {
     fn_803BD5A4(a, *b);
-}
-
-int fn_8048763C() {
-    fn_80487368();
-    return G32(0x24) == 2;
-}
-
-int fn_80487C0C() {
-    int en = OSDisableInterrupts();
-    int v = *(unsigned char*)((int)lbl_805C3C40 + 0x39);
-    OSRestoreInterrupts(en);
-    return v;
-}
-
-int fn_80487C48() {
-    int en = OSDisableInterrupts();
-    int v = *(unsigned char*)((int)lbl_805C3C40 + 0x4C);
-    OSRestoreInterrupts(en);
-    return v;
-}
-
-int fn_80487CC0() {
-    if (G32(0x80) == 1) return fn_803D9B10((int)lbl_805C3C40 + 0x110);
-    return 1;
-}
-
-int fn_804881C0() {
-    return G32(0x90) == 1;
-}
-
-int fn_804881DC() {
-    if (G32(0xC0) == 1) return fn_803D9B10((int)lbl_805C3C40 + 0x110);
-    return 1;
-}
-
-int fn_8048842C() {
-    if (G32(0xF8) == 1) return fn_803D9B10((int)lbl_805C3C40 + 0x110);
-    return 1;
-}
-
-int fn_80488938() {
-    int en;
-    int v;
-    fn_804887EC();
-    en = OSDisableInterrupts();
-    v = G32(0xC);
-    OSRestoreInterrupts(en);
-    return v;
-}
-
-void fn_80488978(a) int a; {
-    int en = OSDisableInterrupts();
-    if (G32(0xC) == 0) G32(0xC) = a;
-    OSRestoreInterrupts(en);
-}
-
-void fn_804889C0() {
-    int en = OSDisableInterrupts();
-    G32(0xC) = 0;
-    OSRestoreInterrupts(en);
-}
-
-void fn_804889F4() {
-    int en = OSDisableInterrupts();
-    G32(0x108) = 1;
-    OSRestoreInterrupts(en);
-}
-
-void fn_80488A28() {
-    int en = OSDisableInterrupts();
-    int v = G32(0x108);
-    OSRestoreInterrupts(en);
-    if (v == 1) OSExitThread(0);
-}
-
-int fn_804893F8() {
-    return fn_8048530C() == 1;
 }
