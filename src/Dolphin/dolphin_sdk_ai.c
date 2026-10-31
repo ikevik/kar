@@ -20,7 +20,7 @@ static s64 bound_48KHz;
 static s64 min_wait;
 static s64 max_wait;
 static s64 buffer;
-static AIDCallback __tmp_aid_callback_var;
+AIDCallback lbl_805DE000;
 
 static void __AISHandler(s16 interrupt, OSContext* context);
 static void fn_803DFC50(s16 interrupt, OSContext* context);
@@ -329,9 +329,9 @@ AIDCallback __tmp_aid_callback(AIDCallback callback)
     BOOL oldInts;
     AIDCallback old;
 
-    old = __tmp_aid_callback_var;
+    old = lbl_805DE000;
     oldInts = OSDisableInterrupts();
-    __tmp_aid_callback_var = callback;
+    lbl_805DE000 = callback;
     OSRestoreInterrupts(oldInts);
     return old;
 }
