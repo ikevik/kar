@@ -381,6 +381,53 @@ int fn_8046F1F4(a) char* a; {
     return old;
 }
 
+/* ---- w3f batch 4 ---- */
+extern char lbl_805E62A0;
+extern char lbl_805E6298;
+extern char lbl_805DD200;
+extern int fn_8046ABC8();
+extern int fn_80476038();
+
+void fn_8046D98C(a, p) char* a; void* p; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    memcpy(s + 0x4C, p ? p : &lbl_805E62A0, 4);
+    OSRestoreInterrupts(en);
+}
+
+void fn_8046DA0C(a, p) char* a; void* p; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    memcpy(s + 0x54, p ? p : &lbl_805E6298, 4);
+    OSRestoreInterrupts(en);
+}
+
+
+int fn_8046F3B0(p, x) unsigned char* p; int x; {
+    int en = OSDisableInterrupts();
+    int r;
+    if (*p != 0x11) r = -12;
+    else r = fn_8046ABC8(&lbl_805DE628, p, x, &lbl_805DD200);
+    OSRestoreInterrupts(en);
+    return r;
+}
+
+int fn_8047623C(a, b, c) int a; int b; int c; {
+    int tmp;
+    int r = fn_80476038(a, b, c, 4, 0, &tmp);
+    if (r == 0) r = tmp;
+    if (r == 0 && c > 0) r = -9;
+    return r;
+}
+
+int fn_80476294(a, b, c) int a; int b; int c; {
+    int tmp;
+    int r = fn_80476038(a, b, c, 5, 0, &tmp);
+    if (r == 0) r = tmp;
+    if (r == 0 && c > 0) r = -9;
+    return r;
+}
+
 #if 0 /* w3f near misses */
 int fn_804708C4() {
     if ((unsigned)lbl_805DE628 == 0) return 1;
@@ -414,6 +461,13 @@ int fn_8046F190(a, v) char* a; int v; {
     if (*(int*)(s + 8) == 0) *(int*)(s + 8) = v;
     OSRestoreInterrupts();
     return *(int*)(s + 8);
+}
+
+void fn_8046DA8C(a, v) char* a; int v; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    *(int*)(s + 0x40) = (v < 0x44) ? 0x44 : v;
+    OSRestoreInterrupts(en);
 }
 
 
