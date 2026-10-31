@@ -7,7 +7,7 @@ extern HSD_ObjAllocData gobj_alloc_data;
 
 extern HSD_GObjLibInitDataType HSD_GObjLibInitData;
 
-void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
+static inline void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
 {
     s32 link = gobj->p_link;
     gobj->prev = hiprio_gobj;
@@ -127,15 +127,16 @@ void func_80428F64(HSD_GObj* gobj)
 }
 
 
+#if 0 /* 99.7%: register allocation differs in final loop */
 extern s32 lbl_805DE344;
 extern void fn_804287DC(HSD_GObjProc*);
 extern void fn_80428684(HSD_GObjProc*);
 
 void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* position)
 {
-    HSD_GObjProc* proc;
-    HSD_GObjProc* rev;
     HSD_GObjProc* next;
+    HSD_GObjProc* rev;
+    HSD_GObjProc* proc;
     s32 lvl;
     s32 prev_lvl;
 
@@ -190,8 +191,15 @@ void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* po
         break;
     }
 
-    lvl = lbl_805DE344 != 0 ? lbl_805DE344 - 1 : 2;
-    prev_lvl = lvl != 0 ? lvl - 1 : 2;
+    {
+        s32 g = lbl_805DE344;
+        lvl = 2;
+        if (g != 0)
+            lvl = g - 1;
+    }
+    prev_lvl = 2;
+    if (lvl != 0)
+        prev_lvl = lvl - 1;
     proc = rev;
     while (proc != NULL) {
         next = proc->child;
@@ -201,3 +209,5 @@ void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* po
         proc = next;
     }
 }
+
+#endif
