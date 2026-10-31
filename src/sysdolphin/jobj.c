@@ -1,6 +1,7 @@
 #include "jobj.h"
 #include "dobj.h"
 #include "robj.h"
+#include "cobj.h"
 
 extern HSD_JObj* lbl_805DE250;
 extern u32 lbl_805DE258;
@@ -52,6 +53,8 @@ extern void HSD_AObjInvokeCallBacks(void);
 extern void* hsdNew(void*);
 extern int hsdIsDescendantOf(void*, void*);
 extern void HSD_Panic(const char*, int, const char*);
+extern HSD_CObj* HSD_CObjGetCurrent(void);
+extern void fn_803D1578(Mtx, Mtx);
 extern void fn_80417C20(void*);
 extern void fn_80417CA0(void*);
 extern void fn_804084B0(HSD_JObj*, void*, void*);
@@ -258,5 +261,68 @@ void fn_8040C450(HSD_JObj* jobj, u32 flags, u32 mask)
             HSD_JObjSetMtxDirty(jobj);
         }
         jobj->flags = flags | (jobj->flags & ~mask);
+    }
+}
+
+void fn_80409274(HSD_JObj* jobj, f32 frame)
+{
+    if (jobj != NULL) {
+        HSD_AObjReqAnim(jobj->aobj, frame);
+        if (union_type_dobj(jobj)) {
+            HSD_DObjReqAnimAllByFlags(jobj->u.dobj, 0x7ff, frame);
+        }
+        HSD_RObjReqAnimAllByFlags(jobj->robj, 0x7ff, frame);
+    }
+}
+
+HSD_JObj* fn_8040BC14(HSD_JObj* jobj)
+{
+    HSD_JObj* prev;
+
+    if (jobj == NULL || jobj->parent == NULL) {
+        return NULL;
+    }
+    if (jobj == jobj->parent->child) {
+        return NULL;
+    }
+    for (prev = jobj->parent->child; prev != NULL; prev = prev->next) {
+        if (prev->next == jobj) {
+            return prev;
+        }
+    }
+    HSD_Panic(__FILE__, 0x610, "can not find specified jobj. maybe jobj tree is broken.\n");
+    return NULL;
+}
+
+void fn_8040E1A8(HSD_JObj* jobj)
+{
+    ((HSD_JObjInfo*) jobj->object.parent.class_info)->release_child(jobj);
+    if (HSD_IDGetDataFromTable(NULL, jobj->id, NULL) == jobj) {
+        HSD_IDRemoveByIDFromTable(NULL, jobj->id);
+    }
+    if (jobj->scl != NULL) {
+        fn_80417C20(jobj->scl);
+    }
+    if (jobj->envelopemtx != NULL) {
+        fn_80417CA0(jobj->envelopemtx);
+    }
+    hsdJObj.parent.parent.head.parent->release((HSD_Class*) jobj);
+}
+
+void fn_8040A688(Mtx vmtx, HSD_JObj* jobj, Mtx mtx)
+{
+    HSD_CObj* cobj;
+
+    HSD_JObjSetupMatrix(jobj);
+    HSD_JObjSetupMatrix(jobj->child);
+    fn_803D1578(jobj->child->mtx, mtx);
+    PSMTXConcat(jobj->mtx, mtx, mtx);
+    if (vmtx != NULL) {
+        PSMTXConcat(vmtx, mtx, mtx);
+    } else {
+        cobj = HSD_CObjGetCurrent();
+        if (cobj != NULL) {
+            PSMTXConcat(cobj->view_mtx, mtx, mtx);
+        }
     }
 }

@@ -121,11 +121,12 @@ typedef struct _HSD_Joint {
 
 typedef struct _HSD_JObjInfo {
     HSD_ObjInfo parent;
+    void (*disp)(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask, u32 rendermode);
     s32 (*load)(HSD_JObj* jobj, HSD_Joint* joint, HSD_JObj* jobj_2);
     void (*make_mtx)(HSD_JObj* jobj);
     void (*make_pmtx)(HSD_JObj* jobj, Mtx mtx, Mtx rmtx);
-    void (*disp)(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask, u32 rendermode);
     void (*release_child)(HSD_JObj* jobj);
+    void (*unk50)(void);
 } HSD_JObjInfo;
 
 extern HSD_JObjInfo hsdJObj;
