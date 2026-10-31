@@ -290,8 +290,8 @@ void fn_803C78BC(void)
 {
     int enabled;
     enabled = OSDisableInterrupts();
-    PauseFlag = 0;
-    if (PausingFlag) {
+    *(volatile int*)&PauseFlag = 0;
+    if (*(volatile int*)&PausingFlag) {
         PausingFlag = 0;
         stateReady();
     }
