@@ -1,4 +1,5 @@
 #include <dolphin/types.h>
+#pragma dont_inline on
 
 typedef void (*DVDLowCallback)(u32 intType);
 typedef struct DVDDiskID DVDDiskID;
@@ -108,10 +109,12 @@ void stateGettingError(void)
     DVDLowRequestError(cbForStateGettingError);
 }
 
+#pragma dont_inline on
 void stateGoToRetry(void)
 {
     DVDLowStopMotor(cbForStateGoToRetry);
 }
+#pragma dont_inline reset
 
 void stateMotorStopped(void)
 {
@@ -136,10 +139,12 @@ void cbForReadAsync(s32 result, DVDFileInfo* fileInfo)
     }
 }
 
+#pragma dont_inline on
 void stateCoverClosed_CMD(DVDCommandBlock* block)
 {
     fn_803C4958(lbl_8056CC40, cbForStateCoverClosed);
 }
+#pragma dont_inline reset
 
 void fn_803C82FC(void)
 {
@@ -234,6 +239,7 @@ int fn_803C5304(DVDCommandBlock* block)
     return 1;
 }
 
+#pragma dont_inline on
 void __DVDLowSetWAType(int type, u32 location)
 {
     int enabled = OSDisableInterrupts();
@@ -241,8 +247,10 @@ void __DVDLowSetWAType(int type, u32 location)
     WorkAroundSeekLocation = location;
     OSRestoreInterrupts(enabled);
 }
+#pragma dont_inline reset
 
 #if 1
+#pragma dont_inline on
 void DVDReset(void)
 {
     DVDLowReset();
@@ -251,6 +259,7 @@ void DVDReset(void)
     ResetRequired = 0;
     ResumeFromHere = 0;
 }
+#pragma dont_inline reset
 #endif
 
 s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
@@ -386,3 +395,120 @@ int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
     return 1;
 }
 #endif
+
+extern s32 CommandList_8056CB40[];
+extern void cbForUnrecoveredErrorRetry(u32 intType);
+extern void __DVDLowSetWAType(int type, u32 location);
+
+void stateTimeout(void)
+{
+    __DVDStoreErrorCode(0x01234568);
+    DVDReset();
+    cbForStateError(0);
+}
+
+void __DVDInitWA(void)
+{
+    NextCommandNumber = 0;
+    CommandList_8056CB40[0] = -1;
+    __DVDLowSetWAType(0, 0);
+    OSInitAlarm();
+}
+
+void AlarmHandler(OSAlarm* alarm, void* context)
+{
+    DVDReset();
+    DCInvalidateRange(lbl_8056CC40, 0x20);
+    lbl_805DDDEC = stateCoverClosed_CMD;
+    stateCoverClosed_CMD(executing);
+}
+
+int __DVDCheckWaitingQueue(void)
+{
+    u32 i;
+    int enabled;
+
+    enabled = OSDisableInterrupts();
+    for (i = 0; i < 4; i++) {
+        if (WaitingQueue[i].head != &WaitingQueue[i]) {
+            OSRestoreInterrupts(enabled);
+            return 1;
+        }
+    }
+    OSRestoreInterrupts(enabled);
+    return 0;
+}
+
+int fn_803C800C(DVDCommandBlock* block)
+{
+    int enabled;
+    DVDCommandBlock* prev;
+    DVDCommandBlock* next;
+
+    enabled = OSDisableInterrupts();
+    prev = block->prev;
+    next = block->next;
+    if (prev == 0 || next == 0) {
+        OSRestoreInterrupts(enabled);
+        return 0;
+    }
+    prev->next = next;
+    next->prev = prev;
+    OSRestoreInterrupts(enabled);
+    return 1;
+}
+
+int __DVDPushWaitingQueue(int prio, DVDCommandBlock* block)
+{
+    int enabled;
+    DVDCommandBlock* q;
+
+    enabled = OSDisableInterrupts();
+    q = (DVDCommandBlock*)&WaitingQueue[prio];
+    ((DVDCommandBlock*)q->prev)->next = block;
+    block->prev = q->prev;
+    block->next = q;
+    q->prev = block;
+    OSRestoreInterrupts(enabled);
+    return 1;
+}
+
+void cbForUnrecoveredError(u32 intType)
+{
+    if (intType == 16) {
+        executing->state = -1;
+        __DVDStoreErrorCode(0x01234568);
+        DVDReset();
+        cbForStateError(0);
+        return;
+    }
+    if (intType & 1) {
+        stateGoToRetry();
+    } else {
+        DVDLowRequestError(cbForUnrecoveredErrorRetry);
+    }
+}
+
+#pragma dont_inline reset
+static inline int isDir(int off)
+{
+    if ((*(u32*)(FstStart + off) & 0xFF000000) == 0) {
+        return 0;
+    }
+    return 1;
+}
+
+int DVDFastOpen(int entrynum, DVDFileInfo* fileInfo)
+{
+    int off = entrynum * 12;
+
+    if (entrynum < 0 || entrynum >= MaxEntryNum || isDir(off)) {
+        return 0;
+    }
+    fileInfo->startAddr = *(u32*)(FstStart + off + 4);
+    fileInfo->length = *(u32*)(FstStart + off + 8);
+    fileInfo->callback = 0;
+    fileInfo->cb.state = 0;
+    return 1;
+}
+#pragma dont_inline on
