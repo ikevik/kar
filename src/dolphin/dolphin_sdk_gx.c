@@ -52,8 +52,8 @@ typedef struct GXData {
     u32 nextTexRgn;
     u32 nextTexRgnCI;
     u32 tlutRegions[20][4];
-    u32 texRegionCallback;
-    u32 tlutRegionCallback;
+    void* (*texRegionCallback)(void*, u32);
+    void* (*tlutRegionCallback)(void*, u32);
     u32 nrmType;
     u8 hasNrms;
     u8 hasBiNrms;
@@ -186,14 +186,14 @@ void fn_803CBFA8(u8 a, u8 b) {
     __peReg[2] = t | b;
 }
 
-u32 fn_803CE0CC(u32 v) {
-    u32 old = gx->texRegionCallback;
+void* (*fn_803CE0CC(void* (*v)(void*, u32)))(void*, u32) {
+    void* (*old)(void*, u32) = gx->texRegionCallback;
     gx->texRegionCallback = v;
     return old;
 }
 
-u32 fn_803CE0E0(u32 v) {
-    u32 old = gx->tlutRegionCallback;
+void* (*fn_803CE0E0(void* (*v)(void*, u32)))(void*, u32) {
+    void* (*old)(void*, u32) = gx->tlutRegionCallback;
     gx->tlutRegionCallback = v;
     return old;
 }
@@ -543,3 +543,87 @@ void fn_803CC474(u8 w, u32 offs) {
     GXWGFifo_u32 = gx->lpSize;
     gx->bpSentNot = 0;
 }
+
+extern u32 lbl_805DDE44;
+extern void GXSetViewportJitter(f32, f32, f32, f32, f32, f32, u32);
+extern void fn_803D0B20(u32);
+extern void __GXXfVtxSpecs(void);
+extern void fn_803CDC4C(void*, void*, u32);
+
+void func_803CD230(u32* a, u32* b) {
+    a[3] = b[0];
+}
+
+u32 fn_803C9D94(u32 v) {
+    u32 old = lbl_805DDE44;
+    BOOL en = OSDisableInterrupts();
+    lbl_805DDE44 = v;
+    OSRestoreInterrupts(en);
+    return old;
+}
+
+void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f) {
+    GXSetViewportJitter(a, b, c, d, e, f, 1);
+}
+
+void GXSetCurrentMtx(u32 id) {
+    gx->matIdxA = (gx->matIdxA & ~0x3F) | id;
+    fn_803D0B20(0);
+}
+
+void fn_803CA848(void) {
+    GXWGFifo_u8 = 8;
+    GXWGFifo_u8 = 0x50;
+    GXWGFifo_u32 = gx->vcdLo;
+    GXWGFifo_u8 = 8;
+    GXWGFifo_u8 = 0x60;
+    GXWGFifo_u32 = gx->vcdHi;
+    __GXXfVtxSpecs();
+}
+
+void fn_803CDDE4(void* obj, u32 map) {
+    void* region = gx->texRegionCallback(obj, map);
+    fn_803CDC4C(obj, region, map);
+}
+
+void fn_803CEF6C(u32 idx, u32 a, u32 b) {
+    u32* p = &gx->teva[idx];
+    *p = (*p & ~3) | a;
+    *p = (*p & ~0xC) | (b << 2);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = *p;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CC4BC(u32 idx, u8 a, u8 b) {
+    gx->suTs0[idx] = (gx->suTs0[idx] & ~0x40000) | (a << 18);
+    gx->suTs0[idx] = (gx->suTs0[idx] & ~0x80000) | (b << 19);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->suTs0[idx];
+    gx->bpSentNot = 0;
+}
+
+void fn_803CC89C(u32 a) {
+    u8 t0 = (a & 1) == 1;
+    u8 t1 = (a & 2) == 2;
+    gx->cpDisp = (gx->cpDisp & ~1) | t0;
+    gx->cpDisp = (gx->cpDisp & ~2) | (t1 << 1);
+    gx->cpTex = (gx->cpTex & ~1) | t0;
+    gx->cpTex = (gx->cpTex & ~2) | (t1 << 1);
+}
+
+#if 0 /* NONMATCHING: instruction order */
+void fn_803CC9CC(u8* c, u32 z) {
+    u32 reg;
+    z = z & 0xFFFFFF;
+    reg = __rlwimi(c[3] << 8, c[0], 0, 24, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = (reg & 0xFFFFFF) | 0x4F000000;
+    reg = __rlwimi(c[1] << 8, c[2], 0, 24, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = (reg & 0xFFFFFF) | 0x50000000;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = z | 0x51000000;
+    gx->bpSentNot = 0;
+}
+#endif
