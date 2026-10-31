@@ -81,7 +81,7 @@ extern u8 BB2_8056CC20[];
 typedef struct { void* head; void* tail; } Queue;
 extern Queue WaitingQueue[];
 
-extern int StopAtNextInt_805DDD40;
+extern int StopAtNextInt;
 extern DVDLowCallback Callback;
 extern int WaitingCoverClose;
 extern int lbl_805DDD60;
@@ -132,7 +132,7 @@ int DVDLowWaitCoverClose(DVDLowCallback callback)
 {
     Callback = callback;
     WaitingCoverClose = 1;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[1] = 2;
     return 1;
 }
@@ -224,7 +224,7 @@ int DVDSetAutoInvalidation(int autoInval)
 
 int DVDLowBreak(void)
 {
-    StopAtNextInt_805DDD40 = 1;
+    StopAtNextInt = 1;
     lbl_805DDD60 = 1;
     return 1;
 }
@@ -290,8 +290,8 @@ void fn_803C78BC(void)
 {
     int enabled;
     enabled = OSDisableInterrupts();
-    PauseFlag = 0;
-    if (PausingFlag) {
+    *(volatile int*)&PauseFlag = 0;
+    if (*(volatile int*)&PausingFlag) {
         PausingFlag = 0;
         stateReady();
     }
@@ -305,7 +305,7 @@ int DVDLowStopMotor(DVDLowCallback callback)
 {
     vu32* regs = __DIRegs;
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     regs[2] = 0xE3000000;
     regs[7] = 1;
     SET_TIMEOUT();
@@ -317,7 +317,7 @@ int DVDLowStopMotor(DVDLowCallback callback)
 int DVDLowRequestError(DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0xE0000000;
     __DIRegs[7] = 1;
     SET_TIMEOUT();
@@ -329,7 +329,7 @@ int DVDLowRequestError(DVDLowCallback callback)
 int fn_803C4898(u32 offset, DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0xAB000000;
     __DIRegs[3] = offset >> 2;
     __DIRegs[7] = 1;
@@ -342,7 +342,7 @@ int fn_803C4898(u32 offset, DVDLowCallback callback)
 int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0xE2000000 | subcmd;
     __DIRegs[7] = 1;
     SET_TIMEOUT();
@@ -354,7 +354,7 @@ int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
 int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0xE1000000 | mode;
     __DIRegs[3] = offset >> 2;
     __DIRegs[4] = length;
@@ -368,7 +368,7 @@ int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
 int fn_803C4B14(void* addr, DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0x12000000;
     __DIRegs[4] = 0x20;
     __DIRegs[5] = (u32)addr;
@@ -383,7 +383,7 @@ int fn_803C4B14(void* addr, DVDLowCallback callback)
 int fn_803C4958(void* addr, DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0xA8000040;
     __DIRegs[3] = 0;
     __DIRegs[4] = 0x20;
@@ -399,7 +399,7 @@ int fn_803C4958(void* addr, DVDLowCallback callback)
 int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
 {
     Callback = callback;
-    StopAtNextInt_805DDD40 = 0;
+    StopAtNextInt = 0;
     __DIRegs[2] = 0xE4000000 | (enable ? 0x10000 : 0) | size;
     __DIRegs[7] = 1;
     SET_TIMEOUT();

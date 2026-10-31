@@ -956,8 +956,8 @@ double fn_803BC738(double x, double y, int iy)
     if (ix < 0x3e300000) {
         if ((int)x == 0) {
             if (((ix | *((int*)&x + 1)) | (iy + 1)) == 0) {
-                y = __fabs(x);
-                return lbl_805E5690 / y;
+                double t = __fabs(x);
+                return lbl_805E5690 / t;
             } else {
                 if (iy == 1) {
                     return x;

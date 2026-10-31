@@ -86,7 +86,43 @@ typedef void (*OSInterruptHandler)(s16 interrupt, OSContext* context);
 
 extern void OSReport(const char* msg, ...);
 extern void __OSSaveFPUContext(void);
-extern void UnlockSram(int commit, u32 offset);
+typedef struct SramControl {
+    u8 sram[64];
+    u32 offset;
+    int enabled;
+    int locked;
+    int sync;
+} SramControl;
+typedef struct OSSram {
+    u16 checkSum;
+    u16 checkSum2;
+    u32 ead0;
+    u32 ead1;
+    u32 counterBias;
+    s8 displayOffsetH;
+    u8 ntd;
+    u8 language;
+    u8 flags;
+} OSSram;
+typedef struct OSSramEx {
+    u8 flashID[2][12];
+    u32 wirelessKeyboardID;
+    u16 wirelessPadID[4];
+    u8 dvdErrorCode;
+    u8 padding0;
+    u8 flashIDCheckSum[2];
+    u16 gbs;
+    u8 padding1[2];
+} OSSramEx;
+extern int EXILock(s32 chan, u32 dev, void* cb);
+extern int EXIUnlock(s32 chan);
+extern int EXISelect(s32 chan, u32 dev, u32 freq);
+extern int EXIDeselect(s32 chan);
+extern int EXIImm(s32 chan, void* buf, s32 len, u32 type, void* cb);
+extern int EXIImmEx(s32 chan, void* buf, s32 len, u32 type);
+extern int EXISync(s32 chan);
+extern int EXIDma(s32 chan, void* buf, s32 len, u32 type, void* cb);
+extern void DCInvalidateRange(void* addr, u32 nBytes);
 extern int OSGetResetButtonState(void);
 extern void SelectThread(int yield);
 extern void OSInitThreadQueue(OSThreadQueue* queue);
@@ -96,7 +132,7 @@ extern u32 __OSMaskInterrupts(u32 mask);
 
 extern OSBootInfo* BootInfo_805DDE68;
 extern u8 DriveInfo_8056D560[];
-extern u8 Scb[];
+static SramControl Scb;
 extern OSExceptionHandler* OSExceptionTable;
 extern OSInterruptHandler* InterruptHandlerTable;
 extern HeapDesc* lbl_805DDEB0;
@@ -292,10 +328,123 @@ void fn_803D997C(void)
 }
 
 
+static int WriteSram(void* buffer, u32 offset, u32 size);
+
+#pragma peephole on
+void WriteSramCallback(s32 chan, OSContext* context)
+{
+    Scb.sync = WriteSram(Scb.sram + Scb.offset, Scb.offset, 64 - Scb.offset);
+    if (Scb.sync) {
+        Scb.offset = 64;
+    }
+}
+
+static int WriteSram(void* buffer, u32 offset, u32 size)
+{
+    int err;
+    u32 cmd;
+    if (!EXILock(0, 1, WriteSramCallback)) {
+        return 0;
+    }
+    if (!EXISelect(0, 1, 3)) {
+        EXIUnlock(0);
+        return 0;
+    }
+    offset <<= 6;
+    cmd = (offset + 0x100) | 0xA0000000;
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIImmEx(0, buffer, size, 1);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+static int ReadSram(void* buffer)
+{
+    int err;
+    u32 cmd;
+    DCInvalidateRange(buffer, 64);
+    if (!EXILock(0, 1, 0)) {
+        return 0;
+    }
+    if (!EXISelect(0, 1, 3)) {
+        EXIUnlock(0);
+        return 0;
+    }
+    cmd = 0x20000100;
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIDma(0, buffer, 64, 0, 0);
+    err |= !EXISync(0);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+void __OSInitSram(void)
+{
+    Scb.locked = Scb.enabled = 0;
+    Scb.sync = ReadSram(Scb.sram);
+    Scb.offset = 64;
+}
+
+static void* LockSram(u32 offset)
+{
+    int enabled = OSDisableInterrupts();
+    if (Scb.locked != 0) {
+        OSRestoreInterrupts(enabled);
+        return 0;
+    }
+    Scb.enabled = enabled;
+    Scb.locked = 1;
+    return Scb.sram + offset;
+}
+
+void* __OSLockSram(void)
+{
+    return LockSram(0);
+}
+
+void* __OSLockSramEx(void)
+{
+    return LockSram(20);
+}
+
+int UnlockSram(int commit, u32 offset)
+{
+    u16* p;
+    if (commit) {
+        if (offset == 0) {
+            OSSram* sram = (OSSram*)Scb.sram;
+            if (2 < (u32)(sram->flags & 3)) {
+                sram->flags &= ~3;
+            }
+            sram->checkSum = sram->checkSum2 = 0;
+            for (p = (u16*)&sram->counterBias; p < (u16*)(Scb.sram + 20); p++) {
+                sram->checkSum += *p;
+                sram->checkSum2 += ~*p;
+            }
+        }
+        if (offset < Scb.offset) {
+            Scb.offset = offset;
+        }
+        Scb.sync = WriteSram(Scb.sram + Scb.offset, Scb.offset, 64 - Scb.offset);
+        if (Scb.sync) {
+            Scb.offset = 64;
+        }
+    }
+    Scb.locked = 0;
+    OSRestoreInterrupts(Scb.enabled);
+    return Scb.sync;
+}
+
 #pragma peephole on
 u32 __OSSyncSram(void)
 {
-    return *(u32*)(Scb + 0x4C);
+    return Scb.sync;
 }
 
 #pragma peephole on
@@ -308,6 +457,89 @@ void __OSUnlockSram(int commit)
 void __OSUnlockSramEx(int commit)
 {
     UnlockSram(commit, 0x14);
+}
+
+int fn_803D946C(void* buffer, s32 length, s32 offset)
+{
+    u32 cmd;
+    int err;
+    DCInvalidateRange(buffer, (u32)length);
+    if (EXILock(0, 1, 0) == 0) {
+        return 0;
+    }
+    if (EXISelect(0, 1, 3) == 0) {
+        EXIUnlock(0);
+        return 0;
+    }
+    cmd = (u32)(offset << 6);
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIDma(0, buffer, length, 0, 0);
+    err |= !EXISync(0);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+u32 OSGetSoundMode(void)
+{
+    OSSram* sram;
+    u32 mode;
+    sram = (OSSram*)__OSLockSram();
+    mode = (sram->flags & 4) ? 1 : 0;
+    __OSUnlockSram(0);
+    return mode;
+}
+
+void OSSetSoundMode(u32 mode)
+{
+    OSSram* sram;
+    mode <<= 2;
+    mode &= 4;
+    sram = (OSSram*)__OSLockSram();
+    if (mode == (sram->flags & 4)) {
+        __OSUnlockSram(0);
+    } else {
+        sram->flags &= ~4;
+        sram->flags |= mode;
+        __OSUnlockSram(1);
+    }
+}
+
+u32 OSGetProgressiveMode(void)
+{
+    OSSram* sram;
+    u32 mode;
+    sram = (OSSram*)__OSLockSram();
+    mode = (sram->flags >> 7) & 1;
+    __OSUnlockSram(0);
+    return mode;
+}
+
+void OSSetProgressiveMode(u32 mode)
+{
+    OSSram* sram;
+    mode <<= 7;
+    mode &= 0x80;
+    sram = (OSSram*)__OSLockSram();
+    if (mode == (sram->flags & 0x80)) {
+        __OSUnlockSram(0);
+        return;
+    }
+    sram->flags &= ~0x80;
+    sram->flags |= mode;
+    __OSUnlockSram(1);
+}
+
+u16 OSGetWirelessID(s32 channel)
+{
+    OSSramEx* sram;
+    u16 id;
+    sram = (OSSramEx*)__OSLockSramEx();
+    id = sram->wirelessPadID[channel];
+    __OSUnlockSramEx(0);
+    return id;
 }
 
 #pragma peephole on
@@ -378,7 +610,7 @@ extern OSContext* __OSFPUContext_;
 extern int lbl_805DDEB4;
 extern void* lbl_805DDEB8;
 extern u32 lbl_805DDEBC;
-extern u32 RunQueueBits;
+extern volatile u32 RunQueueBits;
 typedef struct RunQ {
     OSThread* head;
     OSThread* tail;
@@ -477,8 +709,9 @@ void OSWakeupThread(OSThreadQueue* queue)
     OSThread* thread;
     OSThread* next;
     OSThread* prev;
-    RunQ* rq = RunQueue;
+    RunQ* rq;
     enabled = OSDisableInterrupts();
+    rq = RunQueue;
     while (queue->head) {
         thread = queue->head;
         next = thread->link.next;
@@ -1019,6 +1252,7 @@ static asm void PPCMtmsr(register u32 val)
 }
 
 #pragma peephole off
+#pragma dont_inline on
 void OSClearContext(OSContext* context)
 {
     context->mode = 0;
@@ -1027,6 +1261,7 @@ void OSClearContext(OSContext* context)
         *(OSContext**)0x800000D8 = 0;
     }
 }
+#pragma dont_inline reset
 
 #if 1
 #pragma peephole off
@@ -1059,15 +1294,31 @@ void OSSetCurrentContext(OSContext* context)
 #endif
 
 #if 1
-#pragma peephole off
+#pragma peephole on
 void __OSModuleInit(void)
 {
-    u32* base = (u32*)0x80003000;
-    base[0xCC / 4] = 0;
-    base[0xC8 / 4] = 0;
-    base[0xD0 / 4] = 0;
+    *(u32*)0x800030CC = 0;
+    *(u32*)0x800030C8 = 0;
+    *(u32*)0x800030D0 = 0;
 }
 #endif
+
+extern int __OSCheckMutex(OSMutex* mutex);
+
+#pragma peephole on
+int __OSCheckMutexes(OSThread* thread)
+{
+    OSMutex* mutex;
+    for (mutex = thread->queueMutex.head; mutex; mutex = mutex->link.next) {
+        if (mutex->thread != thread) {
+            return 0;
+        }
+        if (!__OSCheckMutex(mutex)) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 #pragma peephole on
 int __OSCheckDeadLock(OSThread* thread)
@@ -1083,6 +1334,7 @@ int __OSCheckDeadLock(OSThread* thread)
 }
 
 #pragma peephole on
+#pragma dont_inline on
 s32 __OSGetEffectivePriority(OSThread* thread)
 {
     s32 priority = thread->base;
@@ -1095,9 +1347,10 @@ s32 __OSGetEffectivePriority(OSThread* thread)
     }
     return priority;
 }
+#pragma dont_inline reset
 
 #if 1
-#pragma peephole off
+#pragma peephole on
 int OSOnReset(int final)
 {
     if (final) {
@@ -1129,15 +1382,89 @@ u16 OSGetFontEncode(void)
 }
 #endif
 
+extern void* memset(void* dst, int val, u32 n);
+extern void* memcpy(void* dst, const void* src, u32 n);
+extern void DCFlushRangeNoSync(void* addr, u32 nBytes);
+extern void ICInvalidateRange(void* addr, u32 nBytes);
+extern void __OSSystemCallVectorStart(void);
+extern void ExternalInterruptHandler(u8 exception, OSContext* context);
+extern void OSSwitchFPUContext(u8 exception, OSContext* context);
+
+#pragma peephole off
+void __OSContextInit(void)
+{
+    __OSSetExceptionHandler(7, OSSwitchFPUContext);
+    *(OSContext**)0x800000D8 = 0;
+    DBPrintf("FPU-unavailable handler installed\n");
+}
+
+#pragma peephole off
+void __OSInitSystemCall(void)
+{
+    void* addr = (void*)0x80000C00;
+    memcpy(addr, __OSSystemCallVectorStart, (u32)__OSSystemCallVectorEnd - (u32)__OSSystemCallVectorStart);
+    DCFlushRangeNoSync(addr, 256);
+    asm { sync }
+    ICInvalidateRange(addr, 256);
+}
+
+#pragma peephole off
+void __OSInterruptInit(void)
+{
+    InterruptHandlerTable = (OSInterruptHandler*)0x80003040;
+    memset(InterruptHandlerTable, 0, 128);
+    *(vu32*)0x800000C4 = 0;
+    *(vu32*)0x800000C8 = 0;
+    ((vu32*)0xCC003000)[1] = 0xF0;
+    __OSMaskInterrupts(0xFFFFFFE0);
+    __OSSetExceptionHandler(4, ExternalInterruptHandler);
+}
+
+#pragma peephole on
+#pragma dont_inline on
+void fn_803D3148(OSAlarm* alarm, s64 start, s64 period, OSAlarmHandler handler)
+{
+    int enabled = OSDisableInterrupts();
+    alarm->period = period;
+    alarm->start = __OSTimeToSystemTime(start);
+    InsertAlarm(alarm, 0, handler);
+    OSRestoreInterrupts(enabled);
+}
+#pragma dont_inline reset
+
+#pragma peephole on
+#pragma dont_inline on
+void UnsetRun(OSThread* thread)
+{
+    OSThreadQueue* queue = thread->queue;
+    OSThread* next = thread->link.next;
+    OSThread* prev = thread->link.prev;
+    if (next == 0) {
+        queue->tail = prev;
+    } else {
+        next->link.prev = prev;
+    }
+    if (prev == 0) {
+        queue->head = next;
+    } else {
+        prev->link.next = next;
+    }
+    if (queue->head == 0) {
+        RunQueueBits &= ~(1u << (31 - thread->priority));
+    }
+    thread->queue = 0;
+}
+#pragma dont_inline reset
+
 #if 1
 #pragma peephole on
 void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
 {
-    u32 arraySize;
+    u32 totalSize;
     int i;
     lbl_805DDEB0 = arenaStart;
     lbl_805DDEB4 = maxHeaps;
-    arraySize = maxHeaps * sizeof(HeapDesc);
+    totalSize = maxHeaps * sizeof(HeapDesc);
     for (i = 0; i < lbl_805DDEB4; i++) {
         HeapDesc* hd = &lbl_805DDEB0[i];
         hd->size = -1;
@@ -1145,7 +1472,7 @@ void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
     }
     lbl_805DDEBC = (u32)arenaEnd & ~31;
     lbl_805DC978 = -1;
-    arenaStart = (void*)((u32)lbl_805DDEB0 + arraySize);
+    arenaStart = (void*)((u32)lbl_805DDEB0 + totalSize);
     arenaStart = (void*)(((u32)arenaStart + 31) & ~31);
     lbl_805DDEB8 = arenaStart;
     return arenaStart;
@@ -1175,6 +1502,7 @@ int OSCreateHeap(void* start, void* end)
 }
 
 #pragma peephole on
+#pragma dont_inline on
 void __OSUnlockAllMutex(OSThread* thread)
 {
     OSMutex* mutex;
@@ -1195,7 +1523,268 @@ void __OSUnlockAllMutex(OSThread* thread)
     }
 }
 
-extern OSThread* SetEffectivePriority(OSThread* thread, s32 priority);
+#pragma dont_inline reset
+
+#define AddTail(queue, thread, link) \
+    do { \
+        OSThread* prev = (queue)->tail; \
+        if (prev == 0) { \
+            (queue)->head = thread; \
+        } else { \
+            prev->link.next = thread; \
+        } \
+        thread->link.prev = prev; \
+        thread->link.next = 0; \
+        (queue)->tail = thread; \
+    } while (0)
+
+#define RemoveItem(queue, thread, link) \
+    do { \
+        OSThread* next = thread->link.next; \
+        OSThread* prev = thread->link.prev; \
+        if (next == 0) { \
+            (queue)->tail = prev; \
+        } else { \
+            next->link.prev = prev; \
+        } \
+        if (prev == 0) { \
+            (queue)->head = next; \
+        } else { \
+            prev->link.next = next; \
+        } \
+    } while (0)
+
+#define AddPrio(queue, thread, link) \
+    do { \
+        OSThread* next; \
+        OSThread* prev; \
+        for (next = (queue)->head; next && next->priority <= thread->priority; next = next->link.next) { \
+        } \
+        if (next == 0) { \
+            AddTail(queue, thread, link); \
+        } else { \
+            thread->link.next = next; \
+            prev = next->link.prev; \
+            next->link.prev = thread; \
+            thread->link.prev = prev; \
+            if (prev == 0) { \
+                (queue)->head = thread; \
+            } else { \
+                prev->link.next = thread; \
+            } \
+        } \
+    } while (0)
+
+#define SetRun(thread) \
+    do { \
+        thread->queue = (OSThreadQueue*)&RunQueue[thread->priority]; \
+        AddTail(thread->queue, thread, link); \
+        RunQueueBits |= 1u << (31 - thread->priority); \
+        RunQueueHint = 1; \
+    } while (0)
+
+#pragma peephole on
+OSThread* SetEffectivePriority(OSThread* thread, s32 priority)
+{
+    switch (thread->state) {
+    case 1:
+        UnsetRun(thread);
+        thread->priority = priority;
+        SetRun(thread);
+        break;
+    case 4:
+        RemoveItem(thread->queue, thread, link);
+        thread->priority = priority;
+        AddPrio(thread->queue, thread, link);
+        if (thread->mutex) {
+            return thread->mutex->thread;
+        }
+        break;
+    case 2:
+        RunQueueHint = 1;
+        thread->priority = priority;
+        break;
+    }
+    return 0;
+}
+
+static inline s32 EffPrio(OSThread* thread)
+{
+    s32 priority = thread->base;
+    OSMutex* mutex;
+    for (mutex = thread->queueMutex.head; mutex; mutex = mutex->link.next) {
+        OSThread* blocked = mutex->queue.head;
+        if (blocked && blocked->priority < priority) {
+            priority = blocked->priority;
+        }
+    }
+    return priority;
+}
+
+#pragma peephole on
+s32 OSResumeThread(OSThread* thread)
+{
+    int enabled = OSDisableInterrupts();
+    s32 suspendCount = thread->suspend--;
+    if (thread->suspend < 0) {
+        thread->suspend = 0;
+    } else if (thread->suspend == 0) {
+        switch (thread->state) {
+        case 1:
+            thread->priority = EffPrio(thread);
+            SetRun(thread);
+            break;
+        case 4:
+            RemoveItem(thread->queue, thread, link);
+            thread->priority = EffPrio(thread);
+            AddPrio(thread->queue, thread, link);
+            if (thread->mutex) {
+                OSThread* owner = thread->mutex->thread;
+                do {
+                    s32 priority;
+                    if (owner->suspend > 0) {
+                        break;
+                    }
+                    priority = __OSGetEffectivePriority(owner);
+                    if (owner->priority == priority) {
+                        break;
+                    }
+                    owner = SetEffectivePriority(owner, priority);
+                } while (owner);
+            }
+            break;
+        }
+        __OSReschedule();
+    }
+    OSRestoreInterrupts(enabled);
+    return suspendCount;
+}
+
+#define DequeueActive(thread) \
+    do { \
+        OSThread* next = thread->linkActive.next; \
+        OSThread* prev = thread->linkActive.prev; \
+        if (next == 0) { \
+            *(OSThread**)0x800000E0 = prev; \
+        } else { \
+            next->linkActive.prev = prev; \
+        } \
+        if (prev == 0) { \
+            *(OSThread**)0x800000DC = next; \
+        } else { \
+            prev->linkActive.next = next; \
+        } \
+    } while (0)
+
+#pragma peephole on
+void OSExitThread(void* val)
+{
+    OSThread* currentThread;
+    int enabled;
+    enabled = OSDisableInterrupts();
+    currentThread = *(OSThread**)0x800000E4;
+    OSClearContext(&currentThread->context);
+    if (currentThread->attr & 1) {
+        DequeueActive(currentThread);
+        currentThread->state = 0;
+    } else {
+        currentThread->state = 8;
+    }
+    currentThread->val = val;
+    __OSUnlockAllMutex(currentThread);
+    OSWakeupThread(&currentThread->queueJoin);
+    RunQueueHint = 1;
+    __OSReschedule();
+    OSRestoreInterrupts(enabled);
+}
+
+#pragma peephole on
+void OSCancelThread(OSThread* thread)
+{
+    int enabled = OSDisableInterrupts();
+    switch (thread->state) {
+    case 1:
+        if (!(0 < thread->suspend)) {
+            UnsetRun(thread);
+        }
+        break;
+    case 2:
+        RunQueueHint = 1;
+        break;
+    case 4:
+        RemoveItem(thread->queue, thread, link);
+        thread->queue = 0;
+        if (!(0 < thread->suspend) && thread->mutex) {
+            OSThread* owner = thread->mutex->thread;
+            do {
+                s32 priority;
+                if (owner->suspend > 0) {
+                    break;
+                }
+                priority = __OSGetEffectivePriority(owner);
+                if (owner->priority == priority) {
+                    break;
+                }
+                owner = SetEffectivePriority(owner, priority);
+            } while (owner);
+        }
+        break;
+    default:
+        OSRestoreInterrupts(enabled);
+        return;
+    }
+    OSClearContext(&thread->context);
+    if (thread->attr & 1) {
+        DequeueActive(thread);
+        thread->state = 0;
+    } else {
+        thread->state = 8;
+    }
+    __OSUnlockAllMutex(thread);
+    OSWakeupThread(&thread->queueJoin);
+    __OSReschedule();
+    OSRestoreInterrupts(enabled);
+}
+
+#pragma peephole on
+s32 OSSuspendThread(OSThread* thread)
+{
+    int enabled = OSDisableInterrupts();
+    s32 suspendCount = thread->suspend++;
+    if (suspendCount == 0) {
+        switch (thread->state) {
+        case 2:
+            RunQueueHint = 1;
+            thread->state = 1;
+            break;
+        case 1:
+            UnsetRun(thread);
+            break;
+        case 4:
+            RemoveItem(thread->queue, thread, link);
+            thread->priority = 32;
+            AddTail(thread->queue, thread, link);
+            if (thread->mutex) {
+                OSThread* owner = thread->mutex->thread;
+                do {
+                    s32 priority;
+                    if (owner->suspend > 0) {
+                        break;
+                    }
+                    priority = __OSGetEffectivePriority(owner);
+                    if (owner->priority == priority) {
+                        break;
+                    }
+                    owner = SetEffectivePriority(owner, priority);
+                } while (owner);
+            }
+            break;
+        }
+        __OSReschedule();
+    }
+    OSRestoreInterrupts(enabled);
+    return suspendCount;
+}
 extern void Reset(u32 resetCode);
 volatile u16 __VIRegs_os[] : 0xcc002000;
 volatile u32 __PIRegs_os[] : 0xcc003000;
