@@ -57,12 +57,14 @@ void fn_8010F6EC(void)
 void grSetupCityEventData(void* self)
 {
     void* data;
+    void* obj;
     grLoadCityEventArchive(&data);
     W(self, 0x30) = W(data, 0);
-    W(P(P(self, 0x40), 0), 0x7c) = W(P(P(data, 4), 0), 0);
-    W(P(P(self, 0x40), 0), 0x80) = W(P(P(data, 4), 0), 4);
-    W(P(self, 0x40), 8) = W(P(data, 4), 8);
-    W(P(self, 0x40), 0xc) = W(P(data, 4), 0xc);
+    obj = P(self, 0x40);
+    W(P(obj, 0), 0x7c) = W(P(P(data, 4), 0), 0);
+    W(P(obj, 0), 0x80) = W(P(P(data, 4), 0), 4);
+    W(obj, 8) = W(P(data, 4), 8);
+    W(obj, 0xc) = W(P(data, 4), 0xc);
 }
 
 int fn_8010F720(int v)
@@ -72,7 +74,7 @@ int fn_8010F720(int v)
     void* e;
     int i;
     int n;
-    if (!(W(P(c, 0x14), 4) > 6)) {
+    if (!((int)W(P(c, 0x14), 4) > 6)) {
         __assert(lbl_804A77F4, 0x1c3, lbl_804A7800);
     }
     e = P(P(c, 0x14), 0);
