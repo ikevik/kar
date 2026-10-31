@@ -573,3 +573,77 @@ double fn_803BB750(double x, double y)
     }
 }
 #pragma fp_contract off
+
+extern const double lbl_805E5748;
+
+double fn_803BD238(double x)
+{
+    double y[2];
+    int n, ix;
+
+    ix = *(int*)&x;
+    ix &= 0x7fffffff;
+    if (ix <= 0x3fe921fb) {
+        return fn_803BC698(0, x, lbl_805E5748);
+    } else if (ix >= 0x7ff00000) {
+        return x - x;
+    } else {
+        n = fn_803BB3B0(x, y);
+        switch (n & 3) {
+        case 0:
+            return fn_803BC698(1, y[0], y[1]);
+        case 1:
+            return fn_803BB750(y[0], y[1]);
+        case 2:
+            return -fn_803BC698(1, y[0], y[1]);
+        default:
+            return -fn_803BB750(y[0], y[1]);
+        }
+    }
+}
+
+double fn_803BD13C(double x, double* iptr)
+{
+    int i0, i1, j0;
+    unsigned int i;
+
+    i0 = *(int*)&x;
+    i1 = *((int*)&x + 1);
+    j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+    if (j0 < 20) {
+        if (j0 < 0) {
+            *(int*)iptr = i0 & 0x80000000;
+            *((int*)iptr + 1) = 0;
+            return x;
+        } else {
+            i = (0x000fffff) >> j0;
+            if (((i0 & i) | i1) == 0) {
+                *iptr = x;
+                *(int*)&x = i0 & 0x80000000;
+                *((int*)&x + 1) = 0;
+                return x;
+            } else {
+                *(int*)iptr = i0 & ~i;
+                *((int*)iptr + 1) = 0;
+                return x - *iptr;
+            }
+        }
+    } else if (j0 > 51) {
+        *iptr = x;
+        *(int*)&x = i0 & 0x80000000;
+        *((int*)&x + 1) = 0;
+        return x;
+    } else {
+        i = ((unsigned int)(0xffffffff)) >> (j0 - 20);
+        if ((i1 & i) == 0) {
+            *iptr = x;
+            *(int*)&x = i0 & 0x80000000;
+            *((int*)&x + 1) = 0;
+            return x;
+        } else {
+            *(int*)iptr = i0;
+            *((int*)iptr + 1) = i1 & ~i;
+            return x - *iptr;
+        }
+    }
+}
