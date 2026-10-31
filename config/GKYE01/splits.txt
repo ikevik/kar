@@ -357,14 +357,14 @@ dolphin/dolphin_sdk_dsp.c:
 	.text       start:0x803C3538 end:0x803C405C
 	.data       start:0x804F9308 end:0x804F94C8
 	.sdata      start:0x805DC8C8 end:0x805DC8D0
-	.sbss       start:0x805DDD20 end:0x805DDD44
+	.sbss       start:0x805DDD20 end:0x805DDD40
 
 dolphin/dolphin_sdk_dvd.c:
 	.text       start:0x803C405C end:0x803C856C
 	.data       start:0x804F94C8 end:0x804F98AC
 	.bss        start:0x8056CC40 end:0x8056D2C0
 	.sdata      start:0x805DC8D0 end:0x805DC908
-	.sbss       start:0x805DDD44 end:0x805DDE08
+	.sbss       start:0x805DDD40 end:0x805DDE08
 
 dolphin/dolphin_sdk_gx.c:
 	.text       start:0x803C856C end:0x803D13FC
