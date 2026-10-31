@@ -449,10 +449,10 @@ config.libs = [
         "game",
         [
             Object(NonMatching, "text_804452A0.c"),
-            Object(NonMatching, "IPSocket.c", mw_version="GC/1.2.5"),
-            Object(NonMatching, "text_8047DB6C.c", mw_version="GC/1.2.5"),
-            Object(NonMatching, "IPIgmp.c", mw_version="GC/1.2.5"),
-            Object(NonMatching, "text_80482598.c", mw_version="GC/1.2.5"),
+            Object(NonMatching, "IPSocket.c", mw_version="GC/1.3.2"),
+            Object(NonMatching, "text_8047DB6C.c", mw_version="GC/1.3.2"),
+            Object(NonMatching, "IPIgmp.c", mw_version="GC/1.3.2"),
+            Object(NonMatching, "text_80482598.c", mw_version="GC/1.3.2"),
         ],
     ),
     Lib(
