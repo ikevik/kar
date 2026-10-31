@@ -6,7 +6,7 @@ typedef struct GXData {
     u16 vNum;
     u16 bpSentNot;
     u16 vLim;
-    u8 pad06[2];
+    u16 vSize;
     u32 cpEnable;
     u32 cpStatus;
     u32 cpClr;
@@ -305,8 +305,9 @@ void fn_803CCF50(void) {
 }
 
 
-extern u32 lbl_805DDE50;
-extern u32 lbl_805DDE54;
+typedef void (*GXCb)(void);
+extern GXCb lbl_805DDE50;
+extern GXCb lbl_805DDE54;
 
 void fn_803CF8CC(u8 a, u8 b, u8 c) {
     u32 reg = gx->zmode;
@@ -384,16 +385,16 @@ void fn_803CEC24(u32 idx, u32 a, u32 b, u32 c, u32 d) {
     gx->bpSentNot = 0;
 }
 
-u32 fn_803CC000(u32 v) {
-    u32 old = lbl_805DDE50;
+GXCb fn_803CC000(GXCb v) {
+    GXCb old = lbl_805DDE50;
     BOOL en = OSDisableInterrupts();
     lbl_805DDE50 = v;
     OSRestoreInterrupts(en);
     return old;
 }
 
-u32 fn_803CC0CC(u32 v) {
-    u32 old = lbl_805DDE54;
+GXCb fn_803CC0CC(GXCb v) {
+    GXCb old = lbl_805DDE54;
     BOOL en = OSDisableInterrupts();
     lbl_805DDE54 = v;
     OSRestoreInterrupts(en);
@@ -463,6 +464,7 @@ void __GXWriteFifoIntReset(u8 a, u8 b) {
 extern void fn_803CD7D4(void* obj, u32 b, u32 c, u32 d, u32 e, u32 f, u32 g, u32 h);
 extern void fn_803CE568(u32 a, u32 b, u32 c, u32 d, u32 e, u32 f, u32 g, u32 h, u32 i, u32 j);
 extern void GXCPInterruptHandler(void);
+extern void OSWakeupThread(void* queue);
 extern void* OSGetCurrentThread(void);
 extern void OSSleepThread(void* queue);
 extern void* lbl_805DDE38;
@@ -852,4 +854,66 @@ void fn_803CFAC0(u8 a, u8 b) {
     GXWGFifo_u8 = 0x61;
     GXWGFifo_u32 = a | 0x68000000;
     __GXFlushTextureState();
+}
+
+void fn_803CC110(s16 interrupt, OSContext* ctx) {
+    OSContext tmp;
+    __peReg[5] = (__peReg[5] & ~8) | 8;
+    lbl_805DDE58 = 1;
+    if (lbl_805DDE54) {
+        OSClearContext(&tmp);
+        OSSetCurrentContext(&tmp);
+        lbl_805DDE54();
+        OSClearContext(&tmp);
+        OSSetCurrentContext(ctx);
+    }
+    OSWakeupThread(&lbl_805DDE5C);
+}
+
+void fn_803CC044(s16 interrupt, OSContext* ctx) {
+    OSContext tmp;
+    u16 token = __peReg[7];
+    if (lbl_805DDE50) {
+        OSClearContext(&tmp);
+        OSSetCurrentContext(&tmp);
+        ((void (*)(u16))lbl_805DDE50)(token);
+        OSClearContext(&tmp);
+        OSSetCurrentContext(ctx);
+    }
+    __peReg[5] = (__peReg[5] & ~4) | 4;
+}
+
+void fn_803CC3A4(void) {
+    u32 i;
+    u32 n = gx->vLim * gx->vSize;
+    GXWGFifo_u8 = 0x98;
+    GXWGFifo.u16 = gx->vLim;
+    for (i = 0; i < n; i += 4) {
+        GXWGFifo_u32 = 0;
+    }
+    gx->bpSentNot = 1;
+}
+
+void GXSetArray(s32 attr, u32 base, u8 stride) {
+    s32 idx;
+    s32 a;
+    if (attr == 0x19) {
+        attr = 10;
+    }
+    a = attr - 9;
+    base &= 0x3FFFFFFF;
+    GXWGFifo_u8 = 8;
+    GXWGFifo_u8 = a | 0xA0;
+    GXWGFifo_u32 = base;
+    idx = a - 12;
+    if (idx >= 0 && idx < 4) {
+        gx->indexBase[idx] = base;
+    }
+    GXWGFifo_u8 = 8;
+    GXWGFifo_u8 = a | 0xB0;
+    GXWGFifo_u32 = stride;
+    idx = a - 12;
+    if (idx >= 0 && idx < 4) {
+        gx->indexStride[idx] = stride;
+    }
 }
