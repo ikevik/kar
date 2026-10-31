@@ -326,3 +326,41 @@ void fn_8040A688(Mtx vmtx, HSD_JObj* jobj, Mtx mtx)
         }
     }
 }
+
+extern const float lbl_805E5B10;
+extern u32 lbl_805DE254;
+
+HSD_JObj* fn_8040C774(void)
+{
+    HSD_JObj* jobj;
+    jobj = hsdNew(lbl_805DE250 != NULL ? (void*) lbl_805DE250 : (void*) &hsdJObj);
+    if (jobj == NULL) {
+        __assert(__FILE__, 0x7f7, "jobj");
+    }
+    return jobj;
+}
+
+int fn_8040DC70(HSD_JObj* jobj)
+{
+    int ret = hsdJObj.parent.parent.head.parent->init((HSD_Class*) jobj);
+    if (ret >= 0) {
+        jobj->flags = MTX_DIRTY;
+        jobj->scale.x = lbl_805E5B10;
+        jobj->scale.y = lbl_805E5B10;
+        jobj->scale.z = lbl_805E5B10;
+        ret = 0;
+    }
+    return ret;
+}
+
+void fn_8040E240(HSD_ClassInfo* info)
+{
+    if (info == (HSD_ClassInfo*) lbl_805DE250) {
+        lbl_805DE250 = NULL;
+    }
+    if (info == (HSD_ClassInfo*) &hsdJObj) {
+        lbl_805DE254 = 0;
+        lbl_805DE264 = 0;
+    }
+    hsdJObj.parent.parent.head.parent->amnesia(info);
+}
