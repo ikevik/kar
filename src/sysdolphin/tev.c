@@ -46,6 +46,8 @@ extern void fn_803CFA4C(u8 enable, u8 alpha);
 extern void fn_803CF900(u8 enable);
 extern void fn_803CFA20(u8 enable);
 
+void HSD_SetMaterialColor(GXColor* ambient, GXColor* diffuse, GXColor* specular, f32 alpha);
+#if 0 /* not yet matching */
 void HSD_SetMaterialColor(GXColor* ambient, GXColor* diffuse, GXColor* specular, f32 alpha)
 {
     f32 a;
@@ -60,6 +62,7 @@ void HSD_SetMaterialColor(GXColor* ambient, GXColor* diffuse, GXColor* specular,
     }
     lbl_80589260.alpha = (u8) (255.0f * a);
 }
+#endif
 
 void HSD_SetMaterialShininess(f32 shininess)
 {
@@ -211,7 +214,8 @@ void _HSD_StateInvalidateRenderMode(void)
 
 #include <sysdolphin/objalloc.h>
 
-extern HSD_ObjAllocData lbl_80589278[];
+typedef struct { HSD_ObjAllocData a, b, c; } HSD_RenderAllocs;
+extern HSD_RenderAllocs lbl_80589278;
 extern HSD_ObjAllocData lbl_805892A4;
 extern HSD_ObjAllocData lbl_805892D0;
 extern s32 lbl_805DE1CC;
@@ -221,7 +225,7 @@ extern s32 lbl_80502978[];
 extern s32 lbl_805028E8[];
 
 typedef struct HSD_StateInvalidateEntry {
-    u32 flag;
+    s32 flag;
     void (*fn)(void);
 } HSD_StateInvalidateEntry;
 extern HSD_StateInvalidateEntry lbl_80502420[];
@@ -231,26 +235,32 @@ extern void fn_803CD4A0(u8);
 extern void GXSetNumTexGens(u8);
 extern void fn_803CF30C(u8);
 
+void HSD_StateInvalidate(u32 flags);
+#if 0 /* not yet matching */
 void HSD_StateInvalidate(u32 flags)
 {
     HSD_StateInvalidateEntry* e = lbl_80502420;
-    for (; e->flag != 0; e++) {
+    while (e->flag != 0) {
         if (flags & e->flag)
             e->fn();
+        e++;
     }
 }
+#endif
 
+void HSD_RenderInitAllocData(void);
+#if 0 /* not yet matching */
 void HSD_RenderInitAllocData(void)
 {
-    HSD_ObjAllocData* d = lbl_80589278;
-    HSD_ObjAllocInit(&d[0], 0x1C, 4);
-    HSD_ObjAllocInit(&d[1], 0x14, 4);
-    HSD_ObjAllocInit(&d[2], 0x30, 4);
+    HSD_ObjAllocInit(&lbl_80589278.a, 0x1C, 4);
+    HSD_ObjAllocInit(&lbl_80589278.b, 0x14, 4);
+    HSD_ObjAllocInit(&lbl_80589278.c, 0x30, 4);
 }
+#endif
 
 HSD_ObjAllocData* HSD_RenderGetAllocData(void)
 {
-    return lbl_80589278;
+    return &lbl_80589278.a;
 }
 
 HSD_ObjAllocData* HSD_TevRegGetAllocData(void)
@@ -307,5 +317,96 @@ s32 fn_803F903C(void)
 void fn_803F905C(void)
 {
     fn_803CF30C(lbl_805DE1E0);
+    lbl_805DE1E0 = 0;
+}
+
+#include <functions.h>
+
+extern char lbl_805DCA90[6];
+extern char lbl_805DCA98[8];
+
+typedef struct HSD_TevLoopEnt {
+    u32 w0;
+    u32 w4;
+    s32 w8;
+} HSD_TevLoopEnt;
+typedef struct HSD_TevPair {
+    u32 a;
+    u32 b;
+} HSD_TevPair;
+extern HSD_TevLoopEnt lbl_80502460[4];
+extern u32 lbl_80502968[4];
+extern void fn_803CEDAC(u32, HSD_TevPair*);
+
+void fn_803F9890(void)
+{
+    lbl_80502460[0].w8 = 0;
+    lbl_80502460[1].w8 = 0;
+    lbl_80502460[2].w8 = 0;
+    lbl_80502460[3].w8 = 0;
+}
+
+void fn_803F98B0(void)
+{
+    lbl_805DE1C8 = 0;
+}
+
+void fn_803F9554(void);
+#if 0 /* not yet matching */
+void fn_803F9554(void)
+{
+    u32 i;
+    u32 off = 0;
+    HSD_TevLoopEnt* e = lbl_80502460;
+    for (i = 0; i < 4; i++, off += 4, e++) {
+        if (e->w8 != 0) {
+            HSD_TevPair p;
+            p.a = e->w0;
+            p.b = e->w4;
+            fn_803CEDAC(*(u32*) ((u8*) lbl_80502968 + off), &p);
+            e->w8 = 0;
+        }
+    }
+}
+#endif
+
+s32 fn_803F94A4(s32 x)
+{
+    switch (x) {
+    case 0:
+        return 1;
+    case 1:
+        return 2;
+    case 2:
+        return 1;
+    case 3:
+        return 2;
+    case 4:
+        return 1;
+    case 5:
+        return 2;
+    case 0xFF:
+        return 0;
+    }
+    __assert(lbl_805DCA90, 0x481, lbl_805DCA98);
+    return 0;
+}
+
+extern void fn_803F908C(void*);
+extern s32 lbl_80502928[];
+
+void HSD_SetupTevStageAll(void* list)
+{
+    s32 max = 0;
+    s32 n;
+    u32* p = list;
+    for (; p != NULL; p = (u32*) p[0]) {
+        n = lbl_80502928[p[2]];
+        if (n > max)
+            max = n;
+        fn_803F908C(p);
+    }
+    lbl_805DE1E0 = max;
+    fn_803CF30C(max);
     lbl_805DE1E0 = 0;
 }
