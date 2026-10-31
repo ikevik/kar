@@ -110,3 +110,41 @@ void func_80429774(HSD_GObj* gobj)
     gobj->prev_gx = NULL;
     gobj->next_gx = NULL;
 }
+
+void fn_80429830(s32 where, HSD_GObj* gobj, u8 gx_link, u8 priority, HSD_GObj* position)
+{
+    func_80429774(gobj);
+    gobj->gx_link = gx_link;
+    gobj->render_priority = priority;
+    switch (where) {
+    case 0:
+        gx_first_lower_prio(gobj);
+        break;
+    case 1:
+        gx_first_higher_prio(gobj);
+        break;
+    case 2:
+        gx_reorder(gobj, position);
+        break;
+    case 3:
+        gx_reorder(gobj, position->prev_gx);
+        break;
+    }
+}
+
+void fn_80429B24(HSD_GObj* gobj, u8 gx_link, u8 priority)
+{
+    if (!(gx_link <= HSD_GObjLibInitData.gx_link_max))
+        __assert(lbl_80504E10, 0x1F7, lbl_80504E20);
+    fn_80429830(0, gobj, gx_link, priority, NULL);
+}
+
+void fn_80429BAC(HSD_GObj* gobj, HSD_GObj* other)
+{
+    fn_80429830(2, gobj, other->gx_link, other->render_priority, other);
+}
+
+void fn_80429BE0(HSD_GObj* gobj, HSD_GObj* other)
+{
+    fn_80429830(3, gobj, other->gx_link, other->render_priority, other);
+}
