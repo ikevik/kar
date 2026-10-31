@@ -60,6 +60,25 @@ extern void TRKGetInput(void);
 extern s32 TRKTargetStopped(void);
 extern void TRKConstructEvent(TRKEvent*, u32);
 extern void TRKDestructEvent(TRKEvent*);
+typedef struct TRKReply {
+    u32 len;
+    u8 cmd;
+    u8 pad[3];
+    u8 err;
+    u8 rest[0x33];
+} TRKReply;
+
+extern void* memset(void*, s32, u32);
+extern char lbl_8048BC78[];
+extern char lbl_8048BE48[];
+extern void _SetUseSerialIO(u8);
+extern s32 fn_803C046C(void);
+extern s32 fn_803C2018(void);
+extern s32 fn_800051C0(void);
+extern s32 fn_803C089C(TRKBuffer*);
+extern s32 fn_803C0818(TRKBuffer*);
+extern s32 fn_803BFB08(TRKBuffer*, s32*, s32, s32, s32);
+extern s32 TRKGetFreeBuffer(s32*, TRKBuffer**);
 extern TRKState gTRKState;
 extern TRKCPUState gTRKCPUState;
 extern DBCommTable gDBCommTable;
@@ -744,4 +763,186 @@ TRKBuffer* TRKGetBuffer(s32 idx)
         buf = (TRKBuffer*)(lbl_80569E90 + idx * 0x890);
     }
     return buf;
+}
+
+s32 TRKInitializeSerialHandler(void)
+{
+    lbl_8056B840[0] = -1;
+    lbl_8056B840[2] = 0;
+    lbl_8056B840[3] = 0;
+    MWTRACE(1, lbl_8048BC78, 0x40);
+    MWTRACE(1, lbl_8048BC78 + 0x24, 0x40);
+    MWTRACE(1, lbl_8048BC78 + 0x48, 0x40);
+    MWTRACE(1, lbl_8048BC78 + 0x6c, 0x40);
+    MWTRACE(1, lbl_8048BC78 + 0x8c, 0x40);
+    MWTRACE(1, lbl_8048BC78 + 0xac, 0x40);
+    return 0;
+}
+
+s32 TRKDoSetOption(TRKBuffer* buf)
+{
+    TRKReply reply;
+    u8 type = *((u8*)buf + 0x18);
+    u8 value = *((u8*)buf + 0x1c);
+    if (type == 1) {
+        fn_803BE624(lbl_8048BE48);
+        if (value != 0) {
+            fn_803BE624(lbl_8048BE48 + 0x20);
+        } else {
+            fn_803BE624(lbl_8048BE48 + 0x28);
+        }
+        _SetUseSerialIO(value);
+    }
+    memset(&reply, 0, 0x40);
+    reply.cmd = 0x80;
+    reply.len = 0x40;
+    reply.err = 0;
+    fn_803C2388(&reply, 0x40);
+    return 0;
+}
+
+s32 TRKDoStop(void)
+{
+    TRKReply reply;
+    u8 err;
+    switch (fn_803C046C()) {
+    case 0:
+        err = 0;
+        break;
+    case 0x704:
+        err = 0x21;
+        break;
+    case 0x705:
+        err = 0x22;
+        break;
+    case 0x706:
+        err = 0x20;
+        break;
+    default:
+        err = 1;
+        break;
+    }
+    memset(&reply, 0, 0x40);
+    reply.cmd = 0x80;
+    reply.len = 0x40;
+    reply.err = err;
+    fn_803C2388(&reply, 0x40);
+    return 0;
+}
+
+s32 fn_803BF5A4(void)
+{
+    TRKReply reply;
+    memset(&reply, 0, 0x40);
+    reply.cmd = 0x80;
+    reply.len = 0x40;
+    reply.err = 0;
+    fn_803C2388(&reply, 0x40);
+    fn_803C2018();
+    return 0;
+}
+
+s32 fn_803BF5FC(void)
+{
+    TRKReply reply;
+    memset(&reply, 0, 0x40);
+    reply.cmd = 0x80;
+    reply.len = 0x40;
+    reply.err = 0;
+    fn_803C2388(&reply, 0x40);
+    fn_800051C0();
+    return 0;
+}
+
+s32 fn_803BF654(void)
+{
+    TRKEvent event;
+    TRKReply reply;
+    lbl_8056B858[0] = 0;
+    memset(&reply, 0, 0x40);
+    reply.cmd = 0x80;
+    reply.len = 0x40;
+    reply.err = 0;
+    fn_803C2388(&reply, 0x40);
+    TRKConstructEvent(&event, 1);
+    TRKPostEvent(&event);
+    return 0;
+}
+
+s32 fn_803BF6CC(void)
+{
+    TRKReply reply;
+    lbl_8056B858[0] = 1;
+    memset(&reply, 0, 0x40);
+    reply.cmd = 0x80;
+    reply.len = 0x40;
+    reply.err = 0;
+    fn_803C2388(&reply, 0x40);
+    return 0;
+}
+
+s32 fn_803BFF40(s32 cmd)
+{
+    TRKBuffer* buf;
+    s32 bufIdx;
+    s32 outIdx;
+    s32 err;
+    err = TRKGetFreeBuffer(&bufIdx, &buf);
+    if (err == 0) {
+        if (err == 0) {
+            if (cmd == 0x90) {
+                fn_803C089C(buf);
+            } else {
+                fn_803C0818(buf);
+            }
+        }
+        err = fn_803BFB08(buf, &outIdx, 2, 3, 1);
+        if (err == 0) {
+            TRKReleaseBuffer(outIdx);
+        }
+        TRKReleaseBuffer(bufIdx);
+    }
+    return err;
+}
+
+asm void fn_803BFFD8(register u32 addr, register u32 len)
+{
+    nofralloc
+    lis r5, 0xffff
+    ori r5, r5, 0xfff1
+    and r5, r5, r3
+    subf r3, r5, r3
+    add r4, r4, r3
+L_loop:
+    dcbst r0, r5
+    dcbf r0, r5
+    sync
+    icbi r0, r5
+    addic r5, r5, 8
+    subic. r4, r4, 8
+    bge L_loop
+    isync
+    blr
+}
+
+asm void fn_803C00D8(void)
+{
+    nofralloc
+    mfmsr r8
+    li r10, 0
+L_top:
+    cmpw r10, r5
+    beq L_end
+    mtmsr r7
+    sync
+    lbzx r9, r10, r4
+    mtmsr r6
+    sync
+    stbx r9, r10, r3
+    addi r10, r10, 1
+    b L_top
+L_end:
+    mtmsr r8
+    sync
+    blr
 }
