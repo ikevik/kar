@@ -1,5 +1,7 @@
 #include "dolphin/sdk_common.h"
 
+#pragma dont_inline on
+
 typedef struct GXData {
     u16 vNum;
     u16 bpSentNot;
@@ -102,7 +104,7 @@ u32 fn_803CA01C(void) { return lbl_805DDE30; }
 
 u32 fn_803CA024(void) { return lbl_805DDE34; }
 
-u32 fn_803CDC44(u32* obj) { return obj[5]; }
+s32 fn_803CDC44(u32* obj) { return obj[5]; }
 
 extern void GXInitFifoPtrs(GXFifoObj* fifo, u32 rd, u32 wr);
 #pragma dont_inline on
@@ -748,3 +750,106 @@ void fn_803CF05C(u32 a, u8 b, u32 c, u32 d, u32 e) {
     gx->bpSentNot = 0;
 }
 #endif
+
+extern void fn_803CC214(void);
+extern void fn_803CC3A4(void);
+extern void fn_803CB3A8(u32 a, u32 i, u32* p1, u32* p2, u32* p3);
+
+void fn_803D0384(u32 a, u32 b) {
+    if (gx->dirtyState != 0) {
+        fn_803CC214();
+    }
+    if (*(u32*)gx == 0) {
+        fn_803CC3A4();
+    }
+    GXWGFifo_u8 = 0x40;
+    GXWGFifo_u32 = a;
+    GXWGFifo_u32 = b;
+}
+
+void fn_803CB628(u32 a, u32* out) {
+    s32 i;
+    for (i = 9; i <= 20; i++) {
+        out[0] = i;
+        fn_803CB3A8(a, i, &out[1], &out[2], &out[3]);
+        out += 4;
+    }
+    out[0] = 0xFF;
+}
+
+#if 0 /* NONMATCHING */
+void fn_803CED38(u32 idx, u8* c) {
+    u32 a = c[3];
+    u32 r = c[0];
+    u32 b = c[2];
+    u32 g = c[1];
+    u32 r1 = __rlwimi(a << 12, r, 0, 24, 31);
+    u32 r2 = __rlwimi(g << 12, b, 0, 24, 31);
+    u32 w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 12, 31);
+    u32 w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 12, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w1;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    gx->bpSentNot = 0;
+}
+#endif
+
+#if 0 /* NONMATCHING */
+void fn_803CEDAC(u32 idx, s16* c) {
+    u32 r1 = __rlwimi((c[3] & 0x7FF) << 12, c[0], 0, 21, 31);
+    u32 r2 = __rlwimi((c[1] & 0x7FF) << 12, c[2], 0, 21, 31);
+    u32 w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 9, 31);
+    u32 w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 9, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w1;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    gx->bpSentNot = 0;
+}
+#endif
+
+#if 0 /* NONMATCHING */
+void fn_803CEE20(u32 idx, u8* c) {
+    u32 r1 = __rlwimi(c[3] << 12, c[0], 0, 24, 31);
+    u32 r2 = __rlwimi(c[1] << 12, c[2], 0, 24, 31);
+    u32 w1, w2;
+    r1 = (r1 & ~0xF00000) | 0x800000;
+    w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 8, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w1;
+    r2 = (r2 & ~0xF00000) | 0x800000;
+    w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 8, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    gx->bpSentNot = 0;
+}
+#endif
+
+#if 0 /* NONMATCHING */
+void* __GXDefaultTexRegionCallback(void* obj, u32 map) {
+    s32 fmt = fn_803CDC44(obj);
+    if (fmt == 8 || fmt == 9 || fmt == 10) {
+        return gx->texRegionsCI[gx->nextTexRgnCI++ & 3];
+    }
+    return gx->texRegions[gx->nextTexRgn++ & 7];
+}
+#endif
+
+void fn_803CFAC0(u8 a, u8 b) {
+    gx->lpSize = (gx->lpSize & ~0x400000) | (b << 22);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->lpSize;
+    __GXFlushTextureState();
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = a | 0x68000000;
+    __GXFlushTextureState();
+}
