@@ -33,6 +33,7 @@ extern double fn_803BD468(double, double);
 extern void fn_8044A250(s32, f32, s32);
 extern const double lbl_805E6118;
 extern const f32 lbl_805E6120;
+extern const f32 lbl_805E6128, lbl_805E612C, lbl_805E6130;
 extern void fn_80449BA0(s32, u8, u16, s32, s32);
 extern void fn_80449DC0(s32, u8, s32);
 extern void fn_80449E98(s32, u8, s32);
@@ -514,6 +515,23 @@ s32 fn_8044353C(s32 id, s32 detune)
     return 1;
 }
 
+s32 fn_804436E0(s32 prio, s16 detune)
+{
+    s32 intr;
+    AXVoice* v;
+    if (prio >= 0 && prio <= 0x3f) {
+        intr = OSDisableInterrupts();
+        for (v = lbl_805DE480; v != NULL; v = v->next) {
+            if ((v->flags & SMSTATE_MASK) != 0 && v->prio == prio) {
+                fn_8044353C(v->id, detune);
+            }
+        }
+        OSRestoreInterrupts(intr);
+        return 1;
+    }
+    return 0;
+}
+
 s32 fn_80443C14(s32 prio, s32 sel, s32 c)
 {
     s32 intr;
@@ -638,4 +656,36 @@ s32 fn_80444868(s32 type, u8* p)
         break;
     }
     return 1;
+}
+
+#pragma fp_contract on
+s32 fn_804446F0(s32 type, u8* p)
+{
+    s32 size;
+    size = 0;
+    if (type < 0 || type > 4 || (type != 0 && p == NULL)) {
+        return 0;
+    }
+    switch (type) {
+    case 0:
+        break;
+    case 1:
+        size = (s32) (lbl_805E612C * *(f32*) (p + 0x1d8) + lbl_805E6128);
+        break;
+    case 2:
+        size = (s32) (lbl_805E612C * *(f32*) (p + 0x150) + lbl_805E6130);
+        break;
+    case 3:
+        size = 0x1680;
+        break;
+    case 4:
+        {
+            u32 a = *(u32*) (p + 0x3c);
+            u32 b = *(u32*) (p + 0x40);
+            u32 c = *(u32*) (p + 0x44);
+            size = ((a << 5) - 1) / 160 * 640 + ((b << 5) - 1) / 160 * 640 + ((c << 5) - 1) / 160 * 640;
+        }
+        break;
+    }
+    return size;
 }
