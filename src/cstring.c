@@ -9,6 +9,44 @@ typedef unsigned long size_t;
 extern void __close_all(void);
 extern void (*__stdio_exit)(void);
 
+int fn_803B4584(const char* s, size_t n)
+{
+    int c;
+    if (n == 0) {
+        return -1;
+    }
+    c = *(const unsigned char*)s;
+    if ((signed char)c == 0) {
+        return 0;
+    }
+    c = (signed char)c;
+    if ((c & 0x80) == 0) {
+        return 1;
+    }
+    if ((c & 0xe0) == 0xc0) {
+        if (n >= 2) {
+            if ((s[1] & 0x80) == 0x80) {
+                return 2;
+            }
+            return -1;
+        }
+        return -2;
+    }
+    if ((c & 0xf0) == 0xe0) {
+        if (n >= 3) {
+            if ((s[1] & 0x80) == 0x80 && (s[2] & 0x80) == 0x80) {
+                return 3;
+            }
+            return -1;
+        }
+        if ((n == 2 && (s[1] & 0x80) == 0x80) || n == 1) {
+            return -2;
+        }
+        return -1;
+    }
+    return -1;
+}
+
 int memcmp(const void* s1, const void* s2, size_t n)
 {
     const unsigned char* p1 = (const unsigned char*)s1 - 1;
