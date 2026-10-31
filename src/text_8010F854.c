@@ -1,6 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned long u32;
 typedef struct { float a, b; } F2;
+typedef struct { float x, y, z; } V3;
 
 #define P(p, o) (*(void**)((u8*)(p) + (o)))
 #define W(p, o) (*(u32*)((u8*)(p) + (o)))
@@ -253,27 +254,39 @@ void fn_8010FE9C(void* a)
 
 void fn_80110668(int i, float* out)
 {
+    u8* e;
+    int o;
     if (lbl_805DD730 == 0) return;
     if (lbl_805DD734 == 0) return;
-    *out = lbl_805DFB30 * ((F2*)P(lbl_805DD734, 4))[i].b;
+    o = i * 8;
+    e = P(lbl_805DD734, 4);
+    e += o;
+    *out = lbl_805DFB30 * *(float*)(e + 4);
 }
 
 void fn_801106A0(int i, float* x, float* y, float* z)
 {
     int o;
+    u32 b;
+    void* l;
     if (lbl_805DD730 == 0) return;
-    if (lbl_805DD734 == 0) return;
+    l = lbl_805DD734;
+    if (l == 0) return;
     o = i * 12;
-    *x = *(float*)((u8*)P(lbl_805DD734, 0xc) + o);
-    *y = *(float*)((u8*)P(lbl_805DD734, 0xc) + o + 4);
-    *z = *(float*)((u8*)P(lbl_805DD734, 0xc) + o + 8);
+    *x = *(float*)(W(l, 0xc) + o);
+    b = W(lbl_805DD734, 0xc);
+    b += o;
+    *y = *(float*)(b + 4);
+    b = W(lbl_805DD734, 0xc);
+    b += o;
+    *z = *(float*)(b + 8);
 }
 
 void fn_80110F38(void)
 {
     void* t = lbl_805DD730;
     if (t != 0) {
-        HSD_ObjFree(lbl_80557838);
+        HSD_ObjFree(lbl_80557838, t);
     }
     lbl_805DD730 = 0;
     lbl_805DD734 = 0;
@@ -481,8 +494,9 @@ void fn_801136A8(int p)
 {
     signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        if (b[p + 1] != -1) {
-            fn_8011C864(b[p + 1], p, 0);
+        signed char c = b[p + 1];
+        if (c != -1) {
+            fn_8011C864(c, p, 0);
         }
     }
 }
