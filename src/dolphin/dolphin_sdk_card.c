@@ -41,13 +41,18 @@ u16 __CARDGetFontEncode(void)
     return lbl_805DE048;
 }
 
-#if 0
+typedef struct CARDBlock {
+    u8 pad[0x10c];
+    void* diskID;
+} CARDBlock;
+
 void __CARDSetDiskID(void* diskID)
 {
-    *(void**)(lbl_8056E4E8 + 0x10c) = diskID ? diskID : lbl_8056E4E8 + 0x220;
-    *(void**)(lbl_8056E4E8 + 0x21c) = diskID ? diskID : lbl_8056E4E8 + 0x220;
+    u8* base = lbl_8056E4E8;
+    CARDBlock* block = (CARDBlock*)base;
+    block[0].diskID = diskID ? diskID : base + 0x220;
+    block[1].diskID = diskID ? diskID : base + 0x220;
 }
-#endif
 
 s32 __CARDPutControlBlock(u8* card, s32 result)
 {
@@ -61,13 +66,18 @@ s32 __CARDPutControlBlock(u8* card, s32 result)
     return result;
 }
 
+#pragma dont_inline reset
 s32 CARDGetResultCode(s32 chan)
 {
+    u8* card;
+
     if (chan < 0 || chan >= 2) {
         return -128;
     }
-    return *(s32*)(lbl_8056E4E8 + chan * 0x110 + 4);
+    card = lbl_8056E4E8 + chan * 0x110;
+    return *(s32*)(card + 4);
 }
+#pragma dont_inline on
 
 int fn_803E30BC(int x)
 {
@@ -148,3 +158,164 @@ s32 fn_803E72B8(void)
 {
     return 0;
 }
+
+extern s32 fn_803E55D8(s32 chan, s32* xfer, CARDCallback cb);
+
+s32 fn_803E7610(s32 a, s32 b, s32 c, s32 d)
+{
+    s32 result = fn_803E73F0(a, b, c, d, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E7A88(s32* fileInfo, s32 b, s32 c, s32 d)
+{
+    s32 result = fn_803E7940((s32)fileInfo, b, c, d, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(*fileInfo);
+}
+
+s32 fn_803E7E04(s32* fileInfo, s32 b, s32 c, s32 d)
+{
+    s32 result = fn_803E7CF0((s32)fileInfo, b, c, d, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(*fileInfo);
+}
+
+s32 fn_803E8000(s32 a, s32 b)
+{
+    s32 result = fn_803E7EF0(a, b, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E84E0(s32 a, s32 b, s32 c)
+{
+    s32 result = fn_803E836C(a, b, c, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E8724(s32 a, s32 b, s32 c)
+{
+    s32 result = fn_803E8528(a, b, c, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E5B68(s32 chan)
+{
+    s32 x;
+    s32 result = fn_803E55D8(chan, &x, __CARDSyncCallback);
+    if (result >= 0 && &x != 0) {
+        result = fn_803E3024(chan);
+    }
+    return result;
+}
+
+s32 fn_803E7264(s32* fileInfo)
+{
+    void* card;
+    s32 result = __CARDGetControlBlock(*fileInfo, &card);
+    if (result < 0) {
+        return result;
+    }
+    *fileInfo = -1;
+    return __CARDPutControlBlock(card, 0);
+}
+
+extern s32 fn_803E4E04(s32 chan);
+extern s32 fn_803E5088(s32 chan, s32 a);
+extern s32 fn_803E52C8(s32 chan, s32 a);
+extern int EXIProbe(s32 chan);
+
+s32 fn_803E554C(s32 chan)
+{
+    s32 result = fn_803E4E04(chan);
+    s32 sum;
+    s32 a;
+    s32 b;
+
+    if (result < 0) {
+        return result;
+    }
+    a = fn_803E5088(chan, 0);
+    b = fn_803E52C8(chan, 0);
+    sum = a + b;
+    switch (sum) {
+    case 0:
+        return 0;
+    case 1:
+        return -6;
+    default:
+        return -6;
+    }
+}
+
+int fn_803E6E6C(u8* a, char* b)
+{
+    char* p = (char*)(a + 8);
+    char c1;
+    char c2;
+    int i = 0x20;
+
+    while (--i >= 0) {
+        c1 = *p++;
+        c2 = *b++;
+        if (c1 != c2) {
+            return 0;
+        }
+        if (c2 == 0) {
+            return 1;
+        }
+    }
+    if (*b == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void __CARDUnlockedHandler(s32 chan, void* context)
+{
+    CARDCallback callback;
+    u8* card = lbl_8056E4E8 + chan * 0x110;
+
+    callback = *(CARDCallback*)(card + 0xdc);
+    if (callback) {
+        *(CARDCallback*)(card + 0xdc) = 0;
+        callback(chan, EXIProbe(chan) ? 1 : -3);
+    }
+}
+
+extern void OSSleepThread(void* queue);
+extern u32 OSGetTick(void);
+extern u32 lbl_805DC9F8;
+
+#pragma dont_inline reset
+s32 fn_803E3024(s32 chan)
+{
+    u8* card;
+    int enabled;
+    s32 result;
+
+    card = lbl_8056E4E8 + chan * 0x110;
+    enabled = OSDisableInterrupts();
+    while ((result = CARDGetResultCode(chan)) == -1) {
+        OSSleepThread(card + 0x8c);
+    }
+    OSRestoreInterrupts(enabled);
+    return result;
+}
+#pragma dont_inline on

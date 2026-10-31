@@ -330,3 +330,65 @@ void fn_803EEED0(u8* p, u32 v)
     F32(p, 0x1c) |= 0x10000;
     OSRestoreInterrupts(enabled);
 }
+
+extern s64 OSGetTime(void);
+extern void DSPAssertTask(void* task);
+extern void fn_803ED0E0(u32 a);
+extern void fn_803EFD34(u32 a);
+extern u8 lbl_80572580[];
+u32 lbl_805DE0DC;
+s64 lbl_805DE0E0;
+u8* lbl_805DE138;
+u32 lbl_805DE13C;
+u32 lbl_805DE140;
+u32 lbl_805DE144;
+
+u8* fn_803EF164(void)
+{
+    u8* p;
+
+    if (lbl_805DE144) {
+        p = lbl_805DE138 + lbl_805DE140++ * 0x38;
+        lbl_805DE140 = lbl_805DE140 % lbl_805DE13C;
+        return p;
+    }
+    return 0;
+}
+
+#pragma peephole off
+int fn_803EFEA0(u32 a)
+{
+    int enabled;
+
+    enabled = OSDisableInterrupts();
+    fn_803EFD34(a);
+    OSRestoreInterrupts(enabled);
+    return 1;
+}
+#pragma peephole on
+
+void fn_803ED268(void)
+{
+    if (lbl_805DE0DC == 0) {
+        lbl_805DE0E0 = OSGetTime();
+    }
+    if (lbl_805DE0DC == 1) {
+        lbl_805DE0DC = 0;
+        fn_803ED0E0(0);
+    } else {
+        lbl_805DE0DC = 2;
+        DSPAssertTask(lbl_80572580);
+    }
+}
+
+#pragma peephole off
+void fn_803ED2DC(void)
+{
+    if (lbl_805DE0DC == 2) {
+        lbl_805DE0DC = 0;
+        fn_803ED0E0((u32)(OSGetTime() - lbl_805DE0E0) >> 2);
+    } else {
+        lbl_805DE0DC = 1;
+    }
+}
+#pragma peephole on

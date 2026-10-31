@@ -198,12 +198,10 @@ void AIInit(u8* stack)
     max_wait = OSNanosecondsToTicks(63000);
     buffer = OSNanosecondsToTicks(3000);
     __AIRegs[0] = (__AIRegs[0] & ~0x20) | 0x20;
-    __AIRegs[1] = __AIRegs[1] & ~0xff00;
-    asm { nop }
-    __AIRegs[1] = __AIRegs[1] & ~0xff;
-    asm { nop }
+    AISetStreamVolRight(0);
+    AISetStreamVolLeft(0);
     __AIRegs[3] = 0;
-    __AI_set_stream_sample_rate(0);
+    __AI_set_stream_sample_rate(1);
     AISetDSPSampleRate(0);
     __AIS_Callback = NULL;
     __AID_Callback = NULL;
