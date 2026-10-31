@@ -188,10 +188,10 @@ typedef struct _PObjSList {
 void PObjRelease(HSD_Class* o)
 {
     HSD_PObj* pobj = (HSD_PObj*) o;
-    PObjSList* list;
-    HSD_Envelope* env;
     HSD_Envelope* next;
     HSD_ShapeSet* shape_set;
+    HSD_Envelope* env;
+    PObjSList* list;
 
     if (pobj->aobj != NULL) {
         HSD_AObjRemove(pobj->aobj);
