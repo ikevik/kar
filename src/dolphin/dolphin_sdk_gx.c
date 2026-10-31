@@ -63,7 +63,8 @@ typedef struct GXData {
     u32 projType;
     f32 projMtx[6];
     f32 vp[6];
-    u8 pad454[0x4F4 - 0x454];
+    u8 pad454[0x4F3 - 0x454];
+    u8 dirtyVAT;
     u32 dirtyState;
 } GXData;
 
@@ -1079,3 +1080,75 @@ void fn_803CDE80(u32* obj, u32 tlut) {
     region[3] = obj[2];
 }
 #endif
+
+extern void fn_803CE1AC(void);
+extern void fn_803CEA64(void);
+extern void fn_803CA89C(void);
+extern void fn_803CB30C(void);
+
+void fn_803CC214(void) {
+    if (gx->dirtyState & 1) {
+        fn_803CE1AC();
+    }
+    if (gx->dirtyState & 2) {
+        fn_803CEA64();
+    }
+    if (gx->dirtyState & 4) {
+        fn_803CC5A0();
+    }
+    if (gx->dirtyState & 8) {
+        fn_803CA848();
+    }
+    if (gx->dirtyState & 0x10) {
+        fn_803CB30C();
+    }
+    if (gx->dirtyState & 0x18) {
+        fn_803CA89C();
+    }
+    gx->dirtyState = 0;
+}
+
+#if 0 /* NONMATCHING: reg alloc */
+void fn_803CB30C(void) {
+    u8 i;
+    for (i = 0; i < 8; i++) {
+        if (gx->dirtyVAT & (1 << i)) {
+            GXWGFifo_u8 = 8;
+            GXWGFifo_u8 = i | 0x70;
+            GXWGFifo_u32 = gx->vatA[i];
+            GXWGFifo_u8 = 8;
+            GXWGFifo_u8 = i | 0x80;
+            GXWGFifo_u32 = gx->vatB[i];
+            GXWGFifo_u8 = 8;
+            GXWGFifo_u8 = i | 0x90;
+            GXWGFifo_u32 = gx->vatC[i];
+        }
+    }
+    gx->dirtyVAT = 0;
+}
+#endif
+
+void GXSetProjection(f32* m, s32 type) {
+    gx->projType = type;
+    gx->projMtx[0] = m[0];
+    gx->projMtx[2] = m[5];
+    gx->projMtx[4] = m[10];
+    gx->projMtx[5] = m[11];
+    if (type == 1) {
+        gx->projMtx[1] = m[3];
+        gx->projMtx[3] = m[7];
+    } else {
+        gx->projMtx[1] = m[2];
+        gx->projMtx[3] = m[6];
+    }
+    GXWGFifo_u8 = 0x10;
+    GXWGFifo_u32 = 0x61020;
+    GXWGFifo_f32 = gx->projMtx[0];
+    GXWGFifo_f32 = gx->projMtx[1];
+    GXWGFifo_f32 = gx->projMtx[2];
+    GXWGFifo_f32 = gx->projMtx[3];
+    GXWGFifo_f32 = gx->projMtx[4];
+    GXWGFifo_f32 = gx->projMtx[5];
+    GXWGFifo_u32 = gx->projType;
+    gx->bpSentNot = 1;
+}
