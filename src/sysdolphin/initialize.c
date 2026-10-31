@@ -337,7 +337,7 @@ extern void _HSD_DispForgetMemory(void);
 extern void _HSD_IDForgetMemory(void);
 extern void _HSD_ObjAllocForgetMemory(void);
 extern void fn_8041E6A4(void);
-extern void fn_8041A504(void);
+extern void _HSD_RObjForgetMemory(void);
 
 void HSD_Reinit(void)
 {
@@ -347,7 +347,7 @@ void HSD_Reinit(void)
         _HSD_IDForgetMemory,
         _HSD_ObjAllocForgetMemory,
         fn_8041E6A4,
-        fn_8041A504,
+        _HSD_RObjForgetMemory,
         NULL
     };
     void (**fp)(void);
