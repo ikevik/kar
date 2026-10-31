@@ -3,6 +3,9 @@
 #include "robj.h"
 #include "cobj.h"
 
+void fn_8040E2A4(void);
+HSD_JObjInfo hsdJObj = { fn_8040E2A4 };
+
 extern HSD_JObj* lbl_805DE250;
 extern u32 lbl_805DE258;
 extern u32 lbl_805DE260;
@@ -363,4 +366,69 @@ void fn_8040E240(HSD_ClassInfo* info)
         lbl_805DE264 = 0;
     }
     hsdJObj.parent.parent.head.parent->amnesia(info);
+}
+
+extern void fn_8040B188(HSD_JObj*, HSD_Joint*);
+
+HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint)
+{
+    HSD_JObj* jobj;
+    HSD_ClassInfo* info;
+
+    if (joint == NULL) {
+        jobj = NULL;
+    } else {
+        if (joint->class_name == NULL || (info = hsdSearchClassInfo(joint->class_name)) == NULL) {
+            jobj = fn_8040C774();
+        } else {
+            jobj = hsdNew(info);
+            if (jobj == NULL) {
+                __assert(__FILE__, 0x3d5, "jobj");
+            }
+        }
+        ((HSD_JObjInfo*) jobj->object.parent.class_info)->load(jobj, joint, NULL);
+    }
+    fn_8040B188(jobj, joint);
+    return jobj;
+}
+
+void fn_8040B670(HSD_Obj* o)
+{
+    if (o != NULL) {
+        if ((o->ref_count_individual ? 0 : 1) || (--o->ref_count_individual ? 0 : 1)) {
+            s32 count = (o->ref_count == 0xffff) ? -1 : o->ref_count;
+            if (count < 0 && o != NULL) {
+                o->parent.class_info->release((HSD_Class*) o);
+                o->parent.class_info->destroy((HSD_Class*) o);
+            }
+        }
+    }
+}
+
+extern HSD_ClassInfo objInfo;
+extern void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
+extern int fn_8040DC70(HSD_JObj*);
+extern void fn_8040E1A8(HSD_JObj*);
+extern void fn_8040E240(HSD_ClassInfo*);
+extern s32 fn_80408884(HSD_JObj*, HSD_Joint*, HSD_JObj*);
+extern void fn_8040F00C(HSD_JObj*);
+extern void fn_8040F218(HSD_JObj*, Mtx, Mtx);
+extern void fn_8040ADD4(HSD_JObj*, Mtx, Mtx, HSD_TrspMask, u32);
+extern void fn_8040DCD4(HSD_JObj*);
+extern void fn_8040985C(void);
+
+void fn_8040E2A4(void)
+{
+    hsdInitClassInfo((HSD_ClassInfo*) &hsdJObj, &objInfo,
+        "sysdolphin_base_library", "hsd_jobj",
+        sizeof(HSD_JObjInfo), sizeof(HSD_JObj));
+    ((HSD_ClassInfo*) &hsdJObj)->init = (void*) fn_8040DC70;
+    ((HSD_ClassInfo*) &hsdJObj)->release = (void*) fn_8040E1A8;
+    ((HSD_ClassInfo*) &hsdJObj)->amnesia = fn_8040E240;
+    hsdJObj.load = fn_80408884;
+    hsdJObj.make_mtx = fn_8040F00C;
+    hsdJObj.make_pmtx = fn_8040F218;
+    hsdJObj.disp = fn_8040ADD4;
+    hsdJObj.release_child = fn_8040DCD4;
+    hsdJObj.unk50 = fn_8040985C;
 }
