@@ -28,8 +28,8 @@ extern void fn_803D1578(Mtx, Mtx);
 extern void fn_80417C20(void*);
 extern void fn_80417CA0(void*);
 extern void fn_804084B0(HSD_JObj*, void*, void*);
-extern void fn_80408BD0(HSD_JObj*, u32);
-extern void fn_80408F88(HSD_JObj*, u32, f32);
+void fn_80408BD0(HSD_JObj*, u32);
+void fn_80408F88(HSD_JObj*, u32, f32);
 extern HSD_AObj* HSD_AObjLoadDesc(struct _HSD_AObjDesc*);
 extern void HSD_RObjAddAnimAll(HSD_RObj*, struct _HSD_RObjAnimJoint*);
 extern void HSD_DObjAddAnimAll(HSD_DObj*, void*, void*);
@@ -136,6 +136,19 @@ void fn_80408B54(HSD_JObj* jobj, u32 flags)
     }
 }
 
+void fn_80408BD0(HSD_JObj* jobj, u32 flags)
+{
+    if (jobj != NULL) {
+        HSD_JObj* child;
+        fn_80408B54(jobj, flags);
+        if (!(jobj->flags & INSTANCE)) {
+            for (child = jobj->child; child != NULL; child = child->next) {
+                fn_80408BD0(child, flags);
+            }
+        }
+    }
+}
+
 void fn_80408E74(HSD_JObj* jobj)
 {
     if (jobj != NULL) {
@@ -163,6 +176,19 @@ void fn_80408F00(HSD_JObj* jobj, u32 flags, f32 frame)
             HSD_DObjReqAnimAllByFlags(jobj->u.dobj, flags, frame);
         }
         HSD_RObjReqAnimAllByFlags(jobj->robj, flags, frame);
+    }
+}
+
+void fn_80408F88(HSD_JObj* jobj, u32 flags, f32 frame)
+{
+    if (jobj != NULL) {
+        HSD_JObj* child;
+        fn_80408F00(jobj, flags, frame);
+        if (!(jobj->flags & INSTANCE)) {
+            for (child = jobj->child; child != NULL; child = child->next) {
+                fn_80408F88(child, flags, frame);
+            }
+        }
     }
 }
 
@@ -210,25 +236,11 @@ void fn_80409340(HSD_JObj* jobj, HSD_AnimJoint* an, HSD_AnimJoint* mat, HSD_Anim
         return;
     }
     if (an != NULL) {
-        HSD_AObj* aobj;
         if (jobj->aobj != NULL) {
             HSD_AObjRemove(jobj->aobj);
         }
         jobj->aobj = HSD_AObjLoadDesc(an->aobjdesc);
-        aobj = jobj->aobj;
-        if (aobj != NULL && aobj->fobj != NULL) {
-            HSD_FObj* fobj;
-            HSD_FObj** prev = &aobj->fobj;
-            while ((fobj = *prev) != NULL) {
-                if (fobj->obj_type == TYPE_JOBJ) {
-                    *prev = fobj->next;
-                    fobj->next = aobj->fobj;
-                    aobj->fobj = fobj;
-                    break;
-                }
-                prev = &fobj->next;
-            }
-        }
+        fn_804092E8(jobj->aobj);
         HSD_RObjAddAnimAll(jobj->robj, an->robj_anim);
         if (an->flags & 1) {
             fn_8040BD64(jobj, CLASSICAL_SCALE);
