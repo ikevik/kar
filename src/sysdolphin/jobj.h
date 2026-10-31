@@ -75,7 +75,7 @@
 
 #define JOBJ_INSTANCE(o) ((o->flags & INSTANCE) == 0)
 #define JOBJ_USE_QUATERNION(o) ((o->flags & USE_QUATERNION))
-#define union_type_dobj(o) ((o->flags & 0x4020) == 0)
+#define union_type_dobj(o) ((o->flags & 0x4020) ? 0 : 1)
 #define union_type_ptcl(o) ((o->flags & PTCL) != 0)
 
 typedef u32 HSD_TrspMask;
@@ -126,9 +126,13 @@ typedef struct _HSD_JObjInfo {
     void (*make_pmtx)(HSD_JObj* jobj, Mtx mtx, Mtx rmtx);
     void (*disp)(HSD_JObj* jobj, Mtx vmtx, Mtx pmtx, HSD_TrspMask trsp_mask, u32 rendermode);
     void (*release_child)(HSD_JObj* jobj);
+    void (*update)(void);
 } HSD_JObjInfo;
 
 extern HSD_JObjInfo hsdJObj;
+
+void HSD_JObjSetupMatrixSub(HSD_JObj* jobj);
+void HSD_JObjSetMtxDirtySub(HSD_JObj* jobj);
 
 inline struct _HSD_RObj* HSD_JObjGetRObj(HSD_JObj* jobj)
 {
