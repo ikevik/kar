@@ -62,6 +62,7 @@ extern s32 lbl_805DE454;
 s32 fn_80442674(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 s32 AXDriverSetupAux(s32, s32, void*);
 
+#ifdef NONMATCHING
 u8* fn_804407E0(u32 size)
 {
     u8* ptr;
@@ -74,6 +75,7 @@ u8* fn_804407E0(u32 size)
     }
     return ptr;
 }
+#endif
 
 void fn_80440840(void)
 {
@@ -243,6 +245,7 @@ s32 fn_80444CBC(void)
     return lbl_805DE44C;
 }
 
+#ifdef NONMATCHING
 void fn_804424B4(s32 pid)
 {
     AXVoice* v;
@@ -264,6 +267,7 @@ void fn_804424B4(s32 pid)
     v->flags &= 0x3fffffff;
     lbl_805DE454--;
 }
+#endif
 
 void fn_80442588(s32 pid)
 {
@@ -329,6 +333,7 @@ s32 fn_80442A54(s32 id, s32 vol)
     return 1;
 }
 
+#ifdef NONMATCHING
 s32 fn_80442B88(s32 prio, s32 vol)
 {
     s32 intr;
@@ -345,6 +350,7 @@ s32 fn_80442B88(s32 prio, s32 vol)
     }
     return 0;
 }
+#endif
 
 s32 fn_80442CFC(s32 id, s32 vol)
 {
@@ -374,6 +380,7 @@ s32 fn_80442CFC(s32 id, s32 vol)
     return 1;
 }
 
+#ifdef NONMATCHING
 s32 fn_80442E30(s32 prio, s32 vol)
 {
     s32 intr;
@@ -390,6 +397,7 @@ s32 fn_80442E30(s32 prio, s32 vol)
     }
     return 0;
 }
+#endif
 
 s32 fn_8044327C(s32 id, s32 a, s32 b)
 {
@@ -518,6 +526,7 @@ s32 fn_8044353C(s32 id, s32 detune)
     return 1;
 }
 
+#ifdef NONMATCHING
 s32 fn_804436E0(s32 prio, s16 detune)
 {
     s32 intr;
@@ -534,7 +543,9 @@ s32 fn_804436E0(s32 prio, s16 detune)
     }
     return 0;
 }
+#endif
 
+#ifdef NONMATCHING
 s32 fn_80443C14(s32 prio, s32 sel, s32 c)
 {
     s32 intr;
@@ -558,6 +569,7 @@ s32 fn_80443C14(s32 prio, s32 sel, s32 c)
     OSRestoreInterrupts(intr);
     return 1;
 }
+#endif
 
 s32 fn_80443CDC(s32 id)
 {
@@ -580,6 +592,7 @@ s32 fn_80443CDC(s32 id)
     }
 }
 
+#ifdef NONMATCHING
 s32 fn_80443D8C(s32 prio)
 {
     s32 count = 0;
@@ -597,7 +610,9 @@ s32 fn_80443D8C(s32 prio)
     }
     return -1;
 }
+#endif
 
+#ifdef NONMATCHING
 s32 fn_80443E9C(s32 vid)
 {
     s32 count = 0;
@@ -615,6 +630,7 @@ s32 fn_80443E9C(s32 vid)
     }
     return -1;
 }
+#endif
 
 s32 fn_80444868(s32 type, u8* p)
 {
@@ -662,6 +678,7 @@ s32 fn_80444868(s32 type, u8* p)
 }
 
 #pragma fp_contract on
+#ifdef NONMATCHING
 s32 fn_804446F0(s32 type, u8* p)
 {
     s32 size;
@@ -692,6 +709,7 @@ s32 fn_804446F0(s32 type, u8* p)
     }
     return size;
 }
+#endif
 
 static void axPauseVoice(s32 id)
 {
@@ -763,6 +781,7 @@ s32 fn_80444CC4(s32 prio)
     return 1;
 }
 
+#ifdef NONMATCHING
 s32 fn_80444E00(void)
 {
     s32 intr;
@@ -780,6 +799,7 @@ s32 fn_80444E00(void)
     OSRestoreInterrupts(intr);
     return 1;
 }
+#endif
 
 s32 fn_80444FE0(s32 prio)
 {

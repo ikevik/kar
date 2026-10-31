@@ -104,10 +104,14 @@ void fn_80408064(HSD_JObj* jobj, HSD_Joint* joint)
     }
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 void fn_80408440(HSD_JObj* jobj)
 {
     HSD_JObjSetMtxDirty(jobj);
 }
+#endif
+#endif
 
 void fn_804087F4(HSD_JObj* jobj, void (*func)(HSD_JObj*, void*, int), void* arg)
 {
@@ -138,6 +142,8 @@ void fn_80408B54(HSD_JObj* jobj, u32 flags)
     }
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 void fn_80408BD0(HSD_JObj* jobj, u32 flags)
 {
     if (jobj != NULL) {
@@ -150,6 +156,8 @@ void fn_80408BD0(HSD_JObj* jobj, u32 flags)
         }
     }
 }
+#endif
+#endif
 
 void fn_80408E74(HSD_JObj* jobj)
 {
@@ -181,6 +189,8 @@ void fn_80408F00(HSD_JObj* jobj, u32 flags, f32 frame)
     }
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 void fn_80408F88(HSD_JObj* jobj, u32 flags, f32 frame)
 {
     if (jobj != NULL) {
@@ -193,6 +203,8 @@ void fn_80408F88(HSD_JObj* jobj, u32 flags, f32 frame)
         }
     }
 }
+#endif
+#endif
 
 void fn_80409250(HSD_JObj* jobj, f32 frame)
 {
@@ -210,6 +222,7 @@ void fn_80409274(HSD_JObj* jobj, f32 frame)
     }
 }
 
+#ifdef NONMATCHING
 void fn_804092E8(HSD_AObj* aobj)
 {
     HSD_FObj* fobj;
@@ -231,7 +244,9 @@ void fn_804092E8(HSD_AObj* aobj)
         }
     }
 }
+#endif
 
+#ifdef NONMATCHING
 void fn_80409340(HSD_JObj* jobj, HSD_AnimJoint* an, HSD_AnimJoint* mat, HSD_AnimJoint* sh)
 {
     if (jobj == NULL) {
@@ -254,6 +269,7 @@ void fn_80409340(HSD_JObj* jobj, HSD_AnimJoint* an, HSD_AnimJoint* mat, HSD_Anim
         HSD_DObjAddAnimAll(jobj->u.dobj, mat != NULL ? mat->aobjdesc : NULL, sh != NULL ? sh->aobjdesc : NULL);
     }
 }
+#endif
 
 void fn_8040A1A0(HSD_JObj* jobj)
 {
@@ -299,10 +315,14 @@ HSD_JObj* fn_8040ACFC(HSD_JObj* jobj)
     return (HSD_JObj*) ((u8*) jobj + 0x54);
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 void fn_8040AD04(HSD_JObj* jobj)
 {
     HSD_JObjSetupMatrix(jobj);
 }
+#endif
+#endif
 
 void fn_8040AD74(HSD_JObj* jobj)
 {
@@ -406,6 +426,8 @@ void fn_8040B670(HSD_Obj* o)
     }
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 HSD_JObj* fn_8040B718(HSD_JObj* jobj)
 {
     HSD_JObj* child;
@@ -439,6 +461,8 @@ HSD_JObj* fn_8040B718(HSD_JObj* jobj)
     HSD_JObjUnref(jobj);
     return child;
 }
+#endif
+#endif
 
 void fn_8040B920(HSD_JObj* jobj)
 {
@@ -483,11 +507,17 @@ HSD_JObj* fn_8040BC14(HSD_JObj* jobj)
     return NULL;
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 HSD_JObj* fn_8040BCA0(HSD_JObj* jobj)
 {
     return (jobj != NULL && union_type_dobj(jobj)) ? (HSD_JObj*) jobj->u.dobj : NULL;
 }
+#endif
+#endif
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 void fn_8040BCCC(HSD_JObj* jobj, HSD_RObj* robj)
 {
     if (jobj != NULL) {
@@ -501,6 +531,8 @@ void fn_8040BCCC(HSD_JObj* jobj, HSD_RObj* robj)
         }
     }
 }
+#endif
+#endif
 
 u32 fn_8040BD4C(HSD_JObj* jobj)
 {
@@ -606,6 +638,8 @@ void fn_8040E240(HSD_ClassInfo* info)
     hsdJObj.parent.parent.head.parent->amnesia(info);
 }
 
+#ifdef NONMATCHING
+#ifdef NONMATCHING
 void fn_8040E2A4(void)
 {
     hsdInitClassInfo((HSD_ClassInfo*) &hsdJObj, &objInfo,
@@ -621,3 +655,5 @@ void fn_8040E2A4(void)
     hsdJObj.release_child = fn_8040DCD4;
     hsdJObj.update = (void*) fn_8040985C;
 }
+#endif
+#endif
