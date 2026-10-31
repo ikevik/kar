@@ -1300,6 +1300,23 @@ void __OSModuleInit(void)
 }
 #endif
 
+extern int __OSCheckMutex(OSMutex* mutex);
+
+#pragma peephole on
+int __OSCheckMutexes(OSThread* thread)
+{
+    OSMutex* mutex;
+    for (mutex = thread->queueMutex.head; mutex; mutex = mutex->link.next) {
+        if (mutex->thread != thread) {
+            return 0;
+        }
+        if (!__OSCheckMutex(mutex)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 #pragma peephole on
 int __OSCheckDeadLock(OSThread* thread)
 {
@@ -1360,15 +1377,87 @@ u16 OSGetFontEncode(void)
 }
 #endif
 
+extern void* memset(void* dst, int val, u32 n);
+extern void* memcpy(void* dst, const void* src, u32 n);
+extern void DCFlushRangeNoSync(void* addr, u32 nBytes);
+extern void ICInvalidateRange(void* addr, u32 nBytes);
+extern void __OSSystemCallVectorStart(void);
+extern void ExternalInterruptHandler(u8 exception, OSContext* context);
+extern void OSSwitchFPUContext(u8 exception, OSContext* context);
+
+#pragma peephole off
+void __OSContextInit(void)
+{
+    __OSSetExceptionHandler(7, OSSwitchFPUContext);
+    *(OSContext**)0x800000D8 = 0;
+    DBPrintf("FPU-unavailable handler installed\n");
+}
+
+#pragma peephole off
+void __OSInitSystemCall(void)
+{
+    void* addr = (void*)0x80000C00;
+    memcpy(addr, __OSSystemCallVectorStart, (u32)__OSSystemCallVectorEnd - (u32)__OSSystemCallVectorStart);
+    DCFlushRangeNoSync(addr, 256);
+    asm { sync }
+    ICInvalidateRange(addr, 256);
+}
+
+#pragma peephole off
+void __OSInterruptInit(void)
+{
+    InterruptHandlerTable = (OSInterruptHandler*)0x80003040;
+    memset(InterruptHandlerTable, 0, 128);
+    *(vu32*)0x800000C4 = 0;
+    *(vu32*)0x800000C8 = 0;
+    ((vu32*)0xCC003000)[1] = 0xF0;
+    __OSMaskInterrupts(0xFFFFFFE0);
+    __OSSetExceptionHandler(4, ExternalInterruptHandler);
+}
+
+#pragma peephole on
+#pragma dont_inline on
+void fn_803D3148(OSAlarm* alarm, s64 start, s64 period, OSAlarmHandler handler)
+{
+    int enabled = OSDisableInterrupts();
+    alarm->period = period;
+    alarm->start = __OSTimeToSystemTime(start);
+    InsertAlarm(alarm, 0, handler);
+    OSRestoreInterrupts(enabled);
+}
+#pragma dont_inline reset
+
+#pragma peephole on
+void UnsetRun(OSThread* thread)
+{
+    OSThreadQueue* queue = thread->queue;
+    OSThread* next = thread->link.next;
+    OSThread* prev = thread->link.prev;
+    if (next == 0) {
+        queue->tail = prev;
+    } else {
+        next->link.prev = prev;
+    }
+    if (prev == 0) {
+        queue->head = next;
+    } else {
+        prev->link.next = next;
+    }
+    if (queue->head == 0) {
+        RunQueueBits &= ~(1u << (31 - thread->priority));
+    }
+    thread->queue = 0;
+}
+
 #if 1
 #pragma peephole on
 void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
 {
-    u32 arraySize;
+    u32 totalSize;
     int i;
     lbl_805DDEB0 = arenaStart;
     lbl_805DDEB4 = maxHeaps;
-    arraySize = maxHeaps * sizeof(HeapDesc);
+    totalSize = maxHeaps * sizeof(HeapDesc);
     for (i = 0; i < lbl_805DDEB4; i++) {
         HeapDesc* hd = &lbl_805DDEB0[i];
         hd->size = -1;
@@ -1376,7 +1465,7 @@ void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
     }
     lbl_805DDEBC = (u32)arenaEnd & ~31;
     lbl_805DC978 = -1;
-    arenaStart = (void*)((u32)lbl_805DDEB0 + arraySize);
+    arenaStart = (void*)((u32)lbl_805DDEB0 + totalSize);
     arenaStart = (void*)(((u32)arenaStart + 31) & ~31);
     lbl_805DDEB8 = arenaStart;
     return arenaStart;
