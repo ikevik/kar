@@ -237,7 +237,7 @@ extern int fn_80476C44();
 extern void fn_8047103C();
 extern void fn_8047477C();
 extern void fn_8046A7A0();
-extern void fn_8046F190();
+extern int fn_8046F190();
 extern void OSCancelAlarm();
 
 void fn_80467F44(a, b, c) int a; int b; int c; {
@@ -328,6 +328,59 @@ void fn_80478650(p) char* p; {
     fn_80479750(q);
 }
 
+/* ---- w3f batch 3 ---- */
+int fn_8046A954(list, t) int** list; int* t; {
+    int* n = *list;
+    int* nx = n == 0 ? 0 : (int*)n[6];
+    while (n != 0) {
+        if (n == t) return 1;
+        n = nx;
+        nx = n == 0 ? 0 : (int*)n[6];
+    }
+    return 0;
+}
+
+void fn_8046D71C(a, buf) char* a; void* buf; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    memcpy(buf, s + 0x38, 6);
+    OSRestoreInterrupts(en);
+}
+
+void fn_8046D78C(a, buf) char* a; void* buf; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    memcpy(buf, s + 0x48, 4);
+    OSRestoreInterrupts(en);
+}
+
+void fn_8046D7FC(a, buf) char* a; void* buf; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    memcpy(buf, s + 0x44, 4);
+    OSRestoreInterrupts(en);
+}
+
+void fn_8046D86C(a, buf) char* a; void* buf; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    memcpy(buf, s + 0x54, 4);
+    OSRestoreInterrupts(en);
+}
+
+
+
+
+int fn_8046F1F4(a) char* a; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int old;
+    OSDisableInterrupts();
+    old = *(int*)(s + 8);
+    *(int*)(s + 8) = 0;
+    OSRestoreInterrupts();
+    return old;
+}
+
 #if 0 /* w3f near misses */
 int fn_804708C4() {
     if ((unsigned)lbl_805DE628 == 0) return 1;
@@ -339,6 +392,28 @@ int fn_804774BC() {
     if (*(unsigned*)&lbl_805DE650 == 0) return 1;
     while (*(unsigned*)&lbl_805DE650 != 0) fn_80476C44(*(unsigned*)&lbl_805DE650);
     return 0;
+}
+
+void fn_8046D8DC(a, buf) char* a; int* buf; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    OSDisableInterrupts();
+    *buf = *(int*)(s + 0x40);
+    OSRestoreInterrupts();
+}
+
+void fn_8046D934(a, buf) char* a; int* buf; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    int en = OSDisableInterrupts();
+    *buf = *(int*)(s + 4);
+    OSRestoreInterrupts(en);
+}
+
+int fn_8046F190(a, v) char* a; int v; {
+    char* s = (a != 0) ? a : lbl_805BDD20;
+    OSDisableInterrupts();
+    if (*(int*)(s + 8) == 0) *(int*)(s + 8) = v;
+    OSRestoreInterrupts();
+    return *(int*)(s + 8);
 }
 
 
