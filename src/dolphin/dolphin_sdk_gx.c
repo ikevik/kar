@@ -66,9 +66,14 @@ typedef struct GXData {
 } GXData;
 
 typedef struct GXFifoObj {
-    u8 pad0[0xC];
+    u32 base;
+    u32 end;
+    u32 size;
     u32 hiWatermark;
     u32 loWatermark;
+    u32 rdPtr;
+    u32 wrPtr;
+    s32 count;
 } GXFifoObj;
 
 extern GXData* const gx;
@@ -99,10 +104,13 @@ u32 fn_803CA024(void) { return lbl_805DDE34; }
 
 u32 fn_803CDC44(u32* obj) { return obj[5]; }
 
+extern void GXInitFifoPtrs(GXFifoObj* fifo, u32 rd, u32 wr);
+#pragma dont_inline on
 void GXInitFifoLimits(GXFifoObj* fifo, u32 hi, u32 lo) {
     fifo->hiWatermark = hi;
     fifo->loWatermark = lo;
 }
+#pragma dont_inline reset
 
 void GXInvalidateVtxCache(void) {
     GXWGFifo_u8 = 0x48;
@@ -624,6 +632,119 @@ void fn_803CC9CC(u8* c, u32 z) {
     GXWGFifo_u32 = (reg & 0xFFFFFF) | 0x50000000;
     GXWGFifo_u8 = 0x61;
     GXWGFifo_u32 = z | 0x51000000;
+    gx->bpSentNot = 0;
+}
+#endif
+
+#if 0 /* NONMATCHING */
+void GXInitFifoBase(GXFifoObj* fifo, u32 base, u32 size) {
+    fifo->base = base;
+    fifo->end = base + size - 4;
+    fifo->size = size;
+    fifo->count = 0;
+    GXInitFifoLimits(fifo, size - 0x4000, (size >> 1) & 0x7FFFFFE0);
+    GXInitFifoPtrs(fifo, base, base);
+}
+#endif
+
+void GXInitFifoPtrs(GXFifoObj* fifo, u32 rd, u32 wr) {
+    BOOL en = OSDisableInterrupts();
+    fifo->rdPtr = rd;
+    fifo->wrPtr = wr;
+    fifo->count = wr - rd;
+    if (fifo->count < 0) {
+        fifo->count += fifo->size;
+    }
+    OSRestoreInterrupts(en);
+}
+
+void fn_803CEE94(s32 idx, u32 v) {
+    u32* p = &gx->tevKsel[idx >> 1];
+    if (idx & 1) {
+        *p = (*p & ~0x7C000) | (v << 14);
+    } else {
+        *p = (*p & ~0x1F0) | (v << 4);
+    }
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = *p;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CEF00(s32 idx, u32 v) {
+    u32* p = &gx->tevKsel[idx >> 1];
+    if (idx & 1) {
+        *p = (*p & ~0xF80000) | (v << 19);
+    } else {
+        *p = (*p & ~0x3E00) | (v << 9);
+    }
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = *p;
+    gx->bpSentNot = 0;
+}
+
+#if 0 /* NONMATCHING */
+void fn_803CEC68(u32 idx, s32 op, u32 bias, u32 scale, u32 clamp, u32 out) {
+    u32 reg = gx->tevc[idx];
+    reg = __rlwimi(reg, op, 18, 13, 13);
+    if (op <= 1) {
+        reg = __rlwimi(reg, scale, 20, 10, 11);
+        reg = __rlwimi(reg, bias, 16, 14, 15);
+    } else {
+        reg = __rlwimi(reg, op, 19, 10, 11);
+        reg = __rlwimi(reg, 3, 16, 14, 15);
+    }
+    GXWGFifo_u8 = 0x61;
+    reg = __rlwimi(reg, clamp, 19, 12, 12);
+    reg = __rlwimi(reg, out, 22, 8, 9);
+    GXWGFifo_u32 = reg;
+    gx->tevc[idx] = reg;
+    gx->bpSentNot = 0;
+}
+#endif
+
+#if 0 /* NONMATCHING */
+void fn_803CECD0(u32 idx, s32 op, u32 bias, u32 scale, u32 clamp, u32 out) {
+    u32 reg = gx->teva[idx];
+    reg = __rlwimi(reg, op, 18, 13, 13);
+    if (op <= 1) {
+        reg = __rlwimi(reg, scale, 20, 10, 11);
+        reg = __rlwimi(reg, bias, 16, 14, 15);
+    } else {
+        reg = __rlwimi(reg, op, 19, 10, 11);
+        reg = __rlwimi(reg, 3, 16, 14, 15);
+    }
+    GXWGFifo_u8 = 0x61;
+    reg = __rlwimi(reg, clamp, 19, 12, 12);
+    reg = __rlwimi(reg, out, 22, 8, 9);
+    GXWGFifo_u32 = reg;
+    gx->teva[idx] = reg;
+    gx->bpSentNot = 0;
+}
+#endif
+
+void fn_803CF820(u32 type, u32 src, u32 dst, u32 op) {
+    u32 reg = gx->cmode0;
+    reg = __rlwimi(reg, type == 3, 11, 20, 20);
+    reg = __rlwimi(reg, type, 0, 31, 31);
+    reg = __rlwimi(reg, type == 2, 1, 30, 30);
+    reg = __rlwimi(reg, op, 12, 16, 19);
+    reg = __rlwimi(reg, src, 8, 21, 23);
+    GXWGFifo_u8 = 0x61;
+    reg = __rlwimi(reg, dst, 5, 24, 26);
+    GXWGFifo_u32 = reg;
+    gx->cmode0 = reg;
+    gx->bpSentNot = 0;
+}
+
+#if 0 /* NONMATCHING */
+void fn_803CF05C(u32 a, u8 b, u32 c, u32 d, u32 e) {
+    u32 reg = b | 0xF3000000;
+    reg = (reg & ~0xFF00) | ((e << 8) & 0xFF00);
+    reg = (reg & ~0x70000) | (a << 16);
+    reg = (reg & ~0x380000) | (d << 19);
+    GXWGFifo_u8 = 0x61;
+    reg = (reg & ~0xC00000) | (c << 22);
+    GXWGFifo_u32 = reg;
     gx->bpSentNot = 0;
 }
 #endif
