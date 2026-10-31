@@ -12,7 +12,10 @@ extern int fn_8005D64C();
 extern int fn_8005DED0();
 extern int fn_8005E08C();
 extern int fn_8005E108();
+extern int fn_80065A80();
 extern int fn_80065AE4();
+extern int fn_80065B7C();
+extern int fn_80065DC4();
 extern int fn_80068D68();
 extern int fn_8006E5A4();
 extern int fn_8007125C();
@@ -21,12 +24,14 @@ extern int fn_800793B8();
 extern int fn_8007A598();
 extern int fn_8007AD58();
 extern int fn_8018C2E4();
+extern int fn_8018DBA0(int, int, int, int, int, int, int, float, float);
 extern int fn_802339C4();
 extern int fn_802361A0();
 extern int fn_8023624C();
 extern int fn_8027B600();
 extern int fn_8040A64C();
 extern int fn_8042A22C();
+extern int func_80428F64();
 typedef struct { u8 pad[168]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_168_1_1;
 typedef struct { u8 pad[168]; unsigned a:2; unsigned f:1; unsigned b:5; } BF_168_2_1;
 typedef struct { u8 pad[168]; unsigned a:3; unsigned f:1; unsigned b:4; } BF_168_3_1;
@@ -60,6 +65,7 @@ extern int lbl_805DD6C8;
 extern int lbl_805DD6CC;
 extern int lbl_805DD6F8;
 extern int lbl_805DD714;
+extern int lbl_805DF75C;
 typedef struct { int w[3]; } S12;
 typedef struct { int w[10]; } S40;
 
@@ -1440,5 +1446,435 @@ void fn_800F91E8(int a1)
 void fn_800F91FC(int a1)
 {
     ((BF_300_3_1*)(a1))->f = 1;
+}
+
+int fn_800B0A2C(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800B5B94(a1, 1, 0);
+    c1 = fn_800B5B44(a1, 30);
+    return c1;
+}
+
+int fn_800B1DC0(int a1)
+{
+    int c0;
+    c0 = fn_800B0CDC(a1);
+    *(int*)((u8*)(a1) + 64) = c0;
+    return c0;
+}
+
+int fn_800D5ED4(int a1)
+{
+    int c0;
+    int c1;
+    int c2;
+    int c3;
+    c0 = fn_800D5FD0((*(int*)((u8*)(a1) + 0)));
+    c1 = fn_800D60D8((*(int*)((u8*)(a1) + 0)));
+    c2 = fn_800D6188((*(int*)((u8*)(a1) + 0)));
+    c3 = fn_800EF618(a1);
+    return c3;
+}
+
+int fn_800DC144(int a1)
+{
+    int c0;
+    c0 = func_80428F64((*(int*)((u8*)(a1) + 360)));
+    *(int*)((u8*)(a1) + 360) = 0;
+    return c0;
+}
+
+int fn_800DE228(int a1)
+{
+    int c0;
+    int c1;
+    int c2;
+    c0 = fn_800E8CC0(a1);
+    c1 = fn_800DFBC4(a1);
+    c2 = fn_800E2D34(a1);
+    return c2;
+}
+
+int fn_800DE714(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800DFAD8(a1);
+    c1 = fn_800E2930(a1);
+    return c1;
+}
+
+int fn_800DE748(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800DFE40(a1);
+    c1 = fn_800E2AC0(a1);
+    return c1;
+}
+
+float fn_800E980C(float fa1)
+{
+
+    return ((*(float*)&lbl_805DF75C) - fa1);
+}
+
+int fn_800EEF04(int a1)
+{
+    int c0;
+    int c1;
+    int c2;
+    c0 = fn_80065A80(3);
+    *(int*)((u8*)(a1) + 1812) = c0;
+    c1 = fn_80065B7C((*(int*)((u8*)(a1) + 1812)), 1);
+    c2 = fn_80065DC4((*(int*)((u8*)(a1) + 1812)), 0);
+    return c2;
+}
+
+int fn_800F645C(int a1, int a2, int a3)
+{
+    int c0;
+    int c1;
+    c0 = fn_800E6014((*(int*)((u8*)(a1) + 104)), (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 8))) + 4))) + 0))) + 8)), a3);
+    c1 = fn_800E6074((a1 + 12), a2, a3, (*(int*)((u8*)(a1) + 104)), (((unsigned)(*(unsigned char*)((u8*)(a1) + 300)) >> 4) & 1));
+    return c1;
+}
+
+float fn_800F738C(int a1, float fa1)
+{
+    *(float*)((u8*)(a1) + 0) = ((*(float*)((u8*)(a1) + 0)) * fa1);
+    *(float*)((u8*)(a1) + 16) = ((*(float*)((u8*)(a1) + 16)) * fa1);
+    *(float*)((u8*)(a1) + 32) = ((*(float*)((u8*)(a1) + 32)) * fa1);
+    *(float*)((u8*)(a1) + 4) = ((*(float*)((u8*)(a1) + 4)) * fa1);
+    *(float*)((u8*)(a1) + 20) = ((*(float*)((u8*)(a1) + 20)) * fa1);
+    *(float*)((u8*)(a1) + 36) = ((*(float*)((u8*)(a1) + 36)) * fa1);
+    *(float*)((u8*)(a1) + 8) = ((*(float*)((u8*)(a1) + 8)) * fa1);
+    *(float*)((u8*)(a1) + 24) = ((*(float*)((u8*)(a1) + 24)) * fa1);
+    *(float*)((u8*)(a1) + 40) = ((*(float*)((u8*)(a1) + 40)) * fa1);
+    return fa1;
+}
+
+int fn_800F8344(int a1, int a2, int a3, int a4, float fa1, float fa2)
+{
+    int c0;
+    c0 = fn_8018DBA0((*(int*)((u8*)((*(int*)((u8*)(a1) + 44))) + 0)), (*(int*)((u8*)((*(int*)((u8*)(a1) + 44))) + 268)), a2, a3, a4, (*(int*)((u8*)(a1) + 44)), a2, fa2, fa2);
+    return c0;
+}
+
+int fn_800F9D80(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(16);
+    c1 = fn_800F9DB8(c0, a1);
+    return c1;
+}
+
+int fn_800FA2A0(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(17);
+    c1 = fn_800FA2D8(c0, a1);
+    return c1;
+}
+
+int fn_800FA610(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(18);
+    c1 = fn_800FA648(c0, a1);
+    return c1;
+}
+
+int fn_800FA708(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(19);
+    c1 = fn_800FA740(c0, a1);
+    return c1;
+}
+
+int fn_800FB378(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(20);
+    c1 = fn_800FB3B0(c0, a1);
+    return c1;
+}
+
+int fn_800FB5D0(int a1, int a2, int a3)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(41, a2, a3);
+    c1 = fn_800FB618(c0, a1, a3);
+    return c1;
+}
+
+int fn_800FBF60(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(42);
+    c1 = fn_800FBF98(c0, a1);
+    return c1;
+}
+
+int fn_800FC2D0(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(21);
+    c1 = fn_800FC308(c0, a1);
+    return c1;
+}
+
+int fn_800FC848(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(43);
+    c1 = fn_800FC880(c0, a1);
+    return c1;
+}
+
+int fn_800FCD44(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(44);
+    c1 = fn_800FCD7C(c0, a1);
+    return c1;
+}
+
+int fn_800FDF6C(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(45);
+    c1 = fn_800FDFA4(c0, a1);
+    return c1;
+}
+
+int fn_800FE5D4(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(46);
+    c1 = fn_800FE60C(c0, a1);
+    return c1;
+}
+
+int fn_800FEB20(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(47);
+    c1 = fn_800FEB58(c0, a1);
+    return c1;
+}
+
+int fn_800FF50C(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(49);
+    c1 = fn_800FF544(c0, a1);
+    return c1;
+}
+
+int fn_800FFD04(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(50);
+    c1 = fn_800FFD3C(c0, a1);
+    return c1;
+}
+
+int fn_80100224(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(51);
+    c1 = fn_8010025C(c0, a1);
+    return c1;
+}
+
+int fn_801007FC(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(52);
+    c1 = fn_80100834(c0, a1);
+    return c1;
+}
+
+int fn_80100FB4(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(53);
+    c1 = fn_80100FEC(c0, a1);
+    return c1;
+}
+
+int fn_801012C8(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(39);
+    c1 = fn_80101300(c0, a1);
+    return c1;
+}
+
+int fn_8010181C(int a1, int a2, int a3)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F48CC(40, a2, a3);
+    c1 = fn_8010186C(c0, a1, a3);
+    return c0;
+}
+
+int fn_8010250C(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(22);
+    c1 = fn_80102544(c0, a1);
+    return c1;
+}
+
+int fn_80102C40(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(54);
+    c1 = fn_80102C78(c0, a1);
+    return c1;
+}
+
+int fn_80103654(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(55);
+    c1 = fn_8010368C(c0, a1);
+    return c1;
+}
+
+int fn_80103C58(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(24);
+    c1 = fn_80103C90(c0, a1);
+    return c1;
+}
+
+int fn_801044CC(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(31);
+    c1 = fn_80104504(c0, a1);
+    return c1;
+}
+
+int fn_80105DB8(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(56);
+    c1 = fn_80105DF0(c0, a1);
+    return c1;
+}
+
+int fn_80106144(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(57);
+    c1 = fn_8010617C(c0, a1);
+    return c1;
+}
+
+int fn_801063BC(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(58);
+    c1 = fn_801063F4(c0, a1);
+    return c1;
+}
+
+int fn_80106824(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(32);
+    c1 = fn_8010685C(c0, a1);
+    return c1;
+}
+
+int fn_80107120(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(30);
+    c1 = fn_80107158(c0, a1);
+    return c1;
+}
+
+int fn_80109624(int a1, int a2, int a3, int a4)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F466C(62, a2, a3, a4);
+    c1 = fn_80109684(c0, a1, a3, a4);
+    return c0;
+}
+
+int fn_801097F8(int a1, int a2, int a3, int a4)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F466C(63, a2, a3, a4);
+    c1 = fn_80109858(c0, a1, a3, a4);
+    return c0;
+}
+
+int fn_80109DB4(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(61);
+    c1 = fn_80109DEC(c0, a1);
+    return c1;
+}
+
+int fn_8010D228(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(68);
+    c1 = fn_8010D260(c0, a1);
+    return c1;
+}
+
+int fn_8010DB64(int a1)
+{
+    int c0;
+    int c1;
+    c0 = fn_800F446C(69);
+    c1 = fn_8010DB9C(c0, a1);
+    return c1;
 }
 
