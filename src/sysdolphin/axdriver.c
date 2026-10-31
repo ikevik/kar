@@ -26,6 +26,14 @@ extern void OSRestoreInterrupts(s32);
 extern void fn_80443FB0(s32, s32, s32);
 extern void fn_804438C4(s32, s32, s32);
 extern s32 fn_80449AE4(s32);
+extern void fn_80449648(s32);
+extern void fn_80449BA0(s32, s32, s32, s32, s32);
+extern void fn_80449DC0(s32, s32, s32);
+extern void fn_80449E98(s32, s32, s32);
+
+#define SMSTATE_MASK 0xc0000000
+#define SMSTATE_ACTIVE 0x40000000
+#define SMSTATE_SLEEP 0x80000000
 extern u32 lbl_805DD120;
 extern s32 lbl_805DD124;
 extern s32 lbl_805DD128;
@@ -57,6 +65,99 @@ u8* fn_804407E0(u32 size)
 
 void fn_80440840(void)
 {
+}
+
+static BOOL axFreeVoice(AXVoice* v)
+{
+    BOOL ok;
+    s32 pid;
+    if (v == NULL) {
+        return FALSE;
+    }
+    ok = FALSE;
+    if ((v->flags & SMSTATE_MASK) == SMSTATE_ACTIVE || (v->flags & SMSTATE_MASK) == SMSTATE_SLEEP) {
+        ok = TRUE;
+    }
+    if (!ok) {
+        __assert(__FILE__, 0x9e, "(v->flags&SMSTATE_MASK) == SMSTATE_ACTIVE || (v->flags&SMSTATE_MASK) == SMSTATE_SLEEP");
+    }
+    pid = v->pid;
+    if (pid != -1) {
+        lbl_8058E298[pid & 0x3f] = NULL;
+        v->pid = -1;
+        fn_80449648(pid);
+        lbl_805DE454--;
+    }
+    v->flags &= ~0x20000000;
+    v->flags &= 0x3fffffff;
+    return TRUE;
+}
+
+s32 fn_80440844(s32 id)
+{
+    s32 intr;
+    AXVoice* v;
+    s32 ret;
+    s32 idx = id & lbl_805DE494;
+    if (id < 0 || idx > lbl_805DE49C) {
+        return 0;
+    }
+    intr = OSDisableInterrupts();
+    v = &lbl_805DE48C[idx];
+    if (v->id != id || (v->flags & SMSTATE_MASK) == 0) {
+        OSRestoreInterrupts(intr);
+        return 0;
+    }
+    ret = axFreeVoice(v);
+    OSRestoreInterrupts(intr);
+    return ret;
+}
+
+s32 fn_80440990(void)
+{
+    s32 intr = OSDisableInterrupts();
+    AXVoice* v;
+    for (v = lbl_805DE480; v != NULL; v = v->next) {
+        if ((v->flags & SMSTATE_MASK) != 0) {
+            axFreeVoice(v);
+        }
+    }
+    OSRestoreInterrupts(intr);
+    return 1;
+}
+
+s32 fn_80440A88(s32 vid)
+{
+    s32 intr;
+    AXVoice* v;
+    if (vid >= 0 && vid <= lbl_805DE444) {
+        intr = OSDisableInterrupts();
+        for (v = lbl_805DE480; v != NULL; v = v->next) {
+            if ((v->flags & SMSTATE_MASK) != 0 && v->vid == vid) {
+                axFreeVoice(v);
+            }
+        }
+        OSRestoreInterrupts(intr);
+        return 1;
+    }
+    return 0;
+}
+
+s32 fn_80440BB0(s32 prio)
+{
+    s32 intr;
+    AXVoice* v;
+    if (prio >= 0 && prio <= 0x3f) {
+        intr = OSDisableInterrupts();
+        for (v = lbl_805DE480; v != NULL; v = v->next) {
+            if ((v->flags & SMSTATE_MASK) != 0 && v->prio == prio) {
+                axFreeVoice(v);
+            }
+        }
+        OSRestoreInterrupts(intr);
+        return 1;
+    }
+    return 0;
 }
 
 s32 fn_80442A10(s32 a, s32 b, s32 c, s32 d, s32 idx)
