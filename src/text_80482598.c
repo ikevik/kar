@@ -83,3 +83,83 @@ void fn_80486D58() {
 void fn_80486E84(a, b) int a; int* b; {
     fn_803BD5A4(a, *b);
 }
+
+/* ---- w3f batch 2 ---- */
+extern char* strchr();
+extern int sprintf(char*, const char*, ...);
+extern void fn_803B8048();
+extern char lbl_805DD268;
+extern char lbl_80534C24[];
+extern void OSInitThreadQueue();
+extern void OSCreateThread();
+extern void OSResumeThread();
+extern int lbl_805DE6F4;
+extern int lbl_805DE6F8;
+extern void fn_80486BBC();
+extern void fn_8046D7FC();
+extern void fn_8046D86C();
+extern void fn_8046D78C();
+
+void fn_804828C4(out) unsigned* out; {
+    fn_8046D7FC(0, out);
+    if (*out == 0) fn_8046D86C(0, out);
+}
+
+void fn_80482910(out) unsigned* out; {
+    unsigned t;
+    fn_8046D7FC(0, &t);
+    if (t == 0) {
+        fn_8046D86C(0, &t);
+        if (t != 0) {
+            *out = 0xFFFF0000;
+            return;
+        }
+    }
+    fn_8046D78C(0, out);
+}
+
+
+char* fn_80482D48(s, d, st, ln) char* s; char* d; char** st; int* ln; {
+    char* p = s;
+    *st = 0;
+    *ln = 0;
+    for (; *p != 0 && strchr(d, *p) == 0; p++) {
+    }
+    *st = s;
+    *ln = p - s;
+    return p;
+}
+
+int fn_80483DD4(buf, a, b, c) char* buf; int a; int b; int c; {
+    char* start = buf;
+    buf += sprintf(buf, lbl_80534C24, c, a, b);
+    fn_803B8048(buf, &lbl_805DD268);
+    return (buf + 2) - start;
+}
+
+void fn_80486CD8(cfg) int* cfg; {
+    if (lbl_805DE6FC == 0) {
+        lbl_805DE6FC = 1;
+        OSInitThreadQueue(&lbl_805DE6E8);
+        lbl_805DE6F4 = cfg[4];
+        lbl_805DE6F8 = cfg[5];
+        OSCreateThread(cfg[0], fn_80486BBC, 0, cfg[1], cfg[2], cfg[3], 0);
+        OSResumeThread(cfg[0]);
+    }
+}
+
+#if 0 /* w3f near misses */
+char* fn_80482B08(p) char* p; {
+    if (p[0] == 13 && p[1] == 10) {
+        int ok = 1;
+        char c = p[2];
+        if (c != 32 && c != 9) ok = 0;
+        if (ok == 0) return p + 2;
+    } else if (p[0] == 0) {
+        return p;
+    }
+    return fn_80482B08(p + 1);
+}
+
+
+#endif /* w3f near misses */
