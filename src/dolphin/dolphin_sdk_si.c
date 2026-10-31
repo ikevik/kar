@@ -344,9 +344,10 @@ BOOL SITransfer(s32 chan, u32* output, u32 outputBytes, u32* input, u32 inputByt
     BOOL enabled;
     OSTime now;
     OSTime fire;
+    SIPacket* pkt = &Packet[chan];
 
     enabled = OSDisableInterrupts();
-    if (Packet[chan].chan != -1 || Si.chan == chan) {
+    if (pkt->chan != -1 || Si.chan == chan) {
         OSRestoreInterrupts(enabled);
         return FALSE;
     }
@@ -363,13 +364,13 @@ BOOL SITransfer(s32 chan, u32* output, u32 outputBytes, u32* input, u32 inputByt
         OSRestoreInterrupts(enabled);
         return TRUE;
     }
-    Packet[chan].chan = chan;
-    Packet[chan].output = output;
-    Packet[chan].outputBytes = outputBytes;
-    Packet[chan].input = input;
-    Packet[chan].inputBytes = inputBytes;
-    Packet[chan].callback = callback;
-    Packet[chan].fire = fire;
+    pkt->chan = chan;
+    pkt->output = output;
+    pkt->outputBytes = outputBytes;
+    pkt->input = input;
+    pkt->inputBytes = inputBytes;
+    pkt->callback = callback;
+    pkt->fire = fire;
     OSRestoreInterrupts(enabled);
     return TRUE;
 }
