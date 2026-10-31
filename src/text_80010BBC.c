@@ -198,3 +198,27 @@ void fn_800490D0(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
 void fn_800490F8(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
 void fn_80049140(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
 void fn_80049168(u8 v) { AT(u8, gmGetGlobalP(), 0x7c4) = v; }
+
+typedef signed char s8;
+extern void fn_8013381C();
+extern void fn_80133AF4();
+extern void fn_801363BC();
+extern void fn_8000BC30();
+void fn_8003C710(void) { gmGetGlobalP(); fn_8013381C(); }
+void fn_8003D550(void) { gmGetGlobalP(); fn_80133AF4(); }
+void fn_8004730C(void) { gmGetGlobalP(); fn_801363BC(); }
+void fn_8003EDC4(void) { gmGetGlobalP(); fn_8000BC30(3); }
+void fn_8003D5B8(u8 v) { char* g = gmGetGlobalP(); AT(u8, g, 0x35e) = AT(u8, g, 0x35d); AT(u8, g, 0x35d) = v; }
+void fn_8003EA64(u8 v) { char* g = gmGetGlobalP(); AT(u8, g, 0x382) = AT(u8, g, 0x381); AT(u8, g, 0x381) = v; }
+void fn_8003F694(u8 v) { char* g = gmGetGlobalP(); AT(u8, g, 0x39a) = AT(u8, g, 0x399); AT(u8, g, 0x399) = v; }
+void fn_8003EC10(u8 v) { char* g = gmGetGlobalP(); AT(short, g, 0x38e) = v; }
+u8 fn_8003EC44(void) { char* g = gmGetGlobalP(); return AT(u16, g, 0x38e); }
+typedef struct { char pad[0x366]; u8 a; } B366;
+u8 fn_8003D804(s8 i) { char* g = gmGetGlobalP(); g += i; return ((B366*)g)->a; }
+typedef struct { char pad[0x38a]; u8 a; } B38A;
+u8 fn_8003ECB8(s8 i) { char* g = gmGetGlobalP(); g += i; return ((B38A*)g)->a; }
+void fn_8003D7B8(s8 i) { char* q = gmGetGlobalP() + i; if ((s8)AT(u8, q, 0x366) < 99) AT(u8, q, 0x366)++; }
+void fn_8003EC6C(s8 i) { char* q = gmGetGlobalP() + i; if ((s8)AT(u8, q, 0x38a) < 99) AT(u8, q, 0x38a)++; }
+int fn_8003D83C(void) { char* g = gmGetGlobalP(); if ((s8)AT(u8, g, 0x35d) == 0 && AT(char, g, 0x362) == 1) return 0; return 1; }
+int fn_8003ECF0(void) { char* g = gmGetGlobalP(); if ((s8)AT(u8, g, 0x381) == 0 && AT(char, g, 0x386) == 1) return 0; return 1; }
+int fn_80047350(void) { char* g = gmGetGlobalP(); return (s8)AT(u8, g, 0xd4d) == 0; }
