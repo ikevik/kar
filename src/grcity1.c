@@ -13,6 +13,106 @@ extern int fn_800F8B74(void*, int);
 extern void fn_800DB5D4(void*, void*, int);
 extern void fn_800DB654(void*, void*, int);
 extern void __assert(char*, int, char*);
+extern char lbl_805D6368[8];
+extern int lbl_804A77E4[];
+extern void fn_800DBE48();
+extern void fn_800DB774();
+extern int fn_800DB2B8();
+extern void fn_800DC630();
+extern void fn_800DC1B4();
+extern int fn_80261ECC();
+extern void fn_800FA2A0();
+extern void fn_800FA610();
+extern void fn_800FE5D4();
+extern void fn_80109DB4();
+extern void fn_8010D228();
+extern void fn_8010DB64();
+extern void fn_80106824();
+extern void fn_80108F10();
+extern void fn_80108CE8();
+extern void fn_80109138();
+extern void fn_80107BFC();
+extern void fn_80107D64();
+extern void fn_80107ECC();
+extern void fn_801043C8();
+
+void fn_8010F114(void* a)
+{
+    void* r;
+    void* c;
+    void* t;
+    u32 q;
+    int k;
+    c = P(a, 0x2c);
+    t = P(P(c, 8), 8);
+    if (t != 0) {
+        q = W(t, 0);
+        if (q != 0) {
+            fn_800DBE48(c);
+        }
+    }
+    k = fn_80261ECC();
+    r = P(P(c, 8), 8);
+    switch (k) {
+    case 9:
+        fn_800DB774(c, P(r, 4));
+        fn_800DB774(c, P(r, 8));
+        fn_800DC630(c, lbl_804A77E4[fn_800DB2B8(P(P(P(c, 8), 8), 0xc), 4)]);
+        break;
+    case 0x16:
+        fn_800DB774(c, P(r, 8));
+        fn_800DC630(c, 0xf);
+        break;
+    case 0x17:
+        fn_800DB774(c, P(r, 4));
+        fn_800DC630(c, 0x10);
+        break;
+    case 0x34:
+        fn_800DB774(c, P(r, 4));
+        fn_800DB774(c, P(r, 8));
+        fn_800DC630(c, 0);
+        break;
+    default:
+        __assert(lbl_804A77F4, 0x6a, lbl_805D6368);
+        break;
+    }
+    fn_800DC1B4(c);
+}
+
+void grYakuUpdate(void* a)
+{
+    fn_800FA2A0(a, 0);
+    fn_800FA610(a, 1);
+    fn_800FE5D4(a, 2);
+    fn_800FE5D4(a, 3);
+    fn_800FE5D4(a, 4);
+    fn_800FE5D4(a, 5);
+    fn_800FE5D4(a, 6);
+    fn_800FE5D4(a, 7);
+    fn_800FE5D4(a, 8);
+    fn_800FE5D4(a, 9);
+    fn_800FE5D4(a, 10);
+    fn_800FE5D4(a, 11);
+    fn_800FE5D4(a, 12);
+    fn_800FE5D4(a, 13);
+    fn_800FE5D4(a, 14);
+    fn_800FE5D4(a, 15);
+    fn_800FE5D4(a, 16);
+    fn_800FE5D4(a, 17);
+    fn_80109DB4(a, 0x12);
+    fn_80109DB4(a, 0x13);
+    fn_8010D228(a, 0x14);
+    fn_8010DB64(a, 0x15);
+    fn_80106824(a, 0x16);
+    fn_80106824(a, 0x17);
+    fn_80108F10(a, 0x18);
+    fn_80108CE8(a, 0x19);
+    fn_80109138(a, 0x1a);
+    fn_80107BFC(a, 0x1b);
+    fn_80107D64(a, 0x1c);
+    fn_80107ECC(a, 0x1d);
+    fn_801043C8(a, 0x1e);
+}
 
 int fn_8010F5A4(int arg)
 {
@@ -70,15 +170,13 @@ void grSetupCityEventData(void* self)
 int fn_8010F720(int v)
 {
     void* c = P(P(lbl_805DD6CC, 8), 8);
-    int i;
-    int n;
     void* e;
+    int i;
     if (!((int)W(P(c, 0x14), 4) > 6)) {
         __assert(lbl_804A77F4, 0x1c3, lbl_804A7800);
     }
     e = P(P(c, 0x14), 0);
-    n = W(e, 0x34);
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < (int)W(e, 0x34); i++) {
         if (v == ((int*)P(e, 0x30))[i]) {
             return 1;
         }
