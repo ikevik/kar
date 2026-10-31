@@ -101,7 +101,7 @@ extern OSExceptionHandler* OSExceptionTable;
 extern OSInterruptHandler* InterruptHandlerTable;
 extern HeapDesc* lbl_805DDEB0;
 extern int lbl_805DDEF8;
-extern int RunQueueHint;
+extern volatile int RunQueueHint;
 extern s32 Reschedule;
 extern void* __OSArenaHi;
 extern void* __OSArenaLo;
@@ -117,6 +117,7 @@ u32 OSGetConsoleType(void)
     return type;
 }
 
+#pragma dont_inline on
 #pragma peephole off
 OSExceptionHandler __OSSetExceptionHandler(u8 exception, OSExceptionHandler handler)
 {
@@ -132,6 +133,7 @@ OSExceptionHandler __OSGetExceptionHandler(u8 exception)
     return OSExceptionTable[exception];
 }
 #pragma peephole on
+#pragma dont_inline reset
 
 OSInterruptHandler __OSSetInterruptHandler(s16 interrupt, OSInterruptHandler handler)
 {
@@ -295,14 +297,14 @@ int fn_803D9AF4(OSThread* thread)
     return 0;
 }
 
+static inline int IsDead(OSThread* thread)
+{
+    return thread->state == 8 || thread->state == 0;
+}
+
 int fn_803D9B10(OSThread* thread)
 {
-    u16 state = thread->state;
-    int r = 1;
-    if (state != 8 && state != 0) {
-        r = 0;
-    }
-    if (r) {
+    if (IsDead(thread)) {
         return 1;
     }
     return 0;
@@ -404,7 +406,9 @@ void OSSleepThread(OSThreadQueue* queue)
     currentThread = *(OSThread**)0x800000E4;
     currentThread->state = 4;
     currentThread->queue = queue;
-    for (next = queue->head; next && next->priority <= currentThread->priority; next = next->link.next) {
+    next = queue->head;
+    while (next && next->priority <= currentThread->priority) {
+        next = next->link.next;
     }
     if (next == 0) {
         prev = queue->tail;
@@ -440,6 +444,7 @@ void OSWakeupThread(OSThreadQueue* queue)
     OSThread* thread;
     OSThread* next;
     OSThread* prev;
+    RunQ* rq = RunQueue;
     enabled = OSDisableInterrupts();
     while (queue->head) {
         thread = queue->head;
@@ -452,7 +457,7 @@ void OSWakeupThread(OSThreadQueue* queue)
         queue->head = next;
         thread->state = 1;
         if (thread->suspend <= 0) {
-            thread->queue = (OSThreadQueue*)&RunQueue[thread->priority];
+            thread->queue = (OSThreadQueue*)&rq[thread->priority];
             prev = thread->queue->tail;
             if (prev == 0) {
                 thread->queue->head = thread;
@@ -469,3 +474,4 @@ void OSWakeupThread(OSThreadQueue* queue)
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }
+#pragma peephole on
