@@ -147,4 +147,21 @@ u32 fwrite(u32 p3, u32 p4, u32 p5, u32 p6) {
 
 
 
+u32 fseek(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    u32 s30;
+    u32 s29;
+    u32 c1;
+    s31 = p5;
+    s30 = p4;
+    s29 = p3;
+    __begin_critical_region(2);
+    c1 = fn_803B4068(s29, s30, s31);
+    s31 = c1;
+    __end_critical_region(2);
+    return s31;
+}
+
+
+
 

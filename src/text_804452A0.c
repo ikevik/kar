@@ -398,14 +398,14 @@ extern const float lbl_805E6228;
 extern const float lbl_805E622C;
 extern const float lbl_805E6230;
 u32 fn_80449AE4(u32);
-void fn_8044EFA8(u32, u32);
+void fn_8044EFA8();
 u32 fn_8044F128(float, float, float, float, float);
 u32 fn_8044EDEC(u32);
 void fn_8044F8C8(u32, u32, u32);
 void fn_803D7E58(u32);
 u32 fn_8045BDEC(u32);
 float OSReport(u32, ...);
-void fn_803D7F34(u32, float);
+void fn_803D7F34();
 float fn_803DA558(u32, u32);
 float fn_8045CEB8(u32);
 
@@ -507,5 +507,192 @@ u32 HVQM4BufaGetFree(u32 p3) {
     }
     OSRestoreInterrupts();
     return v1;
+}
+
+typedef struct { u32 w[4]; } S16;
+extern u8 lbl_80508D58[];
+extern u32 lbl_805DD160;
+extern u32 lbl_805DD168;
+extern u8 lbl_80597140[];
+extern u8 lbl_80509398[];
+extern u32 lbl_805DE50C;
+extern u32 lbl_805DE568;
+void fn_804452A0(u32, u32, u32, u32, u32, u32, u32, u32);
+void __assert(u32, u32, u32);
+void fn_804498CC(u32, u32);
+u32 fn_80453484(u32, u32);
+u32 fn_8045B848(void);
+u32 fn_803D9AF4(u32);
+u32 fn_8045C38C(u32, u32);
+
+void fn_804456C0(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 loc12[1];
+    u32 loc8[1];
+    M32(((u32)loc8)) = p6;
+    M32(((u32)loc12)) = 0;
+    fn_804452A0(p3, p4, 127, 0, 0, 0, 0, p5);
+}
+
+u32 fn_804479E0(u32 p3) {
+    u32 s30;
+    u32 v1;
+    u32 s31;
+    s30 = p3;
+    v1 = lbl_805DE4E4;
+    s31 = ((u32 (*)())(v1))();
+    if ((s32)s31 == (s32)0) {
+        OSReport((u32)lbl_80508D58, s30);
+        __assert((u32)&lbl_805DD160, 174, (u32)&lbl_805DD168);
+    }
+    return s31;
+}
+
+void fn_80449958(u32 p3) {
+    u32 v1;
+    u32 v2;
+    v1 = M32((u32)lbl_80597140+(p3<<2));
+    v2 = M32(((u32)(u32)lbl_80597140+4+(p3<<2)));
+    fn_804498CC((v1<<1), (v2<<1));
+}
+
+void fn_8044A010(u32 p3) {
+    u32 s31;
+    u32 v1;
+    u32 v2;
+    u32 l3;
+    u32 v3;
+    s31 = p3;
+    v1 = M32(p3);
+    if ((s32)v1 != (s32)-2) {
+        __assert((u32)&lbl_805DD160, 2117, (u32)lbl_80509398);
+    }
+    v2 = lbl_805DE50C;
+    l3 = v2;
+    while ((u32)l3 != (u32)0) {
+        if ((u32)l3 == (u32)s31) {
+        return;
+        }
+        v3 = M32((l3+48));
+        l3 = v3;
+    }
+    M32((s31+48)) = v2;
+    lbl_805DE50C = s31;
+}
+
+void fn_8044F088(u32 p3) {
+    u32 v1;
+    u32 s31;
+    u32 l4;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    u32 v6;
+    v1 = lbl_805DE568;
+    s31 = v1;
+    l4 = 0;
+    while ((u32)s31 != (u32)0) {
+        v2 = M32((s31+80));
+        if ((u32)s31 == (u32)p3) {
+            if ((u32)l4 != (u32)0) {
+                M32((l4+80)) = v2;
+            } else {
+                lbl_805DE568 = v2;
+            }
+            v3 = M32((s31+100));
+            if ((u32)v3 != (u32)0) {
+                v4 = M32((v3+4));
+                if ((u32)v4 != (u32)0) {
+                    fn_8044EFA8(v4, l4);
+                }
+                v5 = M32((s31+100));
+                fn_8044EFA8(v5);
+            }
+            v6 = M32((s31+104));
+            if ((u32)v6 != (u32)0) {
+                fn_8044EFA8(v6);
+            }
+            fn_8044EFA8(s31);
+            return;
+        }
+        l4 = s31;
+        s31 = v2;
+    }
+}
+
+u32 fn_80453440(u32 p3, u32 p4, u32 p5) {
+    u32 v1;
+    u32 s31;
+    u32 c0;
+    v1 = M32(p3);
+    s31 = v1;
+    c0 = fn_80453484(p4, p5);
+    if ((s32)s31 >= (s32)c0) {
+        s31 = c0;
+    }
+    return s31;
+}
+
+u32 fn_8045BDEC(u32 p3) {
+    u32 l3;
+    u32 l4;
+    u32 v1;
+    if ((u32)p3 != (u32)0) {
+        l3 = p3;
+        l4 = 0;
+        while ((v1 = M8(l3), l3 = (l3+1), (s32)((s8)v1) != (s32)0)) {
+            l4 = (l4+1);
+        }
+        l3 = l4;
+        return l3;
+    }
+    return 0;
+}
+
+void fn_8045BE68(void) {
+    u32 s31;
+    u32 c0;
+    s31 = (u32)lbl_805B4698;
+    c0 = fn_8045B848();
+    if ((s32)c0 == (s32)0) {
+    return;
+    }
+    fn_803D9AF4(s31);
+}
+
+void fn_8045BFAC(void) {
+    u32 s31;
+    u32 c0;
+    s31 = (u32)lbl_805B4698;
+    c0 = fn_803D9AF4((u32)lbl_805B4698);
+    if ((s32)c0 == (s32)0) {
+    return;
+    }
+    OSResumeThread(s31);
+}
+
+u32 fn_8045C52C(u32 p3, u32 p4) {
+    u32 s31;
+    u32 s30;
+    u32 s29;
+    u32 s28;
+    u32 v1;
+    u32 v2;
+    u32 c0;
+    s29 = p4;
+    s28 = p3;
+    if ((s32)s28 == (s32)0) {
+        return -1;
+    }
+    s30 = 16;
+    while ((s32)s30 < (s32)s29) {
+        s31 = (s28+s30);
+        v1 = M8((s31+-1));
+        v2 = M8(s31);
+        c0 = fn_8045C38C(v1, v2);
+        M8(s31) = c0;
+        s30 = (s30+1);
+    }
+    return 0;
 }
 
