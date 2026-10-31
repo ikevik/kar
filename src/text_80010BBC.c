@@ -278,3 +278,329 @@ typedef struct { char pad[0x5c1]; u8 a; } B5C1;
 #if 0
 void fn_80042200(int i) { char* g = gmGetClearcheckerP(); g += i * 0x14; ((B5C1*)g)->a = 0; }
 #endif
+
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+typedef struct { u8 :7; u8 f:1; } BFu8_7_1;
+typedef struct { u8 :6; u8 f:1; } BFu8_6_1;
+typedef struct { u8 :5; u8 f:2; } BFu8_5_2;
+typedef struct { u8 :5; u8 f:1; } BFu8_5_1;
+typedef struct { u8 :4; u8 f:2; } BFu8_4_2;
+typedef struct { u8 :4; u8 f:1; } BFu8_4_1;
+typedef struct { u8 :3; u8 f:1; } BFu8_3_1;
+typedef struct { u8 :2; u8 f:1; } BFu8_2_1;
+typedef struct { u8 :1; u8 f:1; } BFu8_1_1;
+typedef struct { u8 f:2; } BFu8_0_2;
+typedef struct { u8 f:1; } BFu8_0_1;
+extern u8 lbl_80497280[];
+extern u32 lbl_805D51B8;
+extern u8 lbl_804972D8[];
+extern u32 lbl_805D51C0;
+extern u8 lbl_80497BA8[];
+extern u32 lbl_805D51D8;
+extern u8 HSD_AObjSetFlags[];
+extern u32 lbl_805DD5A8;
+extern u32 lbl_805D528C;
+extern u8 lbl_80498FEC[];
+u32 menuGetNextMenuID(u32, float);
+void fn_80008220(u32, float);
+u32 fn_8000FCB0(u32);
+u32 fn_8022D230(u32, float);
+void fn_801C8A60(u32, u32, float);
+u32 fn_800088C8(u32, float);
+u32 debug_memCard_reqSave(u32, float);
+u32 memset(u32, u32, u32, float);
+float fn_8005FB64(u32, float);
+void fn_8005FAE4(u32, float);
+void fn_8001A3C0(u32, float);
+void fn_8001D43C(u32, float);
+void fn_8001F950(u32, float);
+void fn_80134264(u32, u32, float);
+void fn_80134244(u32, u32, float);
+void fn_801342A4(u32, u32);
+void fn_80134284(u32, u32);
+u32 fn_8000B2B8(void);
+u32 fn_80072770(u32, float);
+void fn_80073FBC(u32, float);
+void fn_8002D0EC(u32, float);
+void fn_8002D9E8(u32, float);
+void fn_80135D08(u32, u32, u32);
+u32 loadMainMenuMusic(void);
+void fn_801358F0(u32, u32, float);
+void fn_801358D0(u32, u32, float);
+void fn_80135930(u32, u32);
+void fn_80135910(u32, u32);
+u32 fn_8002CFD8(u32, u32, u32, float);
+void fn_8003D03C(u32, float);
+void fn_8003EDEC(u32);
+u32 fn_8000CC18(u32, float);
+u32 fn_8000BC10(u32, float);
+float fn_8000CCB8(u32, float);
+u32 fn_8005A348(u32, float);
+u32 fn_8000AF38(u32, float);
+void fn_80136AF0(u32, float);
+void fn_80136FD8(u32, float);
+void fn_80137470(u32, float);
+u32 fn_80071D7C(void);
+u32 fn_801377E8(void);
+u32 fn_8000B884(u32, float);
+u32 fn_80138204(void);
+u32 fn_8000AD48(u32, float);
+u32 fn_8000AE50(u32, float);
+u32 fn_80138FAC(u32, u32, float);
+u32 fn_80139058(u32, float);
+u32 fn_80139034(u32, float);
+void fn_80183054(u32, float);
+float debug_memCard_reqDelete(u32, float);
+u32 fn_8007863C(u32, float);
+float fn_8007875C(u32, float);
+float fn_80078E40(u32, float);
+float fn_80078C7C(u32, float);
+void __assert(u32, u32, u32);
+u32 fn_80078CC0(void);
+u32 menu_getCurrentMenuID(void);
+u32 fn_800064F0(u32, float);
+void func_80428F64(u32, float);
+u32 fn_80077A5C(void);
+u32 fn_80448220(u32, float);
+u32 fn_80077980(u32, float);
+u32 fn_80077B50(u32, u32, u32, u32, u32, u32, float);
+u32 func_80428F28(u32, u32, u32, float);
+float HSD_GObj_AddGXLink(u32, u32, u32, u32, float);
+u32 HSD_CObjLoadDesc(u32, float);
+float fn_80429C14(u32, u32, u32, float);
+float fn_80429728(u32, u32, u32, float);
+u32 fn_80077ED4(u32, u32, float);
+void fn_8000A498(u32, float);
+u32 fn_8007859C(void);
+u32 fn_8027C830(u32, float);
+u32 fn_8027C838(void);
+u32 fn_8006595C(u32, float);
+u32 fn_8027E574(u32, float);
+u32 fn_8027CCA8(u32, float);
+u32 lbLoadMusicLocation(u32, float);
+float fn_800780D0(u32, float);
+u32 fn_8027CD10(u32, float);
+u32 fn_8027EF64(void);
+u32 fn_80233A74(void);
+u32 fn_8005AB84(u32, float);
+u32 fn_8005A440(u32, float);
+u32 fn_8005A608(u32, float);
+u32 fn_8027EF6C(u32, float);
+u32 fn_8027F5B4(u32, float);
+u32 fn_8027F610(void);
+u32 fn_80138D74(u32, float);
+u32 fn_8000AECC(u32, float);
+u32 fn_801822F4(u32, u32, float);
+u32 fn_8007B650(u32);
+u32 fn_8000AAC4(u32, float);
+u32 fn_8000AF5C(u32, float);
+u32 plGetPlayerKind(u32, float);
+void fn_8004D8A8(u32, float);
+u32 fn_8000A300(u32, float);
+u32 fn_8000916C(u32, float);
+void fn_8004D248(u32, float);
+void fn_8004D5D4(u32);
+u32 fn_802339E4(void);
+u32 fn_8007ADB8(u32, float);
+u32 fn_80281660(u32, float);
+u32 fn_80281AD4(u32, float);
+float fn_80281BB4(u32, float);
+u32 fn_802823FC(u32, float);
+u32 fn_8005A5B0(u32, float);
+void fn_804119E4(u32);
+u32 fn_801390E0(void);
+u32 fn_80139188(u32, float);
+u32 fn_801391C8(u32, float);
+u32 fn_801832C4(u32, float);
+u32 fn_80183844(u32, float);
+u32 fn_8018433C(u32, float);
+u32 fn_80184828(u32, float);
+u32 fn_80184C0C(u32, float);
+u32 fn_80184E90(u32, float);
+u32 fn_801850A8(u32, float);
+u32 fn_80185358(u32, float);
+float fn_80185654(u32, float);
+float fn_8017C90C(u32, float);
+float fn_8017C990(u32, float);
+float fn_8017CA38(u32, float);
+float fn_8017C9C8(u32, float);
+u32 fn_8017CA00(u32, float);
+u32 fn_80184530(u32, float);
+u32 fn_80072AA0(u32, float);
+u32 fn_80072A68(u32, float);
+u32 fn_8023295C(u32, float);
+float fn_80277748(u32, float);
+u32 fn_80078D24(u32, float);
+u32 fn_8013927C(u32, float);
+u32 fn_80139314(u32, float);
+void fn_80185A88(u32, float);
+u32 fn_80185940(u32);
+u32 fn_80051F98(u32, float);
+u32 fn_80051FF8(u32, float);
+u32 fn_800524CC(u32, float);
+void fn_80185A00(u32, u32, float);
+void fn_803FCDB8(u32, ...);
+u32 fn_8040BD4C(u32, u32, u32);
+float fn_8040BD64(u32, u32, float);
+float fn_8040C0D8(u32, u32, float);
+void fn_80408F88(u32, u32);
+u32 HSD_RObjAlloc(u32, u32);
+float HSD_RObjSetFlags(u32, u32, float);
+float fn_8041A438(u32, u32, float);
+u32 fn_8040BCCC(u32, u32, float);
+float HSD_JObjCheckDepend(u32);
+float HSD_AObjInterpretAnim(u32, u32, u32, float);
+void HSD_RObjAnimAll(u32, float);
+float HSD_AObjInitEndCallBack(u32);
+u32 fn_80055DF8(u32, float);
+void HSD_AObjInvokeCallBacks(u32, float);
+void HSD_JObjUnref(u32, float);
+void fn_800571A4(u32, u32, u32, u32, u32);
+u32 OSDisableInterrupts(u32, u32);
+u32 HSD_GetHeap(void);
+float HSD_SetHeap(u32, float);
+float HSD_Free(u32, float);
+void fn_80057A9C(u32, u32);
+void OSRestoreInterrupts(u32);
+void fn_80059CFC(void);
+u32 fn_80058E84(void);
+u32 DVDConvertPathToEntrynum(u32, float);
+float fn_80058920(u32, u32);
+u32 fn_8007603C(void);
+void fn_80075DC0(u32, float);
+void fn_803D360C(u32, u32);
+void fn_803D3708(u32, u32);
+float fn_8005BA38(u32, u32);
+float fn_8005BEE4(u32, u32, float);
+float fn_8005C298(u32, u32, u32, float);
+void OSReport(u32, ...);
+void fn_804484D0(u32);
+void fn_80445A84(u32);
+float fn_80445810(u32, u32);
+float fn_804458D0(u32, u32);
+
+void fn_8004877C(void) {
+    __assert((u32)lbl_80497280, 482, (u32)&lbl_805D51B8);
+}
+
+void fn_80048888(void) {
+    __assert((u32)lbl_80497280, 548, (u32)&lbl_805D51B8);
+}
+
+void fn_80048F68(void) {
+    __assert((u32)lbl_804972D8, 335, (u32)&lbl_805D51C0);
+}
+
+void fn_80049040(void) {
+    __assert((u32)lbl_804972D8, 388, (u32)&lbl_805D51C0);
+}
+
+void fn_8004F5E0(u32 p3) {
+    u32 v1;
+    if ((s32)p3 >= (s32)3) {
+        __assert((u32)lbl_80497BA8, 167, (u32)&lbl_805D51D8);
+    }
+    if ((s32)p3 >= (s32)3) {
+        __assert((u32)lbl_80497BA8, 134, (u32)&lbl_805D51D8);
+    }
+    v1 = M32((u32)lbl_80497B9C+(p3<<2));
+    fn_804119E4(v1);
+}
+
+void fn_800550F4(u32 p3, u32 p4) {
+    fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjSetFlags, 3, (8192<<16));
+}
+
+void fn_80055AA8(u32 p3) {
+    fn_80408F88(p3, 4);
+}
+
+void fn_80055ACC(u32 p3) {
+    fn_80408F88(p3, 16);
+}
+
+void fn_80055DAC(u32 p3) {
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    float d0;
+    float d1;
+    if ((s32)p3 == (s32)0) {
+    return;
+    }
+    d0 = HSD_JObjCheckDepend(p3);
+    v1 = M32(p3);
+    v2 = M32(((u32)p3+124));
+    v3 = M32(((u32)v1+80));
+    d1 = HSD_AObjInterpretAnim(v2, p3, v3, d0);
+    v4 = M32(((u32)p3+128));
+    HSD_RObjAnimAll(v4, d1);
+}
+
+void fn_8005729C(u32 p3, u32 p4, u32 p5) {
+    u32 v1;
+    u32 v2;
+    v1 = M32(((u32)p4+24));
+    v2 = M32(((u32)p4+28));
+    fn_800571A4(p3, v1, v2, p5, p4);
+}
+
+u32 fn_80058E60(void) {
+    u32 v1;
+    fn_80059CFC();
+    v1 = lbl_805DD5A8;
+    return v1;
+}
+
+void fn_80059D28(u32 p3) {
+    u32 v1;
+    v1 = lbl_805D528C;
+    fn_803D360C(v1, p3);
+}
+
+void HasCamera(u32 p3) {
+    u32 v1;
+    v1 = lbl_805D528C;
+    fn_803D3708(v1, p3);
+}
+
+u32 fn_8005A440(u32 p3, float q1) {
+    float d0;
+    d0 = fn_8005BA38(2, 1);
+    fn_8005BEE4(1, 2, d0);
+}
+
+void fn_8005B8AC(void) {
+    OSReport((u32)lbl_80498FEC);
+}
+
+void fn_8005B9D0(u32 p3) {
+    if ((s32)p3 != (s32)1) {
+        if ((s32)p3 != (s32)0) {
+            if ((s32)p3 != (s32)2) {
+                if ((s32)p3 != (s32)3) {
+                    if ((s32)p3 != (s32)4) {
+                    return;
+                    }
+                }
+            }
+        }
+    }
+    fn_804484D0(p3);
+}
+
+void fn_8005E184(void) {
+    fn_80445A84(1);
+}
+
+
+
+
+
