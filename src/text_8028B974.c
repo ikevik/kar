@@ -1,5 +1,8 @@
 /* auto small functions */
 #pragma dont_inline on
+extern int HSD_CObjSetCurrent();
+extern void HSD_JObjDispAll();
+extern void fn_80397A48();
 extern char lbl_804BBFF4[];
 extern char lbl_804BC32C[];
 extern char lbl_804BE46C[];
@@ -396,4 +399,94 @@ int fn_802B57F4(int a0, int a1) {
     t0 = *(int*)(a0 + 276);
     *(int*)(a0 + 160) = t0;
     return a0;
+}
+
+int fn_80291E7C(int a0) {
+int t0;
+int t1;
+t0 = *(int*)(a0 + 8);
+t1 = HSD_CObjSetCurrent(t0);
+lbl_805DDC90 = a0;
+return ((unsigned)((-t1) | t1) >> 31);
+}
+
+void fn_802927D4(int a0, float fa0) {
+int t0;
+float t1;
+int t2;
+if (*(unsigned char*)(a0 + 12) != 0) {
+t0 = *(unsigned char*)(a0 + 12);
+*(float*)(a0 + 20) = fa0;
+return;
+}
+t1 = lbl_805E3358;
+t2 = *(unsigned char*)(a0 + 12);
+*(float*)(a0 + 20) = t1;
+}
+
+void fn_802939F4(int a0) {
+int t0;
+int t1;
+int t2;
+int t3;
+int m0;
+m0 = *(unsigned char*)(a0 + 16);
+if (*(unsigned char*)(a0 + 16) != 0) {
+t0 = *(int*)(a0 + 12);
+t1 = *(unsigned char*)(a0 + 16);
+HSD_JObjDispAll(t0, 0, 1, 0);
+t2 = *(int*)(a0 + 12);
+HSD_JObjDispAll(t2, 0, 4, 0);
+t3 = *(int*)(a0 + 12);
+HSD_JObjDispAll(t3, 0, 2, 0);
+m0 = t1;
+}
+}
+
+void fn_8029B280(int a0, int a1) {
+int t0;
+int t1;
+int t2;
+t0 = *(int*)(a0 + 16384);
+*(int*)(a1 + 0) = t0;
+*(int*)(a0 + 16384) = ((unsigned)(a1 - a0) >> 8);
+t1 = *(int*)(a0 + 16388);
+t2 = (*(int*)(a0 + 16388) + 1);
+*(int*)(a0 + 16388) = t2;
+}
+
+int fn_8029D72C(int a0) {
+int t0;
+int t1;
+t0 = *(int*)(a0 + 8);
+t1 = HSD_CObjSetCurrent(t0);
+lbl_805DDC90 = a0;
+return ((unsigned)((-t1) | t1) >> 31);
+}
+
+void fn_802A051C(int a0) {
+int t0;
+int m0;
+m0 = *(int*)(a0 + 16);
+if ((unsigned)*(int*)(a0 + 16) < (unsigned)240) {
+t0 = *(int*)(a0 + 16);
+fn_8029CF8C();
+m0 = t0;
+}
+}
+
+int fn_802A0F08(int a0, int a1, int a2) {
+*(int*)((a0 + (a1 << 2)) + 2864) = a2;
+return (a0 + (a1 << 2));
+}
+
+void fn_802ADCEC(int a0) {
+int t0;
+int m0;
+m0 = *(unsigned char*)(a0 + 256);
+if (*(unsigned char*)(a0 + 256) != 0) {
+t0 = *(unsigned char*)(a0 + 256);
+fn_80397A48();
+m0 = t0;
+}
 }

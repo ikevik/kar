@@ -1,5 +1,6 @@
 /* auto small functions */
 #pragma dont_inline on
+extern void fn_803DA558();
 extern char lbl_80535238[];
 extern char lbl_805C2AF8[];
 extern char lbl_805C3C40[];
@@ -61,4 +62,28 @@ void fn_804892D0(void) {
 
 void fn_804893D8(void) {
     fn_80485180();
+}
+
+void fn_80487D00(void) {
+int t0;
+int m0;
+m0 = *(int*)((int)lbl_805C3C40 + 128);
+if (*(int*)((int)lbl_805C3C40 + 128) == 1) {
+t0 = *(int*)((int)lbl_805C3C40 + 128);
+fn_803DA558(((int)lbl_805C3C40 + 272), 0);
+*(int*)((int)lbl_805C3C40 + 128) = 0;
+m0 = 0;
+}
+}
+
+void fn_8048821C(void) {
+int t0;
+int m0;
+m0 = *(int*)((int)lbl_805C3C40 + 192);
+if (*(int*)((int)lbl_805C3C40 + 192) == 1) {
+t0 = *(int*)((int)lbl_805C3C40 + 192);
+fn_803DA558(((int)lbl_805C3C40 + 272), 0);
+*(int*)((int)lbl_805C3C40 + 192) = 0;
+m0 = 0;
+}
 }

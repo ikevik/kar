@@ -1,5 +1,14 @@
 /* auto small functions */
 #pragma dont_inline on
+extern unsigned short lbl_805DCDD0;
+extern int lbl_805DCE08;
+extern int lbl_805DCE0C;
+extern float lbl_805DE41C;
+extern float lbl_805DE420;
+extern float lbl_805DE424;
+extern int lbl_805DE428;
+extern int lbl_805DE430;
+extern float lbl_805E60C8;
 extern int lbl_805DCE00;
 extern int lbl_805DE3D8;
 extern int lbl_805DE3F0;
@@ -85,4 +94,38 @@ void fn_80440718(int a0) {
 
 int fn_804407D8(void) {
     return lbl_805DE480;
+}
+
+int fn_80430270(void) {
+unsigned short t0;
+unsigned short t1;
+int m0;
+t0 = lbl_805DCDD0;
+lbl_805DCDD0 = (t0 + 1);
+m0 = ((t0 + 1) & 0xffff);
+if ((unsigned)((t0 + 1) & 0xffff) < (unsigned)256) {
+lbl_805DCDD0 = 256;
+m0 = 256;
+}
+t1 = lbl_805DCDD0;
+return t1;
+}
+
+void fn_80439D14(int a0, int a1, int a2) {
+float t0;
+lbl_805DCE08 = a0;
+lbl_805DCE0C = a1;
+if (lbl_805DE428 == 0) {
+if (a2 != 0) {
+t0 = lbl_805E60C8;
+lbl_805DE41C = t0;
+lbl_805DE420 = t0;
+lbl_805DE424 = t0;
+}
+}
+lbl_805DE428 = a2;
+}
+
+void fn_8043FFB4(int a0) {
+lbl_805DE430 = ((unsigned)(a0 + 15) >> 4);
 }

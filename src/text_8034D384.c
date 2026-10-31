@@ -1,5 +1,6 @@
 /* auto small functions */
 #pragma dont_inline on
+extern void fn_8036AC00();
 
 
 
@@ -53,4 +54,29 @@ void fn_8036E748(int a0, int a1) {
     *(float*)(a0 + 440) = t1;
     t2 = *(float*)(a1 + 36);
     *(float*)(a0 + 444) = t2;
+}
+
+int fn_80369B14(int a0) {
+int t0;
+int t1;
+int t2;
+int t3;
+t0 = (a0 + (*(int*)(a0 + 16384) << 8));
+t1 = *(int*)((a0 + (*(int*)(a0 + 16384) << 8)) + 0);
+*(int*)(a0 + 16384) = t1;
+t2 = *(int*)(a0 + 16388);
+t3 = (*(int*)(a0 + 16388) - 1);
+*(int*)(a0 + 16388) = t3;
+return t0;
+}
+
+void fn_8036ABD4(int a0) {
+int t0;
+int m0;
+m0 = *(unsigned short*)(a0 + 126);
+if (*(unsigned short*)(a0 + 126) == 0) {
+t0 = *(unsigned short*)(a0 + 126);
+fn_8036AC00();
+m0 = t0;
+}
 }

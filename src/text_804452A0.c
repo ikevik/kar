@@ -1,5 +1,23 @@
 /* auto small functions */
 #pragma dont_inline on
+extern char lbl_80596DA0[];
+extern char lbl_80596E40[];
+extern char lbl_805BE470[];
+extern int lbl_805DD16C;
+extern char lbl_805DD200;
+extern char lbl_805DD228;
+extern int lbl_805DE4F0;
+extern int lbl_805DE4F4;
+extern int lbl_805DE5AC;
+extern int lbl_805DE5B0;
+extern int lbl_805DE628;
+extern int lbl_805DE634;
+extern char lbl_805DE650;
+extern char lbl_805E6298;
+extern char lbl_805E62A0;
+extern void fn_8044C284();
+extern void fn_80455FEC();
+extern void fn_804563AC();
 extern char lbl_8059A818[];
 extern char lbl_8059A880[];
 extern char lbl_805B4698[];
@@ -262,4 +280,50 @@ void fn_80471D90(int a0, int a1, int a2) {
 void setDoneCallFunc(int a0, int a1, int a2) {
     *(int*)(a0 + 984) = a1;
     *(int*)(a0 + 988) = a2;
+}
+
+int HVQM4PlayerExGetMaxAudioTrack(int a0) {
+return (*(unsigned char*)(a0 + 67) & 0xf);
+}
+
+int fn_804457E0(int a0, int a1) {
+fn_8044C284((a0 & 0xff), a1, 63, 0);
+return 1;
+}
+
+int fn_80448264(void) {
+return (lbl_805DE4F0 - lbl_805DE4F4);
+}
+
+void fn_804567E4(int a0) {
+if (a0 == 0) {
+fn_804563AC();
+} else {
+fn_80455FEC();
+}
+}
+
+int fn_80472174(int a0, int a1, int a2, int a3, int a4, int a5) {
+int m0;
+m0 = a2;
+if ((unsigned)(a0 + a1) <= (unsigned)a2) {
+m0 = (a2 - a1);
+}
+if ((unsigned)(m0 + a5) <= (unsigned)(a0 + a1)) {
+*(int*)(a4 + 0) = m0;
+*(int*)(a4 + 4) = a5;
+return 1;
+}
+*(int*)(a4 + 0) = m0;
+*(int*)(a4 + 4) = ((a0 + a1) - m0);
+*(int*)(a4 + 8) = a0;
+*(int*)(a4 + 12) = (a5 - ((a0 + a1) - m0));
+return 2;
+}
+
+int fn_804755EC(int a0) {
+if (*(unsigned char*)(a0 + 0) != 6) {
+return -12;
+}
+return *(int*)(a0 + 140);
 }
