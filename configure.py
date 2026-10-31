@@ -195,21 +195,14 @@ config.scratch_preset_id = None
 cflags_base = [
     "-nodefaults",
     "-proc gekko",
-    "-align powerpc",
-    "-enum int",
     "-fp hardware",
     "-Cpp_exceptions off",
     "-O4,p",
-    "-inline auto",
-    '-pragma "cats off"',
-    '-pragma "warn_notinlined off"',
-    "-maxerrors 1",
-    "-nosyspath",
-    "-RTTI off",
-    "-fp_contract on",
-    "-str reuse",
-    "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
-    "-i include",
+    "-inline all",
+    "-cwd source",
+    "-I-",
+    "-i include/",
+    "-i src/",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
@@ -250,24 +243,13 @@ cflags_rel = [
 config.linker_version = "GC/1.3.2"
 
 
-# Helper function for Dolphin libraries
-def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
-    return {
-        "lib": lib_name,
-        "mw_version": "GC/1.2.5n",
-        "cflags": cflags_base,
-        "progress_category": "sdk",
-        "objects": objects,
-    }
-
-
-# Helper function for REL script objects
-def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+# Helper for a group of objects built with the project-wide settings
+def Lib(lib_name: str, category: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/1.3.2",
-        "cflags": cflags_rel,
-        "progress_category": "game",
+        "cflags": cflags_base,
+        "progress_category": category,
         "objects": objects,
     }
 
@@ -285,16 +267,210 @@ def MatchingFor(*versions):
 config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
-    {
-        "lib": "Runtime.PPCEABI.H",
-        "mw_version": config.linker_version,
-        "cflags": cflags_runtime,
-        "progress_category": "sdk",  # str | List[str]
-        "objects": [
-            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
+    Lib(
+        "game",
+        "game",
+        [
+            Object(NonMatching, "gmmain.c"),
+            Object(NonMatching, "gmglobal.c"),
+            Object(NonMatching, "gmautodemo.c"),
+            Object(NonMatching, "text_80010BBC.c"),
+            Object(NonMatching, "text_80060ED0.c"),
+            Object(NonMatching, "db_800AD79C.c"),
+            Object(NonMatching, "smsoundtest.c"),
+            Object(NonMatching, "text_800AF474.c"),
+            Object(NonMatching, "grcity1.c"),
+            Object(NonMatching, "text_8010F854.c"),
+            Object(NonMatching, "text_801166B4.c"),
+            Object(NonMatching, "text_801D443C.c"),
+            Object(NonMatching, "a2d/a2d_game_lib.c"),
+            Object(NonMatching, "text_8028B974.c"),
+            Object(NonMatching, "a2d/a2d_gamehistory.c"),
+            Object(NonMatching, "a2d/a2d_gamesession.c"),
+            Object(NonMatching, "a2d/a2d_cpu_kirby.c"),
+            Object(NonMatching, "a2d/a2d_kirbyjointanim.c"),
+            Object(NonMatching, "a2d/a2d_lavabomb.c"),
+            Object(NonMatching, "a2d/a2d_grindrail.c"),
+            Object(NonMatching, "a2d/a2d_bg3000.c"),
+            Object(NonMatching, "a2d/a2d_bg4000.c"),
+            Object(NonMatching, "a2d/a2d_bg5000.c"),
+            Object(NonMatching, "a2d/a2d_bg8000.c"),
+            Object(NonMatching, "text_8034D384.c"),
+            Object(NonMatching, "a2d/a2d_kurakko.c"),
+            Object(NonMatching, "a2d/a2d_game_audio.c"),
+            Object(NonMatching, "a2d/a2d_soundhandle.c"),
+            Object(NonMatching, "a2d/a2d_game_effect.c"),
+            Object(NonMatching, "a2d/a2d_effecthandle.c"),
+            Object(NonMatching, "a2d/a2d_wipeeffect.c"),
+            Object(NonMatching, "a2d/a2d_effect_slideblur.c"),
+            Object(NonMatching, "a2d/a2d_kirbydisp.c"),
+            Object(NonMatching, "a2d/a2d_refract.c"),
+            Object(NonMatching, "a2d/fl_indirectload.c"),
         ],
-    },
+    ),
+    Lib(
+        "Runtime.PPCEABI.H",
+        "sdk",
+        [
+            Object(NonMatching, "Runtime.PPCEABI.H/__va_arg.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/NMWException.cpp"),
+            Object(NonMatching, "Runtime.PPCEABI.H/MWRTTI.cpp"),
+            Object(NonMatching, "Runtime.PPCEABI.H/runtime.c"),
+            Object(NonMatching, "__init_cpp_exceptions.cpp"),
+            Object(NonMatching, "Runtime.PPCEABI.H/Gecko_ExceptionPPC.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
+        ],
+    ),
+    Lib(
+        "Dolphin SDK",
+        "sdk",
+        [
+            Object(NonMatching, "abort_exit.c"),
+        ],
+    ),
+    Lib(
+        "game",
+        "game",
+        [
+            Object(NonMatching, "text_803AFAC8.c"),
+        ],
+    ),
+    Lib(
+        "Dolphin SDK",
+        "sdk",
+        [
+            Object(NonMatching, "cstring.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_other.c"),
+        ],
+    ),
+    Lib(
+        "MetroTRK",
+        "sdk",
+        [
+            Object(NonMatching, "MetroTRK/TRK_MINNOW_DOLPHIN.c"),
+        ],
+    ),
+    Lib(
+        "Dolphin SDK",
+        "sdk",
+        [
+            Object(NonMatching, "PPCArch.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_db.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_dsp.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_dvd.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_gx.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_mtx.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_mtxvec.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_mtx44.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_vec.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_os.c"),
+            Object(NonMatching, "init/__ppc_eabi_init.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_pad.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_vi.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_ai.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_ar.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_arq.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_card.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_si.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_exi.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_ax.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_mix.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_synth.c"),
+        ],
+    ),
+    Lib(
+        "sysdolphin",
+        "game",
+        [
+            Object(NonMatching, "sysdolphin/dobj.c"),
+            Object(NonMatching, "sysdolphin/tobj.c"),
+            Object(NonMatching, "sysdolphin/tev.c"),
+            Object(NonMatching, "sysdolphin/mobj_aobj.c"),
+            Object(NonMatching, "sysdolphin/lobj.c"),
+            Object(NonMatching, "sysdolphin/cobj.c"),
+            Object(NonMatching, "sysdolphin/fobj.c"),
+            Object(NonMatching, "sysdolphin/pobj.c"),
+            Object(NonMatching, "sysdolphin/jobj.c"),
+            Object(NonMatching, "sysdolphin/displayfunc.c"),
+            Object(NonMatching, "sysdolphin/initialize.c"),
+            Object(NonMatching, "sysdolphin/video.c"),
+            Object(NonMatching, "sysdolphin/controller.c"),
+            Object(NonMatching, "sysdolphin/rumble.c"),
+            Object(NonMatching, "sysdolphin/spline.c"),
+            Object(NonMatching, "sysdolphin/mtx.c"),
+            Object(NonMatching, "sysdolphin/util.c"),
+            Object(NonMatching, "sysdolphin/objalloc.c"),
+            Object(NonMatching, "sysdolphin/robj.c"),
+            Object(NonMatching, "sysdolphin/id_wobj_fog.c"),
+            Object(NonMatching, "sysdolphin/pref.c"),
+            Object(NonMatching, "sysdolphin/list_object.c"),
+            Object(NonMatching, "sysdolphin/memory.c"),
+            Object(NonMatching, "sysdolphin/shadow.c"),
+            Object(NonMatching, "sysdolphin/archive.c"),
+            Object(NonMatching, "sysdolphin/random.c"),
+            Object(NonMatching, "sysdolphin/bytecode.c"),
+            Object(NonMatching, "sysdolphin/class.c"),
+            Object(NonMatching, "sysdolphin/hash.c"),
+            Object(NonMatching, "sysdolphin/texp.c"),
+            Object(NonMatching, "sysdolphin/texpdag.c"),
+            Object(NonMatching, "sysdolphin/debug.c"),
+            Object(NonMatching, "sysdolphin/gobjproc.c"),
+            Object(NonMatching, "sysdolphin/gobjplink.c"),
+            Object(NonMatching, "sysdolphin/gobjgxlink.c"),
+            Object(NonMatching, "sysdolphin/gobjobject_gobjuserdata.c"),
+            Object(NonMatching, "sysdolphin/gobj.c"),
+            Object(NonMatching, "sysdolphin/particle.c"),
+        ],
+    ),
+    Lib(
+        "game",
+        "game",
+        [
+            Object(NonMatching, "text_8042AD44.c"),
+        ],
+    ),
+    Lib(
+        "sysdolphin",
+        "game",
+        [
+            Object(NonMatching, "sysdolphin/axdriver.c"),
+        ],
+    ),
+    Lib(
+        "game",
+        "game",
+        [
+            Object(NonMatching, "text_804452A0.c"),
+            Object(NonMatching, "IPSocket.c"),
+            Object(NonMatching, "text_8047DB6C.c"),
+            Object(NonMatching, "IPIgmp.c"),
+            Object(NonMatching, "text_80482598.c"),
+        ],
+    ),
+    Lib(
+        "Runtime.PPCEABI.H",
+        "sdk",
+        [
+            Object(NonMatching, "Runtime.PPCEABI.H/__mem.c"),
+        ],
+    ),
+    Lib(
+        "MetroTRK",
+        "sdk",
+        [
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mem_TRK.c"),
+            Object(NonMatching, "TRK_MINNOW_DOLPHIN/__exception.c"),
+        ],
+    ),
+    Lib(
+        "Dolphin SDK",
+        "sdk",
+        [
+            Object(NonMatching, "os/__start.c", mw_version="GC/1.0"),
+            Object(NonMatching, "os/__ppc_eabi_init.c"),
+        ],
+    ),
 ]
 
 

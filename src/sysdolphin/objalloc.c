@@ -12,4 +12,4 @@
 //    heap->size = size;
 //}
 
-HSD_ObjAllocInit
+// HSD_ObjAllocInit (unfinished; was never part of the legacy build)
