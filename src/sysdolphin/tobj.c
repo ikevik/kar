@@ -7,6 +7,10 @@ extern void* memset(void*, int, unsigned long);
 extern void* HSD_Alloc(u32 size);
 extern void HSD_AObjReqAnim(struct _HSD_AObj* aobj, f32 frame);
 extern struct _HSD_AObj* HSD_AObjLoadDesc(struct _HSD_AObjDesc* desc);
+extern void* memcpy(void*, const void*, unsigned long);
+extern HSD_ClassInfo* hsdSearchClassInfo(char* class_name);
+extern void HSD_AObjInterpretAnim(struct _HSD_AObj* aobj, void* obj, void* update);
+extern void fn_804105F0(s32);
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void* hsdAllocMemPiece(s32 size);
 extern void HSD_Free(void*);
@@ -16,7 +20,7 @@ extern void hsdInitClassInfo(HSD_ClassInfo* class_info, HSD_ClassInfo* parent_in
 extern HSD_TObjInfo lbl_80501E30;
 extern HSD_ClassInfo lbl_805044A8;
 extern HSD_TObjInfo* lbl_805DE178;
-extern HSD_TObjInfo* lbl_805DE17C;
+extern HSD_TObj* lbl_805DE17C;
 
 char lbl_805DCA50[] = "tobj.c";
 
@@ -106,6 +110,103 @@ void HSD_TObjReqAnimAllByFlags(HSD_TObj* tobj, f32 startframe, u32 flags)
             }
         }
     }
+}
+
+void HSD_TObjAnim(HSD_TObj* tobj)
+{
+    if (tobj != NULL)
+        HSD_AObjInterpretAnim(tobj->aobj, tobj, HSD_TOBJ_METHOD(tobj)->update);
+}
+
+void HSD_TObjAnimAll(HSD_TObj* tobj)
+{
+    if (tobj != NULL) {
+        for (; tobj != NULL; tobj = tobj->next) {
+            if (tobj != NULL)
+                HSD_AObjInterpretAnim(tobj->aobj, tobj, HSD_TOBJ_METHOD(tobj)->update);
+        }
+    }
+}
+
+int TObjLoad(HSD_TObj* tobj, HSD_TObjDesc* td)
+{
+    tobj->next = HSD_TObjLoadDesc(td->next);
+    tobj->anim_id = td->id;
+    tobj->src = td->src;
+    tobj->mtxid = 0x3C;
+    tobj->rotate.x = td->rotate.x;
+    tobj->rotate.y = td->rotate.y;
+    tobj->rotate.z = td->rotate.z;
+    tobj->scale = td->scale;
+    tobj->translate = td->translate;
+    tobj->wrap_s = td->wrap_s;
+    tobj->wrap_t = td->wrap_t;
+    tobj->repeat_s = td->repeat_s;
+    tobj->repeat_t = td->repeat_t;
+    tobj->flags = td->blend_flags;
+    tobj->blending = td->blending;
+    tobj->magFilt = td->magFilt;
+    tobj->imagedesc = td->imagedesc;
+    tobj->tlut = HSD_TlutLoadDesc(td->tlutdesc);
+    tobj->lod = td->lod;
+    tobj->aobj = NULL;
+    tobj->flags |= TEX_MTX_DIRTY;
+    tobj->tlut_no = 0xFF;
+    tobj->tev = HSD_TObjTevLoadDesc(td->tev);
+    fn_804105F0(2);
+    return 0;
+}
+
+HSD_TObj* HSD_TObjLoadDesc(HSD_TObjDesc* td)
+{
+    HSD_TObj* tobj;
+    HSD_ClassInfo* info;
+    if (td == NULL)
+        return NULL;
+    if (td->class_name == NULL || (info = hsdSearchClassInfo(td->class_name)) == NULL) {
+        tobj = HSD_TObjAlloc();
+    } else {
+        tobj = hsdNew(info);
+        if (tobj == NULL)
+            __assert(lbl_805DCA50, 0x22C, "tobj");
+    }
+    HSD_TOBJ_METHOD(tobj)->load(tobj, td);
+    return tobj;
+}
+
+HSD_Tlut* HSD_TlutLoadDesc(HSD_TlutDesc* tlutdesc)
+{
+    HSD_Tlut* tlut;
+    if (tlutdesc == NULL)
+        return NULL;
+    tlut = HSD_TlutAlloc();
+    memcpy(tlut, tlutdesc, sizeof(HSD_Tlut));
+    return tlut;
+}
+
+HSD_TObjTev* HSD_TObjTevLoadDesc(HSD_TObjTevDesc* tevdesc)
+{
+    HSD_TObjTev* tev;
+    if (tevdesc == NULL)
+        return NULL;
+    tev = HSD_TObjTevAlloc();
+    memcpy(tev, tevdesc, sizeof(HSD_TObjTev));
+    return tev;
+}
+
+HSD_TObj* _HSD_TObjGetCurrentByType(HSD_TObj* from, u32 mapping)
+{
+    HSD_TObj* tobj;
+    if (from == NULL) {
+        tobj = lbl_805DE17C;
+    } else {
+        tobj = from->next;
+    }
+    for (; tobj != NULL; tobj = tobj->next) {
+        if (tobj_coord(tobj) == mapping)
+            return tobj;
+    }
+    return NULL;
 }
 
 void HSD_TObjRemoveAll(HSD_TObj* tobj)
