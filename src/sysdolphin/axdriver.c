@@ -1,7 +1,28 @@
 #include "dolphin/types.h"
 #include "functions.h"
 
-extern u8 lbl_8058E398[];
+typedef struct AXVoice {
+    u8 pad0[4];
+    struct AXVoice* next; // 0x04
+    u32 flags; // 0x08
+    void* vpb; // 0x0c
+    s32 pid; // 0x10
+    u8 pad14[0x3d - 0x14];
+    u8 prio; // 0x3d
+    u8 pad3e[0x48 - 0x3e];
+} AXVoice;
+
+extern AXVoice* lbl_8058E298[64];
+extern u8 lbl_8058E398[2][0x40];
+extern AXVoice* lbl_805DE480;
+extern s32 lbl_805DE48C;
+extern s32 lbl_805DE494;
+extern s32 lbl_805DE49C;
+extern s32 OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(s32);
+extern void fn_80443FB0(void*, s32, s32);
+extern void fn_804438C4(void*, s32, s32);
+extern s32 fn_80449AE4(void*);
 extern u32 lbl_805DD120;
 extern s32 lbl_805DD124;
 extern s32 lbl_805DD128;
@@ -37,7 +58,7 @@ void fn_80440840(void)
 
 s32 fn_80442A10(s32 a, s32 b, s32 c, s32 d, s32 idx)
 {
-    return fn_80442674(a, b, c, 0, 0, lbl_8058E398[idx], lbl_8058E398[idx + 0x40], d, idx);
+    return fn_80442674(a, b, c, 0, 0, lbl_8058E398[0][idx], lbl_8058E398[1][idx], d, idx);
 }
 
 s32 fn_8044262C(s32 a, s32 b, s32 c, s32 d)
@@ -104,4 +125,83 @@ s32 fn_80444CB4(void)
 s32 fn_80444CBC(void)
 {
     return lbl_805DE44C;
+}
+
+void fn_804424B4(s32 pid)
+{
+    AXVoice* v;
+    BOOL ok;
+    s32 slot = pid & 0x3f;
+    if (!(pid > 0)) {
+        __assert(__FILE__, 0x38b, "pid > 0");
+    }
+    v = lbl_8058E298[slot];
+    ok = FALSE;
+    if (v != NULL && v->pid == pid) {
+        ok = TRUE;
+    }
+    if (!ok) {
+        __assert(__FILE__, 0x38d, "v && v->pid == pid");
+    }
+    lbl_8058E298[slot] = NULL;
+    v->flags &= ~0x20000000;
+    v->flags &= 0x3fffffff;
+    lbl_805DE454--;
+}
+
+void fn_80442588(s32 pid)
+{
+    AXVoice* v;
+    BOOL ok;
+    s32 slot = pid & 0x3f;
+    if (!(pid > 0)) {
+        __assert(__FILE__, 0x39e, "pid > 0");
+    }
+    v = lbl_8058E298[slot];
+    ok = FALSE;
+    if (v != NULL && v->pid == pid) {
+        ok = TRUE;
+    }
+    if (!ok) {
+        __assert(__FILE__, 0x3a0, "v && v->pid == pid");
+    }
+    v->flags |= 0x20000000;
+}
+
+s32 fn_8044416C(s32 prio, s32 b, s32 c)
+{
+    s32 intr;
+    AXVoice* v;
+    if (prio >= 0 && prio <= 0x3f) {
+        intr = OSDisableInterrupts();
+        for (v = lbl_805DE480; v != NULL; v = v->next) {
+            if ((v->flags & 0xc0000000) != 0 && v->prio == prio) {
+                fn_80443FB0(v->vpb, b, c);
+            }
+        }
+        OSRestoreInterrupts(intr);
+        return 1;
+    }
+    return 0;
+}
+
+s32 fn_80443C14(s32 prio, s32 sel, s32 c)
+{
+    s32 intr;
+    AXVoice* v;
+    if (prio < 0 || prio > 0x3f) {
+        return 0;
+    }
+    if (sel < 0 || sel > 1) {
+        return 0;
+    }
+    intr = OSDisableInterrupts();
+    for (v = lbl_805DE480; v != NULL; v = v->next) {
+        if ((v->flags & 0xc0000000) != 0 && v->prio == prio) {
+            fn_804438C4(v->vpb, sel, c);
+        }
+    }
+    lbl_8058E398[sel][prio] = c;
+    OSRestoreInterrupts(intr);
+    return 1;
 }
