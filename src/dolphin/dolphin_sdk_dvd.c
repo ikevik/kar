@@ -262,6 +262,7 @@ void DVDReset(void)
 #pragma dont_inline reset
 #endif
 
+#pragma dont_inline reset
 s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
 {
     int enabled = OSDisableInterrupts();
@@ -274,6 +275,7 @@ s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
     OSRestoreInterrupts(enabled);
     return retVal;
 }
+#pragma dont_inline on
 
 #if 1
 void fn_803C78BC(void)
@@ -532,13 +534,15 @@ void fn_803C437C(void)
 {
     WACommand* cl = CommandList_8056CB40;
     WACommand* cmd;
+    u32 idx = NextCommandNumber * 0x14;
+    s32 c = *(s32*)((u8*)cl + idx);
 
-    if (cl[NextCommandNumber].command == 1) {
-        cmd = &cl[NextCommandNumber];
+    if (c == 1) {
+        cmd = (WACommand*)((u8*)cl + idx);
         NextCommandNumber++;
         fn_803C4470(cmd->a, cmd->b, cmd->c, cmd->d);
-    } else if (cl[NextCommandNumber].command == 2) {
-        cmd = &cl[NextCommandNumber];
+    } else if (c == 2) {
+        cmd = (WACommand*)((u8*)cl + idx);
         NextCommandNumber++;
         fn_803C4898(cmd->c, (DVDLowCallback)cmd->d);
     }
@@ -612,6 +616,7 @@ void cbForUnrecoveredErrorRetry(u32 intType)
     }
 }
 
+#pragma dont_inline reset
 s32 DVDGetDriveStatus(void)
 {
     s32 retVal;
@@ -632,3 +637,4 @@ s32 DVDGetDriveStatus(void)
     OSRestoreInterrupts(enabled);
     return retVal;
 }
+#pragma dont_inline on
