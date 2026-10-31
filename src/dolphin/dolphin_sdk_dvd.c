@@ -641,3 +641,116 @@ s32 DVDGetDriveStatus(void)
     return retVal;
 }
 #pragma dont_inline on
+
+extern u32 lbl_805DDDD8;
+extern char lbl_804F9590[];
+extern char lbl_804F95C8[];
+extern char lbl_805DC8D8[8];
+extern char lbl_805DC8EC[];
+extern char lbl_804F9684[];
+extern char lbl_804F96A0[];
+extern int lbl_805DDD98;
+extern int DVDInitialized;
+extern int FirstTimeInBootrom;
+extern int CurrCommand;
+extern char* __DVDVersion;
+extern u8* bootInfo_;
+extern void OSPanic(const char* file, int line, const char* msg, ...);
+extern void OSReport(const char* msg, ...);
+extern void OSRegisterVersion(const char* version);
+extern void* __OSSetInterruptHandler(s16 interrupt, void* handler);
+extern u32 __OSUnmaskInterrupts(u32 mask);
+extern void OSInitThreadQueue(OSThreadQueue* queue);
+extern void __DVDInterruptHandler(s16 interrupt, void* context);
+extern void __fstLoad(void);
+extern int fn_803C7364(DVDCommandBlock* block, void* addr, s32 length, s32 offset,
+                       DVDCBCallback callback, s32 prio);
+extern int DVDConvertPathToEntrynum(const char* path);
+extern u32 fn_803C5328(u32 entry, char* path, u32 maxlen);
+extern void cbForReadAsync(s32 result, DVDFileInfo* fileInfo);
+extern DVDCommandBlock* bootInfo_ptr;
+
+u32 CategorizeError(u32 error)
+{
+    if (error == 0x20400) {
+        lbl_805DDDD8 = error;
+        return 1;
+    }
+    error &= 0x00FFFFFF;
+    if (error == 0x62800 || error == 0x23A00 || error == 0xB5A01) {
+        return 0;
+    }
+    lbl_805DDDDC++;
+    if (lbl_805DDDDC == 2) {
+        if (error == lbl_805DDDD8) {
+            lbl_805DDDD8 = error;
+            return 1;
+        }
+        lbl_805DDDD8 = error;
+        return 2;
+    }
+    lbl_805DDDD8 = error;
+    if (error == 0x31100 || executing->command == 5) {
+        return 2;
+    }
+    return 3;
+}
+
+int DVDReadAsyncPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset,
+                     DVDCallback callback, s32 prio)
+{
+    if (!(0 <= offset && offset < fileInfo->length)) {
+        OSPanic(lbl_805DC8D8, 0x2E6, lbl_804F95C8);
+    }
+    if (!(0 <= offset + length && offset + length < fileInfo->length + 32)) {
+        OSPanic(lbl_805DC8D8, 0x2EC, lbl_804F95C8);
+    }
+    fileInfo->callback = callback;
+    fn_803C7364(&fileInfo->cb, addr, length, fileInfo->startAddr + offset, (DVDCBCallback)cbForReadAsync,
+                prio);
+    return 1;
+}
+
+#pragma dont_inline reset
+extern int fn_803C5488(char* path, u32 maxlen);
+int DVDOpen(const char* fileName, DVDFileInfo* fileInfo)
+{
+    int entry;
+    char cur[128];
+
+    entry = DVDConvertPathToEntrynum(fileName);
+    if (entry < 0) {
+        fn_803C5488(cur, 128);
+        OSReport(lbl_804F9590, fileName, cur);
+        return 0;
+    }
+    if (isDir(entry)) {
+        return 0;
+    }
+    fileInfo->startAddr = FstStart[entry].parentOrPosition;
+    fileInfo->length = FstStart[entry].nextEntryOrLength;
+    fileInfo->callback = 0;
+    fileInfo->cb.state = 0;
+    return 1;
+}
+int fn_803C5488(char* path, u32 maxlen)
+{
+    u32 loc = lbl_805DDD98;
+    u32 n = fn_803C5328(loc, path, maxlen);
+
+    if (n == maxlen) {
+        path[n - 1] = 0;
+        return 0;
+    }
+    if (isDir(loc)) {
+        if (n == maxlen - 1) {
+            path[n] = 0;
+            return 0;
+        }
+        path[n++] = '/';
+    }
+    path[n] = 0;
+    return 1;
+}
+
+#pragma dont_inline on
