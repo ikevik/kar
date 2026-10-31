@@ -396,7 +396,22 @@ int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
 }
 #endif
 
-extern s32 CommandList_8056CB40[];
+typedef struct WACommand {
+    s32 command;
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
+} WACommand;
+extern WACommand CommandList_8056CB40[];
+extern DVDCommandBlock DummyCommandBlock;
+extern int FatalErrorFlag;
+extern int lbl_805DDDDC;
+extern void fn_803C4470(u32 a, u32 b, u32 c, u32 d);
+extern void stateGettingError(void);
+extern void stateTimeout(void);
+extern void __DVDFSInit(void);
+extern DVDDiskID* bootInfo;
 extern void cbForUnrecoveredErrorRetry(u32 intType);
 extern void __DVDLowSetWAType(int type, u32 location);
 
@@ -410,7 +425,7 @@ void stateTimeout(void)
 void __DVDInitWA(void)
 {
     NextCommandNumber = 0;
-    CommandList_8056CB40[0] = -1;
+    CommandList_8056CB40[0].command = -1;
     __DVDLowSetWAType(0, 0);
     OSInitAlarm();
 }
@@ -512,3 +527,108 @@ int DVDFastOpen(int entrynum, DVDFileInfo* fileInfo)
     return 1;
 }
 #pragma dont_inline on
+
+void fn_803C437C(void)
+{
+    WACommand* cl = CommandList_8056CB40;
+    WACommand* cmd;
+
+    if (cl[NextCommandNumber].command == 1) {
+        cmd = &cl[NextCommandNumber];
+        NextCommandNumber++;
+        fn_803C4470(cmd->a, cmd->b, cmd->c, cmd->d);
+    } else if (cl[NextCommandNumber].command == 2) {
+        cmd = &cl[NextCommandNumber];
+        NextCommandNumber++;
+        fn_803C4898(cmd->c, (DVDLowCallback)cmd->d);
+    }
+}
+
+int fn_803C4580(void* addr, u32 length, u32 offset, DVDLowCallback callback)
+{
+    WACommand* cl = CommandList_8056CB40;
+    u32 seek = offset & ~0x7FFF;
+
+    if (seek == 0) {
+        seek = 0;
+    } else {
+        seek = seek + WorkAroundSeekLocation;
+    }
+    cl[0].command = 2;
+    cl[0].c = seek;
+    cl[0].d = (u32)callback;
+    cl[1].command = 1;
+    cl[1].a = (u32)addr;
+    cl[1].b = length;
+    cl[1].c = offset;
+    cl[1].d = (u32)callback;
+    cl[2].command = -1;
+    NextCommandNumber = 0;
+    return fn_803C4898(seek, (DVDLowCallback)callback);
+}
+
+DVDCommandBlock* __DVDPopWaitingQueue(void)
+{
+    int enabled;
+    u32 i;
+    DVDCommandBlock* q;
+    DVDCommandBlock* tmp;
+
+    enabled = OSDisableInterrupts();
+    for (i = 0; i < 4; i++) {
+        if (WaitingQueue[i].head != &WaitingQueue[i]) {
+            OSRestoreInterrupts(enabled);
+            enabled = OSDisableInterrupts();
+            q = (DVDCommandBlock*)&WaitingQueue[i];
+            tmp = q->next;
+            q->next = tmp->next;
+            tmp->next->prev = q;
+            OSRestoreInterrupts(enabled);
+            tmp->next = 0;
+            tmp->prev = 0;
+            return tmp;
+        }
+    }
+    OSRestoreInterrupts(enabled);
+    return 0;
+}
+
+void cbForUnrecoveredErrorRetry(u32 intType)
+{
+    if (intType == 16) {
+        executing->state = -1;
+        __DVDStoreErrorCode(0x01234568);
+        DVDReset();
+        cbForStateError(0);
+        return;
+    }
+    executing->state = -1;
+    if (intType & 2) {
+        __DVDStoreErrorCode(0x01234567);
+        DVDLowStopMotor(cbForStateError);
+    } else {
+        __DVDStoreErrorCode(__DIRegs[8]);
+        DVDLowStopMotor(cbForStateError);
+    }
+}
+
+s32 DVDGetDriveStatus(void)
+{
+    s32 retVal;
+    int enabled;
+
+    enabled = OSDisableInterrupts();
+    if (FatalErrorFlag) {
+        retVal = -1;
+    } else if (PausingFlag) {
+        retVal = 8;
+    } else if (executing == 0) {
+        retVal = 0;
+    } else if (executing == &DummyCommandBlock) {
+        retVal = 0;
+    } else {
+        retVal = DVDGetCommandBlockStatus(executing);
+    }
+    OSRestoreInterrupts(enabled);
+    return retVal;
+}
