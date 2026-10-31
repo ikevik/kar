@@ -221,31 +221,33 @@ void fn_803D0AF8(u32 a) {
 
 #define BPF(field, v) do { u32 _v = (v); GXWGFifo_u8 = 0x61; GXWGFifo_u32 = _v; g->field = _v; g->bpSentNot = 0; } while (0)
 
-#if 0 /* NONMATCHING: register allocation / li scheduling */
-void fn_803CF874(u32 a) {
-    gx->cmode0 = __rlwimi(gx->cmode0, a, 3, 28, 28);
+void fn_803CF874(u8 a) {
+    u32 reg = gx->cmode0;
+    reg = __rlwimi(reg, a, 3, 28, 28);
     GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = gx->cmode0;
+    GXWGFifo_u32 = reg;
+    gx->cmode0 = reg;
     gx->bpSentNot = 0;
 }
 
-void fn_803CF8A0(u32 a) {
-    u32 v = __rlwimi(gx->cmode0, a, 4, 27, 27);
+void fn_803CF8A0(u8 a) {
+    u32 reg = gx->cmode0;
+    reg = __rlwimi(reg, a, 4, 27, 27);
     GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = v;
-    gx->cmode0 = v;
+    GXWGFifo_u32 = reg;
+    gx->cmode0 = reg;
     gx->bpSentNot = 0;
 }
 
-void fn_803CFA20(u32 a) {
-    u32 v = __rlwimi(gx->cmode0, a, 2, 29, 29);
+void fn_803CFA20(u8 a) {
+    u32 reg = gx->cmode0;
+    reg = __rlwimi(reg, a, 2, 29, 29);
     GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = v;
-    gx->cmode0 = v;
+    GXWGFifo_u32 = reg;
+    gx->cmode0 = reg;
     gx->bpSentNot = 0;
 }
 
-#endif
 
 void GXGetViewportv(f32* vp) {
     vp[0] = gx->vp[0];
@@ -288,4 +290,149 @@ void fn_803CCF50(void) {
     GXWGFifo_u8 = 0x61;
     GXWGFifo_u32 = 0x560003FF;
     gx->bpSentNot = 0;
+}
+
+
+extern u32 lbl_805DDE50;
+extern u32 lbl_805DDE54;
+
+void fn_803CF8CC(u8 a, u8 b, u8 c) {
+    u32 reg = gx->zmode;
+    reg = __rlwimi(reg, a, 0, 31, 31);
+    reg = __rlwimi(reg, b, 1, 28, 30);
+    reg = __rlwimi(reg, c, 4, 27, 27);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg;
+    gx->zmode = reg;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CFA88(u8 a, u8 b) {
+    u32 reg = (b & ~2) | (a << 1);
+    reg = (reg & 0xFFFFFF) | 0x44000000;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CBFD8(u8 a, u32 b, u8 c) {
+    u32 v = (a & ~0xE) | (b << 1);
+    v = (v & ~0x10) | (c << 4);
+    __peReg[0] = v;
+}
+
+void fn_803CC874(u32 a) {
+    gx->cpDisp = (gx->cpDisp & ~0x3000) | (a << 12);
+    gx->cpTex = gx->cpTex & ~0x3000;
+}
+
+void fn_803CD4A0(u8 a) {
+    u32 reg = gx->genMode;
+    u32 n = a;
+    reg = (reg & ~0x70) | (n << 4);
+    gx->genMode = reg;
+    GXWGFifo_u8 = 0x10;
+    GXWGFifo_u32 = 0x1009;
+    GXWGFifo_u32 = n;
+    gx->dirtyState |= 4;
+}
+
+void GXSetNumTexGens(u8 n) {
+    u32 reg = gx->genMode;
+    u32 nn = n;
+    reg = (reg & ~0xF) | nn;
+    gx->genMode = reg;
+    GXWGFifo_u8 = 0x10;
+    GXWGFifo_u32 = 0x103F;
+    GXWGFifo_u32 = nn;
+    gx->dirtyState |= 4;
+}
+
+void fn_803CEBE0(u32 idx, u32 a, u32 b, u32 c, u32 d) {
+    u32 reg = gx->tevc[idx];
+    reg = __rlwimi(reg, a, 12, 16, 19);
+    reg = __rlwimi(reg, b, 8, 20, 23);
+    reg = __rlwimi(reg, c, 4, 24, 27);
+    reg = __rlwimi(reg, d, 0, 28, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg;
+    gx->tevc[idx] = reg;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CEC24(u32 idx, u32 a, u32 b, u32 c, u32 d) {
+    u32 reg = gx->teva[idx];
+    reg = __rlwimi(reg, a, 13, 16, 18);
+    reg = __rlwimi(reg, b, 10, 19, 21);
+    reg = __rlwimi(reg, c, 7, 22, 24);
+    reg = __rlwimi(reg, d, 4, 25, 27);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg;
+    gx->teva[idx] = reg;
+    gx->bpSentNot = 0;
+}
+
+u32 fn_803CC000(u32 v) {
+    u32 old = lbl_805DDE50;
+    BOOL en = OSDisableInterrupts();
+    lbl_805DDE50 = v;
+    OSRestoreInterrupts(en);
+    return old;
+}
+
+u32 fn_803CC0CC(u32 v) {
+    u32 old = lbl_805DDE54;
+    BOOL en = OSDisableInterrupts();
+    lbl_805DDE54 = v;
+    OSRestoreInterrupts(en);
+    return old;
+}
+
+void fn_803D0AB8(u32 a, u32 b) {
+    u32 v = (((a + 0x156) >> 1) & 0xFFF003FF) | (((b + 0x156) << 9) & 0xFFFFFC00);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = (v & 0xFFFFFF) | 0x59000000;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CFA4C(u8 a, u8 b) {
+    u32 reg = gx->cmode1;
+    reg = __rlwimi(reg, b, 0, 24, 31);
+    reg = __rlwimi(reg, a, 8, 23, 23);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg;
+    gx->cmode1 = reg;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CC564(u8 a) {
+    gx->genMode = (gx->genMode & ~0x80000) | (a << 19);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = 0xFE080000;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->genMode;
+}
+
+void fn_803CC6E4(u32 a) {
+    gx->cpDispStride = 0;
+    gx->cpDispStride = (gx->cpDispStride & ~0x3FF) | (((s32)((a & 0x7FFF) << 1)) >> 5);
+    gx->cpDispStride = (gx->cpDispStride & 0xFFFFFF) | 0x4D000000;
+}
+
+void __GXFifoLink(u8 a) {
+    u32 en = a ? 1 : 0;
+    gx->cpEnable = (gx->cpEnable & ~0x10) | (en << 4);
+    __cpReg[1] = gx->cpEnable;
+}
+
+void __GXWriteFifoIntEnable(u8 a, u8 b) {
+    gx->cpEnable = (gx->cpEnable & ~4) | (a << 2);
+    gx->cpEnable = (gx->cpEnable & ~8) | (b << 3);
+    __cpReg[1] = gx->cpEnable;
+}
+
+void __GXWriteFifoIntReset(u8 a, u8 b) {
+    gx->cpClr = (gx->cpClr & ~1) | a;
+    gx->cpClr = (gx->cpClr & ~2) | (b << 1);
+    __cpReg[2] = gx->cpClr;
 }
