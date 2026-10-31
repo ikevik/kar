@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include "id.h"
 #include <sysdolphin/wobj.h>
 #include <sysdolphin/fog.h>
@@ -407,7 +408,7 @@ HSD_Fog* HSD_FogGetCurrent(void)
     return lbl_805DE2E8;
 }
 
-#ifdef NONMATCHING /* 97.8% */
+#ifdef NONMATCHING /* 98%: fmadds operand load order, beq/b layout */
 void HSD_FogSet(HSD_Fog* fog)
 {
     HSD_FogAdj* fog_adj;
