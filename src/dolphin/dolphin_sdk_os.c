@@ -638,6 +638,7 @@ void OSSetAlarm(OSAlarm* alarm, s64 tick, OSAlarmHandler handler)
 }
 
 #pragma peephole off
+#pragma dont_inline on
 s64 __OSGetSystemTime(void)
 {
     int enabled = OSDisableInterrupts();
@@ -646,6 +647,7 @@ s64 __OSGetSystemTime(void)
     OSRestoreInterrupts(enabled);
     return result;
 }
+#pragma dont_inline reset
 
 #pragma peephole off
 s64 __OSTimeToSystemTime(s64 time)
@@ -1832,4 +1834,128 @@ void fn_803D9E28(OSThread* thread, s32 priority)
         }
         thread = SetEffectivePriority(thread, priority);
     } while (thread);
+}
+
+extern void PPCMtdec(u32 val);
+extern void OSLoadContext(OSContext* context);
+
+#pragma peephole on
+static inline void SetTimer(OSAlarm* alarm)
+{
+    s64 delta = alarm->fire - __OSGetSystemTime();
+    if (delta < 0) {
+        PPCMtdec(0);
+    } else if (delta < 0x80000000) {
+        PPCMtdec((u32)delta);
+    } else {
+        PPCMtdec(0x7fffffff);
+    }
+}
+
+void InsertAlarm(OSAlarm* alarm, s64 fire, OSAlarmHandler handler)
+{
+    OSAlarm* next;
+    OSAlarm* prev;
+    if (0 < alarm->period) {
+        s64 time = __OSGetSystemTime();
+        fire = alarm->start;
+        if (alarm->start < time) {
+            fire += alarm->period * ((time - alarm->start) / alarm->period + 1);
+        }
+    }
+    alarm->handler = handler;
+    alarm->fire = fire;
+    for (next = AlarmQueue.head; next; next = next->next) {
+        if (next->fire <= fire) {
+            continue;
+        }
+        alarm->prev = next->prev;
+        next->prev = alarm;
+        alarm->next = next;
+        prev = alarm->prev;
+        if (prev) {
+            prev->next = alarm;
+        } else {
+            AlarmQueue.head = alarm;
+            SetTimer(alarm);
+        }
+        return;
+    }
+    alarm->next = 0;
+    prev = AlarmQueue.tail;
+    AlarmQueue.tail = alarm;
+    alarm->prev = prev;
+    if (prev) {
+        prev->next = alarm;
+    } else {
+        AlarmQueue.head = AlarmQueue.tail = alarm;
+        SetTimer(alarm);
+    }
+}
+
+void OSCancelAlarm(OSAlarm* alarm)
+{
+    OSAlarm* next;
+    int enabled = OSDisableInterrupts();
+    if (alarm->handler == 0) {
+        OSRestoreInterrupts(enabled);
+        return;
+    }
+    next = alarm->next;
+    if (next == 0) {
+        AlarmQueue.tail = alarm->prev;
+    } else {
+        next->prev = alarm->prev;
+    }
+    if (alarm->prev) {
+        alarm->prev->next = next;
+    } else {
+        AlarmQueue.head = next;
+        if (next) {
+            SetTimer(next);
+        }
+    }
+    alarm->handler = 0;
+    OSRestoreInterrupts(enabled);
+}
+
+void DecrementerExceptionCallback(u8 exception, OSContext* context)
+{
+    OSContext exceptionContext;
+    OSAlarm* alarm;
+    OSAlarm* next;
+    OSAlarmHandler handler;
+    register s64 time = __OSGetSystemTime();
+    alarm = AlarmQueue.head;
+    if (alarm == 0) {
+        OSLoadContext(context);
+    }
+    if (time < alarm->fire) {
+        SetTimer(alarm);
+        OSLoadContext(context);
+    }
+    next = alarm->next;
+    AlarmQueue.head = next;
+    if (next == 0) {
+        AlarmQueue.tail = 0;
+    } else {
+        next->prev = 0;
+    }
+    handler = alarm->handler;
+    alarm->handler = 0;
+    if (0 < alarm->period) {
+        InsertAlarm(alarm, 0, handler);
+    }
+    if (AlarmQueue.head) {
+        SetTimer(AlarmQueue.head);
+    }
+    OSDisableScheduler();
+    OSClearContext(&exceptionContext);
+    OSSetCurrentContext(&exceptionContext);
+    handler(alarm, context);
+    OSClearContext(&exceptionContext);
+    OSSetCurrentContext(context);
+    OSEnableScheduler();
+    __OSReschedule();
+    OSLoadContext(context);
 }
