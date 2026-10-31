@@ -7,7 +7,7 @@ extern HSD_ObjAllocData gobj_alloc_data;
 
 extern HSD_GObjLibInitDataType HSD_GObjLibInitData;
 
-void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
+static inline void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
 {
     s32 link = gobj->p_link;
     gobj->prev = hiprio_gobj;
@@ -25,12 +25,12 @@ void GObj_PReorder(HSD_GObj* gobj, HSD_GObj* hiprio_gobj)
     }
 }
 
-inline HSD_GObj* gobj_allocate(void)
+static inline HSD_GObj* gobj_allocate(void)
 {
     return HSD_ObjAlloc(&gobj_alloc_data);
 }
 
-inline void gobj_first_lower_prio(HSD_GObj* gobj)
+static inline void gobj_first_lower_prio(HSD_GObj* gobj)
 {
     HSD_GObj* var_r4 = plinklow_gobjs[gobj->p_link];
     while (var_r4 != NULL && var_r4->p_priority > gobj->p_priority) {
@@ -39,7 +39,7 @@ inline void gobj_first_lower_prio(HSD_GObj* gobj)
     GObj_PReorder(gobj, var_r4);
 }
 
-inline void gobj_first_higher_prio(HSD_GObj* gobj)
+static inline void gobj_first_higher_prio(HSD_GObj* gobj)
 {
     HSD_GObj* var_r4 = lbl_805DE334[gobj->p_link];
     while (var_r4 != NULL && var_r4->p_priority < gobj->p_priority) {
@@ -126,3 +126,88 @@ void func_80428F64(HSD_GObj* gobj)
     HSD_ObjFree(&gobj_alloc_data, gobj);
 }
 
+
+#if 0 /* 99.7%: register allocation differs in final loop */
+extern s32 lbl_805DE344;
+extern void fn_804287DC(HSD_GObjProc*);
+extern void fn_80428684(HSD_GObjProc*);
+
+void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* position)
+{
+    HSD_GObjProc* next;
+    HSD_GObjProc* rev;
+    HSD_GObjProc* proc;
+    s32 lvl;
+    s32 prev_lvl;
+
+    if (!(p_link <= HSD_GObjLibInitData.p_link_max))
+        __assert(lbl_80504DD8, 0x19F, lbl_80504DE4);
+
+    if (!lbl_8058C1F4.b0 && gobj == lbl_805DE324) {
+        lbl_8058C1F4.type = where;
+        lbl_8058C1F4.b3 = 1;
+        lbl_8058C1F4.p_link = p_link;
+        lbl_8058C1F4.p_prio = priority;
+        lbl_8058C1F4.gobj = position;
+        return;
+    }
+
+    proc = gobj->proc;
+    rev = NULL;
+    while (proc != NULL) {
+        fn_804287DC(proc);
+        next = proc->child;
+        proc->child = rev;
+        rev = proc;
+        proc = next;
+    }
+    gobj->proc = NULL;
+
+    if (gobj->prev != NULL) {
+        gobj->prev->next = gobj->next;
+    } else {
+        lbl_805DE334[gobj->p_link] = gobj->next;
+    }
+    if (gobj->next != NULL) {
+        gobj->next->prev = gobj->prev;
+    } else {
+        plinklow_gobjs[gobj->p_link] = gobj->prev;
+    }
+    gobj->p_link = p_link;
+    gobj->p_priority = priority;
+
+    switch (where) {
+    case 0:
+        gobj_first_lower_prio(gobj);
+        break;
+    case 1:
+        gobj_first_higher_prio(gobj);
+        break;
+    case 2:
+        GObj_PReorder(gobj, position);
+        break;
+    case 3:
+        GObj_PReorder(gobj, position->prev);
+        break;
+    }
+
+    {
+        s32 g = lbl_805DE344;
+        lvl = 2;
+        if (g != 0)
+            lvl = g - 1;
+    }
+    prev_lvl = 2;
+    if (lvl != 0)
+        prev_lvl = lvl - 1;
+    proc = rev;
+    while (proc != NULL) {
+        next = proc->child;
+        fn_80428684(proc);
+        if (proc->flags_3 == prev_lvl)
+            proc->flags_3 = (u8) lvl;
+        proc = next;
+    }
+}
+
+#endif

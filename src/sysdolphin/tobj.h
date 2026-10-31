@@ -133,7 +133,7 @@ typedef struct _HSD_TObj {
     struct _HSD_TObj* next;
     u32 id; //GXTexMapID
     u32 src; //GXTexGenSrc
-    GXTexMtx mtxid;
+    u32 mtxid; //GXTexMtx
     Quaternion rotate;
     Vec scale;
     Vec translate;
@@ -141,6 +141,7 @@ typedef struct _HSD_TObj {
     u32 wrap_t; //GXTexWrapMode
     u8 repeat_s;
     u8 repeat_t;
+    u16 anim_id;
     u32 flags;
     f32 blending;
     u32 magFilt; //GXTexFilter
@@ -244,6 +245,7 @@ typedef struct _HSD_TObjInfo {
     void (*make_mtx)(HSD_TObj* tobj);
     int (*load)(HSD_TObj* tobj, HSD_TObjDesc* desc);
     void (*make_texp)(HSD_TObj* tobj, u32 lightmap, u32 lightmap_done, HSD_TExp** c, HSD_TExp** a, HSD_TExp** list);
+    void (*update)(void* obj, u32 type, void* val);
 } HSD_TObjInfo;
 
 typedef struct _HSD_TexAnim {
