@@ -332,6 +332,28 @@ int fn_80483B34(a, b, out) char* a; char* b; char* out; {
     out[n] = 0;
     return n;
 }
+int fn_80485BBC(p) char* p; {
+    char* dst = p;
+    char* start = p;
+    char c;
+    while ((c = *p) != 0) {
+        if (c == 0x3b) {
+            while (*++p != 0) {
+                c = *p;
+                if (c == 0x2f) {
+                    *dst = c;
+                    p++;
+                    dst++;
+                    break;
+                }
+            }
+        } else {
+            *dst++ = *p++;
+        }
+    }
+    *dst = 0;
+    return dst - start;
+}
 int fn_8048530C() {
     return lbl_805DE6D0;
 }
