@@ -728,3 +728,111 @@ void fn_803EECCC(u8* p, u32* src)
     F32(p, 0x1c) |= 0x21000;
     OSRestoreInterrupts(old);
 }
+
+extern u32 lbl_805DE0B8;
+extern u32 lbl_8056EB00_[];
+
+void __AXAuxInit(void)
+{
+    int i;
+    lbl_805DE088 = 0;
+    lbl_805DE08C = 0;
+    lbl_805DE090 = 0;
+    lbl_805DE094 = 0;
+    lbl_805DE0A8 = 0;
+    lbl_805DE0AC = 1;
+    lbl_805DE0B0 = 0;
+    lbl_805DE0B4 = 1;
+    lbl_805DE0B8 = 2;
+    for (i = 0; i < 480; i++) {
+        ((u32*)lbl_8056EB00)[i] = 0;
+        ((u32*)lbl_80570180)[i] = 0;
+    }
+}
+
+#define MIXM(v)                \
+    val = *q++;                \
+    *dst++ = val;              \
+    if (val) {                 \
+        mask |= (v);           \
+    }
+
+void fn_803EE914(u8* p, u16* src)
+{
+    u32 mask = 0;
+    u16* dst = (u16*)(p + 0x14a);
+    u16 val;
+    u16* q;
+    int old = OSDisableInterrupts();
+    val = *src;
+    q = src + 1;
+    *dst++ = val;
+    if (val) {
+        mask |= 0x1;
+    }
+    MIXM(0x9)
+    MIXM(0x2)
+    MIXM(0xa)
+    MIXM(0x10)
+    MIXM(0x50)
+    MIXM(0x20)
+    MIXM(0x60)
+    MIXM(0x200)
+    MIXM(0xa00)
+    MIXM(0x400)
+    MIXM(0xc00)
+    MIXM(0x1000)
+    MIXM(0x3000)
+    MIXM(0x4)
+    MIXM(0xc)
+    MIXM(0x80)
+    val = *q;
+    *dst = val;
+    if (val) {
+        mask |= 0x180;
+    }
+    F16(p, 0x144) = mask;
+    F32(p, 0x1c) |= 0x12;
+    OSRestoreInterrupts(old);
+}
+
+extern const float lbl_805E5984;
+extern const float lbl_805E594C;
+extern const float lbl_805E5948;
+extern void fn_803EF698(void* a, void* b, f32 x, f32 y);
+extern void fn_803EF828(void* a, void* p, int ch);
+
+void fn_803EFEEC(void** bufs, u8* p)
+{
+    void* b2;
+    void* b1;
+    void* b0;
+    u8 i;
+    f32 half = lbl_805E5984;
+    f32 one = lbl_805E594C;
+    f32 zero = lbl_805E5948;
+    if (*(u8*)(p + 0x1c4) == 0) {
+        b2 = bufs[2];
+        b1 = bufs[1];
+        b0 = bufs[0];
+        for (i = 0; i < 3; i++) {
+            switch (i) {
+            case 0: {
+                f32 v = *(f32*)(p + 0x1a8);
+                if (v != zero) {
+                    f32 t = half * v;
+                    fn_803EF698(b0, b1, t, one - t);
+                }
+                fn_803EF828(b0, p, 0);
+                break;
+            }
+            case 1:
+                fn_803EF828(b1, p, 1);
+                break;
+            case 2:
+                fn_803EF828(b2, p, 2);
+                break;
+            }
+        }
+    }
+}
