@@ -205,16 +205,24 @@ void __copy_longs_rev_aligned(void* dst, const void* src, size_t len)
     i = len >> 5;
     if (i) {
         do {
-            lpd[-1] = lps[-1];
-            lpd[-2] = lps[-2];
-            lpd[-3] = lps[-3];
-            lpd[-4] = lps[-4];
-            lpd[-5] = lps[-5];
-            lpd[-6] = lps[-6];
-            lpd[-7] = lps[-7];
+            unsigned long v1 = lps[-1];
+            unsigned long v2 = lps[-2];
+            lpd[-1] = v1;
+            v1 = lps[-3];
+            lpd[-2] = v2;
+            v2 = lps[-4];
+            lpd[-3] = v1;
+            v1 = lps[-5];
+            lpd[-4] = v2;
+            v2 = lps[-6];
+            lpd[-5] = v1;
+            v1 = lps[-7];
+            lpd[-6] = v2;
             src = lps - 8;
+            v2 = *lps;
+            lpd[-7] = v1;
             dst = lpd - 8;
-            *lpd = *lps;
+            *lpd = v2;
         } while (--i);
     }
     i = (len & 0x1c) >> 2;
@@ -249,16 +257,24 @@ void __copy_longs_aligned(void* dst, const void* src, size_t len)
     dst = (unsigned char*)dst - 3;
     if (i) {
         do {
-            lpd[1] = lps[1];
-            lpd[2] = lps[2];
-            lpd[3] = lps[3];
-            lpd[4] = lps[4];
-            lpd[5] = lps[5];
-            lpd[6] = lps[6];
-            lpd[7] = lps[7];
+            unsigned long v1 = lps[1];
+            unsigned long v2 = lps[2];
+            lpd[1] = v1;
+            v1 = lps[3];
+            lpd[2] = v2;
+            v2 = lps[4];
+            lpd[3] = v1;
+            v1 = lps[5];
+            lpd[4] = v2;
+            v2 = lps[6];
+            lpd[5] = v1;
+            v1 = lps[7];
+            lpd[6] = v2;
             src = lps + 8;
+            v2 = *lps;
+            lpd[7] = v1;
             dst = lpd + 8;
-            *lpd = *lps;
+            *lpd = v2;
         } while (--i);
     }
     i = (len & 0x1c) >> 2;
