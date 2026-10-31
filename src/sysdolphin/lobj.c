@@ -470,3 +470,169 @@ struct _HSD_WObj* HSD_LObjGetInterestWObj(HSD_LObj* lobj)
     }
     return NULL;
 }
+
+extern struct _HSD_SList* lbl_805DE20C;
+extern HSD_LObjInfo* lbl_805DE208;
+extern HSD_LObjInfo hsdLObj;
+extern HSD_ClassInfo objInfo;
+struct _HSD_WObj* HSD_WObjAlloc(void);
+void HSD_WObjSetPosition(struct _HSD_WObj*, Vec*);
+void HSD_WObjGetPosition(struct _HSD_WObj*, Vec*);
+void HSD_WObjAddAnim(struct _HSD_WObj*, struct _HSD_WObjAnim*);
+void HSD_AObjRemove(struct _HSD_AObj*);
+struct _HSD_AObj* HSD_AObjLoadDesc(struct _HSD_AObjDesc*);
+void LObjRelease(HSD_Class*);
+int LObjLoad(HSD_LObj*, HSD_LightDesc*);
+void LObjUpdateFunc();
+
+typedef struct _LObjListNode {
+    struct _LObjListNode* next;
+    HSD_LObj* data;
+} LObjListNode;
+
+HSD_LObj* HSD_LObjGetCurrentByType(u32 type)
+{
+    LObjListNode* cur;
+    for (cur = (LObjListNode*) lbl_805DE20C; cur != NULL; cur = cur->next) {
+        if ((type & 3) == (cur->data->flags & 3)) {
+            return cur->data;
+        }
+    }
+    return NULL;
+}
+
+s32 HSD_LightID2Index(u32 id)
+{
+    s32 idx;
+    switch (id) {
+    case 0x1:
+        idx = 0;
+        break;
+    case 0x2:
+        idx = 1;
+        break;
+    case 0x4:
+        idx = 2;
+        break;
+    case 0x8:
+        idx = 3;
+        break;
+    case 0x10:
+        idx = 4;
+        break;
+    case 0x20:
+        idx = 5;
+        break;
+    case 0x40:
+        idx = 6;
+        break;
+    case 0x80:
+        idx = 7;
+        break;
+    case 0x100:
+        idx = 8;
+        break;
+    default:
+        assert_line(0x4a8, 0);
+        break;
+    }
+    return idx;
+}
+
+u32 HSD_Index2LightID(u32 idx)
+{
+    switch (idx) {
+    case 0:
+        return 0x1;
+    case 1:
+        return 0x2;
+    case 2:
+        return 0x4;
+    case 3:
+        return 0x8;
+    case 4:
+        return 0x10;
+    case 5:
+        return 0x20;
+    case 6:
+        return 0x40;
+    case 7:
+        return 0x80;
+    case 8:
+        return 0x100;
+    default:
+        return 0;
+    }
+}
+
+void HSD_LObjSetPosition(HSD_LObj* lobj, Vec* position)
+{
+    assert_line(0x56f, lobj);
+    if (lobj->position == NULL) {
+        lobj->position = HSD_WObjAlloc();
+        assert_line(0x572, lobj->position);
+    }
+    HSD_WObjSetPosition(lobj->position, position);
+}
+
+BOOL HSD_LObjGetPosition(HSD_LObj* lobj, Vec* position)
+{
+    if (lobj != NULL && lobj->position != NULL) {
+        HSD_WObjGetPosition(lobj->position, position);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void HSD_LObjSetInterest(HSD_LObj* lobj, Vec* interest)
+{
+    assert_line(0x593, lobj);
+    if (lobj->interest == NULL) {
+        lobj->interest = HSD_WObjAlloc();
+        assert_line(0x596, lobj->interest);
+    }
+    HSD_WObjSetPosition(lobj->interest, interest);
+}
+
+BOOL HSD_LObjGetInterest(HSD_LObj* lobj, Vec* interest)
+{
+    if (lobj != NULL && lobj->interest != NULL) {
+        HSD_WObjGetPosition(lobj->interest, interest);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void HSD_LObjAddAnim(HSD_LObj* lobj, HSD_LightAnim* anim)
+{
+    if (lobj != NULL && anim != NULL) {
+        if (lobj->aobj != NULL) {
+            HSD_AObjRemove(lobj->aobj);
+        }
+        lobj->aobj = HSD_AObjLoadDesc(anim->aobjdesc);
+        HSD_WObjAddAnim(HSD_LObjGetPositionWObj(lobj), anim->position_anim);
+        HSD_WObjAddAnim(HSD_LObjGetInterestWObj(lobj), anim->interest_anim);
+    }
+}
+
+void LObjAmnesia(HSD_ClassInfo* info)
+{
+    if (info == HSD_CLASS_INFO(lbl_805DE208)) {
+        lbl_805DE208 = NULL;
+    }
+    if (info == HSD_CLASS_INFO(&hsdLObj)) {
+        lbl_805DE20C = NULL;
+    }
+    HSD_OBJECT_PARENT_INFO(&hsdLObj)->amnesia(info);
+}
+
+void LObjInfoInit(void)
+{
+    hsdInitClassInfo(HSD_CLASS_INFO(&hsdLObj), &objInfo,
+        "sysdolphin_base_library", "hsd_lobj",
+        sizeof(HSD_LObjInfo), sizeof(HSD_LObj));
+    HSD_CLASS_INFO(&hsdLObj)->release = LObjRelease;
+    HSD_CLASS_INFO(&hsdLObj)->amnesia = LObjAmnesia;
+    hsdLObj.load = LObjLoad;
+    hsdLObj.update = LObjUpdateFunc;
+}
