@@ -182,8 +182,8 @@ int fn_8046DC28(a, p) int a; unsigned char* p; {
     return 0;
 }
 int fn_8046F174(a) char* a; {
-    if (a == 0) a = lbl_805BDD20;
-    return *(int*)(a + 8);
+    char* b = (a != 0) ? a : lbl_805BDD20;
+    return *(int*)(b + 8);
 }
 int fn_80471E5C(a) int a; {
     return fn_80471DA8(a);
@@ -216,10 +216,9 @@ int fn_80471940() {
     return fn_80471E7C(lbl_805B9C90);
 }
 unsigned fn_804721C0(a, b, c, d, e) unsigned a; unsigned b; unsigned c; unsigned d; unsigned e; {
-    unsigned x = a + b;
-    unsigned y = c + e;
-    if (y < x) a = y;
-    return a + e - (x - c);
+    b = a + b;
+    if (c + e < b) return c + e;
+    return a + e - (b - c);
 }
 int fn_80470110(a, b, c, d, e, f, g) int a; int b; int c; int d; int e; int f; int g; {
     return fn_8046FD10(a, b, c, d, e, 0, f, g);
