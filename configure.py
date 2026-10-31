@@ -383,7 +383,7 @@ config.libs = [
         "sysdolphin",
         "game",
         [
-            Object(NonMatching, "sysdolphin/dobj.c"),
+            Object(Matching, "sysdolphin/dobj.c"),
             Object(NonMatching, "sysdolphin/tobj.c"),
             Object(NonMatching, "sysdolphin/tev.c"),
             Object(NonMatching, "sysdolphin/mobj_aobj.c"),
