@@ -214,10 +214,9 @@ void _HSD_StateInvalidateRenderMode(void)
 
 #include <sysdolphin/objalloc.h>
 
-typedef struct { HSD_ObjAllocData a, b, c; } HSD_RenderAllocs;
-extern HSD_RenderAllocs lbl_80589278;
-extern HSD_ObjAllocData lbl_805892A4;
-extern HSD_ObjAllocData lbl_805892D0;
+static HSD_ObjAllocData lbl_80589278;
+static HSD_ObjAllocData lbl_805892A4;
+static HSD_ObjAllocData lbl_805892D0;
 extern s32 lbl_805DE1CC;
 extern s32 lbl_805DE1C8;
 extern s32 lbl_805DE1E0;
@@ -236,31 +235,27 @@ extern void GXSetNumTexGens(u8);
 extern void fn_803CF30C(u8);
 
 void HSD_StateInvalidate(u32 flags);
-#if 0 /* not yet matching */
 void HSD_StateInvalidate(u32 flags)
 {
-    HSD_StateInvalidateEntry* e = lbl_80502420;
-    while (e->flag != 0) {
-        if (flags & e->flag)
-            e->fn();
-        e++;
+    s32 i;
+    s32 f;
+    for (i = 0; (f = lbl_80502420[i].flag) != 0; i++) {
+        if (flags & f)
+            lbl_80502420[i].fn();
     }
 }
-#endif
 
 void HSD_RenderInitAllocData(void);
-#if 0 /* not yet matching */
 void HSD_RenderInitAllocData(void)
 {
-    HSD_ObjAllocInit(&lbl_80589278.a, 0x1C, 4);
-    HSD_ObjAllocInit(&lbl_80589278.b, 0x14, 4);
-    HSD_ObjAllocInit(&lbl_80589278.c, 0x30, 4);
+    HSD_ObjAllocInit(&lbl_80589278, 0x1C, 4);
+    HSD_ObjAllocInit(&lbl_805892A4, 0x14, 4);
+    HSD_ObjAllocInit(&lbl_805892D0, 0x30, 4);
 }
-#endif
 
 HSD_ObjAllocData* HSD_RenderGetAllocData(void)
 {
-    return &lbl_80589278.a;
+    return &lbl_80589278;
 }
 
 HSD_ObjAllocData* HSD_TevRegGetAllocData(void)

@@ -231,17 +231,18 @@ void fn_804092E8(HSD_AObj* aobj)
     if (aobj == NULL) {
         return;
     }
-    if (aobj->fobj != NULL) {
-        prev = &aobj->fobj;
-        while ((fobj = *prev) != NULL) {
-            if (fobj->obj_type == TYPE_JOBJ) {
-                *prev = fobj->next;
-                fobj->next = aobj->fobj;
-                aobj->fobj = fobj;
-                return;
-            }
-            prev = &fobj->next;
+    if (aobj->fobj == NULL) {
+        return;
+    }
+    prev = &aobj->fobj;
+    while ((fobj = *prev) != NULL) {
+        if (fobj->obj_type == TYPE_JOBJ) {
+            *prev = fobj->next;
+            fobj->next = aobj->fobj;
+            aobj->fobj = fobj;
+            return;
         }
+        prev = &fobj->next;
     }
 }
 #endif
@@ -507,14 +508,13 @@ HSD_JObj* fn_8040BC14(HSD_JObj* jobj)
     return NULL;
 }
 
-#ifdef NONMATCHING
-#ifdef NONMATCHING
-HSD_JObj* fn_8040BCA0(HSD_JObj* jobj)
+HSD_DObj* fn_8040BCA0(HSD_JObj* jobj)
 {
-    return (jobj != NULL && union_type_dobj(jobj)) ? (HSD_JObj*) jobj->u.dobj : NULL;
+    if (jobj == NULL || !union_type_dobj(jobj)) {
+        return NULL;
+    }
+    return jobj->u.dobj;
 }
-#endif
-#endif
 
 #ifdef NONMATCHING
 #ifdef NONMATCHING

@@ -55,38 +55,38 @@ u32 fn_80428618(s32 n)
 }
 
 void fn_80428684(HSD_GObjProc* proc);
-#if 0 /* not yet matching */
+#if 0 /* near miss: register allocation */
 void fn_80428684(HSD_GObjProc* proc)
 {
-    HSD_GObj* g;
     HSD_GObjProc* p;
-    HSD_GObj* gobj = proc->gobj;
-    u8 s = proc->s_link;
-    u8 pl = gobj->p_link;
-    s32 idx = pl + s * (HSD_GObjLibInitData.p_link_max + 1);
-    HSD_GObjProc** heads = lbl_805DE34C;
-    HSD_GObjProc* ins = heads[idx];
+    HSD_GObj* g;
+    s32 idx;
+    u8 pl;
+    HSD_GObj* gobj;
+    u8 s;
 
-    if (ins != NULL) {
+    gobj = proc->gobj;
+    s = proc->s_link;
+    pl = gobj->p_link;
+    idx = pl + s * (HSD_GObjLibInitData.p_link_max + 1);
+
+    if (lbl_805DE34C[idx] != NULL) {
         for (g = gobj; g != NULL; g = g->prev) {
             for (p = g->proc; p != NULL; p = p->child) {
                 if (p->s_link == s) {
-                    if (ins == p)
-                        heads[idx] = proc;
+                    if (lbl_805DE34C[idx] == p)
+                        lbl_805DE34C[idx] = proc;
                     goto link;
                 }
             }
         }
     } else {
-        heads[idx] = proc;
+        lbl_805DE34C[idx] = proc;
     }
     {
-        HSD_GObjProc** h = lbl_805DE34C;
         s32 k = pl + s * (HSD_GObjLibInitData.p_link_max + 1);
-        while (pl != 0) {
-            pl--;
-            k--;
-            p = h[k];
+        while (pl-- != 0) {
+            p = lbl_805DE34C[--k];
             if (p != NULL)
                 goto link;
         }
@@ -112,26 +112,26 @@ after:
 #endif
 
 void fn_804287DC(HSD_GObjProc* proc);
-#if 0 /* not yet matching */
 void fn_804287DC(HSD_GObjProc* proc)
 {
-    HSD_GObj* gobj = proc->gobj;
-    s32 s = proc->s_link;
-    s32 pl = gobj->p_link;
-    HSD_GObjProc* prev;
-    HSD_GObjProc** heads;
     s32 idx;
+    HSD_GObjProc* prev;
+    s32 pl;
+    s32 s;
+    HSD_GObj* gobj;
 
+    gobj = proc->gobj;
+    s = proc->s_link;
+    pl = gobj->p_link;
     if (lbl_8058C1F4.b0 && proc == lbl_805DE338)
         lbl_805DE338 = proc->next;
-    heads = lbl_805DE34C;
     idx = pl + s * (HSD_GObjLibInitData.p_link_max + 1);
-    if (proc == heads[idx]) {
+    if (proc == lbl_805DE34C[idx]) {
         prev = proc->prev;
         if (prev != NULL && prev->gobj->p_link == pl) {
-            heads[idx] = prev;
+            lbl_805DE34C[idx] = prev;
         } else {
-            heads[idx] = NULL;
+            lbl_805DE34C[idx] = NULL;
         }
     }
     if (proc->prev != NULL) {
@@ -142,7 +142,6 @@ void fn_804287DC(HSD_GObjProc* proc)
     if (proc->next != NULL)
         proc->next->prev = proc->prev;
 }
-#endif
 
 HSD_GObjProc* HSD_GObj_AddProc(HSD_GObj* gobj, void (*cb)(HSD_GObj*), u8 pri)
 {
@@ -161,7 +160,7 @@ HSD_GObjProc* HSD_GObj_AddProc(HSD_GObj* gobj, void (*cb)(HSD_GObj*), u8 pri)
 }
 
 void fn_8042898C(HSD_GObjProc* proc);
-#if 0 /* not yet matching */
+#if 0 /* near miss: register allocation */
 void fn_8042898C(HSD_GObjProc* proc)
 {
     HSD_GObj* gobj;
@@ -186,7 +185,7 @@ void fn_8042898C(HSD_GObjProc* proc)
 #endif
 
 void func_80428AD8(HSD_GObj* gobj);
-#if 0 /* not yet matching */
+#if 0 /* near miss: register allocation */
 void func_80428AD8(HSD_GObj* gobj)
 {
     HSD_GObjProc* proc = gobj->proc;

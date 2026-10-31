@@ -9,9 +9,9 @@ typedef struct HSD_PerfStat {
     u32 env[32];
 } HSD_PerfStat;
 
-extern HSD_PerfStat lbl_80504418;
-extern HSD_PerfStat lbl_80504388;
-extern s64 lbl_805DE2F0;
+__declspec(section ".data") HSD_PerfStat lbl_80504388 = { 0.0f };
+__declspec(section ".data") HSD_PerfStat lbl_80504418 = { 0.0f };
+s64 lbl_805DE2F0;
 extern s64 OSGetTime(void);
 extern void* memset(void*, int, size_t);
 

@@ -49,15 +49,13 @@ static inline void gobj_first_higher_prio(HSD_GObj* gobj)
 }
 
 // CreateGObj
-extern char lbl_80504DD8[];
-extern char lbl_80504DE4[]; // = "p_link <= HSD_GObjLibInitData.p_link_max"
 HSD_GObj* CreateGObj(s32 where, u16 classifier, u8 p_link, u8 priority, HSD_GObj* position)
 {
     HSD_GObj* gobj;
 
     //assert_line(0xA8, p_link <= HSD_GObjLibInitData.p_link_max);
     if (!(p_link <= HSD_GObjLibInitData.p_link_max))
-        __assert(lbl_80504DD8, 0xA8, lbl_80504DE4);
+        __assert("gobjplink.c", 0xA8, "p_link <= HSD_GObjLibInitData.p_link_max");
 
     if ((gobj = gobj_allocate()) == NULL) {
         return NULL;
@@ -127,21 +125,22 @@ void func_80428F64(HSD_GObj* gobj)
 }
 
 
-#if 0 /* 99.7%: register allocation differs in final loop */
 extern s32 lbl_805DE344;
 extern void fn_804287DC(HSD_GObjProc*);
 extern void fn_80428684(HSD_GObjProc*);
 
 void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* position)
 {
-    HSD_GObjProc* next;
-    HSD_GObjProc* rev;
-    HSD_GObjProc* proc;
     s32 lvl;
     s32 prev_lvl;
+    HSD_GObjProc* rev;
+    HSD_GObjProc* proc2;
+    HSD_GObjProc* next2;
+    HSD_GObjProc* next;
+    HSD_GObjProc* proc;
 
     if (!(p_link <= HSD_GObjLibInitData.p_link_max))
-        __assert(lbl_80504DD8, 0x19F, lbl_80504DE4);
+        __assert("gobjplink.c", 0x19F, "p_link <= HSD_GObjLibInitData.p_link_max");
 
     if (!lbl_8058C1F4.b0 && gobj == lbl_805DE324) {
         lbl_8058C1F4.type = where;
@@ -200,14 +199,13 @@ void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* po
     prev_lvl = 2;
     if (lvl != 0)
         prev_lvl = lvl - 1;
-    proc = rev;
-    while (proc != NULL) {
-        next = proc->child;
-        fn_80428684(proc);
-        if (proc->flags_3 == prev_lvl)
-            proc->flags_3 = (u8) lvl;
-        proc = next;
+    proc2 = rev;
+    while (proc2 != NULL) {
+        next2 = proc2->child;
+        fn_80428684(proc2);
+        if (proc2->flags_3 == prev_lvl)
+            proc2->flags_3 = (u8) lvl;
+        proc2 = next2;
     }
 }
 
-#endif
