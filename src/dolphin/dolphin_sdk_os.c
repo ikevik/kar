@@ -610,7 +610,7 @@ extern OSContext* __OSFPUContext_;
 extern int lbl_805DDEB4;
 extern void* lbl_805DDEB8;
 extern u32 lbl_805DDEBC;
-extern u32 RunQueueBits;
+extern volatile u32 RunQueueBits;
 typedef struct RunQ {
     OSThread* head;
     OSThread* tail;
@@ -709,8 +709,9 @@ void OSWakeupThread(OSThreadQueue* queue)
     OSThread* thread;
     OSThread* next;
     OSThread* prev;
-    RunQ* rq = RunQueue;
+    RunQ* rq;
     enabled = OSDisableInterrupts();
+    rq = RunQueue;
     while (queue->head) {
         thread = queue->head;
         next = thread->link.next;
@@ -1331,6 +1332,7 @@ int __OSCheckDeadLock(OSThread* thread)
 }
 
 #pragma peephole on
+#pragma dont_inline on
 s32 __OSGetEffectivePriority(OSThread* thread)
 {
     s32 priority = thread->base;
@@ -1343,6 +1345,7 @@ s32 __OSGetEffectivePriority(OSThread* thread)
     }
     return priority;
 }
+#pragma dont_inline reset
 
 #if 1
 #pragma peephole on
@@ -1428,6 +1431,7 @@ void fn_803D3148(OSAlarm* alarm, s64 start, s64 period, OSAlarmHandler handler)
 #pragma dont_inline reset
 
 #pragma peephole on
+#pragma dont_inline on
 void UnsetRun(OSThread* thread)
 {
     OSThreadQueue* queue = thread->queue;
@@ -1448,6 +1452,7 @@ void UnsetRun(OSThread* thread)
     }
     thread->queue = 0;
 }
+#pragma dont_inline reset
 
 #if 1
 #pragma peephole on
@@ -1515,7 +1520,128 @@ void __OSUnlockAllMutex(OSThread* thread)
     }
 }
 
-extern OSThread* SetEffectivePriority(OSThread* thread, s32 priority);
+#define AddTail(queue, thread, link) \
+    do { \
+        OSThread* prev = (queue)->tail; \
+        if (prev == 0) { \
+            (queue)->head = thread; \
+        } else { \
+            prev->link.next = thread; \
+        } \
+        thread->link.prev = prev; \
+        thread->link.next = 0; \
+        (queue)->tail = thread; \
+    } while (0)
+
+#define RemoveItem(queue, thread, link) \
+    do { \
+        OSThread* next = thread->link.next; \
+        OSThread* prev = thread->link.prev; \
+        if (next == 0) { \
+            (queue)->tail = prev; \
+        } else { \
+            next->link.prev = prev; \
+        } \
+        if (prev == 0) { \
+            (queue)->head = next; \
+        } else { \
+            prev->link.next = next; \
+        } \
+    } while (0)
+
+#define AddPrio(queue, thread, link) \
+    do { \
+        OSThread* next; \
+        OSThread* prev; \
+        for (next = (queue)->head; next && next->priority <= thread->priority; next = next->link.next) { \
+        } \
+        if (next == 0) { \
+            AddTail(queue, thread, link); \
+        } else { \
+            thread->link.next = next; \
+            prev = next->link.prev; \
+            next->link.prev = thread; \
+            thread->link.prev = prev; \
+            if (prev == 0) { \
+                (queue)->head = thread; \
+            } else { \
+                prev->link.next = thread; \
+            } \
+        } \
+    } while (0)
+
+#define SetRun(thread) \
+    do { \
+        thread->queue = (OSThreadQueue*)&RunQueue[thread->priority]; \
+        AddTail(thread->queue, thread, link); \
+        RunQueueBits |= 1u << (31 - thread->priority); \
+        RunQueueHint = 1; \
+    } while (0)
+
+#pragma peephole on
+OSThread* SetEffectivePriority(OSThread* thread, s32 priority)
+{
+    switch (thread->state) {
+    case 1:
+        UnsetRun(thread);
+        thread->priority = priority;
+        SetRun(thread);
+        break;
+    case 4:
+        RemoveItem(thread->queue, thread, link);
+        thread->priority = priority;
+        AddPrio(thread->queue, thread, link);
+        if (thread->mutex) {
+            return thread->mutex->thread;
+        }
+        break;
+    case 2:
+        RunQueueHint = 1;
+        thread->priority = priority;
+        break;
+    }
+    return 0;
+}
+
+#pragma peephole on
+s32 OSSuspendThread(OSThread* thread)
+{
+    int enabled = OSDisableInterrupts();
+    s32 suspendCount = thread->suspend++;
+    if (suspendCount == 0) {
+        switch (thread->state) {
+        case 2:
+            RunQueueHint = 1;
+            thread->state = 1;
+            break;
+        case 1:
+            UnsetRun(thread);
+            break;
+        case 4:
+            RemoveItem(thread->queue, thread, link);
+            thread->priority = 32;
+            AddTail(thread->queue, thread, link);
+            if (thread->mutex) {
+                OSThread* owner = thread->mutex->thread;
+                do {
+                    s32 priority;
+                    if (owner->suspend > 0) {
+                        break;
+                    }
+                    priority = __OSGetEffectivePriority(owner);
+                    if (owner->priority == priority) {
+                        break;
+                    }
+                    owner = SetEffectivePriority(owner, priority);
+                } while (owner);
+            }
+            break;
+        }
+        __OSReschedule();
+    }
+    OSRestoreInterrupts(enabled);
+    return suspendCount;
+}
 extern void Reset(u32 resetCode);
 volatile u16 __VIRegs_os[] : 0xcc002000;
 volatile u32 __PIRegs_os[] : 0xcc003000;
