@@ -113,3 +113,121 @@ fn_803DA558(((int)lbl_805C3C40 + 272), 0);
 m0 = 0;
 }
 }
+
+/* ---- w3f batch 1 ---- */
+#define G32(o) (*(int*)((int)lbl_805C3C40 + (o)))
+extern int lbl_805DE6FC;
+extern int lbl_805DE6E8;
+extern int fn_803D9B10();
+extern void fn_803BD5A4();
+extern void fn_80487368();
+extern void fn_804887EC();
+extern void OSExitThread();
+extern void fn_804830A4();
+extern void fn_80482598();
+extern void fn_8048263C();
+extern void fn_80482730();
+
+void fn_80483C1C() {
+    fn_804830A4();
+}
+
+void fn_804859C8() {
+    fn_80482598();
+}
+
+void fn_804859E8() {
+    fn_8048263C();
+}
+
+void fn_80485AB8() {
+    fn_80482730();
+}
+
+void fn_80486D58() {
+    if (lbl_805DE6FC == 1) {
+        lbl_805DE6FC = 2;
+        OSWakeupThread(&lbl_805DE6E8);
+    }
+}
+
+void fn_80486E84(a, b) int a; int* b; {
+    fn_803BD5A4(a, *b);
+}
+
+int fn_8048763C() {
+    fn_80487368();
+    return G32(0x24) == 2;
+}
+
+int fn_80487C0C() {
+    int en = OSDisableInterrupts();
+    int v = *(unsigned char*)((int)lbl_805C3C40 + 0x39);
+    OSRestoreInterrupts(en);
+    return v;
+}
+
+int fn_80487C48() {
+    int en = OSDisableInterrupts();
+    int v = *(unsigned char*)((int)lbl_805C3C40 + 0x4C);
+    OSRestoreInterrupts(en);
+    return v;
+}
+
+int fn_80487CC0() {
+    if (G32(0x80) == 1) return fn_803D9B10((int)lbl_805C3C40 + 0x110);
+    return 1;
+}
+
+int fn_804881C0() {
+    return G32(0x90) == 1;
+}
+
+int fn_804881DC() {
+    if (G32(0xC0) == 1) return fn_803D9B10((int)lbl_805C3C40 + 0x110);
+    return 1;
+}
+
+int fn_8048842C() {
+    if (G32(0xF8) == 1) return fn_803D9B10((int)lbl_805C3C40 + 0x110);
+    return 1;
+}
+
+int fn_80488938() {
+    int en;
+    int v;
+    fn_804887EC();
+    en = OSDisableInterrupts();
+    v = G32(0xC);
+    OSRestoreInterrupts(en);
+    return v;
+}
+
+void fn_80488978(a) int a; {
+    int en = OSDisableInterrupts();
+    if (G32(0xC) == 0) G32(0xC) = a;
+    OSRestoreInterrupts(en);
+}
+
+void fn_804889C0() {
+    int en = OSDisableInterrupts();
+    G32(0xC) = 0;
+    OSRestoreInterrupts(en);
+}
+
+void fn_804889F4() {
+    int en = OSDisableInterrupts();
+    G32(0x108) = 1;
+    OSRestoreInterrupts(en);
+}
+
+void fn_80488A28() {
+    int en = OSDisableInterrupts();
+    int v = G32(0x108);
+    OSRestoreInterrupts(en);
+    if (v == 1) OSExitThread(0);
+}
+
+int fn_804893F8() {
+    return fn_8048530C() == 1;
+}
