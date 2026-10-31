@@ -253,8 +253,8 @@ void HSD_CObjSetMtxDirty(HSD_CObj* cobj)
 
 BOOL HSD_CObjMtxIsDirty(HSD_CObj* cobj)
 {
-    HSD_WObj* wobj;
     BOOL result = FALSE;
+    HSD_WObj* wobj;
     if ((cobj->flags & 0x40000000) ||
         ((wobj = cobj->eye_position) != NULL && (wobj->flags & 2)) ||
         ((wobj = cobj->interest) != NULL && (wobj->flags & 2))) {

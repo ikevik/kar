@@ -117,10 +117,11 @@ void HSD_PadRumbleRemoveAll(void);
 #if 0 /* near miss: base/index regs swapped */
 void HSD_PadRumbleRemoveAll(void)
 {
-    s32 i;
-    for (i = 0; i < 4; i++) {
+    s32 i = 0;
+    do {
         HSD_PadRumbleRemove((u8) i);
-    }
+        i++;
+    } while (i < 4);
 }
 #endif
 
