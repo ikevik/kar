@@ -663,4 +663,29 @@ void fn_802DA578(void) {}
 
 
 
+
+void fn_802D5CE4(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 v1;
+    float v2;
+    float v3;
+    u32 v4;
+    u32 v7;
+    u32 c0;
+    float d1;
+    float d2;
+    v1 = M32(((u32)p3+124));
+    c0 = fn_803AD760(v1, 0, (u32)&lbl_805D90F0, (u32)&lbl_805D9098, 0);
+    if (c0 != 0) return;
+    v2 = MF(((u32)p3+312));
+    v3 = lbl_805E3788;
+    if (v2 < v3) {
+    d1 = fn_802D8AC8(p3, 1, v2);
+    v4 = M32(((u32)p3+124));
+    d2 = ((VC0_float_uf*)(v4))->m(-1, d1);
+    v7 = M32(((u32)p3+124));
+    if (v7 != 0)
+    fn_802FBAF0(v7, (p3+128), p4, p5, p6, d2);
+    }
+}
+
 }
