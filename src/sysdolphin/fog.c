@@ -9,8 +9,8 @@
 #include <dolphin/types.h>
 
 extern HSD_ClassInfo objInfo;
+extern const GXColor lbl_805E6380;
 HSD_Fog* lbl_805DE2E8;
-GXColor lbl_805DCCCC = { 0, 0, 0, 0 };
 
 void GXSetFog(u32 type, f32 start, f32 end, f32 nearz, f32 farz, GXColor color);
 void GXInitFogAdjTable(void* table, u16 width, Mtx44 proj);
@@ -43,7 +43,7 @@ HSD_Fog* HSD_FogGetCurrent(void)
     return lbl_805DE2E8;
 }
 
-#ifdef NONMATCHING /* 98%: fmadds operand load order, beq/b layout */
+#if 1
 void HSD_FogSet(HSD_Fog* fog)
 {
     HSD_FogAdj* fog_adj;
@@ -58,8 +58,7 @@ void HSD_FogSet(HSD_Fog* fog)
     s32 width;
 
     if (fog == NULL) {
-        GXColor black = { 0, 0, 0, 0 };
-        GXSetFog(0, 0.0F, 0.0F, 0.0F, 0.0F, black);
+        GXSetFog(0, 0.0F, 0.0F, 0.0F, 0.0F, lbl_805E6380);
         return;
     }
     cobj = HSD_CObjGetCurrent();
@@ -74,7 +73,7 @@ void HSD_FogSet(HSD_Fog* fog)
         if (flags & 1) {
             center = (s32) (vp[0] + (vp[2] * (f32) ((fog_adj != NULL ? fog_adj->center : -1) + 320)) / 640.0F);
         } else {
-            center = (s32) (vp[0] + vp[2] * 0.5F);
+            center = (s32) (vp[0] + vp[2] / 2.0F);
         }
         if (flags & 2) {
             width = (fog_adj != NULL) ? fog_adj->width : -1;
@@ -87,7 +86,8 @@ void HSD_FogSet(HSD_Fog* fog)
             mp = mtx;
             memset(mp, 0, sizeof(Mtx44));
             GXGetProjectionv(ps);
-            if ((s32) ps[0] == 0) {
+            switch ((s32) ps[0]) {
+            case 0:
                 mtx[0][0] = ps[1];
                 mtx[0][2] = ps[2];
                 mtx[1][1] = ps[3];
@@ -95,7 +95,8 @@ void HSD_FogSet(HSD_Fog* fog)
                 mtx[2][2] = ps[5];
                 mtx[2][3] = ps[6];
                 mtx[3][2] = -1.0F;
-            } else {
+                break;
+            default:
                 mtx[0][0] = ps[1];
                 mtx[0][3] = ps[2];
                 mtx[1][1] = ps[3];
@@ -103,6 +104,7 @@ void HSD_FogSet(HSD_Fog* fog)
                 mtx[2][2] = ps[5];
                 mtx[2][3] = ps[6];
                 mtx[3][3] = 1.0F;
+                break;
             }
         }
         GXInitFogAdjTable(table, width, mp);
@@ -154,11 +156,12 @@ void HSD_FogInit(HSD_Fog* fog, HSD_FogDesc* desc)
 
 GXColor HSD_FogGetColor(HSD_Fog* fog)
 {
+    static GXColor black = { 0, 0, 0, 0 };
     GXColor color;
     if (fog != NULL) {
         color = fog->color;
     } else {
-        color = lbl_805DCCCC;
+        color = black;
     }
     return color;
 }
@@ -167,10 +170,10 @@ HSD_FogAdj* HSD_FogAdjLoadDesc(HSD_FogAdjDesc* desc)
 {
     HSD_FogAdj* adj = hsdNew((HSD_ClassInfo*) &hsdFogAdj);
     if (adj == NULL) {
-        __assert("fog.c", 301, "fogadj");
+        __assert("fog.c", 301, "adj");
     }
     if (adj == NULL) {
-        __assert("fog.c", 317, "fogadj");
+        __assert("fog.c", 317, "adj");
     }
     HSD_FogAdjInit(adj, desc);
     return adj;

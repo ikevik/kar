@@ -412,7 +412,7 @@ config.libs = [
             Object(NonMatching, "sysdolphin/robj.c"),
             Object(Matching, "sysdolphin/id.c"),
             Object(Matching, "sysdolphin/wobj.c"),
-            Object(NonMatching, "sysdolphin/fog.c"),
+            Object(Matching, "sysdolphin/fog.c"),
             Object(Matching, "sysdolphin/pref.c"),
             Object(Matching, "sysdolphin/list_object.c"),
             Object(NonMatching, "sysdolphin/memory.c"),
