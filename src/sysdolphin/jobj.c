@@ -68,6 +68,8 @@ extern void HSD_RObjAddAnimAll(HSD_RObj*, struct _HSD_RObjAnimJoint*);
 extern void HSD_DObjAddAnimAll(HSD_DObj*, void*, void*);
 extern void fn_8040BD64(HSD_JObj*, u32);
 extern void fn_8040C0D8(HSD_JObj*, u32);
+extern void HSD_RObjAnimAll(HSD_RObj*);
+extern void HSD_DObjAnimAll(HSD_DObj*);
 extern void fn_8040A304(HSD_JObj*);
 
 void HSD_JObjCheckDepend(HSD_JObj* jobj)
@@ -240,6 +242,18 @@ void fn_80409340(HSD_JObj* jobj, HSD_AnimJoint* an, HSD_AnimJoint* mat, HSD_Anim
     }
     if (union_type_dobj(jobj)) {
         HSD_DObjAddAnimAll(jobj->u.dobj, mat != NULL ? mat->aobjdesc : NULL, sh != NULL ? sh->aobjdesc : NULL);
+    }
+}
+
+void fn_8040A1A0(HSD_JObj* jobj)
+{
+    if (jobj != NULL) {
+        HSD_JObjCheckDepend(jobj);
+        HSD_AObjInterpretAnim(jobj->aobj, jobj, ((HSD_JObjInfo*) jobj->object.parent.class_info)->update);
+        HSD_RObjAnimAll(jobj->robj);
+        if (union_type_dobj(jobj)) {
+            HSD_DObjAnimAll(jobj->u.dobj);
+        }
     }
 }
 
@@ -459,6 +473,32 @@ HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint)
     return jobj;
 }
 
+void HSD_JObjUnref(HSD_JObj* jobj)
+{
+    HSD_Obj* o = &jobj->object;
+    if (jobj == NULL) {
+        return;
+    }
+    if ((0xffff - o->ref_count ? 0 : 1) || (o->ref_count-- ? 0 : 1)) {
+        if ((s32) o->ref_count_individual - 1 < 0) {
+            if (o != NULL) {
+                o->parent.class_info->release((HSD_Class*) o);
+                o->parent.class_info->destroy((HSD_Class*) o);
+            }
+        } else {
+            o->ref_count_individual++;
+            assert_line(0x9e, o->ref_count_individual != 0);
+            ((HSD_JObjInfo*) o->parent.class_info)->release_child(jobj);
+            if ((o->ref_count_individual ? 0 : 1) || (--o->ref_count_individual ? 0 : 1)) {
+                if (o != NULL) {
+                    o->parent.class_info->release((HSD_Class*) o);
+                    o->parent.class_info->destroy((HSD_Class*) o);
+                }
+            }
+        }
+    }
+}
+
 void fn_8040B670(HSD_Obj* o)
 {
     if (o != NULL) {
@@ -497,5 +537,5 @@ void fn_8040E2A4(void)
     hsdJObj.make_pmtx = fn_8040F218;
     hsdJObj.disp = fn_8040ADD4;
     hsdJObj.release_child = fn_8040DCD4;
-    hsdJObj.unk50 = fn_8040985C;
+    hsdJObj.update = fn_8040985C;
 }

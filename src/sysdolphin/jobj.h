@@ -126,7 +126,7 @@ typedef struct _HSD_JObjInfo {
     void (*make_mtx)(HSD_JObj* jobj);
     void (*make_pmtx)(HSD_JObj* jobj, Mtx mtx, Mtx rmtx);
     void (*release_child)(HSD_JObj* jobj);
-    void (*unk50)(void);
+    void (*update)(void);
 } HSD_JObjInfo;
 
 extern HSD_JObjInfo hsdJObj;
