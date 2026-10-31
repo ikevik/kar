@@ -6,6 +6,8 @@ extern int lbl_805DD6C4;
 extern int lbl_805DD6C8;
 extern int lbl_805DD6CC;
 extern int lbl_805DD6F8;
+typedef struct { int w[3]; } S12;
+typedef struct { int w[10]; } S40;
 
 int fn_800AFC9C(void)
 {
@@ -438,5 +440,82 @@ void fn_8010E098(void)
 void fn_8010EC0C(void)
 {
 
+}
+
+void fn_800D6724(int a1)
+{
+    *(int*)((u8*)(a1) + 0) = 0;
+    *(int*)((u8*)(a1) + 8) = 0;
+    *(int*)((u8*)(a1) + 16) = 0;
+    *(int*)((u8*)(a1) + 24) = 0;
+    *(int*)((u8*)(a1) + 32) = 0;
+    *(int*)((u8*)(a1) + 40) = 0;
+    *(int*)((u8*)(a1) + 48) = 0;
+    *(int*)((u8*)(a1) + 56) = 0;
+    *(int*)((u8*)(a1) + 64) = 0;
+    *(int*)((u8*)(a1) + 4) = 0;
+    *(int*)((u8*)(a1) + 12) = 0;
+    *(int*)((u8*)(a1) + 20) = 0;
+    *(int*)((u8*)(a1) + 28) = 0;
+    *(int*)((u8*)(a1) + 36) = 0;
+    *(int*)((u8*)(a1) + 44) = 0;
+    *(int*)((u8*)(a1) + 52) = 0;
+    *(int*)((u8*)(a1) + 60) = 0;
+    *(int*)((u8*)(a1) + 68) = 0;
+}
+
+void fn_800AFE6C(int a1)
+{
+    *(S40*)((u8*)(a1) + 232) = *(S40*)((u8*)(a1) + 192);
+}
+
+void fn_800AFEC0(int a1, int a2)
+{
+    *(S40*)((u8*)(a1) + 192) = *(S40*)((u8*)(a2) + 0);
+}
+
+void fn_800B8DC4(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 32) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B8DE0(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 44) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B8DFC(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 20) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B8E18(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 8) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B8E34(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 56) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B8EE8(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 184) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B8F04(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 196) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800B9054(int a1, int a2)
+{
+    *(S12*)((u8*)(a1) + 172) = *(S12*)((u8*)(a2) + 0);
+}
+
+void fn_800CEACC(int a1)
+{
+    *(S12*)((u8*)(a1) + 0) = *(S12*)((u8*)((*(int*)((u8*)((*(int*)((u8*)((*(int*)&lbl_805DD6CC)) + 8))) + 4))) + 100);
 }
 
