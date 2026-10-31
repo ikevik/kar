@@ -475,3 +475,277 @@ void OSWakeupThread(OSThreadQueue* queue)
     OSRestoreInterrupts(enabled);
 }
 #pragma peephole on
+
+asm void __OSDBJump(void)
+{
+    nofralloc
+    bla 0x60
+}
+
+asm void __OSDBIntegrator(void)
+{
+    nofralloc
+    li r5, 0x40
+    mflr r3
+    stw r3, 0xc(r5)
+    lwz r3, 0x8(r5)
+    oris r3, r3, 0x8000
+    mtlr r3
+    li r3, 0x30
+    mtmsr r3
+    blr
+}
+
+asm void DCEnable(void)
+{
+    nofralloc
+    sync
+    mfspr r3, HID0
+    ori r3, r3, 0x4000
+    mtspr HID0, r3
+    blr
+}
+
+asm void DCInvalidateRange(register void* addr, register u32 nBytes)
+{
+    nofralloc
+    cmplwi nBytes, 0
+    blelr
+    clrlwi r5, addr, 27
+    add nBytes, nBytes, r5
+    addi nBytes, nBytes, 31
+    srwi nBytes, nBytes, 5
+    mtctr nBytes
+_dcbi:
+    dcbi 0, addr
+    addi addr, addr, 32
+    bdnz _dcbi
+    blr
+}
+
+asm void DCFlushRange(register void* addr, register u32 nBytes)
+{
+    nofralloc
+    cmplwi nBytes, 0
+    blelr
+    clrlwi r5, addr, 27
+    add nBytes, nBytes, r5
+    addi nBytes, nBytes, 31
+    srwi nBytes, nBytes, 5
+    mtctr nBytes
+_dcbf:
+    dcbf 0, addr
+    addi addr, addr, 32
+    bdnz _dcbf
+    sc
+    blr
+}
+
+asm void fn_803D3F54(register void* addr, register u32 nBytes)
+{
+    nofralloc
+    cmplwi nBytes, 0
+    blelr
+    clrlwi r5, addr, 27
+    add nBytes, nBytes, r5
+    addi nBytes, nBytes, 31
+    srwi nBytes, nBytes, 5
+    mtctr nBytes
+_dcbst:
+    dcbst 0, addr
+    addi addr, addr, 32
+    bdnz _dcbst
+    sc
+    blr
+}
+
+asm void DCFlushRangeNoSync(register void* addr, register u32 nBytes)
+{
+    nofralloc
+    cmplwi nBytes, 0
+    blelr
+    clrlwi r5, addr, 27
+    add nBytes, nBytes, r5
+    addi nBytes, nBytes, 31
+    srwi nBytes, nBytes, 5
+    mtctr nBytes
+_dcbf:
+    dcbf 0, addr
+    addi addr, addr, 32
+    bdnz _dcbf
+    blr
+}
+
+asm void ICInvalidateRange(register void* addr, register u32 nBytes)
+{
+    nofralloc
+    cmplwi nBytes, 0
+    blelr
+    clrlwi r5, addr, 27
+    add nBytes, nBytes, r5
+    addi nBytes, nBytes, 31
+    srwi nBytes, nBytes, 5
+    mtctr nBytes
+_icbi:
+    icbi 0, addr
+    addi addr, addr, 32
+    bdnz _icbi
+    sync
+    isync
+    blr
+}
+
+asm void ICFlashInvalidate(void)
+{
+    nofralloc
+    mfspr r3, HID0
+    ori r3, r3, 0x800
+    mtspr HID0, r3
+    blr
+}
+
+asm void ICEnable(void)
+{
+    nofralloc
+    isync
+    mfspr r3, HID0
+    ori r3, r3, 0x8000
+    mtspr HID0, r3
+    blr
+}
+
+asm void LCDisable(void)
+{
+    nofralloc
+    lis r3, 0xe000
+    li r4, 0x200
+    mtctr r4
+_lcdbi:
+    dcbi 0, r3
+    addi r3, r3, 32
+    bdnz _lcdbi
+    mfspr r4, 920
+    rlwinm r4, r4, 0, 4, 2
+    mtspr 920, r4
+    blr
+}
+
+asm void OSSaveFPUContext(register OSContext* fpuContext)
+{
+    nofralloc
+    addi r5, r3, 0
+    b __OSSaveFPUContext
+}
+
+asm void* OSGetStackPointer(void)
+{
+    nofralloc
+    mr r3, r1
+    blr
+}
+
+asm void fn_803D4738(register void* fn, register void* stk)
+{
+    nofralloc
+    mflr r0
+    mr r5, r1
+    stwu r5, -8(r4)
+    mr r1, r4
+    stw r0, 4(r5)
+    mtlr r3
+    blrl
+    lwz r5, 0(r1)
+    lwz r0, 4(r5)
+    mtlr r0
+    mr r1, r5
+    blr
+}
+
+asm int OSDisableInterrupts(void)
+{
+    nofralloc
+    mfmsr r3
+    rlwinm r4, r3, 0, 17, 15
+    mtmsr r4
+    extrwi r3, r3, 1, 16
+    blr
+}
+
+asm int OSEnableInterrupts(void)
+{
+    nofralloc
+    mfmsr r3
+    ori r4, r3, 0x8000
+    mtmsr r4
+    extrwi r3, r3, 1, 16
+    blr
+}
+
+asm int OSRestoreInterrupts(register int level)
+{
+    nofralloc
+    cmpwi level, 0
+    mfmsr r4
+    beq _disable
+    ori r5, r4, 0x8000
+    b _restore
+_disable:
+    rlwinm r5, r4, 0, 17, 15
+_restore:
+    mtmsr r5
+    extrwi r3, r4, 1, 16
+    blr
+}
+
+asm void RealMode(register u32 addr)
+{
+    nofralloc
+    clrlwi r3, r3, 2
+    mtsrr0 r3
+    mfmsr r3
+    rlwinm r3, r3, 0, 28, 25
+    mtsrr1 r3
+    rfi
+}
+
+asm void fn_803D8218(register void* addr)
+{
+    nofralloc
+    sync
+    isync
+    mtlr r3
+    blr
+}
+
+asm s64 OSGetTime(void)
+{
+    nofralloc
+    mftbu r3
+    mftb r4
+    mftbu r5
+    cmpw r3, r5
+    bne OSGetTime
+    blr
+}
+
+asm u32 OSGetTick(void)
+{
+    nofralloc
+    mftb r3, 268
+    blr
+}
+
+extern void __OSSystemCallVectorEnd(void);
+asm void SystemCallVector(void)
+{
+    nofralloc
+    mfspr r9, HID0
+    ori r10, r9, 0x8
+    mtspr HID0, r10
+    isync
+    sync
+    mtspr HID0, r9
+    rfi
+entry __OSSystemCallVectorEnd
+    nop
+}
