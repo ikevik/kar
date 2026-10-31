@@ -244,6 +244,7 @@ config.linker_version = "GC/1.3.2"
 
 
 cflags_sdk = [x for x in cflags_base if x != "-inline all"] + ["-inline auto"]
+cflags_sdk_nopeep = cflags_sdk + ["-opt nopeephole"]
 
 
 # Helper for a group of objects built with the project-wide settings

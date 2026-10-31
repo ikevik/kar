@@ -25,8 +25,25 @@ struct OSMutex {
     s32 count;
     OSMutexLink link;
 };
+struct OSContext {
+    u32 gpr[32];
+    u32 cr;
+    u32 lr;
+    u32 ctr;
+    u32 xer;
+    f64 fpr[32];
+    u32 fpscr_pad;
+    u32 fpscr;
+    u32 srr0;
+    u32 srr1;
+    u16 mode;
+    u16 state;
+    u32 gqr[8];
+    u32 psf_pad;
+    f64 psf[32];
+};
 struct OSThread {
-    u8 context[0x2C8];
+    OSContext context;
     u16 state;
     u16 attr;
     s32 suspend;
@@ -40,10 +57,21 @@ struct OSThread {
     OSMutexQueue queueMutex;
     OSThreadLink linkActive;
 };
-typedef struct OSAlarm {
-    void* handler;
+typedef struct OSAlarm OSAlarm;
+typedef void (*OSAlarmHandler)(OSAlarm* alarm, OSContext* context);
+struct OSAlarm {
+    OSAlarmHandler handler;
     u32 tag;
-} OSAlarm;
+    s64 fire;
+    OSAlarm* prev;
+    OSAlarm* next;
+    s64 period;
+    s64 start;
+};
+typedef struct OSAlarmQueue {
+    OSAlarm* head;
+    OSAlarm* tail;
+} OSAlarmQueue;
 typedef struct HeapDesc {
     long size;
     void* free;
@@ -89,17 +117,21 @@ u32 OSGetConsoleType(void)
     return type;
 }
 
+#pragma peephole off
 OSExceptionHandler __OSSetExceptionHandler(u8 exception, OSExceptionHandler handler)
 {
     OSExceptionHandler old = OSExceptionTable[exception];
     OSExceptionTable[exception] = handler;
     return old;
 }
+#pragma peephole on
 
+#pragma peephole off
 OSExceptionHandler __OSGetExceptionHandler(u8 exception)
 {
     return OSExceptionTable[exception];
 }
+#pragma peephole on
 
 OSInterruptHandler __OSSetInterruptHandler(s16 interrupt, OSInterruptHandler handler)
 {
@@ -118,10 +150,12 @@ u8 __OSGetDIConfig(void)
     return *(u32*)0xCC006024 & 0xFF;
 }
 
+#pragma peephole off
 void OSRegisterVersion(const char* version)
 {
     OSReport(lbl_805DC974, version);
 }
+#pragma peephole on
 
 void OSCreateAlarm(OSAlarm* alarm)
 {
@@ -297,3 +331,141 @@ void __OSReschedule(void)
     }
 }
 
+
+extern OSAlarmQueue AlarmQueue;
+extern void DecrementerExceptionHandler(u8 exception, OSContext* context);
+extern void InsertAlarm(OSAlarm* alarm, s64 fire, OSAlarmHandler handler);
+extern s64 __OSGetSystemTime(void);
+extern s64 OSGetTime(void);
+extern void OSClearContext(OSContext* context);
+extern void __OSLoadFPUContext(void);
+extern void DBPrintf(const char* fmt, ...);
+extern OSContext* __OSFPUContext_;
+extern void OSSwitchFPUContext(u8 exception, OSContext* context);
+extern int lbl_805DDEB4;
+extern void* lbl_805DDEB8;
+extern u32 lbl_805DDEBC;
+extern u32 RunQueueBits;
+typedef struct RunQ {
+    OSThread* head;
+    OSThread* tail;
+} RunQ;
+extern RunQ RunQueue[32];
+extern void __OSUnlockAllMutex(OSThread* thread);
+extern void OSWakeupThread(OSThreadQueue* queue);
+
+void OSInitAlarm(void)
+{
+    if (__OSGetExceptionHandler(8) != DecrementerExceptionHandler) {
+        AlarmQueue.head = AlarmQueue.tail = 0;
+        __OSSetExceptionHandler(8, DecrementerExceptionHandler);
+    }
+}
+
+void OSSetAlarm(OSAlarm* alarm, s64 tick, OSAlarmHandler handler)
+{
+    int enabled = OSDisableInterrupts();
+    alarm->period = 0;
+    InsertAlarm(alarm, __OSGetSystemTime() + tick, handler);
+    OSRestoreInterrupts(enabled);
+}
+
+#pragma peephole off
+s64 __OSGetSystemTime(void)
+{
+    int enabled = OSDisableInterrupts();
+    s64* timeAdjustPtr = (s64*)0x800030D8;
+    s64 result = OSGetTime() + *timeAdjustPtr;
+    OSRestoreInterrupts(enabled);
+    return result;
+}
+#pragma peephole on
+
+#pragma peephole off
+s64 __OSTimeToSystemTime(s64 time)
+{
+    int enabled = OSDisableInterrupts();
+    s64* timeAdjustPtr = (s64*)0x800030D8;
+    s64 result = *timeAdjustPtr + time;
+    OSRestoreInterrupts(enabled);
+    return result;
+}
+#pragma peephole on
+
+void OSInitContext(OSContext* context, u32 pc, u32 sp);
+
+void OSSleepThread(OSThreadQueue* queue)
+{
+    int enabled;
+    OSThread* currentThread;
+    OSThread* next;
+    OSThread* prev;
+    enabled = OSDisableInterrupts();
+    currentThread = *(OSThread**)0x800000E4;
+    currentThread->state = 4;
+    currentThread->queue = queue;
+    for (next = queue->head; next && next->priority <= currentThread->priority; next = next->link.next) {
+    }
+    if (next == 0) {
+        prev = queue->tail;
+        if (prev == 0) {
+            queue->head = currentThread;
+        } else {
+            prev->link.next = currentThread;
+        }
+        currentThread->link.prev = prev;
+        currentThread->link.next = 0;
+        queue->tail = currentThread;
+    } else {
+        currentThread->link.next = next;
+        prev = next->link.prev;
+        next->link.prev = currentThread;
+        currentThread->link.prev = prev;
+        if (prev == 0) {
+            queue->head = currentThread;
+        } else {
+            prev->link.next = currentThread;
+        }
+    }
+    RunQueueHint = 1;
+    if (RunQueueHint) {
+        SelectThread(0);
+    }
+    OSRestoreInterrupts(enabled);
+}
+
+void OSWakeupThread(OSThreadQueue* queue)
+{
+    int enabled;
+    OSThread* thread;
+    OSThread* next;
+    OSThread* prev;
+    enabled = OSDisableInterrupts();
+    while (queue->head) {
+        thread = queue->head;
+        next = thread->link.next;
+        if (next == 0) {
+            queue->tail = 0;
+        } else {
+            next->link.prev = 0;
+        }
+        queue->head = next;
+        thread->state = 1;
+        if (thread->suspend <= 0) {
+            thread->queue = (OSThreadQueue*)&RunQueue[thread->priority];
+            prev = thread->queue->tail;
+            if (prev == 0) {
+                thread->queue->head = thread;
+            } else {
+                prev->link.next = thread;
+            }
+            thread->link.prev = prev;
+            thread->link.next = 0;
+            thread->queue->tail = thread;
+            RunQueueBits |= 1u << (31 - thread->priority);
+            RunQueueHint = 1;
+        }
+    }
+    __OSReschedule();
+    OSRestoreInterrupts(enabled);
+}
