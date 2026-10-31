@@ -152,6 +152,7 @@ OSInterruptHandler __OSGetInterruptHandler(s16 interrupt)
 #if 1
 #pragma peephole on
 volatile u32 __DIRegs[] : 0xcc006000;
+#pragma peephole off
 u8 __OSGetDIConfig(void)
 {
     return __DIRegs[9] & 0xFF;
@@ -1192,4 +1193,54 @@ void __OSUnlockAllMutex(OSThread* thread)
         mutex->thread = 0;
         OSWakeupThread(&mutex->queue);
     }
+}
+
+extern OSThread* SetEffectivePriority(OSThread* thread, s32 priority);
+extern void Reset(u32 resetCode);
+volatile u16 __VIRegs_os[] : 0xcc002000;
+volatile u32 __PIRegs_os[] : 0xcc003000;
+
+#pragma peephole off
+u32 OSGetResetCode(void)
+{
+    if (*(u8*)0x800030E2 != 0) {
+        return 0x80000000;
+    }
+    return (__PIRegs_os[9] & ~7) >> 3;
+}
+
+#pragma peephole off
+void InquiryCallback(s32 result, OSThread* block)
+{
+    switch (*(s32*)((u8*)block + 0xc)) {
+    case 0:
+        *(u16*)0x800030E6 = *(u16*)(DriveInfo_8056D560 + 2) | 0x8000;
+        break;
+    default:
+        *(u16*)0x800030E6 = 1;
+        break;
+    }
+}
+
+#pragma peephole off
+void __OSDoHotReset(u32 resetCode)
+{
+    OSDisableInterrupts();
+    __VIRegs_os[1] = 0;
+    ICFlashInvalidate();
+    Reset(resetCode << 3);
+}
+
+#pragma peephole on
+void fn_803D9E28(OSThread* thread, s32 priority)
+{
+    do {
+        if (thread->suspend > 0) {
+            break;
+        }
+        if (thread->priority <= priority) {
+            break;
+        }
+        thread = SetEffectivePriority(thread, priority);
+    } while (thread);
 }
