@@ -54,3 +54,70 @@ t5 = *(int*)(a0 + 24);
 int fn_803B3670(a0) int a0; {
 return (((a0 >> 31) ^ a0) - (a0 >> 31));
 }
+
+/* ---- w3f batch 1 ---- */
+extern unsigned char lbl_804F8BF0[];
+extern unsigned char lbl_804F8AF0[];
+extern char __files[];
+extern void* memset();
+extern void fn_803AFB90();
+extern void fn_803AFCE8();
+extern int fn_803B3D08();
+
+int fn_803B3870(c) int c; {
+    if (c == -1) return -1;
+    return lbl_804F8BF0[(unsigned char)c];
+}
+
+int fn_803B3894(c) int c; {
+    return lbl_804F8AF0[(unsigned char)c] & 0x20;
+}
+
+int fn_803B38AC(c) int c; {
+    return lbl_804F8AF0[(unsigned char)c] & 0x10;
+}
+
+
+void fn_803AFAC8(p) void* p; {
+    __begin_critical_region(1);
+    if (lbl_805DDCD8 == 0) {
+        memset(lbl_80569B10, 0, 0x34);
+        lbl_805DDCD8 = 1;
+    }
+    fn_803AFB38(lbl_80569B10, p);
+    __end_critical_region(1);
+}
+
+int fn_803AFF7C() {
+    int ret = 0;
+    char* f = __files;
+    while (f != 0) {
+        if (((*(unsigned short*)(f + 4)) >> 6) & 7) {
+            if (fn_803B3D08(f) != 0) ret = -1;
+        }
+        f = *(char**)(f + 0x4C);
+    }
+    return ret;
+}
+
+int fn_803B38C4(c) int c; {
+    return lbl_804F8AF0[(unsigned char)c] & 0xC0;
+}
+
+#if 0 /* w3f near misses */
+void fn_803AFB38(heap, p) void* heap; unsigned* p; {
+    if (p != 0) {
+        unsigned* h = (unsigned*)p[-1];
+        unsigned sz;
+        if (((unsigned)h & 1) == 0) {
+            sz = h[2];
+        } else {
+            sz = (p[-2] & ~7) - 8;
+        }
+        if (sz <= 0x44) fn_803AFB90(heap, p);
+        else fn_803AFCE8(heap, p);
+    }
+}
+
+
+#endif /* w3f near misses */
