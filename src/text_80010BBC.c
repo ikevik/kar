@@ -88,7 +88,24 @@ extern int lbl_80497CA8[];
 extern int lbl_80497CC8[];
 extern int lbl_80497CE8[];
 extern int lbl_80497D08[];
-extern int lbl_80538088[];
+typedef struct { int a, b, c; } V3;
+typedef struct {
+    int x0, x4, x8;
+    V3 v;
+    char pad18[0x30 - 0x18];
+    float f30;
+    int x34;
+    char pad38[0x40 - 0x38];
+    short s40, s42;
+    char pad44[0x55 - 0x44];
+    u8 b55_0 : 1;
+    u8 b55_1 : 1;
+    u8 b55_2 : 1;
+    u8 b55_3 : 1;
+    u8 b55_4 : 1;
+    char pad56[0xb8 - 0x56];
+} Q;
+extern struct { int a0; char pad[0x33c - 4]; Q arr[1]; } lbl_80538088[];
 extern struct { int a; int b; } lbl_80537510[];
 typedef struct { int a; int b; int pad[5]; } S1C;
 extern struct { char pad[0x24]; S1C arr[1]; } lbl_80537F40[];
@@ -104,11 +121,17 @@ void fn_8005811C(int* a, int* b) { *a = lbl_80537510[0].a; *b = lbl_80537510[0].
 void fn_80058534(int i, int v) { lbl_80537F40[0].arr[i].a = v; }
 int fn_8005854C(int i) { return lbl_80537F40[0].arr[i].a; }
 int fn_80058834(int i) { return lbl_80537F40[0].arr[i].b; }
-void fn_8005B918(int v) { lbl_80538088[0] = v; }
-int fn_8005B924(void) { return lbl_80538088[0]; }
+void fn_8005B918(int v) { lbl_80538088[0].a0 = v; }
+int fn_8005B924(void) { return lbl_80538088[0].a0; }
 void fn_8005E0DC(u32 x, u32* a, u32* b) { *a = (x >> 4) & 0x7FFFFFF; *b = x & 0xF; }
 int fn_8005E0F0(int x) { if (x == -1) { return 0; } return x < 0; }
 int HSD_FogAdjGetFlags(int* p) { if (p) return p[2]; return 0; }
 int HSD_DObjGetNext(int* p) { if (p) return p[1]; return 0; }
 int fn_80053740(int* p) { if (p == 0) return 0; return p[2]; }
 int fn_80053758(int* p) { if (p == 0) return 0; return p[4]; }
+
+u32 fn_80054CAC(int* p) { int* q = (int*)p[0x7c / 4]; if (q != 0 && (q[0] & 0x04000000)) return 1; return 0; }
+void fn_8005DB44(int i, V3* v, float f) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; q->x8 = 3; q->v = *v; q->f30 = f; q->b55_4 = 1; }
+void fn_8005DB98(int i, int v, float f) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; q->x8 = 4; q->x34 = v; q->f30 = f; }
+void fn_8005DCEC(int i, int v) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; if (q->x0 == 2) q->x4 = v; }
+void fn_8005E08C(int i) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; if (q->s40 != -1 || q->s42 != -1) { q->x8 = 1; return; } q->x8 = 0; q->x0 = 0; }
