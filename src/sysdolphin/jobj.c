@@ -12,39 +12,6 @@ extern u32 lbl_805DE260;
 extern u32 lbl_805DE264;
 extern u32 lbl_805DE268;
 
-HSD_JObj* fn_8040ACFC(HSD_JObj* jobj)
-{
-    return (HSD_JObj*) ((u8*) jobj + 0x54);
-}
-
-void fn_8040ADCC(u32 v)
-{
-    lbl_805DE268 = v;
-}
-
-u32 fn_8040C960(void)
-{
-    return lbl_805DE264;
-}
-
-void fn_8040DC60(u32 v)
-{
-    lbl_805DE258 = v;
-}
-
-void fn_8040DC68(u32 v)
-{
-    lbl_805DE260 = v;
-}
-
-u32 fn_8040BD4C(HSD_JObj* jobj)
-{
-    if (jobj != NULL) {
-        return jobj->flags;
-    }
-    return 0;
-}
-
 extern void HSD_AObjRemove(HSD_AObj*);
 extern void HSD_AObjReqAnim(HSD_AObj*, f32);
 extern void HSD_DObjRemoveAnimAllByFlags(HSD_DObj*, u32);
@@ -71,6 +38,24 @@ extern void fn_8040C0D8(HSD_JObj*, u32);
 extern void HSD_RObjAnimAll(HSD_RObj*);
 extern void HSD_DObjAnimAll(HSD_DObj*);
 extern void fn_8040A304(HSD_JObj*);
+
+extern const float lbl_805E5B10;
+extern u32 lbl_805DE254;
+
+extern void fn_8040B188(HSD_JObj*, HSD_Joint*);
+HSD_JObj* fn_8040C774(void);
+
+extern HSD_ClassInfo objInfo;
+extern void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
+extern int fn_8040DC70(HSD_JObj*);
+extern void fn_8040E1A8(HSD_JObj*);
+extern void fn_8040E240(HSD_ClassInfo*);
+extern s32 fn_80408884(HSD_JObj*, HSD_Joint*, HSD_JObj*);
+extern void fn_8040F00C(HSD_JObj*);
+extern void fn_8040F218(HSD_JObj*, Mtx, Mtx);
+extern void fn_8040ADD4(HSD_JObj*, Mtx, Mtx, HSD_TrspMask, u32);
+extern void fn_8040DCD4(HSD_JObj*);
+extern void fn_8040985C(void);
 
 void HSD_JObjCheckDepend(HSD_JObj* jobj)
 {
@@ -186,6 +171,17 @@ void fn_80409250(HSD_JObj* jobj, f32 frame)
     fn_80408F88(jobj, 0x7ff, frame);
 }
 
+void fn_80409274(HSD_JObj* jobj, f32 frame)
+{
+    if (jobj != NULL) {
+        HSD_AObjReqAnim(jobj->aobj, frame);
+        if (union_type_dobj(jobj)) {
+            HSD_DObjReqAnimAllByFlags(jobj->u.dobj, 0x7ff, frame);
+        }
+        HSD_RObjReqAnimAllByFlags(jobj->robj, 0x7ff, frame);
+    }
+}
+
 void fn_804092E8(HSD_AObj* aobj)
 {
     HSD_FObj* fobj;
@@ -266,133 +262,6 @@ void fn_8040A64C(HSD_JObj* jobj)
     }
 }
 
-void fn_8040AD04(HSD_JObj* jobj)
-{
-    HSD_JObjSetupMatrix(jobj);
-}
-
-void fn_8040AD74(HSD_JObj* jobj)
-{
-    if (jobj != NULL) {
-        if (!hsdIsDescendantOf(jobj, &hsdJObj)) {
-            __assert(__FILE__, 0x3b2, "hsdIsDescendantOf(info, &hsdJObj)");
-        }
-    }
-    lbl_805DE250 = jobj;
-}
-
-void fn_8040B45C(HSD_JObj* jobj)
-{
-    if (jobj != NULL) {
-        HSD_OBJ_REF_INC(&jobj->object);
-    }
-}
-
-void fn_8040B4B0(u32 id, s32* success)
-{
-    HSD_IDGetDataFromTable(NULL, id, success);
-}
-
-void fn_8040B4DC(HSD_JObj* jobj)
-{
-    HSD_OBJ_REF_INC(&jobj->object);
-}
-
-HSD_JObj* fn_8040BCA0(HSD_JObj* jobj)
-{
-    return (jobj != NULL && union_type_dobj(jobj)) ? (HSD_JObj*) jobj->u.dobj : NULL;
-}
-
-void fn_8040BCCC(HSD_JObj* jobj, HSD_RObj* robj)
-{
-    if (jobj != NULL) {
-        if (robj != NULL) {
-            HSD_RObj* r = jobj->robj;
-            if (robj != NULL) {
-                robj->next = r;
-                r = robj;
-            }
-            jobj->robj = r;
-        }
-    }
-}
-
-void fn_8040BD64(HSD_JObj* jobj, u32 flags)
-{
-    if (jobj != NULL) {
-        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
-            HSD_JObjSetMtxDirty(jobj);
-        }
-        jobj->flags |= flags;
-    }
-}
-
-void fn_8040C0D8(HSD_JObj* jobj, u32 flags)
-{
-    if (jobj != NULL) {
-        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
-            HSD_JObjSetMtxDirty(jobj);
-        }
-        jobj->flags &= ~flags;
-    }
-}
-
-void fn_8040C450(HSD_JObj* jobj, u32 flags, u32 mask)
-{
-    if (jobj != NULL) {
-        flags &= mask;
-        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
-            HSD_JObjSetMtxDirty(jobj);
-        }
-        jobj->flags = flags | (jobj->flags & ~mask);
-    }
-}
-
-void fn_80409274(HSD_JObj* jobj, f32 frame)
-{
-    if (jobj != NULL) {
-        HSD_AObjReqAnim(jobj->aobj, frame);
-        if (union_type_dobj(jobj)) {
-            HSD_DObjReqAnimAllByFlags(jobj->u.dobj, 0x7ff, frame);
-        }
-        HSD_RObjReqAnimAllByFlags(jobj->robj, 0x7ff, frame);
-    }
-}
-
-HSD_JObj* fn_8040BC14(HSD_JObj* jobj)
-{
-    HSD_JObj* prev;
-
-    if (jobj == NULL || jobj->parent == NULL) {
-        return NULL;
-    }
-    if (jobj == jobj->parent->child) {
-        return NULL;
-    }
-    for (prev = jobj->parent->child; prev != NULL; prev = prev->next) {
-        if (prev->next == jobj) {
-            return prev;
-        }
-    }
-    HSD_Panic(__FILE__, 0x610, "can not find specified jobj. maybe jobj tree is broken.\n");
-    return NULL;
-}
-
-void fn_8040E1A8(HSD_JObj* jobj)
-{
-    ((HSD_JObjInfo*) jobj->object.parent.class_info)->release_child(jobj);
-    if (HSD_IDGetDataFromTable(NULL, jobj->id, NULL) == jobj) {
-        HSD_IDRemoveByIDFromTable(NULL, jobj->id);
-    }
-    if (jobj->scl != NULL) {
-        fn_80417C20(jobj->scl);
-    }
-    if (jobj->envelopemtx != NULL) {
-        fn_80417CA0(jobj->envelopemtx);
-    }
-    hsdJObj.parent.parent.head.parent->release((HSD_Class*) jobj);
-}
-
 void fn_8040A688(Mtx vmtx, HSD_JObj* jobj, Mtx mtx)
 {
     HSD_CObj* cobj;
@@ -411,45 +280,30 @@ void fn_8040A688(Mtx vmtx, HSD_JObj* jobj, Mtx mtx)
     }
 }
 
-extern const float lbl_805E5B10;
-extern u32 lbl_805DE254;
-
-HSD_JObj* fn_8040C774(void)
+HSD_JObj* fn_8040ACFC(HSD_JObj* jobj)
 {
-    HSD_JObj* jobj;
-    jobj = hsdNew(lbl_805DE250 != NULL ? (void*) lbl_805DE250 : (void*) &hsdJObj);
-    if (jobj == NULL) {
-        __assert(__FILE__, 0x7f7, "jobj");
-    }
-    return jobj;
+    return (HSD_JObj*) ((u8*) jobj + 0x54);
 }
 
-int fn_8040DC70(HSD_JObj* jobj)
+void fn_8040AD04(HSD_JObj* jobj)
 {
-    int ret = hsdJObj.parent.parent.head.parent->init((HSD_Class*) jobj);
-    if (ret >= 0) {
-        jobj->flags = MTX_DIRTY;
-        jobj->scale.x = lbl_805E5B10;
-        jobj->scale.y = lbl_805E5B10;
-        jobj->scale.z = lbl_805E5B10;
-        ret = 0;
-    }
-    return ret;
+    HSD_JObjSetupMatrix(jobj);
 }
 
-void fn_8040E240(HSD_ClassInfo* info)
+void fn_8040AD74(HSD_JObj* jobj)
 {
-    if (info == (HSD_ClassInfo*) lbl_805DE250) {
-        lbl_805DE250 = NULL;
+    if (jobj != NULL) {
+        if (!hsdIsDescendantOf(jobj, &hsdJObj)) {
+            __assert(__FILE__, 0x3b2, "hsdIsDescendantOf(info, &hsdJObj)");
+        }
     }
-    if (info == (HSD_ClassInfo*) &hsdJObj) {
-        lbl_805DE254 = 0;
-        lbl_805DE264 = 0;
-    }
-    hsdJObj.parent.parent.head.parent->amnesia(info);
+    lbl_805DE250 = jobj;
 }
 
-extern void fn_8040B188(HSD_JObj*, HSD_Joint*);
+void fn_8040ADCC(u32 v)
+{
+    lbl_805DE268 = v;
+}
 
 HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint)
 {
@@ -471,6 +325,23 @@ HSD_JObj* HSD_JObjLoadJoint(HSD_Joint* joint)
     }
     fn_8040B188(jobj, joint);
     return jobj;
+}
+
+void fn_8040B45C(HSD_JObj* jobj)
+{
+    if (jobj != NULL) {
+        HSD_OBJ_REF_INC(&jobj->object);
+    }
+}
+
+void fn_8040B4B0(u32 id, s32* success)
+{
+    HSD_IDGetDataFromTable(NULL, id, success);
+}
+
+void fn_8040B4DC(HSD_JObj* jobj)
+{
+    HSD_OBJ_REF_INC(&jobj->object);
 }
 
 void HSD_JObjUnref(HSD_JObj* jobj)
@@ -512,17 +383,147 @@ void fn_8040B670(HSD_Obj* o)
     }
 }
 
-extern HSD_ClassInfo objInfo;
-extern void hsdInitClassInfo(HSD_ClassInfo*, HSD_ClassInfo*, char*, char*, s32, s32);
-extern int fn_8040DC70(HSD_JObj*);
-extern void fn_8040E1A8(HSD_JObj*);
-extern void fn_8040E240(HSD_ClassInfo*);
-extern s32 fn_80408884(HSD_JObj*, HSD_Joint*, HSD_JObj*);
-extern void fn_8040F00C(HSD_JObj*);
-extern void fn_8040F218(HSD_JObj*, Mtx, Mtx);
-extern void fn_8040ADD4(HSD_JObj*, Mtx, Mtx, HSD_TrspMask, u32);
-extern void fn_8040DCD4(HSD_JObj*);
-extern void fn_8040985C(void);
+HSD_JObj* fn_8040BC14(HSD_JObj* jobj)
+{
+    HSD_JObj* prev;
+
+    if (jobj == NULL || jobj->parent == NULL) {
+        return NULL;
+    }
+    if (jobj == jobj->parent->child) {
+        return NULL;
+    }
+    for (prev = jobj->parent->child; prev != NULL; prev = prev->next) {
+        if (prev->next == jobj) {
+            return prev;
+        }
+    }
+    HSD_Panic(__FILE__, 0x610, "can not find specified jobj. maybe jobj tree is broken.\n");
+    return NULL;
+}
+
+HSD_JObj* fn_8040BCA0(HSD_JObj* jobj)
+{
+    return (jobj != NULL && union_type_dobj(jobj)) ? (HSD_JObj*) jobj->u.dobj : NULL;
+}
+
+void fn_8040BCCC(HSD_JObj* jobj, HSD_RObj* robj)
+{
+    if (jobj != NULL) {
+        if (robj != NULL) {
+            HSD_RObj* r = jobj->robj;
+            if (robj != NULL) {
+                robj->next = r;
+                r = robj;
+            }
+            jobj->robj = r;
+        }
+    }
+}
+
+u32 fn_8040BD4C(HSD_JObj* jobj)
+{
+    if (jobj != NULL) {
+        return jobj->flags;
+    }
+    return 0;
+}
+
+void fn_8040BD64(HSD_JObj* jobj, u32 flags)
+{
+    if (jobj != NULL) {
+        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
+            HSD_JObjSetMtxDirty(jobj);
+        }
+        jobj->flags |= flags;
+    }
+}
+
+void fn_8040C0D8(HSD_JObj* jobj, u32 flags)
+{
+    if (jobj != NULL) {
+        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
+            HSD_JObjSetMtxDirty(jobj);
+        }
+        jobj->flags &= ~flags;
+    }
+}
+
+void fn_8040C450(HSD_JObj* jobj, u32 flags, u32 mask)
+{
+    if (jobj != NULL) {
+        flags &= mask;
+        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
+            HSD_JObjSetMtxDirty(jobj);
+        }
+        jobj->flags = flags | (jobj->flags & ~mask);
+    }
+}
+
+HSD_JObj* fn_8040C774(void)
+{
+    HSD_JObj* jobj;
+    jobj = hsdNew(lbl_805DE250 != NULL ? (void*) lbl_805DE250 : (void*) &hsdJObj);
+    if (jobj == NULL) {
+        __assert(__FILE__, 0x7f7, "jobj");
+    }
+    return jobj;
+}
+
+u32 fn_8040C960(void)
+{
+    return lbl_805DE264;
+}
+
+void fn_8040DC60(u32 v)
+{
+    lbl_805DE258 = v;
+}
+
+void fn_8040DC68(u32 v)
+{
+    lbl_805DE260 = v;
+}
+
+int fn_8040DC70(HSD_JObj* jobj)
+{
+    int ret = hsdJObj.parent.parent.head.parent->init((HSD_Class*) jobj);
+    if (ret >= 0) {
+        jobj->flags = MTX_DIRTY;
+        jobj->scale.x = lbl_805E5B10;
+        jobj->scale.y = lbl_805E5B10;
+        jobj->scale.z = lbl_805E5B10;
+        ret = 0;
+    }
+    return ret;
+}
+
+void fn_8040E1A8(HSD_JObj* jobj)
+{
+    ((HSD_JObjInfo*) jobj->object.parent.class_info)->release_child(jobj);
+    if (HSD_IDGetDataFromTable(NULL, jobj->id, NULL) == jobj) {
+        HSD_IDRemoveByIDFromTable(NULL, jobj->id);
+    }
+    if (jobj->scl != NULL) {
+        fn_80417C20(jobj->scl);
+    }
+    if (jobj->envelopemtx != NULL) {
+        fn_80417CA0(jobj->envelopemtx);
+    }
+    hsdJObj.parent.parent.head.parent->release((HSD_Class*) jobj);
+}
+
+void fn_8040E240(HSD_ClassInfo* info)
+{
+    if (info == (HSD_ClassInfo*) lbl_805DE250) {
+        lbl_805DE250 = NULL;
+    }
+    if (info == (HSD_ClassInfo*) &hsdJObj) {
+        lbl_805DE254 = 0;
+        lbl_805DE264 = 0;
+    }
+    hsdJObj.parent.parent.head.parent->amnesia(info);
+}
 
 void fn_8040E2A4(void)
 {
@@ -532,10 +533,10 @@ void fn_8040E2A4(void)
     ((HSD_ClassInfo*) &hsdJObj)->init = (void*) fn_8040DC70;
     ((HSD_ClassInfo*) &hsdJObj)->release = (void*) fn_8040E1A8;
     ((HSD_ClassInfo*) &hsdJObj)->amnesia = fn_8040E240;
-    hsdJObj.load = fn_80408884;
-    hsdJObj.make_mtx = fn_8040F00C;
-    hsdJObj.make_pmtx = fn_8040F218;
-    hsdJObj.disp = fn_8040ADD4;
+    hsdJObj.make_mtx = (void*) fn_80408884;
+    hsdJObj.make_pmtx = (void*) fn_8040F00C;
+    hsdJObj.disp = (void*) fn_8040F218;
+    hsdJObj.load = (void*) fn_8040ADD4;
     hsdJObj.release_child = fn_8040DCD4;
-    hsdJObj.update = fn_8040985C;
+    hsdJObj.update = (void*) fn_8040985C;
 }
