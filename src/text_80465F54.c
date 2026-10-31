@@ -529,6 +529,187 @@ void fn_80479948(u32 p3) {
     fn_8046C6A8((u32)lbl_805BDD20, (s31+0));
 }
 
+extern u8 lbl_805BDDF8[];
+u32 fn_8046A9B4(u32, u32, u32, u32);
+void memmove(u32, u32, u32);
+
+u32 fn_8046F320(u32 p3, u32 p4) {
+    u32 s31;
+    u32 ph0;
+    u32 c1;
+    s31 = OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        p4 = -12;
+    } else {
+        if ((s32)((M32((p3+40)))&0x10000) != (s32)0) {
+            ph0 = 1;
+        } else {
+            ph0 = 0;
+        }
+        c1 = fn_8046A9B4((u32)&lbl_805DE628, p3, p4, ph0);
+        p4 = c1;
+    }
+    OSRestoreInterrupts(s31);
+    return p4;
+}
+
+u32 fn_8046F42C(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+216)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+212)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_8046F4B8(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        s31 = -12;
+    } else {
+        M32((p3+212)) = p4;
+        s31 = 0;
+        M32((p3+216)) = p5;
+        M32((p3+220)) = p4;
+        M32((p3+224)) = 0;
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_8046F538(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+232)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+228)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_80475608(u32 p3, u32 p4) {
+    u32 s31;
+    u32 c1;
+    s31 = OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        p4 = -12;
+    } else {
+        c1 = fn_8046AE54(p3, p4);
+        p4 = c1;
+    }
+    OSRestoreInterrupts(s31);
+    return p4;
+}
+
+u32 fn_8047567C(u32 p3, u32 p4) {
+    u32 s31;
+    u32 ph0;
+    u32 c1;
+    s31 = OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        p4 = -12;
+    } else {
+        if ((s32)(M32((p3+140))) != (s32)0) {
+            p4 = -12;
+        } else {
+            if ((s32)((M8((p4+4)))&0xf0) == (s32)224) {
+                p4 = -13;
+            } else {
+                if ((s32)((M32((p3+144)))&0x10000) != (s32)0) {
+                    ph0 = 1;
+                } else {
+                    ph0 = 0;
+                }
+                c1 = fn_8046A9B4((u32)&lbl_805DE650, p3, p4, ph0);
+                p4 = c1;
+            }
+        }
+    }
+    OSRestoreInterrupts(s31);
+    return p4;
+}
+
+u32 fn_80475AC0(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+288)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+284)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_80475B4C(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+420)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+416)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_80477450(u32 p3, u32 p4, u32 p5, u32 p6) {
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        p6 = -12;
+    } else {
+        M32((p3+500)) = p6;
+        p6 = 0;
+        M32((p3+496)) = p5;
+    }
+    OSRestoreInterrupts();
+    return p6;
+}
+
+u32 fn_80479E2C(u32 p3) {
+    u32 s31;
+    u32 s30;
+    u32 s29;
+    s31 = (u32)lbl_805BDDF8;
+    s30 = OSDisableInterrupts();
+    s29 = M32((s31+240));
+    if ((u32)p3 != (u32)0) {
+        memmove(p3, (s31+984), 300);
+    }
+    OSRestoreInterrupts(s30);
+    return s29;
+}
+
 
 
 
