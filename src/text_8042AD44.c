@@ -195,3 +195,81 @@ lbl_805DE428 = a2;
 void fn_8043FFB4(a0) int a0; {
 lbl_805DE430 = ((unsigned)(a0 + 15) >> 4);
 }
+
+/* ---- w3f batch 1 ---- */
+extern unsigned lbl_805085FC[];
+extern int lbl_8058D198[];
+extern void* lbl_805DE3E4;
+extern void* lbl_805DE37C;
+extern void HSD_Free();
+extern void fn_80437F2C();
+extern void fn_8042B4AC();
+extern void fn_8043051C();
+extern void fn_80433154();
+
+void fn_8043D524() {
+    lbl_805085FC[4] = (lbl_805085FC[4] & 0x0FFFFFF0) | 0x80000000;
+}
+
+void fn_80439480(d, f, a, b, s) unsigned char* d; int f; int a; int b; unsigned char* s; {
+    d[0] = s[0];
+    d[1] = (f & 1) ? s[2] : s[1];
+}
+
+void fn_8043A264(a, b) int* a; int* b; {
+    if (a) *a = lbl_8058D198[5];
+    if (b) *b = lbl_8058D198[6];
+}
+
+unsigned char* fn_8042BC10(p, q) unsigned char* p; unsigned short* q; {
+    *q = *p++;
+    if (*q & 0x80) {
+        *q = ((*q & 0x7F) << 8) + *p++;
+    }
+    return p;
+}
+
+int fn_80437DDC(a, b) char* a; char* b; {
+    if (b == 0 || a == 0 || *(unsigned*)(a + 0x90) != 0) return -1;
+    *(int*)(a + 0x90) = (int)b;
+    return ++*(unsigned short*)(b + 0x3E);
+}
+
+int fn_80437E18(a, b) char* a; char* b; {
+    if (b == 0 || a == 0 || *(unsigned*)(a + 0x54) != 0) return -1;
+    *(int*)(a + 0x54) = (int)b;
+    return ++*(unsigned short*)(b + 0x3E);
+}
+
+int fn_80437E54(a, b) char* a; char* b; {
+    if (b == 0 || a == 0) return -1;
+    if (*(unsigned*)(a + 0x90) != 0) fn_80437F2C(a);
+    *(int*)(a + 0x90) = (int)b;
+    return ++*(unsigned short*)(b + 0x3E);
+}
+
+void fn_80437C90() {
+    int* p = (int*)lbl_805DE3E4;
+    int* n;
+    while (p != 0) {
+        n = (int*)*p;
+        HSD_Free(p);
+        p = n;
+    }
+    lbl_805DE3E4 = 0;
+}
+
+void fn_8043033C() {
+    int* p;
+    int* n;
+    fn_8042B4AC();
+    fn_8043051C();
+    p = (int*)lbl_805DE37C;
+    while (p != 0) {
+        n = (int*)*p;
+        HSD_Free(p);
+        p = n;
+    }
+    lbl_805DE37C = 0;
+    fn_80433154(0);
+}
