@@ -446,6 +446,17 @@ void fn_8043FFC4(int a, ...) {
 
 extern const float lbl_805E5E88;
 extern const float lbl_805E5F18;
+/* ---- w3f batch 4 ---- */
+extern char lbl_805DCDB8;
+extern char lbl_805DCDC0;
+
+int fn_80437EC0(a, b) char* a; char* b; {
+    if (b == 0 || a == 0) return -1;
+    if (*(unsigned*)(a + 0x54) != 0) fn_80437FCC(a);
+    *(int*)(a + 0x54) = (int)b;
+    return ++*(unsigned short*)(b + 0x3E);
+}
+
 #if 0 /* w3f near misses */
 int fn_80437BF0(int n, short size) {
     int* p;
@@ -527,5 +538,18 @@ int fn_804300B4(unsigned char a, float x) {
     if (t > lbl_805E5F18) t = lbl_805E5F18;
     return (int)t;
 }
+void fn_80430044(p) char* p; {
+    if (p != 0) {
+        int ok;
+        unsigned fl;
+        if (p == 0) __assert(&lbl_805DCDB8, 0x25D, &lbl_805DCDC0);
+        fl = *(unsigned*)(p + 0x14);
+        ok = 0;
+        if (!(fl & 0x800000) && (fl & 0x40)) ok = 1;
+        if (ok == 0) return;
+        HSD_JObjSetupMatrixSub(p);
+    }
+}
+
 
 #endif /* w3f near misses */
