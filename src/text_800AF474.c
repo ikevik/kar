@@ -2259,17 +2259,6 @@ int fn_800AFE30(int r3)
     return r3;
 }
 
-int fn_800B54F8(void)
-{
-    int c0;
-    int c1;
-    int c2;
-    c0 = func_80428F28(4, 18, 0);
-    c1 = HSD_GObj_AddProc(c0, (int)fn_800B5434, 13);
-    c2 = HSD_GObj_AddProc(c0, (int)fn_800B548C, 9);
-    return c2;
-}
-
 int fn_800B55D8(int r3)
 {
     int r4;
@@ -3465,5 +3454,16 @@ int fn_8010F0DC(int r3, int r4)
     r3 = fn_80106658(r3, r4);
     L_8010F104: ;
     return r3;
+}
+
+int fn_800B54F8(void)
+{
+    int c0;
+    int c1;
+    int c2;
+    c0 = func_80428F28(4, 18, 0);
+    c1 = HSD_GObj_AddProc(c0, (int)fn_800B5434, 13);
+    c2 = HSD_GObj_AddProc(c0, (int)fn_800B548C, 9);
+    return c2;
 }
 
