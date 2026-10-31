@@ -427,14 +427,28 @@ HSD_CObj* HSD_CObjAlloc(void)
     return cobj;
 }
 
-static Vec default_up = { 0.0F, 1.0F, 0.0F };
+static inline void HSD_CObjSetPerspective(HSD_CObj* cobj, f32 fov, f32 aspect)
+{
+    if (cobj != NULL) {
+        cobj->projection_type = PROJ_PERSPECTIVE;
+        cobj->projection_param.perspective.fov = fov;
+        cobj->projection_param.perspective.aspect = aspect;
+    }
+}
+
+static inline void HSD_CObjMergeFlags(HSD_CObj* cobj, u32 flags)
+{
+    if (cobj != NULL) {
+        cobj->flags = (cobj->flags & 0xC0000000) | (flags & 0x3FFFFFFF);
+    }
+}
+
+Vec lbl_80503410 = { 0.0F, 1.0F, 0.0F };
 
 int HSD_CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
 {
     cobj->flags = desc->flags;
-    if (cobj != NULL) {
-        cobj->flags = desc->flags | (cobj->flags & 0xC0000000);
-    }
+    HSD_CObjMergeFlags(cobj, desc->flags);
     HSD_CObjSetViewport(cobj, &desc->viewport_left);
     HSD_CObjSetScissor(cobj, (u16*) &desc->scissor_lr);
     HSD_WObjInit(cobj->eye_position, desc->eye_desc);
@@ -445,18 +459,14 @@ int HSD_CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
         if (desc->vector != NULL) {
             HSD_CObjGetUpVector(cobj, desc->vector);
         } else {
-            HSD_CObjGetUpVector(cobj, &default_up);
+            HSD_CObjGetUpVector(cobj, &lbl_80503410);
         }
     } else {
         fn_804027CC(cobj, desc->roll);
     }
     switch (desc->projection_type) {
     case PROJ_PERSPECTIVE:
-        if (cobj != NULL) {
-            cobj->projection_type = PROJ_PERSPECTIVE;
-            cobj->projection_param.perspective.fov = desc->projection_param.perspective.fov;
-            cobj->projection_param.perspective.aspect = desc->projection_param.perspective.aspect;
-        }
+        HSD_CObjSetPerspective(cobj, desc->projection_param.perspective.fov, desc->projection_param.perspective.aspect);
         break;
     case PROJ_ORTHO:
         HSD_CObjSetOrtho(cobj, desc->projection_param.ortho.top, desc->projection_param.ortho.bottom, desc->projection_param.ortho.left, desc->projection_param.ortho.right);
