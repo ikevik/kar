@@ -234,3 +234,55 @@ BOOL __PADDisableRecalibration(BOOL disable)
     OSRestoreInterrupts(enabled);
     return prev;
 }
+
+extern void UpdateOrigin(s32 chan);
+extern void OSSetWirelessID(s32 chan, u16 id);
+extern void fn_803E94C8(u32 mask);
+extern void fn_803E9608(s32 chan, void* buf);
+extern void fn_803E942C(u32 mask);
+extern void fn_803E9D20(s32 chan, void* cb);
+extern void fn_803DC06C(void);
+extern u8 lbl_8056E360[];
+extern void* memset(void*, int, u32);
+
+void PADOriginUpdateCallback(s32 chan, u32 error, OSContext* context)
+{
+    u32 chanBit = 0x80000000 >> chan;
+    u32 ec = EnabledBits;
+    if (!(ec & chanBit)) {
+        return;
+    }
+    if (!(error & 0xF)) {
+        UpdateOrigin(chan);
+    }
+    if (error & 0x8) {
+        BOOL enabled = OSDisableInterrupts();
+        fn_803E94C8(chanBit);
+        EnabledBits &= ~chanBit;
+        WaitingBits &= ~chanBit;
+        CheckingBits &= ~chanBit;
+        PendingBits &= ~chanBit;
+        OSSetWirelessID(chan, 0);
+        OSRestoreInterrupts(enabled);
+    }
+}
+
+void PADOriginCallback(s32 chan, u32 error, OSContext* context)
+{
+    if (!(error & 0xF)) {
+        u8 buf[12];
+        s32 rc;
+        UpdateOrigin(ResettingChan);
+        rc = ResettingChan;
+        EnabledBits |= 0x80000000 >> rc;
+        fn_803E9608(rc, buf);
+        fn_803E939C(rc, AnalogMode | 0x00400000);
+        fn_803E942C(EnabledBits);
+    }
+    ResettingChan = __cntlzw(ResettingBits);
+    if (ResettingChan != 32) {
+        ResettingBits &= ~(0x80000000 >> ResettingChan);
+        memset(lbl_8056E360 + ResettingChan * 12, 0, 12);
+        fn_803E9D20(ResettingChan, fn_803DC06C);
+    }
+}

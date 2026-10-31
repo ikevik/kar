@@ -372,8 +372,9 @@ s32 __CARDClearStatus(s32 chan)
 
 void CARDInit(void)
 {
-    CARDControlW* card = CARDBLK;
+    CARDControlW* card;
     s32 chan;
+    card = CARDBLK;
     if (card[0].diskID && card[1].diskID) {
         return;
     }
