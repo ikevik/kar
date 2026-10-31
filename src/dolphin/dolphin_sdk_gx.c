@@ -779,62 +779,8 @@ void fn_803CB628(u32 a, u32* out) {
     out[0] = 0xFF;
 }
 
-#if 0 /* NONMATCHING */
-void fn_803CED38(u32 idx, u8* c) {
-    u32 a = c[3];
-    u32 r = c[0];
-    u32 b = c[2];
-    u32 g = c[1];
-    u32 r1 = __rlwimi(a << 12, r, 0, 24, 31);
-    u32 r2 = __rlwimi(g << 12, b, 0, 24, 31);
-    u32 w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 12, 31);
-    u32 w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 12, 31);
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w1;
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    gx->bpSentNot = 0;
-}
-#endif
 
-#if 0 /* NONMATCHING */
-void fn_803CEDAC(u32 idx, s16* c) {
-    u32 r1 = __rlwimi((c[3] & 0x7FF) << 12, c[0], 0, 21, 31);
-    u32 r2 = __rlwimi((c[1] & 0x7FF) << 12, c[2], 0, 21, 31);
-    u32 w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 9, 31);
-    u32 w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 9, 31);
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w1;
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    gx->bpSentNot = 0;
-}
-#endif
 
-#if 0 /* NONMATCHING */
-void fn_803CEE20(u32 idx, u8* c) {
-    u32 r1 = __rlwimi(c[3] << 12, c[0], 0, 24, 31);
-    u32 r2 = __rlwimi(c[1] << 12, c[2], 0, 24, 31);
-    u32 w1, w2;
-    r1 = (r1 & ~0xF00000) | 0x800000;
-    w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 8, 31);
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w1;
-    r2 = (r2 & ~0xF00000) | 0x800000;
-    w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 8, 31);
-    GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = w2;
-    gx->bpSentNot = 0;
-}
-#endif
 
 #if 0 /* NONMATCHING */
 void* __GXDefaultTexRegionCallback(void* obj, u32 map) {
@@ -1151,4 +1097,79 @@ void GXSetProjection(f32* m, s32 type) {
     GXWGFifo_f32 = gx->projMtx[5];
     GXWGFifo_u32 = gx->projType;
     gx->bpSentNot = 1;
+}
+
+void GXGetProjectionv(f32* p) {
+    p[0] = (f32)gx->projType;
+    p[1] = gx->projMtx[0];
+    p[2] = gx->projMtx[1];
+    p[3] = gx->projMtx[2];
+    p[4] = gx->projMtx[3];
+    p[5] = gx->projMtx[4];
+    p[6] = gx->projMtx[5];
+}
+
+#define SET_REG_FIELD(reg, size, shift, val) \
+    (reg) = ((u32)(reg) & ~(((1 << (size)) - 1) << (shift))) | ((u32)(val) << (shift))
+
+void fn_803CED38(s32 id, u8* c) {
+    u32 reg1 = 0;
+    u32 reg2 = 0;
+    SET_REG_FIELD(reg1, 8, 0, c[0]);
+    SET_REG_FIELD(reg1, 8, 12, c[3]);
+    SET_REG_FIELD(reg1, 8, 24, 0xE0 + id * 2);
+    SET_REG_FIELD(reg2, 8, 0, c[2]);
+    SET_REG_FIELD(reg2, 8, 12, c[1]);
+    SET_REG_FIELD(reg2, 8, 24, 0xE1 + id * 2);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg1;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg2;
+    gx->bpSentNot = 0;
+}
+
+#if 0 /* NONMATCHING: scheduling */
+void fn_803CEDAC(s32 idx, s16* c) {
+    s16 a = c[3];
+    s16 r = c[0];
+    s16 b = c[2];
+    s16 g = c[1];
+    u32 r1 = __rlwimi((a & 0x7FF) << 12, r, 0, 21, 31);
+    u32 w1 = __rlwimi((0xE0 + idx * 2) << 24, r1, 0, 9, 31);
+    u32 r2;
+    u32 w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w1;
+    r2 = __rlwimi((g & 0x7FF) << 12, b, 0, 21, 31);
+    w2 = __rlwimi((0xE1 + idx * 2) << 24, r2, 0, 9, 31);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w2;
+    gx->bpSentNot = 0;
+}
+#endif
+
+void fn_803CEE20(s32 id, u8* c) {
+    u32 reg1 = 0;
+    u32 reg2 = 0;
+    SET_REG_FIELD(reg1, 8, 0, c[0]);
+    SET_REG_FIELD(reg1, 8, 12, c[3]);
+    SET_REG_FIELD(reg1, 4, 20, 8);
+    SET_REG_FIELD(reg1, 8, 24, 0xE0 + id * 2);
+    SET_REG_FIELD(reg2, 8, 0, c[2]);
+    SET_REG_FIELD(reg2, 8, 12, c[1]);
+    SET_REG_FIELD(reg2, 4, 20, 8);
+    SET_REG_FIELD(reg2, 8, 24, 0xE1 + id * 2);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg1;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = reg2;
+    gx->bpSentNot = 0;
 }
