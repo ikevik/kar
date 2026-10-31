@@ -25,11 +25,11 @@ int memcmp(const void* s1, const void* s2, size_t n)
 
 void* __memrchr(const void* s, int c, size_t n)
 {
+    unsigned long ch = (unsigned char)c;
     const unsigned char* p = (const unsigned char*)s + n;
-    c = (unsigned char)c;
     n++;
     while (--n) {
-        if (*--p == c) {
+        if (*--p == ch) {
             return (void*)p;
         }
     }
@@ -38,11 +38,11 @@ void* __memrchr(const void* s, int c, size_t n)
 
 void* memchr(const void* s, int c, size_t n)
 {
+    unsigned long ch = (unsigned char)c;
     const unsigned char* p = (const unsigned char*)s - 1;
-    c = (unsigned char)c;
     n++;
     while (--n) {
-        if (*++p == c) {
+        if (*++p == ch) {
             return (void*)p;
         }
     }
@@ -56,6 +56,8 @@ void __copy_longs_aligned(void* dst, const void* src, size_t n);
 
 void* memmove(void* dst, const void* src, size_t n)
 {
+    const unsigned char* p;
+    unsigned char* q;
     int rev = (unsigned long)src < (unsigned long)dst;
 
     if (n >= 32) {
@@ -75,120 +77,210 @@ void* memmove(void* dst, const void* src, size_t n)
         return dst;
     }
     if (!rev) {
-        src = (const unsigned char*)src - 1;
-        dst = (unsigned char*)dst - 1;
+        p = (const unsigned char*)src - 1;
+        q = (unsigned char*)dst - 1;
         n++;
         while (--n) {
-            *++cpd = *++cps;
+            *++q = *++p;
         }
     } else {
-        src = (const unsigned char*)src + n;
-        dst = (unsigned char*)dst + n;
+        p = (const unsigned char*)src + n;
+        q = (unsigned char*)dst + n;
         n++;
         while (--n) {
-            *--cpd = *--cps;
+            *--q = *--p;
         }
     }
     return dst;
 }
 
-void __copy_longs_aligned(void* dst, const void* src, size_t len)
+void __copy_longs_rev_unaligned(void* dst, const void* src, size_t len)
 {
-    unsigned long i = (-(unsigned long)dst) & 3;
-    src = (const unsigned char*)src - 1;
-    dst = (unsigned char*)dst - 1;
+    unsigned char* d = (unsigned char*)dst + len;
+    const unsigned char* s = (const unsigned char*)src + len;
+    unsigned long i;
+    unsigned long v1, v2;
+    unsigned long* wd;
+    unsigned long* ws;
+    unsigned long ls, rs, offs;
+
+    i = (unsigned long)d & 3;
     if (i) {
         len -= i;
         do {
-            *++cpd = *++cps;
+            *--d = *--s;
         } while (--i);
     }
-    src = (const unsigned char*)src - 3;
-    dst = (unsigned char*)dst - 3;
-    i = len >> 5;
-    if (i) {
-        do {
-            unsigned long v1 = lps[1];
-            unsigned long v2 = lps[2];
-            unsigned long v3 = lps[3];
-            unsigned long v4 = lps[4];
-            unsigned long v5 = lps[5];
-            unsigned long v6 = lps[6];
-            unsigned long v7 = lps[7];
-            unsigned long v8 = lps[8];
-            src = lps + 8;
-            lpd[1] = v1;
-            lpd[2] = v2;
-            lpd[3] = v3;
-            lpd[4] = v4;
-            lpd[5] = v5;
-            lpd[6] = v6;
-            lpd[7] = v7;
-            lpd[8] = v8;
-            dst = lpd + 8;
-        } while (--i);
+    ls = ((unsigned long)s & 3) << 3;
+    offs = (unsigned long)s & 3;
+    rs = 32 - ls;
+    i = len >> 3;
+    s += 4 - offs;
+    wd = (unsigned long*)d;
+    ws = (unsigned long*)s;
+    v1 = *--ws;
+    do {
+        v2 = ws[-1];
+        wd[-1] = (v2 << ls) | (v1 >> rs);
+        ws -= 2;
+        v1 = *ws;
+        wd -= 2;
+        *wd = (v1 << ls) | (v2 >> rs);
+    } while (--i);
+    if (len & 4) {
+        v2 = *--ws;
+        *--wd = (v2 << ls) | (v1 >> rs);
     }
-    i = (len & 0x1c) >> 2;
-    if (i) {
-        do {
-            *++lpd = *++lps;
-        } while (--i);
-    }
-    src = (const unsigned char*)src + 3;
-    dst = (unsigned char*)dst + 3;
     len &= 3;
     if (len) {
+        s = (const unsigned char*)ws + offs;
+        d = (unsigned char*)wd;
         do {
-            *++cpd = *++cps;
+            *--d = *--s;
+        } while (--len);
+    }
+}
+
+void __copy_longs_unaligned(void* dst, const void* src, size_t len)
+{
+    unsigned char* d = (unsigned char*)dst - 1;
+    const unsigned char* s = (const unsigned char*)src - 1;
+    unsigned long i;
+    unsigned long v1, v2;
+    unsigned long* wd;
+    unsigned long* ws;
+    unsigned long ls, rs, offs;
+
+    i = (-(unsigned long)dst) & 3;
+    if (i) {
+        len -= i;
+        do {
+            *++d = *++s;
+        } while (--i);
+    }
+    s++;
+    offs = (unsigned long)s & 3;
+    s -= offs;
+    ls = ((unsigned long)(s + offs) & 3) << 3;
+    rs = 32 - ls;
+    i = len >> 3;
+    wd = (unsigned long*)(d - 3);
+    ws = (unsigned long*)(s - 1);
+    v1 = *++ws;
+    do {
+        v2 = ws[1];
+        wd[1] = (v1 << ls) | (v2 >> rs);
+        ws += 2;
+        v1 = *ws;
+        wd += 2;
+        *wd = (v2 << ls) | (v1 >> rs);
+    } while (--i);
+    if (len & 4) {
+        v2 = *++ws;
+        *++wd = (v1 << ls) | (v2 >> rs);
+    }
+    len &= 3;
+    if (len) {
+        s = (const unsigned char*)ws + 3 - (4 - offs);
+        d = (unsigned char*)wd + 3;
+        do {
+            *++d = *++s;
         } while (--len);
     }
 }
 
 void __copy_longs_rev_aligned(void* dst, const void* src, size_t len)
 {
+    unsigned char* d = (unsigned char*)dst + len;
+    const unsigned char* s = (const unsigned char*)src + len;
     unsigned long i;
-    src = (const unsigned char*)src + len;
-    dst = (unsigned char*)dst + len;
-    i = (unsigned long)dst & 3;
+    unsigned long* wd;
+    unsigned long* ws;
+
+    i = (unsigned long)d & 3;
     if (i) {
         len -= i;
         do {
-            *--cpd = *--cps;
+            *--d = *--s;
         } while (--i);
     }
+    wd = (unsigned long*)d;
+    ws = (unsigned long*)s;
     i = len >> 5;
     if (i) {
         do {
-            unsigned long v1 = lps[-1];
-            unsigned long v2 = lps[-2];
-            unsigned long v3 = lps[-3];
-            unsigned long v4 = lps[-4];
-            unsigned long v5 = lps[-5];
-            unsigned long v6 = lps[-6];
-            unsigned long v7 = lps[-7];
-            unsigned long v8 = lps[-8];
-            src = lps - 8;
-            lpd[-1] = v1;
-            lpd[-2] = v2;
-            lpd[-3] = v3;
-            lpd[-4] = v4;
-            lpd[-5] = v5;
-            lpd[-6] = v6;
-            lpd[-7] = v7;
-            lpd[-8] = v8;
-            dst = lpd - 8;
+            wd[-1] = ws[-1];
+            wd[-2] = ws[-2];
+            wd[-3] = ws[-3];
+            wd[-4] = ws[-4];
+            wd[-5] = ws[-5];
+            wd[-6] = ws[-6];
+            wd[-7] = ws[-7];
+            ws -= 8;
+            wd -= 8;
+            *wd = *ws;
         } while (--i);
     }
     i = (len & 0x1c) >> 2;
     if (i) {
         do {
-            *--lpd = *--lps;
+            *--wd = *--ws;
         } while (--i);
     }
     len &= 3;
     if (len) {
+        d = (unsigned char*)wd;
+        s = (const unsigned char*)ws;
         do {
-            *--cpd = *--cps;
+            *--d = *--s;
+        } while (--len);
+    }
+}
+
+void __copy_longs_aligned(void* dst, const void* src, size_t len)
+{
+    unsigned char* d = (unsigned char*)dst - 1;
+    const unsigned char* s = (const unsigned char*)src - 1;
+    unsigned long i;
+    unsigned long* wd;
+    unsigned long* ws;
+
+    i = (-(unsigned long)dst) & 3;
+    if (i) {
+        len -= i;
+        do {
+            *++d = *++s;
+        } while (--i);
+    }
+    wd = (unsigned long*)(d - 3);
+    ws = (unsigned long*)(s - 3);
+    i = len >> 5;
+    if (i) {
+        do {
+            wd[1] = ws[1];
+            wd[2] = ws[2];
+            wd[3] = ws[3];
+            wd[4] = ws[4];
+            wd[5] = ws[5];
+            wd[6] = ws[6];
+            wd[7] = ws[7];
+            ws += 8;
+            wd += 8;
+            *wd = *ws;
+        } while (--i);
+    }
+    i = (len & 0x1c) >> 2;
+    if (i) {
+        do {
+            *++wd = *++ws;
+        } while (--i);
+    }
+    len &= 3;
+    if (len) {
+        d = (unsigned char*)wd + 3;
+        s = (const unsigned char*)ws + 3;
+        do {
+            *++d = *++s;
         } while (--len);
     }
 }
