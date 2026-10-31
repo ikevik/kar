@@ -1,3 +1,4 @@
+#pragma optimization_level 0
 typedef unsigned long u32;
 typedef unsigned long long u64;
 typedef double f64;
@@ -111,28 +112,32 @@ asm void PPCMtpmc4(register u32 newPMC4)
     blr
 }
 
-typedef union {
-    f64 f;
-    u32 u[2];
-} FpscrUnion;
-
-u32 PPCMffpscr(void)
+asm u32 PPCMffpscr(void)
 {
-    FpscrUnion u;
-    register f64 fpscr;
-    asm { mffs fpscr }
-    u.f = fpscr;
-    return u.u[1];
+    nofralloc
+    stwu r1, -0x18(r1)
+    stfd f31, 0x10(r1)
+    mffs f31
+    stfd f31, 0x8(r1)
+    lwz r3, 0xc(r1)
+    lfd f31, 0x10(r1)
+    addi r1, r1, 0x18
+    blr
 }
 
-void PPCMtfpscr(u32 newFPSCR)
+asm void PPCMtfpscr(register u32 newFPSCR)
 {
-    FpscrUnion u;
-    register f64 fpscr;
-    u.u[0] = 0;
-    u.u[1] = newFPSCR;
-    fpscr = u.f;
-    asm { mtfsf 255, fpscr }
+    nofralloc
+    stwu r1, -0x20(r1)
+    stfd f31, 0x18(r1)
+    li r4, 0
+    stw r4, 0x10(r1)
+    stw r3, 0x14(r1)
+    lfd f31, 0x10(r1)
+    mtfsf 255, f31
+    lfd f31, 0x18(r1)
+    addi r1, r1, 0x20
+    blr
 }
 
 asm u32 PPCMfhid2(void)
@@ -156,9 +161,19 @@ asm void PPCMtwpar(register u32 newwpar)
     blr
 }
 
-void PPCDisableSpeculation(void)
+asm void PPCDisableSpeculation(void)
 {
-    PPCMthid0(PPCMfhid0() | 0x200);
+    nofralloc
+    mflr r0
+    stw r0, 4(r1)
+    stwu r1, -8(r1)
+    bl PPCMfhid0
+    ori r3, r3, 0x200
+    bl PPCMthid0
+    lwz r0, 0xc(r1)
+    addi r1, r1, 8
+    mtlr r0
+    blr
 }
 
 asm void PPCSetFpNonIEEEMode(void)

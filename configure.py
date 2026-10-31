@@ -355,7 +355,7 @@ config.libs = [
         "Dolphin SDK",
         "sdk",
         [
-            Object(NonMatching, "PPCArch.c"),
+            Object(Matching, "PPCArch.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_db.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_dsp.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_dvd.c"),
