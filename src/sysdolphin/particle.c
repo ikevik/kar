@@ -95,11 +95,10 @@ void fn_8042A2E4(HSD_Obj* obj)
 void fn_8042A414(void* head)
 {
     s32 r = fn_8042A45C(head, (ParticleNode*) lbl_80504F30);
-    s32 a = r + 1;
-    lbl_805DE353 = r;
-    lbl_805DE352 = a;
-    lbl_805DE351 = ++a;
-    lbl_805DE350 = ++a;
+    lbl_805DE353 = r++;
+    lbl_805DE352 = r++;
+    lbl_805DE351 = r++;
+    lbl_805DE350 = r;
 }
 
 u32 fn_8042A45C(void* head, ParticleNode* node)
