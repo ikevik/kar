@@ -8,8 +8,12 @@ unsigned char fn_8036E8CC();
 int fn_80369010();
 int fn_8036B0B8();
 void fn_8036E748();
+void fn_80368DB4();
 int fn_80369B14();
 void fn_8036ABD4();
+void fn_8036AF10();
+extern void fn_80368DE4();
+extern void fn_8036A408();
 extern void fn_8036AC00();
 
 
@@ -66,6 +70,12 @@ void fn_8036E748(a0, a1) int a0; int a1; {
     *(float*)(a0 + 444) = t2;
 }
 
+void fn_80368DB4(a0, a1, a2) int a0; int a1; int a2; {
+if ((unsigned)a1 != (unsigned)0) {
+fn_80368DE4(a1, a2);
+}
+}
+
 int fn_80369B14(a0) int a0; {
 int t0;
 int t1;
@@ -84,9 +94,15 @@ void fn_8036ABD4(a0) int a0; {
 int t0;
 int m0;
 m0 = *(unsigned short*)(a0 + 126);
-if (*(unsigned short*)(a0 + 126) == 0) {
+if ((unsigned)*(unsigned short*)(a0 + 126) == (unsigned)0) {
 t0 = *(unsigned short*)(a0 + 126);
 fn_8036AC00();
 m0 = t0;
+}
+}
+
+void fn_8036AF10(a0, a1, a2) int a0; int a1; int a2; {
+if ((unsigned)a1 != (unsigned)0) {
+fn_8036A408(a1, a2);
 }
 }

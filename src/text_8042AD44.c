@@ -27,6 +27,7 @@ void fn_8043FFAC();
 void fn_80440718();
 int fn_804407D8();
 int fn_80430270();
+void fn_804373DC();
 void fn_80439D14();
 void fn_8043FFB4();
 extern char lbl_805051E8[];
@@ -40,6 +41,10 @@ extern float lbl_805DE424;
 extern int lbl_805DE428;
 extern int lbl_805DE430;
 extern float lbl_805E60C8;
+extern void fn_803CEC68();
+extern void fn_803CECD0();
+extern void fn_803CEF6C();
+extern void fn_803CF134();
 extern int lbl_805DCE00;
 extern int lbl_805DE3D8;
 extern int lbl_805DE3F0;
@@ -140,6 +145,21 @@ m0 = 256;
 }
 t1 = lbl_805DCDD0;
 return t1;
+}
+
+void fn_804373DC() {
+fn_803CF134(0, 0, 0, 4);
+fn_803CEC68(0, 0, 0, 0, 1, 0);
+fn_803CECD0(0, 0, 0, 0, 1, 0);
+fn_803CF134(1, 0, 0, 4);
+fn_803CEC68(1, 0, 0, 0, 1, 0);
+fn_803CECD0(1, 0, 0, 0, 1, 0);
+fn_803CF134(2, 0, 0, 4);
+fn_803CEC68(2, 0, 0, 0, 1, 0);
+fn_803CECD0(2, 0, 0, 0, 1, 0);
+fn_803CEF6C(0, 0, 0);
+fn_803CEF6C(1, 0, 0);
+fn_803CEF6C(2, 0, 0);
 }
 
 void fn_80439D14(a0, a1, a2) int a0; int a1; int a2; {

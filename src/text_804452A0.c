@@ -55,10 +55,12 @@ void fn_8045DE2C();
 void fn_8045E978();
 void fn_80471D90();
 void setDoneCallFunc();
+int HVQM4DecSoundClose();
 int HVQM4PlayerExGetMaxAudioTrack();
 int fn_804457E0();
 int fn_80448264();
 void fn_804567E4();
+int fn_8045F6EC();
 int fn_80472174();
 int fn_804755EC();
 extern char lbl_80596DA0[];
@@ -343,6 +345,17 @@ void setDoneCallFunc(a0, a1, a2) int a0; int a1; int a2; {
     *(int*)(a0 + 988) = a2;
 }
 
+int HVQM4DecSoundClose(a0) int a0; {
+int m0;
+if ((unsigned)a0 == (unsigned)0) {
+m0 = 0;
+} else {
+fn_8045D6CC();
+m0 = 1;
+}
+return m0;
+}
+
 int HVQM4PlayerExGetMaxAudioTrack(a0) int a0; {
 return (*(unsigned char*)(a0 + 67) & 0xf);
 }
@@ -364,6 +377,13 @@ fn_80455FEC();
 }
 }
 
+int fn_8045F6EC(a0) int a0; {
+if ((unsigned)a0 != (unsigned)0) {
+return *(int*)(a0 + 992);
+}
+return 0;
+}
+
 int fn_80472174(a0, a1, a2, a3, a4, a5) int a0; int a1; int a2; int a3; int a4; int a5; {
 int m0;
 m0 = a2;
@@ -383,7 +403,7 @@ return 2;
 }
 
 int fn_804755EC(a0) int a0; {
-if (*(unsigned char*)(a0 + 0) != 6) {
+if ((unsigned)*(unsigned char*)(a0 + 0) != (unsigned)6) {
 return -12;
 }
 return *(int*)(a0 + 140);
