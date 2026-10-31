@@ -24,6 +24,7 @@ extern int fn_800793B8();
 extern int fn_8007A598();
 extern int fn_8007AD58();
 extern int fn_8018C2E4();
+extern int fn_8018C824();
 extern int fn_8018DBA0(int, int, int, int, int, int, int, float, float);
 extern int fn_802339C4();
 extern int fn_802361A0();
@@ -54,6 +55,10 @@ typedef struct { u8 pad[170]; unsigned f:1; unsigned b:7; } BF_170_0_1;
 typedef struct { u8 pad[300]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_300_1_1;
 typedef struct { u8 pad[300]; unsigned a:3; unsigned f:1; unsigned b:4; } BF_300_3_1;
 typedef struct { u8 pad[300]; unsigned f:1; unsigned b:7; } BF_300_0_1;
+typedef struct { u8 pad[308]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_308_1_1;
+typedef struct { u8 pad[388]; unsigned f:1; unsigned b:7; } BF_388_0_1;
+typedef struct { u8 pad[458]; unsigned f:1; unsigned b:7; } BF_458_0_1;
+typedef struct { u8 pad[680]; unsigned f:1; unsigned b:7; } BF_680_0_1;
 typedef struct { unsigned a:1; unsigned f:2; unsigned b:5; } BF_0_1_2;
 typedef struct { unsigned a:3; unsigned f:2; unsigned b:3; } BF_0_3_2;
 typedef struct { unsigned f:1; unsigned b:7; } BF_0_0_1;
@@ -63,6 +68,7 @@ extern int lbl_805DD6C0;
 extern int lbl_805DD6C4;
 extern int lbl_805DD6C8;
 extern int lbl_805DD6CC;
+extern int lbl_805DD6F0;
 extern int lbl_805DD6F8;
 extern int lbl_805DD714;
 extern int lbl_805DF75C;
@@ -1876,5 +1882,43 @@ int fn_8010DB64(int a1)
     c0 = fn_800F446C(69);
     c1 = fn_8010DB9C(c0, a1);
     return c1;
+}
+
+void fn_800B317C(int a1, int a2, int a3)
+{
+    *(float*)((u8*)(a3) + 0) = ((*(float*)((u8*)(a1) + 0)) - (*(float*)((u8*)(a2) + 0)));
+    *(float*)((u8*)(a3) + 4) = ((*(float*)((u8*)(a1) + 4)) - (*(float*)((u8*)(a2) + 4)));
+    *(float*)((u8*)(a3) + 8) = ((*(float*)((u8*)(a1) + 8)) - (*(float*)((u8*)(a2) + 8)));
+}
+
+void fn_800C892C(int a1)
+{
+    int c0;
+    c0 = fn_800C6E6C(a1);
+    ((BF_458_0_1*)(a1))->f = c0;
+    *(int*)((u8*)(a1) + 432) = ((*(int*)((u8*)(a1) + 432)) + 1);
+    *(int*)((u8*)(a1) + 436) = ((*(int*)((u8*)(a1) + 436)) + 1);
+}
+
+void fn_800EC564(void)
+{
+    ((BF_680_0_1*)((*(int*)&lbl_805DD6F0)))->f = 1;
+}
+
+void fn_800F8E68(int a1, int a2)
+{
+    int c0;
+    c0 = fn_8018C824((*(int*)((u8*)(a1) + 236)), a2);
+    *(int*)((u8*)(a2) + 8) = ((*(int*)((u8*)(a2) + 8)) + 4);
+}
+
+void fn_800FA910(int a1)
+{
+    ((BF_388_0_1*)((*(int*)((u8*)(a1) + 44))))->f = 0;
+}
+
+void fn_8010D770(int a1)
+{
+    ((BF_308_1_1*)((*(int*)((u8*)(a1) + 44))))->f = 1;
 }
 
