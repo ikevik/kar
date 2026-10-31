@@ -929,4 +929,78 @@ double fn_803BC94C(double x)
     }
 }
 #pragma fp_contract off
+
+extern const double lbl_805E5690;
+extern const double lbl_805E5698;
+extern const double lbl_805E56A0;
+extern const double lbl_805E56A8;
+extern const double lbl_805E56B0;
+extern const double lbl_805E56B8;
+
+static const double tanT[] = {
+    3.33333333333334091986e-01,  1.33333333333201242699e-01,  5.39682539762260521377e-02,
+    2.18694882948595424599e-02,  8.86323982359930005737e-03,  3.59207910759131235356e-03,
+    1.45620945432529025516e-03,  5.88041240820264096874e-04,  2.46463134818469906812e-04,
+    7.81794442939557092300e-05,  7.14072491382608190305e-05,  -1.85586374855275456654e-05,
+    2.59073051863633712884e-05,
+};
+
+#pragma fp_contract on
+double fn_803BC738(double x, double y, int iy)
+{
+    double z, r, v, w, s;
+    int ix, hx;
+
+    hx = *(int*)&x;
+    ix = hx & 0x7fffffff;
+    if (ix < 0x3e300000) {
+        if ((int)x == 0) {
+            if (((ix | *((int*)&x + 1)) | (iy + 1)) == 0) {
+                y = __fabs(x);
+                return lbl_805E5690 / y;
+            } else {
+                if (iy == 1) {
+                    return x;
+                } else {
+                    return lbl_805E5698 / x;
+                }
+            }
+        }
+    }
+    if (ix >= 0x3FE59428) {
+        if (hx < 0) {
+            x = -x;
+            y = -y;
+        }
+        z = lbl_805E56A0 - x;
+        w = lbl_805E56A8 - y;
+        x = z + w;
+        y = lbl_805E56B0;
+    }
+    z = x * x;
+    w = z * z;
+    r = tanT[1] + w * (tanT[3] + w * (tanT[5] + w * (tanT[7] + w * (tanT[9] + w * tanT[11]))));
+    v = z * (tanT[2] + w * (tanT[4] + w * (tanT[6] + w * (tanT[8] + w * (tanT[10] + w * tanT[12])))));
+    s = z * x;
+    r = y + z * (s * (r + v) + y);
+    r += tanT[0] * s;
+    w = x + r;
+    if (ix >= 0x3FE59428) {
+        v = (double)iy;
+        return (double)(1 - ((hx >> 30) & 2)) * (v - lbl_805E56B8 * (x - (w * w / (w + v) - r)));
+    }
+    if (iy == 1) {
+        return w;
+    } else {
+        double a, t;
+        z = w;
+        *((int*)&z + 1) = 0;
+        v = r - (z - x);
+        t = a = lbl_805E5698 / w;
+        *((int*)&t + 1) = 0;
+        s = lbl_805E5690 + t * z;
+        return t + a * (s + t * v);
+    }
+}
+#pragma fp_contract off
 #pragma dont_inline on
