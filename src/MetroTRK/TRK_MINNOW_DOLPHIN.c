@@ -768,16 +768,15 @@ TRKBuffer* TRKGetBuffer(s32 idx)
 
 s32 TRKInitializeSerialHandler(void)
 {
-    char* str = lbl_8048BC78;
     lbl_8056B840[0] = -1;
     lbl_8056B840[2] = 0;
     lbl_8056B840[3] = 0;
-    MWTRACE(1, str, 0x40);
-    MWTRACE(1, str + 0x24, 0x40);
-    MWTRACE(1, str + 0x48, 0x40);
-    MWTRACE(1, str + 0x6c, 0x40);
-    MWTRACE(1, str + 0x8c, 0x40);
-    MWTRACE(1, str + 0xac, 0x40);
+    MWTRACE(1, "TRK_Packet_Header \t    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_ReadMemory     %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_WriteMemory    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_Connect \t    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_ReplyAck\t    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_ReadRegisters\t%ld bytes\n", 0x40);
     return 0;
 }
 
