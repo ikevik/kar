@@ -326,7 +326,7 @@ void HSD_PadRumbleInit(u16 count, RumbleNode* buf)
     d->rumble_max = count;
     d->rumble_free = buf;
     if (count != 0) {
-        for (i = 0; i < count - 1; i++) {
+        for (i = 0; i < (s32) count - 1; i++) {
             d->rumble_free[i].next = &d->rumble_free[i + 1];
         }
         d->rumble_free[i].next = NULL;
