@@ -1,7 +1,73 @@
+#pragma dont_inline on
 typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int s32;
 typedef unsigned short u16;
+typedef unsigned int u32;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+typedef struct { u32 :30; u32 f:2; } BFu32_30_2;
+typedef struct { u32 :28; u32 f:3; } BFu32_28_3;
+typedef struct { u32 f:30; } BFu32_0_30;
+typedef struct { u32 f:28; } BFu32_0_28;
+extern u8 lbl_804BCDD8[];
+extern u8 lbl_804BCDF0[];
+extern const float lbl_805E4DB8;
+extern const float lbl_805E4DBC;
+extern u32 lbl_805DDB80;
+extern u8 lbl_805699F4[];
+void fn_803881A8(void);
+extern u8 lbl_805699E8[];
+extern u8 lbl_804F4E38[];
+extern u8 lbl_804F55B0[];
+extern u8 hsdJObj[];
+void fn_803960C8(void);
+extern u8 hsdDObj[];
+void fn_80396154(void);
+void fn_8038CB78(u32, u32, u32);
+void __register_global_object(u32, u32, u32, float);
+void fn_802889D0(u32, u32, float, float);
+u32 DVDConvertPathToEntrynum(u32, u32);
+u32 fn_80073984(u32, float);
+u32 HSD_JObjLoadJoint(u32, u32);
+u32 fn_80396F54(u32, u32, u32);
+float HSD_JObjDispAll(u32, u32, u32, u32);
+float __construct_array(u32, u32, u32, u32, u32);
+float fn_803CD4A0(u32);
+float fn_803CD4E4(u32, u32, u32, u32, u32, u32, u32, float);
+float GXSetTexCoordGen2(u32, u32, u32, u32, u32, u32, float);
+float fn_803CF820(u32, u32, u32, u32, float);
+float GXSetNumTexGens(u32, float);
+float fn_803CF30C(u32, float);
+float fn_803CF134(u32, u32, u32, u32, float);
+float fn_803CEBE0(u32, u32, u32, u32, u32, float);
+float fn_803CEC68(u32, u32, u32, u32, u32, u32, float);
+float fn_803CEC24(u32, u32, u32, u32, u32, float);
+void fn_803CECD0(u32, u32, u32, u32, u32, u32, float);
+void fn_803955BC(u32, u32, u32);
+u32 fn_80396068(u32, float);
+u32 fn_80378568(u32, float);
+void fn_8038B844(u32, u32, float);
+void hsdInitClassInfo(u32, u32, u32, u32, u32, u32);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 extern const float lbl_805E4DE0;
 extern u8 lbl_804F4F70[];
@@ -320,3 +386,4 @@ s32 fn_80391264(u32* pp)
 
 void fn_80395490(void) { OSReport(lbl_804F5440); }
 void fn_80395560(void) { OSReport(lbl_804F547C); }
+
