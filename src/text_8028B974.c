@@ -182,6 +182,18 @@ typedef struct { int w[13]; } KS13;
 typedef struct { int w[14]; } KS14;
 typedef struct { int w[15]; } KS15;
 typedef struct { int w[16]; } KS16;
+extern char lbl_804BC344[];
+extern char lbl_804BC374[];
+extern char lbl_804BC3BC[];
+extern char lbl_804BC3DC[];
+extern char lbl_804BC430[];
+extern char lbl_804BC454[];
+extern char lbl_804C0F9C[];
+extern char lbl_804F5078[];
+extern char lbl_804F58DC[];
+extern char lbl_804F5970[];
+extern char lbl_804F59EC[];
+extern char lbl_805D81C0;
 extern int lbl_805DD9B8;
 extern int lbl_805DD9BC;
 extern int lbl_805DD9C0;
@@ -268,6 +280,7 @@ extern int lbl_805DDB1C;
 extern int lbl_805DDB20;
 extern int lbl_805DDB24;
 extern int lbl_805DDB28;
+extern float lbl_805E33C4;
 extern int HSD_CObjSetCurrent();
 extern void HSD_JObjDispAll();
 extern void fn_802B3998();
@@ -740,8 +753,8 @@ m1 = lbl_805DDA38;
 } else {
 lbl_805DDA38 = a0;
 lbl_805DDA34 = a0;
-m0 = lbl_805DDA34;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA34;
 }
 lbl_805DDA30 = (lbl_805DDA30 + 1);
 }
@@ -773,8 +786,8 @@ m1 = lbl_805DDA44;
 } else {
 lbl_805DDA44 = a0;
 lbl_805DDA40 = a0;
-m0 = lbl_805DDA40;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA40;
 }
 lbl_805DDA3C = (lbl_805DDA3C + 1);
 }
@@ -806,8 +819,8 @@ m1 = lbl_805DDA50;
 } else {
 lbl_805DDA50 = a0;
 lbl_805DDA4C = a0;
-m0 = lbl_805DDA4C;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA4C;
 }
 lbl_805DDA48 = (lbl_805DDA48 + 1);
 }
@@ -839,8 +852,8 @@ m1 = lbl_805DDA5C;
 } else {
 lbl_805DDA5C = a0;
 lbl_805DDA58 = a0;
-m0 = lbl_805DDA58;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA58;
 }
 lbl_805DDA54 = (lbl_805DDA54 + 1);
 }
@@ -872,8 +885,8 @@ m1 = lbl_805DDA74;
 } else {
 lbl_805DDA74 = a0;
 lbl_805DDA70 = a0;
-m0 = lbl_805DDA70;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA70;
 }
 lbl_805DDA6C = (lbl_805DDA6C + 1);
 }
@@ -905,8 +918,8 @@ m1 = lbl_805DDA80;
 } else {
 lbl_805DDA80 = a0;
 lbl_805DDA7C = a0;
-m0 = lbl_805DDA7C;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA7C;
 }
 lbl_805DDA78 = (lbl_805DDA78 + 1);
 }
@@ -938,8 +951,8 @@ m1 = lbl_805DDA8C;
 } else {
 lbl_805DDA8C = a0;
 lbl_805DDA88 = a0;
-m0 = lbl_805DDA88;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA88;
 }
 lbl_805DDA84 = (lbl_805DDA84 + 1);
 }
@@ -971,8 +984,8 @@ m1 = lbl_805DDA98;
 } else {
 lbl_805DDA98 = a0;
 lbl_805DDA94 = a0;
-m0 = lbl_805DDA94;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA94;
 }
 lbl_805DDA90 = (lbl_805DDA90 + 1);
 }
@@ -1004,8 +1017,8 @@ m1 = lbl_805DDABC;
 } else {
 lbl_805DDABC = a0;
 lbl_805DDAB8 = a0;
-m0 = lbl_805DDAB8;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDAB8;
 }
 lbl_805DDAB4 = (lbl_805DDAB4 + 1);
 }
@@ -1037,8 +1050,8 @@ m1 = lbl_805DDAC8;
 } else {
 lbl_805DDAC8 = a0;
 lbl_805DDAC4 = a0;
-m0 = lbl_805DDAC4;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDAC4;
 }
 lbl_805DDAC0 = (lbl_805DDAC0 + 1);
 }
@@ -1070,8 +1083,8 @@ m1 = lbl_805DDAD4;
 } else {
 lbl_805DDAD4 = a0;
 lbl_805DDAD0 = a0;
-m0 = lbl_805DDAD0;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDAD0;
 }
 lbl_805DDACC = (lbl_805DDACC + 1);
 }
@@ -1103,8 +1116,8 @@ m1 = lbl_805DDAE0;
 } else {
 lbl_805DDAE0 = a0;
 lbl_805DDADC = a0;
-m0 = lbl_805DDADC;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDADC;
 }
 lbl_805DDAD8 = (lbl_805DDAD8 + 1);
 }
@@ -1136,8 +1149,8 @@ m1 = lbl_805DDAEC;
 } else {
 lbl_805DDAEC = a0;
 lbl_805DDAE8 = a0;
-m0 = lbl_805DDAE8;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDAE8;
 }
 lbl_805DDAE4 = (lbl_805DDAE4 + 1);
 }
@@ -1169,8 +1182,8 @@ m1 = lbl_805DDAF8;
 } else {
 lbl_805DDAF8 = a0;
 lbl_805DDAF4 = a0;
-m0 = lbl_805DDAF4;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDAF4;
 }
 lbl_805DDAF0 = (lbl_805DDAF0 + 1);
 }
@@ -1202,8 +1215,8 @@ m1 = lbl_805DDB04;
 } else {
 lbl_805DDB04 = a0;
 lbl_805DDB00 = a0;
-m0 = lbl_805DDB00;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDB00;
 }
 lbl_805DDAFC = (lbl_805DDAFC + 1);
 }
@@ -1235,8 +1248,8 @@ m1 = lbl_805DDB10;
 } else {
 lbl_805DDB10 = a0;
 lbl_805DDB0C = a0;
-m0 = lbl_805DDB0C;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDB0C;
 }
 lbl_805DDB08 = (lbl_805DDB08 + 1);
 }
@@ -1268,8 +1281,8 @@ m1 = lbl_805DDB1C;
 } else {
 lbl_805DDB1C = a0;
 lbl_805DDB18 = a0;
-m0 = lbl_805DDB18;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDB18;
 }
 lbl_805DDB14 = (lbl_805DDB14 + 1);
 }
@@ -1301,8 +1314,8 @@ m1 = lbl_805DDB28;
 } else {
 lbl_805DDB28 = a0;
 lbl_805DDB24 = a0;
-m0 = lbl_805DDB24;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDB24;
 }
 lbl_805DDB20 = (lbl_805DDB20 + 1);
 }
@@ -1346,8 +1359,8 @@ m1 = lbl_805DD9C0;
 } else {
 lbl_805DD9C0 = a0;
 lbl_805DD9BC = a0;
-m0 = lbl_805DD9BC;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DD9BC;
 }
 lbl_805DD9B8 = (lbl_805DD9B8 + 1);
 }
@@ -1379,8 +1392,8 @@ m1 = lbl_805DD9CC;
 } else {
 lbl_805DD9CC = a0;
 lbl_805DD9C8 = a0;
-m0 = lbl_805DD9C8;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DD9C8;
 }
 lbl_805DD9C4 = (lbl_805DD9C4 + 1);
 }
@@ -1412,8 +1425,8 @@ m1 = lbl_805DD9D8;
 } else {
 lbl_805DD9D8 = a0;
 lbl_805DD9D4 = a0;
-m0 = lbl_805DD9D4;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DD9D4;
 }
 lbl_805DD9D0 = (lbl_805DD9D0 + 1);
 }
@@ -1445,8 +1458,8 @@ m1 = lbl_805DD9E4;
 } else {
 lbl_805DD9E4 = a0;
 lbl_805DD9E0 = a0;
-m0 = lbl_805DD9E0;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DD9E0;
 }
 lbl_805DD9DC = (lbl_805DD9DC + 1);
 }
@@ -1478,8 +1491,8 @@ m1 = lbl_805DD9F0;
 } else {
 lbl_805DD9F0 = a0;
 lbl_805DD9EC = a0;
-m0 = lbl_805DD9EC;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DD9EC;
 }
 lbl_805DD9E8 = (lbl_805DD9E8 + 1);
 }
@@ -1511,8 +1524,8 @@ m1 = lbl_805DD9FC;
 } else {
 lbl_805DD9FC = a0;
 lbl_805DD9F8 = a0;
-m0 = lbl_805DD9F8;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DD9F8;
 }
 lbl_805DD9F4 = (lbl_805DD9F4 + 1);
 }
@@ -1544,8 +1557,8 @@ m1 = lbl_805DDA08;
 } else {
 lbl_805DDA08 = a0;
 lbl_805DDA04 = a0;
-m0 = lbl_805DDA04;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA04;
 }
 lbl_805DDA00 = (lbl_805DDA00 + 1);
 }
@@ -1577,8 +1590,8 @@ m1 = lbl_805DDA14;
 } else {
 lbl_805DDA14 = a0;
 lbl_805DDA10 = a0;
-m0 = lbl_805DDA10;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA10;
 }
 lbl_805DDA0C = (lbl_805DDA0C + 1);
 }
@@ -1610,8 +1623,8 @@ m1 = lbl_805DDA20;
 } else {
 lbl_805DDA20 = a0;
 lbl_805DDA1C = a0;
-m0 = lbl_805DDA1C;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA1C;
 }
 lbl_805DDA18 = (lbl_805DDA18 + 1);
 }
@@ -1643,8 +1656,8 @@ m1 = lbl_805DDA2C;
 } else {
 lbl_805DDA2C = a0;
 lbl_805DDA28 = a0;
-m0 = lbl_805DDA28;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA28;
 }
 lbl_805DDA24 = (lbl_805DDA24 + 1);
 }
@@ -1676,8 +1689,8 @@ m1 = lbl_805DDA68;
 } else {
 lbl_805DDA68 = a0;
 lbl_805DDA64 = a0;
-m0 = lbl_805DDA64;
-m1 = a1;
+m0 = a1;
+m1 = lbl_805DDA64;
 }
 lbl_805DDA60 = (lbl_805DDA60 + 1);
 }
