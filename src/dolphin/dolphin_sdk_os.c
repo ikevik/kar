@@ -108,15 +108,14 @@ extern void* __OSArenaLo;
 extern char lbl_805DC974[4];
 extern int lbl_805DC978;
 
-#if 0
+#if 1
 #pragma peephole off
 u32 OSGetConsoleType(void)
 {
-    u32 type;
-    if (BootInfo_805DDE68 == 0 || (type = BootInfo_805DDE68->consoleType) == 0) {
-        type = 0x10000002;
+    if (BootInfo_805DDE68 == 0 || BootInfo_805DDE68->consoleType == 0) {
+        return 0x10000002;
     }
-    return type;
+    return BootInfo_805DDE68->consoleType;
 }
 #endif
 
@@ -150,11 +149,12 @@ OSInterruptHandler __OSGetInterruptHandler(s16 interrupt)
     return InterruptHandlerTable[interrupt];
 }
 
-#if 0
+#if 1
 #pragma peephole on
+volatile u32 __DIRegs[] : 0xcc006000;
 u8 __OSGetDIConfig(void)
 {
-    return *(u32*)0xCC006024 & 0xFF;
+    return __DIRegs[9] & 0xFF;
 }
 #endif
 
@@ -468,7 +468,7 @@ void OSSleepThread(OSThreadQueue* queue)
     OSRestoreInterrupts(enabled);
 }
 
-#if 0
+#if 1
 #pragma peephole on
 void OSWakeupThread(OSThreadQueue* queue)
 {
@@ -1027,7 +1027,7 @@ void OSClearContext(OSContext* context)
     }
 }
 
-#if 0
+#if 1
 #pragma peephole off
 void OSSetCurrentContext(OSContext* context)
 {
@@ -1057,13 +1057,14 @@ void OSSetCurrentContext(OSContext* context)
 }
 #endif
 
-#if 0
+#if 1
 #pragma peephole off
 void __OSModuleInit(void)
 {
-    *(u32*)0x800030CC = 0;
-    *(u32*)0x800030C8 = 0;
-    *(u32*)0x800030D0 = 0;
+    u32* base = (u32*)0x80003000;
+    base[0xCC / 4] = 0;
+    base[0xC8 / 4] = 0;
+    base[0xD0 / 4] = 0;
 }
 #endif
 
@@ -1094,7 +1095,7 @@ s32 __OSGetEffectivePriority(OSThread* thread)
     return priority;
 }
 
-#if 0
+#if 1
 #pragma peephole off
 int OSOnReset(int final)
 {
@@ -1108,7 +1109,7 @@ int OSOnReset(int final)
 
 extern u16 lbl_805DC998;
 
-#if 0
+#if 1
 #pragma peephole on
 u16 OSGetFontEncode(void)
 {
@@ -1127,7 +1128,7 @@ u16 OSGetFontEncode(void)
 }
 #endif
 
-#if 0
+#if 1
 #pragma peephole on
 void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
 {
