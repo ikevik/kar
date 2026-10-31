@@ -9,7 +9,9 @@ typedef struct HSD_VIXfb {
 } HSD_VIXfb;
 
 typedef struct HSD_VIData {
-    u8 pad0[0x1D8];
+    u8 pad0[0x3C];
+    s32 x3c;
+    u8 pad40[0x1D8 - 0x40];
     HSD_VICallback pre_retrace; // 0x1D8
     HSD_VICallback post_retrace; // 0x1DC
     s32 x1e0;
@@ -135,3 +137,9 @@ s32 fn_8041104C(void)
     return lbl_80589A80.x1e0;
 }
 
+
+void fn_80411A6C(s32 x)
+{
+    lbl_80589A80.x3c = x;
+    *((u8*) &lbl_80589A80 + 0x54) = 1;
+}
