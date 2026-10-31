@@ -41,14 +41,16 @@ int fn_80481CE8(int arg)
 void fn_80481FE0(int* p)
 {
     u8 buf[6];
-    if (*p < 5 && *p >= 0) {
-        buf[0] = 1;
-        buf[1] = 0;
-        buf[2] = 0x5e;
-        buf[3] = lbl_805E62C0[1] & 0x7f;
-        buf[4] = lbl_805E62C0[2];
-        buf[5] = lbl_805E62C0[3];
-        fn_80468838(buf);
+    if (*p < 5) {
+        if (*p >= 0) {
+            buf[0] = 1;
+            buf[1] = 0;
+            buf[2] = 0x5e;
+            buf[3] = lbl_805E62C0[1] & 0x7f;
+            buf[4] = lbl_805E62C0[2];
+            buf[5] = lbl_805E62C0[3];
+            fn_80468838(buf);
+        }
     }
 }
 
@@ -68,8 +70,8 @@ int fn_80482054(int arg)
 
 int fn_804820D4(u8* addr, u32* group)
 {
-    IGMPEntry* e;
     IGMPEntry* base = lbl_805C2A18;
+    IGMPEntry* e;
     u32 ip;
     if ((addr[0] & 0xf0) != 0xe0) {
         return -12;
@@ -78,10 +80,12 @@ int fn_804820D4(u8* addr, u32* group)
     if (ip == *(u32*)lbl_805E62C0) {
         return 4;
     }
-    for (e = base; e < base + 4; e++) {
+    e = base;
+    while (e < base + 4) {
         if (e->addr == ip && e->group == *group) {
             return e - base;
         }
+        e++;
     }
     return -4;
 }
