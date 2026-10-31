@@ -176,3 +176,84 @@ void HSD_RObjAddAnimAll(HSD_RObj* robj, HSD_RObjAnimJoint* anim)
         HSD_RObjAddAnim(i, j);
     }
 }
+
+void fn_8040B670(struct _HSD_JObj*);
+void HSD_RvalueRemoveAll(HSD_Rvalue*);
+void HSD_RObjFree(HSD_RObj*);
+s32 _HSD_MemCheckOwn(void*);
+extern void* lbl_805DE2D8;
+extern u32 lbl_805DE2DC;
+
+void HSD_RObjRemove(HSD_RObj* robj)
+{
+    if (robj != NULL) {
+        switch (robj->flags & TYPE_MASK) {
+        case REFTYPE_JOBJ:
+            fn_8040B670(robj->u.jobj);
+            break;
+        case 0:
+            HSD_RvalueRemoveAll(robj->u.exp.rvalue);
+            break;
+        }
+        HSD_AObjRemove(robj->aobj);
+        HSD_RObjFree(robj);
+    }
+}
+
+void HSD_RObjRemoveAll(HSD_RObj* robj)
+{
+    HSD_RObj* next;
+    for (; robj != NULL; robj = next) {
+        next = robj->next;
+        if (robj != NULL) {
+            switch (robj->flags & TYPE_MASK) {
+            case REFTYPE_JOBJ:
+                fn_8040B670(robj->u.jobj);
+                break;
+            case 0:
+                HSD_RvalueRemoveAll(robj->u.exp.rvalue);
+                break;
+            }
+            HSD_AObjRemove(robj->aobj);
+            HSD_RObjFree(robj);
+        }
+    }
+}
+
+HSD_RObj* HSD_RObjAlloc(void)
+{
+    HSD_RObj* robj = HSD_ObjAlloc(&robj_alloc_data);
+    assert_line(0x3c5, robj);
+    memset(robj, 0, sizeof(HSD_RObj));
+    return robj;
+}
+
+void HSD_RObjFree(HSD_RObj* robj)
+{
+    HSD_ObjFree(&robj_alloc_data, robj);
+}
+
+f32 RObjExpDummy(void)
+{
+    return 0.0F;
+}
+
+void HSD_RvalueRemoveAll(HSD_Rvalue* rvalue)
+{
+    HSD_Rvalue* next;
+    for (; rvalue != NULL; rvalue = next) {
+        next = rvalue->next;
+        if (rvalue != NULL) {
+            fn_8040B670(rvalue->jobj);
+            HSD_ObjFree(&rvalue_alloc_data, rvalue);
+        }
+    }
+}
+
+void _HSD_RObjForgetMemory(void)
+{
+    if (_HSD_MemCheckOwn(lbl_805DE2D8)) {
+        lbl_805DE2D8 = NULL;
+        lbl_805DE2DC = 0;
+    }
+}

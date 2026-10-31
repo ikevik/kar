@@ -104,7 +104,7 @@ typedef struct _HSD_ShapeSet {
     u32 nb_normal_index;
     struct _HSD_VtxDescList* normal_desc;
     u8** normal_idx_list;
-    struct {
+    union {
         f32* bp;
         f32 bl;
     } blend;
@@ -145,6 +145,7 @@ typedef struct _HSD_PObjInfo {
 #define HSD_POBJ_METHOD(o) HSD_POBJ_INFO(HSD_CLASS_METHOD(o))
 
 u32 HSD_PObjGetFlags(HSD_PObj* pobj);
+HSD_PObj* HSD_PObjAlloc(void);
 void HSD_PObjRemoveAnimAllByFlags(HSD_PObj* pobj, u32 flags);
 void HSD_PObjReqAnimAllByFlags(HSD_PObj* pobj, f32 startframe, u32 flags);
 

@@ -1,5 +1,5 @@
 #include <sysdolphin/list.h>
-
+#include <sysdolphin/object.h>
 static HSD_ObjAllocData slist_alloc_data;
 static HSD_ObjAllocData dlist_alloc_data;
 
@@ -24,7 +24,7 @@ HSD_SList *HSD_SListAlloc()
     HSD_SList *list;
 
     list = HSD_ObjAlloc(&slist_alloc_data);
-    assert_line(76, list);
+    ((list) ? (void)0 : __assert("list.c", 76, "list"));
 
     memset(list, 0, sizeof(HSD_SList));
     return list;
@@ -46,7 +46,7 @@ void HSD_SListPrepend(HSD_SList* list, void* data)
 
 HSD_SList* HSD_SListAppendList(HSD_SList* list, HSD_SList* next)
 {
-    assert_line(179, next);
+    ((next) ? (void)0 : __assert("list.c", 179, "next"));
     if (list != NULL) {
         next->next = list->next;
         list->next = next;
@@ -58,7 +58,7 @@ HSD_SList* HSD_SListAppendList(HSD_SList* list, HSD_SList* next)
 
 HSD_SList *HSD_SListPrependList(HSD_SList *list, HSD_SList *prev)
 {
-    assert_line(202, prev);
+    ((prev) ? (void)0 : __assert("list.c", 202, "prev"));
     prev->next = list;
     return prev;
 }
@@ -74,4 +74,16 @@ HSD_SList *HSD_SListRemove(HSD_SList *list)
     }
 
     return NULL;
+}
+
+extern HSD_ClassInfo hsdClass;
+static void ObjInfoInit(void);
+
+HSD_ClassInfo objInfo = { ObjInfoInit };
+
+static void ObjInfoInit(void)
+{
+    hsdInitClassInfo(&objInfo, &hsdClass,
+        "sysdolphin_base_library", "hsd_obj",
+        sizeof(HSD_ObjInfo), sizeof(HSD_Obj));
 }

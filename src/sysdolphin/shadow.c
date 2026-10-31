@@ -162,6 +162,7 @@ HSD_Chan channel = {
 
 extern Mtx lbl_80503FC0;
 extern f32 lbl_805DC8C0[];
+extern Mtx lbl_80504678;
 
 extern struct {
     u8 x0_pad[0xC];
@@ -275,6 +276,8 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
     }
 }
 
+void makeMatrix(HSD_Shadow* shadow);
+
 void HSD_ShadowEndRender(HSD_Shadow* shadow)
 {
     HSD_ImageDesc* imgdesc;
@@ -353,6 +356,192 @@ void HSD_ShadowDeleteObject(HSD_Shadow* shadow, struct _HSD_JObj* jobj)
         while (shadow->objects != NULL) {
             HSD_JObjUnref(shadow->objects->data);
             shadow->objects = HSD_SListRemove(shadow->objects);
+        }
+    }
+}
+
+void PSMTXCopy(Mtx src, Mtx dst);
+void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
+void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+s32 HSD_CObjGetProjectionType(struct _HSD_CObj*);
+void HSD_CObjSetAspect(struct _HSD_CObj*, f32);
+void HSD_CObjSetFov(struct _HSD_CObj*, f32);
+void HSD_CObjSetOrtho(struct _HSD_CObj*, f32, f32, f32, f32);
+void HSD_CObjSetFrustum(struct _HSD_CObj*, f32, f32, f32, f32);
+f32 HSD_CObjGetNear(struct _HSD_CObj*);
+extern f32 lbl_805E5DD8;
+double fn_803BD3C8(double, double);
+
+void makeMatrix(HSD_Shadow* shadow)
+{
+    Mtx mtx;
+
+    if (HSD_CObjGetEyeDistance(shadow->camera) < lbl_805DC8C0[0]) {
+        PSMTXCopy(lbl_80504678, shadow->texture->mtx);
+        return;
+    }
+    switch (HSD_CObjGetProjectionType(shadow->camera)) {
+    case PROJ_PERSPECTIVE:
+        C_MTXLightPerspective(mtx, shadow->camera->projection_param.perspective.fov, shadow->camera->projection_param.perspective.aspect, shadow->scaleS, shadow->scaleT, shadow->transS, shadow->transT);
+        break;
+    case PROJ_FRUSTRUM:
+        C_MTXLightFrustum(mtx, shadow->camera->projection_param.frustrum.top, shadow->camera->projection_param.frustrum.bottom, shadow->camera->projection_param.frustrum.left, shadow->camera->projection_param.frustrum.right, shadow->camera->near, shadow->scaleS, shadow->scaleT, shadow->transS, shadow->transT);
+        break;
+    case PROJ_ORTHO:
+        C_MTXLightOrtho(mtx, shadow->camera->projection_param.ortho.top, shadow->camera->projection_param.ortho.bottom, shadow->camera->projection_param.ortho.left, shadow->camera->projection_param.ortho.right, shadow->scaleS, shadow->scaleT, shadow->transS, shadow->transT);
+        break;
+    default:
+        assert_line(0x2bb, 0);
+        break;
+    }
+    PSMTXConcat(mtx, shadow->camera->view_mtx, shadow->texture->mtx);
+}
+
+extern f32 lbl_805DC8B8[];
+extern f32 lbl_805E5DDC;
+extern f32 lbl_805E5DE0;
+f32 atan2f_(f32, f32);
+void PSVECSubtract(Vec*, Vec*, Vec*);
+void PSVECNormalize(Vec*, Vec*);
+void PSVECCrossProduct(Vec*, Vec*, Vec*);
+f32 PSVECMag(Vec*);
+f32 PSVECDotProduct(Vec*, Vec*);
+void PSVECScale(Vec*, Vec*, f32);
+void fn_80417AF4(Vec*, Vec*);
+
+#ifdef NONMATCHING /* 93.7% */
+void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left, f32 right)
+{
+    HSD_CObj* camera;
+    f32 dist;
+    f32 a;
+
+    assert_line(0x2d2, shadow);
+    camera = shadow->camera;
+    dist = HSD_CObjGetEyeDistance(camera);
+    if (!(dist < lbl_805DC8C0[0])) {
+        switch (HSD_CObjGetProjectionType(camera)) {
+        case PROJ_PERSPECTIVE:
+            bottom = (__fabs(top) > __fabs(bottom)) ? __fabs(top) : __fabs(bottom);
+            left = (__fabs(left) > __fabs(right)) ? __fabs(left) : __fabs(right);
+            HSD_CObjSetAspect(camera, left / (bottom + lbl_805DC8C0[0]));
+            HSD_CObjSetFov(camera, lbl_805E5DD8 * (f32) fn_803BD3C8(bottom, dist));
+            break;
+        case PROJ_ORTHO:
+            HSD_CObjSetOrtho(camera, top, bottom, left, right);
+            break;
+        case PROJ_FRUSTRUM:
+            a = HSD_CObjGetNear(camera) / dist;
+            if (a < lbl_805DC8C0[0]) {
+                a = lbl_805DC8C0[0];
+            }
+            HSD_CObjSetFrustum(camera, a * top, a * bottom, a * left, a * right);
+            break;
+        default:
+            assert_line(0x2ff, 0);
+            break;
+        }
+    }
+}
+#endif
+
+inline BOOL TryNormalize2(Vec* v, Vec* out)
+{
+    if (v == NULL || out == NULL) {
+        return ~0;
+    }
+    if (__fabs(v->x) <= lbl_805DC8B8[0] &&
+        __fabs(v->y) <= lbl_805DC8B8[0] &&
+        __fabs(v->z) <= lbl_805DC8B8[0]) {
+        return ~0;
+    }
+    PSVECNormalize(v, out);
+    return 0;
+}
+
+void HSD_ViewingRectInit(HSD_ViewingRect* rect, Vec* origin, Vec* eye, Vec* up, BOOL perspective)
+{
+    assert_line(0x31e, rect);
+    rect->invalid = 0;
+    rect->origin = *origin;
+    PSVECSubtract(eye, origin, &rect->eye_v);
+    if (TryNormalize2(&rect->eye_v, &rect->eye_vn) < 0) {
+        rect->invalid = 1;
+        return;
+    }
+    PSVECCrossProduct(&rect->eye_vn, up, &rect->right_v);
+    if (TryNormalize2(&rect->right_v, &rect->right_v) < 0) {
+        fn_80417AF4(&rect->eye_vn, &rect->right_v);
+        PSVECNormalize(&rect->right_v, &rect->right_v);
+    }
+    PSVECCrossProduct(&rect->right_v, &rect->eye_vn, &rect->up_v);
+    rect->distance = PSVECMag(&rect->eye_v);
+    rect->right = -3.4028235e38F;
+    rect->top = -3.4028235e38F;
+    rect->left = 3.4028235e38F;
+    rect->bottom = 3.4028235e38F;
+    rect->perspective = (perspective != 0);
+}
+
+BOOL HSD_ViewingRectIsValid(HSD_ViewingRect* rect)
+{
+    BOOL result;
+    assert_line(0x33c, rect);
+    result = FALSE;
+    if (!rect->invalid) {
+        if (rect->top > rect->bottom && rect->right > rect->left) {
+            result = TRUE;
+        }
+    }
+    return result;
+}
+
+void HSD_ViewingRectAddPoint(HSD_ViewingRect* rect, f32 a, f32 b, f32 c, f32 d, Vec* position)
+{
+    Vec v;
+    Vec w;
+    Vec u;
+    f32 x;
+    f32 y;
+    f32 s;
+
+    assert_line(0x362, rect);
+    assert_line(0x363, position);
+    if (!rect->invalid) {
+        PSVECSubtract(position, &rect->origin, &v);
+        x = PSVECDotProduct(&v, &rect->eye_vn);
+        if (rect->perspective) {
+            if (x <= 0.0F) {
+                return;
+            }
+            s = rect->distance / x;
+            PSVECScale(&v, &v, s);
+            PSVECSubtract(&v, &rect->eye_v, &w);
+            y = PSVECDotProduct(&rect->right_v, &w);
+            x = PSVECDotProduct(&rect->up_v, &w);
+            a *= s;
+            b *= s;
+            c *= s;
+            d *= s;
+        } else {
+            PSVECScale(&rect->eye_vn, &u, x);
+            PSVECSubtract(&v, &u, &w);
+            y = PSVECDotProduct(&rect->right_v, &w);
+            x = PSVECDotProduct(&rect->up_v, &w);
+        }
+        if (y + d > rect->right) {
+            rect->right = y + d;
+        }
+        if (y + c < rect->left) {
+            rect->left = y + c;
+        }
+        if (x + a > rect->top) {
+            rect->top = x + a;
+        }
+        if (x + b < rect->bottom) {
+            rect->bottom = x + b;
         }
     }
 }

@@ -83,3 +83,48 @@ void HSD_FObjStopAnimAll(HSD_FObj* fobj, void* obj, void (*obj_update)(), f32 ra
         HSD_FObjStopAnim(fobj, obj, obj_update, rate);
     }
 }
+
+void HSD_FObjInterpretAnimAll(HSD_FObj* fobj, void* obj, void (*obj_update)(), f32 rate)
+{
+    HSD_FObj* fp;
+
+    for (fp = fobj; fp != NULL; fp = fp->next) {
+        HSD_FObjInterpretAnim(fp, obj, obj_update, rate);
+    }
+}
+
+#ifdef NONMATCHING /* 95.0% */
+HSD_FObj* HSD_FObjLoadDesc(HSD_FObjDesc* desc)
+{
+    HSD_FObj* fobj;
+
+    if (desc != NULL) {
+        fobj = HSD_FObjAlloc();
+        fobj->next = HSD_FObjLoadDesc(desc->next);
+        fobj->startframe = (s16) desc->startframe;
+        fobj->obj_type = desc->type;
+        fobj->frac_value = desc->frac_value;
+        fobj->frac_slope = desc->frac_slope;
+        fobj->ad_head = desc->ad;
+        fobj->length = desc->length;
+        fobj->flags = 0;
+    } else {
+        fobj = NULL;
+    }
+    return fobj;
+}
+
+#endif
+
+HSD_FObj* HSD_FObjAlloc(void)
+{
+    HSD_FObj* fobj = HSD_ObjAlloc(&fobj_alloc_data);
+    assert_line(0x302, fobj);
+    memset(fobj, 0, sizeof(HSD_FObj));
+    return fobj;
+}
+
+void HSD_FObjFree(HSD_FObj* fobj)
+{
+    HSD_ObjFree(&fobj_alloc_data, fobj);
+}
