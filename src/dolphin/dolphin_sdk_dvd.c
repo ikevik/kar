@@ -35,7 +35,7 @@ typedef struct OSThreadQueue {
     void* tail;
 } OSThreadQueue;
 
-#define __DIRegs ((vu32*)0xCC006000)
+volatile u32 __DIRegs[] : 0xcc006000;
 
 extern int OSDisableInterrupts(void);
 extern int OSRestoreInterrupts(int level);
@@ -118,7 +118,7 @@ void stateMotorStopped(void)
     DVDLowWaitCoverClose(cbForStateMotorStopped);
 }
 
-#if 0
+#if 1
 int DVDLowWaitCoverClose(DVDLowCallback callback)
 {
     Callback = callback;
@@ -217,7 +217,7 @@ int DVDLowBreak(void)
     return 1;
 }
 
-#if 0
+#if 1
 DVDLowCallback DVDLowClearCallback(void)
 {
     DVDLowCallback old;
@@ -242,7 +242,7 @@ void __DVDLowSetWAType(int type, u32 location)
     OSRestoreInterrupts(enabled);
 }
 
-#if 0
+#if 1
 void DVDReset(void)
 {
     DVDLowReset();
@@ -266,10 +266,11 @@ s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
     return retVal;
 }
 
-#if 0
+#if 1
 void fn_803C78BC(void)
 {
-    int enabled = OSDisableInterrupts();
+    int enabled;
+    enabled = OSDisableInterrupts();
     PauseFlag = 0;
     if (PausingFlag) {
         PausingFlag = 0;
@@ -279,7 +280,7 @@ void fn_803C78BC(void)
 }
 #endif
 
-#if 0
+#if 1
 int DVDLowStopMotor(DVDLowCallback callback)
 {
     vu32* regs = __DIRegs;
@@ -292,7 +293,7 @@ int DVDLowStopMotor(DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int DVDLowRequestError(DVDLowCallback callback)
 {
     Callback = callback;
@@ -304,7 +305,7 @@ int DVDLowRequestError(DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int fn_803C4898(u32 offset, DVDLowCallback callback)
 {
     Callback = callback;
@@ -317,7 +318,7 @@ int fn_803C4898(u32 offset, DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
 {
     Callback = callback;
@@ -329,7 +330,7 @@ int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
 {
     Callback = callback;
@@ -343,7 +344,7 @@ int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int fn_803C4B14(void* addr, DVDLowCallback callback)
 {
     Callback = callback;
@@ -358,7 +359,7 @@ int fn_803C4B14(void* addr, DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int fn_803C4958(void* addr, DVDLowCallback callback)
 {
     Callback = callback;
@@ -374,7 +375,7 @@ int fn_803C4958(void* addr, DVDLowCallback callback)
 }
 #endif
 
-#if 0
+#if 1
 int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
 {
     Callback = callback;
