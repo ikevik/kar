@@ -25,6 +25,8 @@ extern int hsdIsDescendantOf(void*, void*);
 extern void HSD_Panic(const char*, int, const char*);
 extern HSD_CObj* HSD_CObjGetCurrent(void);
 extern void fn_803D1578(Mtx, Mtx);
+
+HSD_JObj* fn_8040BC14(HSD_JObj*);
 extern void fn_80417C20(void*);
 extern void fn_80417CA0(void*);
 extern void fn_804084B0(HSD_JObj*, void*, void*);
@@ -401,6 +403,64 @@ void fn_8040B670(HSD_Obj* o)
                 o->parent.class_info->destroy((HSD_Class*) o);
             }
         }
+    }
+}
+
+HSD_JObj* fn_8040B718(HSD_JObj* jobj)
+{
+    HSD_JObj* child;
+    HSD_JObj* next;
+    HSD_JObj* prev;
+    if (jobj == NULL) {
+        return NULL;
+    }
+    child = jobj->child;
+    if (child != NULL && child->next != NULL) {
+        __assert(__FILE__, 0x4e4, "child->next == NULL");
+    }
+    if (child != NULL) {
+        next = child;
+    } else {
+        next = jobj->next;
+    }
+    prev = fn_8040BC14(jobj);
+    if (prev != NULL) {
+        prev->next = next;
+    } else if (jobj->parent != NULL) {
+        jobj->parent->child = next;
+    }
+    if (next != NULL && next == child) {
+        next->next = jobj->next;
+        next->parent = jobj->parent;
+    }
+    jobj->parent = NULL;
+    jobj->child = NULL;
+    jobj->next = NULL;
+    HSD_JObjUnref(jobj);
+    return child;
+}
+
+void fn_8040B920(HSD_JObj* jobj)
+{
+    HSD_JObj* next;
+    HSD_JObj* prev;
+    if (jobj == NULL) {
+        return;
+    }
+    if (jobj->parent != NULL) {
+        prev = fn_8040BC14(jobj);
+        if (prev != NULL) {
+            prev->next = NULL;
+        } else {
+            jobj->parent->child = NULL;
+        }
+    }
+    while (jobj != NULL) {
+        next = jobj->next;
+        jobj->parent = NULL;
+        jobj->next = NULL;
+        HSD_JObjUnref(jobj);
+        jobj = next;
     }
 }
 
