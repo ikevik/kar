@@ -444,3 +444,29 @@ lbl_803FE490:
 /* 803FE4B0 003FB2B0  38 21 00 50 */	addi r1, r1, 0x50
 /* 803FE4B4 003FB2B4  4E 80 00 20 */	blr 
 }
+
+void HSD_LObjSetColor(HSD_LObj* lobj, GXColor* color)
+{
+    lobj->color = *color;
+}
+
+void HSD_LObjGetColor(HSD_LObj* lobj, GXColor* color)
+{
+    *color = lobj->color;
+}
+
+struct _HSD_WObj* HSD_LObjGetPositionWObj(HSD_LObj* lobj)
+{
+    if (lobj != NULL) {
+        return lobj->position;
+    }
+    return NULL;
+}
+
+struct _HSD_WObj* HSD_LObjGetInterestWObj(HSD_LObj* lobj)
+{
+    if (lobj != NULL) {
+        return lobj->interest;
+    }
+    return NULL;
+}

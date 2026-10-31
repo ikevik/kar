@@ -151,4 +151,9 @@ s32 HSD_LObjGetLightMaskAlpha(void);
 s32 HSD_LObjGetLightMaskSpecular(void);
 s32 HSD_LObjGetNbActive(void);
 
+void HSD_LObjSetColor(HSD_LObj* lobj, GXColor* color);
+void HSD_LObjGetColor(HSD_LObj* lobj, GXColor* color);
+struct _HSD_WObj* HSD_LObjGetPositionWObj(HSD_LObj* lobj);
+struct _HSD_WObj* HSD_LObjGetInterestWObj(HSD_LObj* lobj);
+
 #endif
