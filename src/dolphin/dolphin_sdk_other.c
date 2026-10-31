@@ -326,7 +326,7 @@ double fn_803BCCA8(double x, double y)
     return x;
 }
 
-#if 0
+#if 1
 int strcmp(const char* str1, const char* str2)
 {
     const unsigned char* p1 = (const unsigned char*)str1;
@@ -340,8 +340,7 @@ int strcmp(const char* str1, const char* str2)
     if ((k = c1 - c2) != 0) {
         return k;
     }
-    align = (unsigned long)p1 & 3;
-    if (((unsigned long)p2 & 3) != align) {
+    if (((unsigned long)p2 & 3) != (align = (unsigned long)p1 & 3)) {
         goto bytes;
     }
     if (align != 0) {
@@ -384,12 +383,12 @@ bytes:
         return 0;
     }
     for (;;) {
-        c1 = *++p1;
-        c2 = *++p2;
-        if ((k = c1 - c2) != 0) {
+        w1 = *++p1;
+        w2 = *++p2;
+        if ((k = w1 - w2) != 0) {
             return k;
         }
-        if (c1 == 0) {
+        if (w1 == 0) {
             return 0;
         }
     }
