@@ -133,7 +133,7 @@ typedef struct _HSD_TObj {
     struct _HSD_TObj* next;
     u32 id; //GXTexMapID
     u32 src; //GXTexGenSrc
-    GXTexMtx mtxid;
+    u32 mtxid; //GXTexMtx
     Quaternion rotate;
     Vec scale;
     Vec translate;

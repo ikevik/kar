@@ -120,10 +120,11 @@ void HSD_TObjAnim(HSD_TObj* tobj)
 
 void HSD_TObjAnimAll(HSD_TObj* tobj)
 {
+    HSD_TObj* tp;
     if (tobj != NULL) {
-        for (; tobj != NULL; tobj = tobj->next) {
-            if (tobj != NULL)
-                HSD_AObjInterpretAnim(tobj->aobj, tobj, HSD_TOBJ_METHOD(tobj)->update);
+        for (tp = tobj; tp != NULL; tp = tp->next) {
+            if (tp != NULL)
+                HSD_AObjInterpretAnim(tp->aobj, tp, HSD_TOBJ_METHOD(tp)->update);
         }
     }
 }
@@ -161,37 +162,40 @@ HSD_TObj* HSD_TObjLoadDesc(HSD_TObjDesc* td)
 {
     HSD_TObj* tobj;
     HSD_ClassInfo* info;
-    if (td == NULL)
-        return NULL;
-    if (td->class_name == NULL || (info = hsdSearchClassInfo(td->class_name)) == NULL) {
-        tobj = HSD_TObjAlloc();
-    } else {
-        tobj = hsdNew(info);
-        if (tobj == NULL)
-            __assert(lbl_805DCA50, 0x22C, "tobj");
+    if (td != NULL) {
+        if (td->class_name == NULL || (info = hsdSearchClassInfo(td->class_name)) == NULL) {
+            tobj = HSD_TObjAlloc();
+        } else {
+            tobj = hsdNew(info);
+            if (tobj == NULL)
+                __assert(lbl_805DCA50, 0x22C, "tobj");
+        }
+        HSD_TOBJ_METHOD(tobj)->load(tobj, td);
+        return tobj;
     }
-    HSD_TOBJ_METHOD(tobj)->load(tobj, td);
-    return tobj;
+    return NULL;
 }
 
 HSD_Tlut* HSD_TlutLoadDesc(HSD_TlutDesc* tlutdesc)
 {
     HSD_Tlut* tlut;
-    if (tlutdesc == NULL)
-        return NULL;
-    tlut = HSD_TlutAlloc();
-    memcpy(tlut, tlutdesc, sizeof(HSD_Tlut));
-    return tlut;
+    if (tlutdesc != NULL) {
+        tlut = HSD_TlutAlloc();
+        memcpy(tlut, tlutdesc, sizeof(HSD_Tlut));
+        return tlut;
+    }
+    return NULL;
 }
 
 HSD_TObjTev* HSD_TObjTevLoadDesc(HSD_TObjTevDesc* tevdesc)
 {
     HSD_TObjTev* tev;
-    if (tevdesc == NULL)
-        return NULL;
-    tev = HSD_TObjTevAlloc();
-    memcpy(tev, tevdesc, sizeof(HSD_TObjTev));
-    return tev;
+    if (tevdesc != NULL) {
+        tev = HSD_TObjTevAlloc();
+        memcpy(tev, tevdesc, sizeof(HSD_TObjTev));
+        return tev;
+    }
+    return NULL;
 }
 
 HSD_TObj* _HSD_TObjGetCurrentByType(HSD_TObj* from, u32 mapping)
