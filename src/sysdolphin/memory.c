@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include <dolphin/types.h>
 #include <functions.h>
 

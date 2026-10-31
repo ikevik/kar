@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include <dolphin/types.h>
 #include <sysdolphin/objalloc.h>
 
@@ -58,7 +59,7 @@ void _HSD_ZListSort(void)
 }
 
 void _HSD_ZListDisp(void);
-#if 0 /* not yet matching */
+#if 1
 void _HSD_ZListDisp(void)
 {
     HSD_ZListEnt* z;
@@ -102,7 +103,7 @@ void fn_8040F83C(s32 a, s32 b)
 void fn_8040F848(u32* jobj)
 {
     if (jobj != NULL) {
-        if ((jobj[5] & 0x4020) == 0)
+        if (!(jobj[5] & 0x4020) ? 1 : 0)
             fn_8040F2E8(jobj);
     }
 }

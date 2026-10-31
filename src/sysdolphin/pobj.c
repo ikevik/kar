@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include "pobj.h"
 
 u32 HSD_PObjGetFlags(HSD_PObj* pobj)

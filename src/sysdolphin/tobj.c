@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include <functions.h>
 extern void* memset(void*, int, unsigned long);
 

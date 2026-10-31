@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include <dolphin/types.h>
 #include <sysdolphin/objalloc.h>
 
@@ -86,4 +87,11 @@ HSD_ObjAllocData* HSD_MtxGetAllocData(void)
 void HSD_MtxInitAllocData(void)
 {
     HSD_ObjAllocInit(&lbl_8058BBE4, 0x30, 4);
+}
+
+void fn_80416B08(f32 (*m)[4], Vec3* out)
+{
+    out->x = m[0][3];
+    out->y = m[1][3];
+    out->z = m[2][3];
 }

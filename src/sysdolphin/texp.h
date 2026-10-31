@@ -33,7 +33,7 @@ typedef enum _HSD_TEType {
     HSD_TE_COMP_TYPE_MAX = 5
 } HSD_TEType;
 
-typedef enum _HSD_TExpType {
+enum {
     HSD_TE_ZERO = 0,
     HSD_TE_TEV = 1,
     HSD_TE_TEX = 2,
@@ -43,7 +43,8 @@ typedef enum _HSD_TExpType {
     HSD_TE_KONST = 6,
     HSD_TE_ALL = 7,
     HSD_TE_TYPE_MAX = 8
-} HSD_TExpType;
+};
+typedef s32 HSD_TExpType;
 
 typedef struct _HSD_TevConf {
     u32 clr_op;

@@ -9,7 +9,9 @@ typedef struct HSD_VIXfb {
 } HSD_VIXfb;
 
 typedef struct HSD_VIData {
-    u8 pad0[0x1D8];
+    u8 pad0[0x3C];
+    s32 x3c;
+    u8 pad40[0x1D8 - 0x40];
     HSD_VICallback pre_retrace; // 0x1D8
     HSD_VICallback post_retrace; // 0x1DC
     s32 x1e0;
@@ -75,7 +77,7 @@ HSD_VICallback fn_80410AE4(HSD_VICallback cb)
 }
 
 void fn_80410B8C(void* retrace);
-#if 0 /* not yet matching */
+#if 0 /* near miss: 2 lines (store order) */
 void fn_80410B8C(void* retrace)
 {
     s32 changed = 0;
@@ -113,9 +115,8 @@ void fn_80410B8C(void* retrace)
         lbl_805DE2CC++;
     lbl_805DE2C8++;
     if (lbl_805DE2C8 >= VI_AT(s32, 0x1EC)) {
-        s32 t = lbl_805DE2CC;
+        VI_AT(s32, 0x1F0) = lbl_805DE2CC;
         lbl_805DE2C8 = 0;
-        VI_AT(s32, 0x1F0) = t;
         lbl_805DE2CC = 0;
     }
     if (lbl_80589A80.pre_retrace != NULL)
@@ -135,3 +136,38 @@ s32 fn_8041104C(void)
     return lbl_80589A80.x1e0;
 }
 
+
+void fn_80411A6C(s32 x)
+{
+    lbl_80589A80.x3c = x;
+    *((u8*) &lbl_80589A80 + 0x54) = 1;
+}
+
+typedef struct VIRMode {
+    u32 w[15];
+} VIRMode;
+
+void fn_804119E4(VIRMode* rm)
+{
+    *(VIRMode*) &lbl_80589A80 = *rm;
+    *((u8*) &lbl_80589A80 + 0x54) = 1;
+}
+
+void fn_804114BC(int idx)
+{
+    s32* status;
+    int en = OSDisableInterrupts();
+    s32 v;
+    status = &((HSD_VIXfb*) &lbl_80589A80)[idx].status;
+    if (*status != 4) {
+        __assert(lbl_805DCC38, 0x2D2, "_p->xfb[idx].status == HSD_VI_XFB_WAITDONE");
+    }
+    {
+        s32 i = findXfb(6);
+        v = 6;
+        if (i != -1)
+            v = 5;
+    }
+    *status = v;
+    OSRestoreInterrupts(en);
+}

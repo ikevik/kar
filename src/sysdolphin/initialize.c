@@ -366,12 +366,10 @@ u32 HSD_GetCurrentRenderPass(void)
     return lbl_805DE2C4;
 }
 
-#ifdef NONMATCHING /* 99.7%: register swap */
+#if 1
 void HSD_StartRender(int pass)
 {
     GXRenderModeObj* vi = &lbl_80589A80;
-    u16 xfb_height;
-    u16 vi_height;
 
     lbl_805DE2C4 = pass;
     if (vi->aa) {
@@ -379,9 +377,7 @@ void HSD_StartRender(int pass)
     } else {
         fn_803CF938(lbl_805DE2AC, 0);
     }
-    xfb_height = vi->xfbHeight;
-    vi_height = vi->viHeight;
-    fn_803CFAC0(vi->field_rendering, (u32) (xfb_height - vi_height) >> 31);
+    fn_803CFAC0(vi->field_rendering, vi->xfbHeight < vi->viHeight);
     if (lbl_805DE2C0 != 0) {
         if (lbl_805DE2C0 & 1) {
             GXInvalidateVtxCache();
