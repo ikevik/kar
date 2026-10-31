@@ -26,7 +26,8 @@ extern u32 lbl_805DA040;
 extern u32 lbl_805DA038;
 extern u32 lbl_805DDBC0;
 extern u8 lbl_804E02D0[];
-extern u8 lbl_804E0620[];
+struct JE { u32 w[9]; };
+extern struct JE lbl_804E0620[];
 extern u8 lbl_804BCE4C[];
 extern const float lbl_805E3E48;
 extern u8 lbl_804E0B08[];
@@ -942,5 +943,17 @@ void fn_80320708(void) {}
 void fn_8032115C(void) {}
 
 
+
+
+u32 fn_80312650(s32 i) { return lbl_804E0620[i].w[1]; }
+u32 fn_80312668(s32 i) { return lbl_804E0620[i].w[2]; }
+u32 fn_80312680(s32 i) { return lbl_804E0620[i].w[8]; }
+u32 fn_803126B4(s32 i) { return lbl_804E0620[i].w[2]; }
+u32 fn_80312ECC(u32 p3) { return lbl_804E0620[*(s8*)(*(u32*)(*(u32*)(p3 + 4) + 4) + 0x3b)].w[4]; }
+u32 fn_80312EF4(u32 p3) { return lbl_804E0620[*(s8*)(*(u32*)(*(u32*)(p3 + 4) + 4) + 0x3b)].w[5]; }
+u32 fn_80312F1C(u32 p3) { return lbl_804E0620[*(s8*)(*(u32*)(*(u32*)(p3 + 4) + 4) + 0x3b)].w[6]; }
+u32 fn_80312F44(u32 p3) { return lbl_804E0620[*(s8*)(*(u32*)(*(u32*)(p3 + 4) + 4) + 0x3b)].w[8]; }
+u32 fn_80312F6C(u32 p3) { return lbl_804E0620[*(s8*)(*(u32*)(*(u32*)(p3 + 4) + 4) + 0x3b)].w[3]; }
+u32 fn_80312F94(u32 p3) { return lbl_804E0620[*(s8*)(*(u32*)(*(u32*)(p3 + 4) + 4) + 0x3b)].w[7]; }
 
 }
