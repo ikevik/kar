@@ -32,6 +32,34 @@ typedef struct DBCommTable {
     void (*f[16])(void);
 } DBCommTable;
 
+typedef struct TRKEventQueue {
+    u32 mutex;
+    s32 count;
+    s32 next;
+    TRKEvent events[2];
+    u32 eventID;
+} TRKEventQueue;
+
+extern TRKEventQueue lbl_80569E60;
+extern s32 lbl_8056B840[];
+extern u8* gTRKInputPendingPtr[];
+extern char lbl_8048BC30[];
+extern void MWTRACE(s32, const char*, ...);
+extern s32 fn_803C2388(void*, u32);
+extern u32 fn_803BF73C(void);
+extern void fn_803BF730(u32);
+extern TRKBuffer* TRKGetBuffer(s32);
+extern s32 TRKDispatchMessage(TRKBuffer*);
+extern s32 TRKTargetInterrupt(TRKEvent*);
+extern s32 TRKTargetSupportRequest(void);
+extern s32 TRKTargetContinue(void);
+extern s32 TRKTestForPacket(void);
+extern s32 TRKGetNextEvent(TRKEvent*);
+extern s32 TRKPostEvent(TRKEvent*);
+extern void TRKGetInput(void);
+extern s32 TRKTargetStopped(void);
+extern void TRKConstructEvent(TRKEvent*, u32);
+extern void TRKDestructEvent(TRKEvent*);
 extern TRKState gTRKState;
 extern TRKCPUState gTRKCPUState;
 extern DBCommTable gDBCommTable;
@@ -258,15 +286,6 @@ s32 TRKSetBufferPosition(TRKBuffer* buf, u32 pos)
         }
     }
     return err;
-}
-
-TRKBuffer* TRKGetBuffer(s32 idx)
-{
-    TRKBuffer* buf = 0;
-    if (idx >= 0 && idx < 3) {
-        buf = (TRKBuffer*)(lbl_80569E90 + idx * 0x890);
-    }
-    return buf;
 }
 
 s32 fn_803BE368(void)
@@ -572,4 +591,155 @@ void MWEnterCriticalSection(s32* p)
 
 void fn_803C3318(void)
 {
+}
+
+s32 TRKInitializeEventQueue(void)
+{
+    fn_803BFF38(&lbl_80569E60);
+    fn_803BFF30(&lbl_80569E60);
+    lbl_80569E60.count = 0;
+    lbl_80569E60.next = 0;
+    lbl_80569E60.eventID = 0x100;
+    fn_803BFF28(&lbl_80569E60);
+    return 0;
+}
+
+s32 TRKPostEvent(TRKEvent* event)
+{
+    s32 err = 0;
+    s32 idx;
+    fn_803BFF30(&lbl_80569E60);
+    if (lbl_80569E60.count == 2) {
+        err = 0x100;
+    } else {
+        idx = (lbl_80569E60.next + lbl_80569E60.count) % 2;
+        TRK_memcpy(&lbl_80569E60.events[idx], event, 12);
+        lbl_80569E60.events[idx].eventID = lbl_80569E60.eventID;
+        lbl_80569E60.eventID++;
+        if (lbl_80569E60.eventID < 0x100) {
+            lbl_80569E60.eventID = 0x100;
+        }
+        lbl_80569E60.count++;
+    }
+    fn_803BFF28(&lbl_80569E60);
+    return err;
+}
+
+s32 TRKGetNextEvent(TRKEvent* event)
+{
+    s32 ok = 0;
+    fn_803BFF30(&lbl_80569E60);
+    if (lbl_80569E60.count > 0) {
+        TRK_memcpy(event, &lbl_80569E60.events[lbl_80569E60.next], 12);
+        lbl_80569E60.next++;
+        lbl_80569E60.count--;
+        if (lbl_80569E60.next == 2) {
+            lbl_80569E60.next = 0;
+        }
+        ok = 1;
+    }
+    fn_803BFF28(&lbl_80569E60);
+    return ok;
+}
+
+s32 TRKMessageSend(TRKBuffer* buf)
+{
+    s32 r = fn_803C2388(buf->data, buf->length);
+    MWTRACE(1, lbl_8048BC30, r);
+    return 0;
+}
+
+void TRKProcessInput(s32 idx)
+{
+    TRKEvent event;
+    TRKConstructEvent(&event, 2);
+    lbl_8056B840[0] = -1;
+    event.msgBufID = idx;
+    TRKPostEvent(&event);
+}
+
+void TRKGetInput(void)
+{
+    s32 idx;
+    TRKEvent event;
+    idx = TRKTestForPacket();
+    if (idx != -1) {
+        TRKGetBuffer(idx);
+        TRKConstructEvent(&event, 2);
+        lbl_8056B840[0] = -1;
+        event.msgBufID = idx;
+        TRKPostEvent(&event);
+    }
+}
+
+void fn_803BE624(char* str)
+{
+    s32 err = 0;
+    s32 old;
+    char c;
+    char buf[2];
+    while (err == 0 && (c = *str++) != 0) {
+        old = fn_803BF73C();
+        buf[0] = c;
+        buf[1] = 0;
+        fn_803BF730(0);
+        OSReport(buf);
+        fn_803BF730(old);
+        err = 0;
+    }
+}
+
+void TRKNubMainLoop(void)
+{
+    TRKEvent event;
+    s32 exit = 0;
+    s32 inputOK = 0;
+    while (exit == 0) {
+        if (TRKGetNextEvent(&event)) {
+            inputOK = 0;
+            switch (event.type) {
+            case 2:
+                TRKDispatchMessage(TRKGetBuffer(event.msgBufID));
+                break;
+            case 1:
+                exit = 1;
+                break;
+            case 3:
+            case 4:
+                TRKTargetInterrupt(&event);
+                break;
+            case 5:
+                TRKTargetSupportRequest();
+                break;
+            }
+            TRKDestructEvent(&event);
+        } else if (inputOK == 0 || *gTRKInputPendingPtr[0] != 0) {
+            inputOK = 1;
+            TRKGetInput();
+        } else {
+            if (TRKTargetStopped() == 0) {
+                TRKTargetContinue();
+            }
+            inputOK = 0;
+        }
+    }
+}
+
+
+s32 fn_803C2388(void* data, u32 len)
+{
+    return ((s32 (*)(void*, u32))gDBCommTable.f[5])(data, len) != 0 ? -1 : 0;
+}
+
+void MWTRACE(s32 level, const char* fmt, ...)
+{
+}
+
+TRKBuffer* TRKGetBuffer(s32 idx)
+{
+    TRKBuffer* buf = 0;
+    if (idx >= 0 && idx < 3) {
+        buf = (TRKBuffer*)(lbl_80569E90 + idx * 0x890);
+    }
+    return buf;
 }
