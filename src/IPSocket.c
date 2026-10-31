@@ -121,3 +121,72 @@ void fn_8047DB48(void)
 {
     OSWakeupThread(&lbl_805DE6B0);
 }
+
+extern u8 lbl_805C1CB0[];
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int);
+extern void* memcpy(void*, const void*, u32);
+extern int fn_8047A6A8();
+extern void fn_8047A950();
+extern int fn_8046F320();
+extern int fn_8047567C();
+
+int fn_8047AD40(u8* a, u8* b)
+{
+    int en;
+    int ret;
+    en = OSDisableInterrupts();
+    if (lbl_805DE68C != 1) {
+        ret = -0x27;
+    } else {
+        if (a != 0) {
+            memcpy(a, lbl_805C1CB0 + 0x790, 4);
+        }
+        if (b != 0) {
+            memcpy(b, lbl_805C1CB0 + 0x794, 4);
+        }
+        ret = 0;
+    }
+    OSRestoreInterrupts(en);
+    return ret;
+}
+
+int fn_8047CBBC(int a, u8* b)
+{
+    u8* out;
+    int h;
+    int r;
+    if (lbl_805DE68C != 1) {
+        return -0x27;
+    }
+    if (b == 0 || b[0] < 8) {
+        return -0x1c;
+    }
+    h = fn_8047A6A8(a, &out);
+    if (h == 0 || out == 0) {
+        return -8;
+    }
+    switch (out[0]) {
+    case 0x11:
+        r = fn_8046F320(out, b);
+        break;
+    case 6:
+        r = fn_8047567C(out, b);
+        break;
+    default:
+        fn_8047A950(h);
+        return -8;
+    }
+    fn_8047A950(h);
+    switch (r) {
+    case 0:
+        return 0;
+    case -0xd:
+        return -5;
+    case -5:
+        return -3;
+    case -0xc:
+    default:
+        return -0x1c;
+    }
+}
