@@ -5,9 +5,6 @@
 extern HSD_GObjLibInitDataType HSD_GObjLibInitData;
 extern HSD_GObj** lbl_805DE328;
 extern HSD_GObj** lbl_805DE32C;
-extern char lbl_80504E10[];
-extern char lbl_80504E20[];
-extern char lbl_80504E4C[];
 
 extern void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* position);
 
@@ -82,7 +79,7 @@ HSD_GObj* HSD_GObj_AddGXLink_2(s32 where, HSD_GObj* gobj, void (*cb)(HSD_GObj*, 
 HSD_GObj* HSD_GObj_AddGXLink(HSD_GObj* gobj, void (*cb)(HSD_GObj*, s32), u8 gx_link, u8 priority)
 {
     if (!(gx_link <= HSD_GObjLibInitData.gx_link_max))
-        __assert(lbl_80504E10, 0xA7, lbl_80504E20);
+        __assert("gobjgxlink.c", 0xA7, "gx_link <= HSD_GObjLibInitData.gx_link_max");
     return HSD_GObj_AddGXLink_2(0, gobj, cb, gx_link, priority, NULL);
 }
 
@@ -94,7 +91,7 @@ HSD_GObj* fn_80429728(HSD_GObj* gobj, void (*cb)(HSD_GObj*, s32), u8 priority)
 void func_80429774(HSD_GObj* gobj)
 {
     if (gobj->gx_link == HSD_GOBJ_GXLINK_NONE)
-        __assert(lbl_80504E10, 0x19F, lbl_80504E4C);
+        __assert("gobjgxlink.c", 0x19F, "gobj->gx_link != HSD_GOBJ_GXLINK_NONE");
     if (gobj->prev_gx != NULL) {
         gobj->prev_gx->next_gx = gobj->next_gx;
     } else {
@@ -135,7 +132,7 @@ void fn_80429830(s32 where, HSD_GObj* gobj, u8 gx_link, u8 priority, HSD_GObj* p
 void fn_80429B24(HSD_GObj* gobj, u8 gx_link, u8 priority)
 {
     if (!(gx_link <= HSD_GObjLibInitData.gx_link_max))
-        __assert(lbl_80504E10, 0x1F7, lbl_80504E20);
+        __assert("gobjgxlink.c", 0x1F7, "gx_link <= HSD_GObjLibInitData.gx_link_max");
     fn_80429830(0, gobj, gx_link, priority, NULL);
 }
 
