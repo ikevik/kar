@@ -354,6 +354,75 @@ int fn_80485BBC(p) char* p; {
     *dst = 0;
     return dst - start;
 }
+extern int fn_803B7E70();
+extern char lbl_805DD240[8];
+extern char lbl_805DD248[8];
+#if 0 /* 93% */
+char* fn_80482B64(s, o1, o2) char* s; char** o1; int* o2; {
+    char* start = 0;
+    char* delims = lbl_80534C08;
+    char* cur = s;
+    int len = 0;
+    int ok;
+    *o1 = 0;
+    *o2 = 0;
+    while (*cur != 0 && (fn_803B38C4(*cur) || fn_803B38AC(*cur) || strchr(delims, *cur) != 0)) {
+        if (start == 0) {
+            start = cur;
+        }
+        len++;
+        cur++;
+    }
+    if (start == 0) {
+        return cur;
+    }
+    delims = start;
+    if (len == 4 && fn_803B7E70(delims, lbl_805DD240, 4) == 0) {
+        ok = 1;
+    } else if (len == 3 && fn_803B7E70(delims, lbl_805DD248, 3) == 0) {
+        ok = 1;
+    } else {
+        ok = 0;
+    }
+    if (ok == 0) {
+        return 0;
+    }
+    {
+        char* nx = cur + 1;
+        if (*cur != 0x2f) {
+            return 0;
+        }
+        cur = nx;
+    }
+    delims = 0;
+    while (fn_803B38AC(*cur)) {
+        if (delims == 0) {
+            delims = cur;
+        }
+        cur++;
+    }
+    if (delims == 0) {
+        return cur;
+    }
+    if (*cur != 0x2e) {
+        return cur;
+    }
+    cur++;
+    delims = 0;
+    while (fn_803B38AC(*cur)) {
+        if (delims == 0) {
+            delims = cur;
+        }
+        cur++;
+    }
+    if (delims == 0) {
+        return cur;
+    }
+    *o1 = s;
+    *o2 = cur - s;
+    return cur;
+}
+#endif
 int fn_8048530C() {
     return lbl_805DE6D0;
 }
