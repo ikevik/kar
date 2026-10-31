@@ -129,7 +129,7 @@ extern void HSD_CObjEndCurrent();
 extern void fn_8012B580();
 typedef struct { u8 pad[8]; unsigned a : 6; unsigned f : 1; unsigned g : 1; } Flg;
 
-extern char lbl_805D6378[];
+extern char lbl_805D6378[8];
 extern u8 lbl_80557820[];
 extern int lbl_805DD718, lbl_805DD71C, lbl_805DD720, lbl_805DD724;
 extern char lbl_804A78B4[];
@@ -289,12 +289,14 @@ void fn_801116B4(void)
     fn_801116D4();
 }
 
+#pragma dont_inline on
 void fn_801116D4(void* a)
 {
     lbl_805DD740 = 0;
     fn_80114154();
     fn_800EE660(a);
 }
+#pragma dont_inline off
 
 void fn_8010FA0C(void* a)
 {
@@ -939,8 +941,8 @@ void fn_80111078(void* a)
     void* p = fn_800EE73C(a);
     int q = (int)fn_800EE6EC(a);
     int n = (int)fn_800EE708(a);
-    u32 mask = fn_800F7E70(n, P(p, 4));
     int i;
+    u32 mask = fn_800F7E70(n, P(p, 4));
     for (i = 0; i < n; i++, mask >>= 1) {
         if (mask & 1) {
             fn_800FAA98(a, P(p, 0), q + i, ((float*)P(p, 8))[i]);
@@ -951,9 +953,9 @@ void fn_80111078(void* a)
 
 void fn_8011111C(void* a)
 {
-    u8 b3[12];
-    u8 b2[12];
     u8 b1[12];
+    u8 b2[12];
+    u8 b3[12];
     void* p = fn_800EE73C(a);
     void* r;
     void* g;
@@ -1013,12 +1015,15 @@ void fn_80111604(void* a)
 
 void fn_801117F0(void* a)
 {
-    u8 b3[12];
-    u8 b2[12];
     u8 b1[12];
-    void* g = lbl_805DD6CC;
-    void* p = fn_800EE73C(a);
-    void* q = fn_800EE708(a);
+    u8 b2[12];
+    u8 b3[12];
+    void* p;
+    void* q;
+    void* g;
+    g = lbl_805DD6CC;
+    p = fn_800EE73C(a);
+    q = fn_800EE708(a);
     fn_8010A8D4(P(g, 0), P(p, 0), fn_800EE6EC(a), q);
     fn_800D11FC(fn_800EE6EC(a), b1, b2, b3);
     fn_80114010(b1);
