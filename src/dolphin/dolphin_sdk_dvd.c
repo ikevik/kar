@@ -418,7 +418,7 @@ extern void fn_803C4470(u32 a, u32 b, u32 c, u32 d);
 extern void stateGettingError(void);
 extern void stateTimeout(void);
 extern void __DVDFSInit(void);
-extern DVDDiskID* bootInfo;
+extern u8* bootInfo;
 extern void cbForUnrecoveredErrorRetry(u32 intType);
 extern void __DVDLowSetWAType(int type, u32 location);
 
@@ -654,7 +654,6 @@ extern int DVDInitialized;
 extern int FirstTimeInBootrom;
 extern int CurrCommand;
 extern char* __DVDVersion;
-extern u8* bootInfo_;
 extern void OSPanic(const char* file, int line, const char* msg, ...);
 extern void OSReport(const char* msg, ...);
 extern void OSRegisterVersion(const char* version);
@@ -668,7 +667,6 @@ extern int fn_803C7364(DVDCommandBlock* block, void* addr, s32 length, s32 offse
 extern int DVDConvertPathToEntrynum(const char* path);
 extern u32 fn_803C5328(u32 entry, char* path, u32 maxlen);
 extern void cbForReadAsync(s32 result, DVDFileInfo* fileInfo);
-extern DVDCommandBlock* bootInfo_ptr;
 
 u32 CategorizeError(u32 error)
 {
@@ -737,20 +735,88 @@ int fn_803C5488(char* path, u32 maxlen)
 {
     u32 loc = lbl_805DDD98;
     u32 n = fn_803C5328(loc, path, maxlen);
+    int ret;
 
     if (n == maxlen) {
-        path[n - 1] = 0;
-        return 0;
-    }
-    if (isDir(loc)) {
-        if (n == maxlen - 1) {
-            path[n] = 0;
-            return 0;
+        path[maxlen - 1] = 0;
+        ret = 0;
+    } else {
+        if (isDir(loc)) {
+            if (n == maxlen - 1) {
+                path[n] = 0;
+                return 0;
+            }
+            path[n++] = '/';
         }
-        path[n++] = '/';
+        path[n] = 0;
+        ret = 1;
     }
-    path[n] = 0;
-    return 1;
+    return ret;
 }
 
+#pragma dont_inline on
+
+extern int lbl_805DDD98;
+extern void __DVDClearWaitingQueue(void);
+extern int CurrCommand;
+
+void DVDInit(void)
+{
+    u32 magic;
+
+    if (DVDInitialized) {
+        return;
+    }
+    OSRegisterVersion(__DVDVersion);
+    DVDInitialized = 1;
+    __DVDFSInit();
+    __DVDClearWaitingQueue();
+    __DVDInitWA();
+    bootInfo = (u8*)0x80000000;
+    IDShouldBe = (DVDDiskID*)0x80000000;
+    __OSSetInterruptHandler(0x15, __DVDInterruptHandler);
+    __OSUnmaskInterrupts(0x400);
+    OSInitThreadQueue(&__DVDThreadQueue);
+    __DIRegs[0] = 0x2A;
+    __DIRegs[1] = 0;
+    {
+        u32* mp = (u32*)(bootInfo + 0x20);
+        magic = *mp;
+    }
+    if (magic == 0xE5207C22) {
+        OSReport("load fst\n");
+        __fstLoad();
+    } else if (magic != 0x0D15EA5E) {
+        FirstTimeInBootrom = 1;
+    }
+}
+
+extern u8 BB2_8056CC20[];
+
+void stateCoverClosed(void)
+{
+    u8* bb2 = BB2_8056CC20;
+
+    switch (CurrCommand) {
+    case 4:
+    case 5:
+    case 13:
+    case 15:
+        __DVDClearWaitingQueue();
+        {
+            DVDCommandBlock* block = executing;
+            executing = (DVDCommandBlock*)(bb2 + 0x40);
+            if (block->callback) {
+                block->callback(-4, block);
+            }
+        }
+        stateReady();
+        break;
+    default:
+        DVDReset();
+        OSCreateAlarm((OSAlarm*)(bb2 + 0x70));
+        OSSetAlarm((OSAlarm*)(bb2 + 0x70), (s64)(u32)((OS_TIMER_CLOCK / 1000) * 1150), AlarmHandler);
+        break;
+    }
+}
 #pragma dont_inline on
