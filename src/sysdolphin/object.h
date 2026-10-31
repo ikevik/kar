@@ -19,4 +19,11 @@ typedef struct _HSD_ObjInfo {
     struct _HSD_ClassInfo parent;
 } HSD_ObjInfo;
 
+
+inline void HSD_OBJ_REF_INC(HSD_Obj* o)
+{
+    o->ref_count++;
+    assert_line(0x5d, o->ref_count != HSD_OBJ_NOREF);
+}
+
 #endif
