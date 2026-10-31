@@ -233,7 +233,8 @@ cflags_runtime = [
     "-inline auto",
 ]
 
-cflags_dolphin = [f if f != "-proc gekko" else "-proc gekko" for f in cflags_base] + ["-str", "reuse,pool"]
+cflags_dolphin = [("-inline auto" if f == "-inline all" else f) for f in cflags_base]
+cflags_dolphin_pool = cflags_dolphin + ["-str", "reuse,pool"]
 
 # REL flags
 cflags_rel = [
@@ -359,7 +360,7 @@ config.libs = [
         [
             Object(NonMatching, "PPCArch.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_db.c"),
-            Object(NonMatching, "dolphin/dolphin_sdk_dsp.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
+            Object(NonMatching, "dolphin/dolphin_sdk_dsp.c", cflags=cflags_dolphin_pool, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_dvd.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_gx.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_mtx.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
