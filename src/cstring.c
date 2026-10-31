@@ -191,96 +191,88 @@ void __copy_longs_unaligned(void* dst, const void* src, size_t len)
 
 void __copy_longs_rev_aligned(void* dst, const void* src, size_t len)
 {
-    unsigned char* d = (unsigned char*)dst + len;
-    const unsigned char* s = (const unsigned char*)src + len;
     unsigned long i;
-    unsigned long* wd;
-    unsigned long* ws;
 
-    i = (unsigned long)d & 3;
+    src = (const unsigned char*)src + len;
+    dst = (unsigned char*)dst + len;
+    i = (unsigned long)dst & 3;
     if (i) {
         len -= i;
         do {
-            *--d = *--s;
+            *--cpd = *--cps;
         } while (--i);
     }
-    wd = (unsigned long*)d;
-    ws = (unsigned long*)s;
     i = len >> 5;
     if (i) {
         do {
-            wd[-1] = ws[-1];
-            wd[-2] = ws[-2];
-            wd[-3] = ws[-3];
-            wd[-4] = ws[-4];
-            wd[-5] = ws[-5];
-            wd[-6] = ws[-6];
-            wd[-7] = ws[-7];
-            ws -= 8;
-            wd -= 8;
-            *wd = *ws;
+            lpd[-1] = lps[-1];
+            lpd[-2] = lps[-2];
+            lpd[-3] = lps[-3];
+            lpd[-4] = lps[-4];
+            lpd[-5] = lps[-5];
+            lpd[-6] = lps[-6];
+            lpd[-7] = lps[-7];
+            src = lps - 8;
+            dst = lpd - 8;
+            *lpd = *lps;
         } while (--i);
     }
     i = (len & 0x1c) >> 2;
     if (i) {
         do {
-            *--wd = *--ws;
+            *--lpd = *--lps;
         } while (--i);
     }
     len &= 3;
     if (len) {
-        d = (unsigned char*)wd;
-        s = (const unsigned char*)ws;
         do {
-            *--d = *--s;
+            *--cpd = *--cps;
         } while (--len);
     }
 }
 
 void __copy_longs_aligned(void* dst, const void* src, size_t len)
 {
-    unsigned char* d = (unsigned char*)dst - 1;
-    const unsigned char* s = (const unsigned char*)src - 1;
     unsigned long i;
-    unsigned long* wd;
-    unsigned long* ws;
 
     i = (-(unsigned long)dst) & 3;
+    src = (const unsigned char*)src - 1;
+    dst = (unsigned char*)dst - 1;
     if (i) {
         len -= i;
         do {
-            *++d = *++s;
+            *++cpd = *++cps;
         } while (--i);
     }
-    wd = (unsigned long*)(d - 3);
-    ws = (unsigned long*)(s - 3);
     i = len >> 5;
+    src = (const unsigned char*)src - 3;
+    dst = (unsigned char*)dst - 3;
     if (i) {
         do {
-            wd[1] = ws[1];
-            wd[2] = ws[2];
-            wd[3] = ws[3];
-            wd[4] = ws[4];
-            wd[5] = ws[5];
-            wd[6] = ws[6];
-            wd[7] = ws[7];
-            ws += 8;
-            wd += 8;
-            *wd = *ws;
+            lpd[1] = lps[1];
+            lpd[2] = lps[2];
+            lpd[3] = lps[3];
+            lpd[4] = lps[4];
+            lpd[5] = lps[5];
+            lpd[6] = lps[6];
+            lpd[7] = lps[7];
+            src = lps + 8;
+            dst = lpd + 8;
+            *lpd = *lps;
         } while (--i);
     }
     i = (len & 0x1c) >> 2;
     if (i) {
         do {
-            *++wd = *++ws;
+            *++lpd = *++lps;
         } while (--i);
     }
+    src = (const unsigned char*)src + 3;
+    dst = (unsigned char*)dst + 3;
     len &= 3;
     if (len) {
-        d = (unsigned char*)wd + 3;
-        s = (const unsigned char*)ws + 3;
         do {
-            *++d = *++s;
+            *++cpd = *++cps;
         } while (--len);
     }
 }
