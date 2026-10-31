@@ -115,6 +115,46 @@ int fn_8048763C() {
     fn_80487368();
     return G32(0x24) == 2;
 }
+extern int fn_803EB940();
+extern int fn_8047D06C();
+extern void* memmove();
+extern char lbl_8048C9C0[];
+typedef struct { int w[8482]; } Big8488;
+
+int fn_804871EC() {
+    int v;
+    if (fn_803EB940(0, 2, &v) == 0 || v != 0x4020200) {
+        return 0;
+    }
+    return 1;
+}
+#if 0 /* 95% */
+void fn_80488584(p, dst) int* p; void* dst; {
+    switch (p[0]) {
+    case 3:
+    case 0:
+        memmove(dst, (char*)p + 0xd, p[2]);
+        break;
+    default:
+        break;
+    }
+}
+#endif
+int fn_804885D4(a, b) int* a; int* b; {
+    struct { char c0; char c1; short s2; int w; } buf;
+    buf.c0 = 8;
+    buf.c1 = 2;
+    buf.s2 = 0x6786;
+    buf.w = a[0];
+    return fn_8047D06C(G32(8), (char*)b + 0xc, b[1], 0, &buf) >> 31;
+}
+void fn_8048846C() {
+    if (G32(0xF8) == 1) {
+        fn_803DA558((int)lbl_805C3C40 + 0x110, 0);
+        G32(0xF8) = 0;
+    }
+    *(Big8488*)lbl_805C3C40 = *(Big8488*)lbl_8048C9C0;
+}
 int fn_80487C0C() {
     int en = OSDisableInterrupts();
     int v = *(unsigned char*)((int)lbl_805C3C40 + 0x39);
@@ -124,6 +164,12 @@ int fn_80487C0C() {
 int fn_80487C48() {
     int en = OSDisableInterrupts();
     int v = *(unsigned char*)((int)lbl_805C3C40 + 0x4C);
+    OSRestoreInterrupts(en);
+    return v;
+}
+int fn_80487C84() {
+    int en = OSDisableInterrupts();
+    int v = *(unsigned char*)((int)lbl_805C3C40 + 0x4D);
     OSRestoreInterrupts(en);
     return v;
 }
