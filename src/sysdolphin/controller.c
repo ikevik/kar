@@ -3,7 +3,7 @@
 typedef struct PadFrame {
     struct {
         u16 button;
-        u8 pad[10];
+        u8 pad[10];  // pad[8]: err
     } s[4];
     u32 pad30;
 } PadFrame;
@@ -46,6 +46,9 @@ extern PadStat lbl_8058B634[5][4];
 extern PadStat lbl_80503F08;
 
 extern int OSDisableInterrupts(void);
+extern int OSGetResetSwitchState(void);
+extern void fn_803DC4CC(u32);
+extern const u32 lbl_8048C538[4];
 extern void OSRestoreInterrupts(int);
 extern void fn_80411E70(int, void*, void*, u32, u32);
 extern void fn_80413598(int, void*, void*, void*);
@@ -129,6 +132,30 @@ void fn_804125F8(int mode)
         break;
     }
     OSRestoreInterrupts(en);
+}
+
+void fn_804124F8(PadFrame* p)
+{
+    int i;
+    u32 mask = 0;
+    for (i = 0; i < 4; i++) {
+        if ((s8) p->s[i].pad[8] == -1)
+            mask |= lbl_8048C538[i];
+    }
+    if (mask != 0)
+        fn_803DC4CC(mask);
+}
+
+void fn_80412598(void)
+{
+    PadLib* l = &lbl_8058B080;
+    if (OSGetResetSwitchState() != 0) {
+        l->x5a = 1;
+    } else {
+        if (l->x5a != 0)
+            l->x5b = 1;
+        l->x5a = 0;
+    }
 }
 
 #if 0 /* near miss: register allocation of index temps */
