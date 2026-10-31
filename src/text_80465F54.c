@@ -472,3 +472,63 @@ void fn_8046DA8C(a, v) char* a; int v; {
 
 
 #endif /* w3f near misses */
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+void fn_804701B4(u32, u32);
+void fn_804702B8(void);
+void fn_8046C6A8(u32, u32);
+
+u32 fn_80477D60(u32 p3) {
+    u32 s31;
+    u32 s30;
+    u32 s29;
+    u32 v1;
+    u32 c0;
+    u32 c1;
+    s29 = p3;
+    c0 = OSDisableInterrupts();
+    v1 = M32((s29+1360));
+    s30 = (c0+0);
+    if ((s32)v1 > (s32)0) {
+        s31 = -1;
+    } else {
+        c1 = fn_8047033C(s29);
+        s31 = c1;
+    }
+    if ((s32)s31 >= (s32)0) {
+        OSCancelAlarm((s29+264));
+        OSWakeupThread((s29+1364));
+    }
+    OSRestoreInterrupts(s30);
+    return s31;
+}
+
+void fn_80479948(u32 p3) {
+    u32 s31;
+    u32 s30;
+    s31 = (p3+0);
+    s30 = (s31+984);
+    fn_804702B8();
+    OSCancelAlarm((s31+808));
+    M32((s31+804)) = 0;
+    OSCancelAlarm((s31+848));
+    OSCancelAlarm((s31+888));
+    OSCancelAlarm((s31+928));
+    s31 = (u32)lbl_805BE430;
+    memcpy((s31+12), (s30+0), 4);
+    fn_8046C6A8((u32)lbl_805BDD20, (s31+0));
+}
+
+
+
+
