@@ -387,6 +387,39 @@ s32 fn_80442E30(s32 prio, s32 vol)
     return 0;
 }
 
+s32 fn_8044327C(s32 id, s32 a, s32 b)
+{
+    s32 idx;
+    AXVoice* v;
+    s32 intr;
+    if ((u8) a > 0xff) {
+        a = 0xff;
+    }
+    idx = id & lbl_805DE494;
+    if (id < 0 || idx > lbl_805DE49C) {
+        return 0;
+    }
+    intr = OSDisableInterrupts();
+    v = &lbl_805DE48C[idx];
+    if (v->id != id || (v->flags & SMSTATE_MASK) == 0) {
+        OSRestoreInterrupts(intr);
+        return 0;
+    }
+    if (v->pid != -1) {
+        fn_80449BA0(v->pid, a, b, 1, 0);
+    } else {
+        if ((v->flags & SMSTATE_MASK) != SMSTATE_ACTIVE) {
+            __assert(__FILE__, 0x5d2, "(v->flags&SMSTATE_MASK) == SMSTATE_ACTIVE");
+        }
+        *(u16*) ((u8*) v + 0x24) = (u8) a;
+        *(u8*) ((u8*) v + 0x20) = 0;
+        *(u16*) ((u8*) v + 0x26) = b;
+        v->flags |= 0x10000;
+    }
+    OSRestoreInterrupts(intr);
+    return 1;
+}
+
 s32 fn_80443398(s32 id, s32 detune)
 {
     s32 idx;
