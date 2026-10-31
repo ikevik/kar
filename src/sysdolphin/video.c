@@ -6,8 +6,9 @@ typedef struct HSD_VIData {
     u8 pad0[0x1D8];
     HSD_VICallback pre_retrace; // 0x1D8
     HSD_VICallback post_retrace; // 0x1DC
-    u8 pad1[0x1E8 - 0x1E0];
-    HSD_VICallback x1e8;
+    s32 x1e0;
+    void* x1e4;
+    void (*x1e8)(void*);
 } HSD_VIData;
 
 extern HSD_VIData lbl_80589A80;
@@ -33,11 +34,23 @@ HSD_VICallback fn_80410AE4(HSD_VICallback cb)
     return old;
 }
 
-HSD_VICallback fn_80410B38(HSD_VICallback cb)
+void (*fn_80410B38(void (*cb)(void*)))(void*)
 {
-    HSD_VICallback old = lbl_80589A80.x1e8;
+    void (*old)(void*) = lbl_80589A80.x1e8;
     int en = OSDisableInterrupts();
     lbl_80589A80.x1e8 = cb;
     OSRestoreInterrupts(en);
     return old;
+}
+
+void fn_80411008(void)
+{
+    lbl_80589A80.x1e0 = 0;
+    if (lbl_80589A80.x1e8 != NULL)
+        lbl_80589A80.x1e8(lbl_80589A80.x1e4);
+}
+
+s32 fn_8041104C(void)
+{
+    return lbl_80589A80.x1e0;
 }
