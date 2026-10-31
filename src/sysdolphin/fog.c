@@ -11,7 +11,6 @@
 extern HSD_ClassInfo objInfo;
 HSD_Fog* lbl_805DE2E8;
 GXColor lbl_805DCCCC = { 0, 0, 0, 0 };
-extern GXColor lbl_805E6380;
 
 void GXSetFog(u32 type, f32 start, f32 end, f32 nearz, f32 farz, GXColor color);
 void GXInitFogAdjTable(void* table, u16 width, Mtx44 proj);
