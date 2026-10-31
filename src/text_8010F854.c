@@ -513,10 +513,12 @@ void THPSimpleAudioStop2(void)
     lbl_805578B8[5] = 0;
 }
 
+#pragma dont_inline on
 int fn_80112B20(void)
 {
     return lbl_805578B8[5];
 }
+#pragma dont_inline off
 
 void fn_801136A8(int p)
 {
@@ -754,14 +756,16 @@ float fn_80115214(void)
 void fn_80115264(void* a)
 {
     void* c = P(a, 0x2c);
+    float v;
     *(float*)((u8*)c + 0xc) = lbl_805DFB58;
     if (getPlayerCount() <= 1) {
-        *(float*)((u8*)c + 0x10) = lbl_805DFB58;
+        v = lbl_805DFB58;
     } else if (getPlayerCount() == 2) {
-        *(float*)((u8*)c + 0x10) = lbl_805DFB5C;
+        v = lbl_805DFB5C;
     } else {
-        *(float*)((u8*)c + 0x10) = lbl_805DFB60;
+        v = lbl_805DFB60;
     }
+    *(float*)((u8*)c + 0x10) = v;
 }
 
 void fn_8011582C(void)
