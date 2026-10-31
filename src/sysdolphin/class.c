@@ -466,3 +466,23 @@ void func_804212F4(HSD_ClassInfo* info, s32 indent)
     OSReport("    info %d object %d nb_exist %d nb_peak %d\n",
         info->head.info_size, info->head.obj_size, info->head.nb_exist, info->head.nb_peak);
 }
+
+#ifdef NONMATCHING /* 82.4% */
+void hsdPrintClassTree(HSD_ClassInfo* info, BOOL recursive, s32 indent)
+{
+    HSD_ClassInfo* child;
+
+    if (info == NULL) {
+        hsdPrintClassTree(&hsdClass, TRUE, indent);
+        return;
+    }
+    if (info->head.flags & 1) {
+        func_804212F4(info, indent);
+        if (recursive) {
+            for (child = info->head.child; child != NULL; child = child->head.next) {
+                hsdPrintClassTree(child, TRUE, indent + 2);
+            }
+        }
+    }
+}
+#endif
