@@ -663,3 +663,201 @@ s32 EXIGetID(s32 chan, u32 dev, u32* id)
     }
     return err ? 0 : 1;
 }
+
+s32 fn_803EB940(s32 chan, u32 dev, u32* type)
+{
+    u32 _type;
+    s32 rc;
+
+    rc = EXIGetID(chan, dev, &_type);
+    if (rc == 0) {
+        return rc;
+    }
+    switch (_type & ~0xFF) {
+    case 0x04020100:
+    case 0x04020200:
+    case 0x04020300:
+    case 0x04060000:
+        *type = _type & ~0xFF;
+        return rc;
+    }
+    switch (_type & 0xFFFF0000) {
+    case 0x05070000:
+        *type = 0x05070000;
+        return rc;
+    case 0:
+        if (_type & 0x3803) {
+            break;
+        }
+        switch (_type & 0xFC) {
+        case 0x04:
+        case 0x08:
+        case 0x10:
+        case 0x20:
+        case 0x40:
+        case 0x80:
+            *type = _type & 0xFC;
+            return rc;
+        }
+        break;
+    }
+    *type = _type;
+    return rc;
+}
+
+#pragma scheduling on
+#pragma inline_depth(0)
+s32 fn_803EBA58(s32 chan, u32 dev, u32* out)
+{
+    BOOL err;
+    u32 cmd;
+
+    if (chan != 2 && dev == 0) {
+        if (!EXIAttach(chan, NULL)) {
+            return 0;
+        }
+    }
+    err = !EXILock(chan, dev, NULL);
+    if (err == FALSE) {
+        err = !EXISelect(chan, dev, 0);
+        if (err == FALSE) {
+            cmd = 0x20011300;
+            err = !EXIImm(chan, &cmd, 4, 1, NULL);
+            err |= !EXISync(chan);
+            err |= !EXIImm(chan, out, 4, 0, NULL);
+            err |= !EXISync(chan);
+            err |= !EXIDeselect(chan);
+        }
+        EXIUnlock(chan);
+    }
+    if (chan != 2 && dev == 0) {
+        EXIDetach(chan);
+    }
+    if (err) {
+        return 0;
+    }
+    return *out != 0xFFFEFFFF ? 1 : 0;
+}
+
+void __OSEnableBarnacle(s32 chan, u32 dev)
+{
+    u32 id;
+
+    if (EXIGetID(chan, dev, &id)) {
+        switch (id) {
+        case 0x00000004:
+        case 0x00000008:
+        case 0x00000010:
+        case 0x00000020:
+        case 0x01010000:
+        case 0x01020000:
+        case 0x02020000:
+        case 0x03010000:
+        case 0x04020100:
+        case 0x04020200:
+        case 0x04020300:
+        case 0x04040404:
+        case 0x04060000:
+        case 0x04120000:
+        case 0x04130000:
+        case 0x04220000:
+        case 0x80000004:
+        case 0x80000008:
+        case 0x80000010:
+        case 0x80000020:
+        case 0xFFFFFFFF:
+            break;
+        default:
+            if (fn_803EBA58(chan, dev, &id)) {
+                lbl_805DE070 = chan;
+                lbl_805DE074 = dev;
+                lbl_805DE07C = 0xA5FF005A;
+                lbl_805DE078 = 0xA5FF005A;
+            }
+            break;
+        }
+    }
+}
+
+u32 fn_803EBDA0(void)
+{
+    if (lbl_805DE07C == 0xA5FF005A) {
+        return 0;
+    }
+    if (!(OSGetConsoleType() & 0x10000000)) {
+        lbl_805DE078 = 0;
+        return 2;
+    }
+    lbl_805DE078 = 0xA5FF005A;
+    lbl_805DE070 = 0;
+    lbl_805DE074 = 1;
+    return 0;
+}
+
+u32 WriteUARTN(void* buf, u32 len)
+{
+    char* ptr;
+    u32 cmd;
+    s32 xLen;
+    BOOL enabled;
+    s32 qLen;
+    u32 cmd2;
+    u32 error;
+
+    if (lbl_805DE078 != 0xA5FF005A) {
+        return 2;
+    }
+    enabled = OSDisableInterrupts();
+    if (!EXILock(lbl_805DE070, lbl_805DE074, NULL)) {
+        OSRestoreInterrupts(enabled);
+        return 0;
+    }
+    for (ptr = (char*)buf; (u32)(ptr - (char*)buf) < len; ptr++) {
+        if (*ptr == '\n') {
+            *ptr = '\r';
+        }
+    }
+    cmd = 0xA0010000;
+    error = 0;
+    while (len) {
+        if (!EXISelect(lbl_805DE070, lbl_805DE074, 3)) {
+            qLen = -1;
+        } else {
+            cmd2 = 0x20010000;
+            EXIImm(lbl_805DE070, &cmd2, 4, 1, NULL);
+            EXISync(lbl_805DE070);
+            EXIImm(lbl_805DE070, &cmd2, 1, 0, NULL);
+            EXISync(lbl_805DE070);
+            EXIDeselect(lbl_805DE070);
+            qLen = 16 - (cmd2 >> 24);
+        }
+        if (qLen < 0) {
+            error = 3;
+            break;
+        }
+        if (qLen < 12 && (u32)qLen < len) {
+            continue;
+        }
+        if (!EXISelect(lbl_805DE070, lbl_805DE074, 3)) {
+            error = 3;
+            break;
+        }
+        EXIImm(lbl_805DE070, &cmd, 4, 1, NULL);
+        EXISync(lbl_805DE070);
+        while (qLen && len) {
+            if (qLen < 4 && (u32)qLen < len) {
+                break;
+            }
+            xLen = (len < 4) ? len : 4;
+            EXIImm(lbl_805DE070, buf, xLen, 1, NULL);
+            buf = (u8*)buf + xLen;
+            len -= xLen;
+            qLen -= xLen;
+            EXISync(lbl_805DE070);
+        }
+        EXIDeselect(lbl_805DE070);
+    }
+    EXIUnlock(lbl_805DE070);
+    OSRestoreInterrupts(enabled);
+    return error;
+}
