@@ -126,3 +126,78 @@ void func_80428F64(HSD_GObj* gobj)
     HSD_ObjFree(&gobj_alloc_data, gobj);
 }
 
+
+extern s32 lbl_805DE344;
+extern void fn_804287DC(HSD_GObjProc*);
+extern void fn_80428684(HSD_GObjProc*);
+
+void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* position)
+{
+    HSD_GObjProc* proc;
+    HSD_GObjProc* rev;
+    HSD_GObjProc* next;
+    s32 lvl;
+    s32 prev_lvl;
+
+    if (!(p_link <= HSD_GObjLibInitData.p_link_max))
+        __assert(lbl_80504DD8, 0x19F, lbl_80504DE4);
+
+    if (!lbl_8058C1F4.b0 && gobj == lbl_805DE324) {
+        lbl_8058C1F4.type = where;
+        lbl_8058C1F4.b3 = 1;
+        lbl_8058C1F4.p_link = p_link;
+        lbl_8058C1F4.p_prio = priority;
+        lbl_8058C1F4.gobj = position;
+        return;
+    }
+
+    proc = gobj->proc;
+    rev = NULL;
+    while (proc != NULL) {
+        fn_804287DC(proc);
+        next = proc->child;
+        proc->child = rev;
+        rev = proc;
+        proc = next;
+    }
+    gobj->proc = NULL;
+
+    if (gobj->prev != NULL) {
+        gobj->prev->next = gobj->next;
+    } else {
+        lbl_805DE334[gobj->p_link] = gobj->next;
+    }
+    if (gobj->next != NULL) {
+        gobj->next->prev = gobj->prev;
+    } else {
+        plinklow_gobjs[gobj->p_link] = gobj->prev;
+    }
+    gobj->p_link = p_link;
+    gobj->p_priority = priority;
+
+    switch (where) {
+    case 0:
+        gobj_first_lower_prio(gobj);
+        break;
+    case 1:
+        gobj_first_higher_prio(gobj);
+        break;
+    case 2:
+        GObj_PReorder(gobj, position);
+        break;
+    case 3:
+        GObj_PReorder(gobj, position->prev);
+        break;
+    }
+
+    lvl = lbl_805DE344 != 0 ? lbl_805DE344 - 1 : 2;
+    prev_lvl = lvl != 0 ? lvl - 1 : 2;
+    proc = rev;
+    while (proc != NULL) {
+        next = proc->child;
+        fn_80428684(proc);
+        if (proc->flags_3 == prev_lvl)
+            proc->flags_3 = (u8) lvl;
+        proc = next;
+    }
+}
