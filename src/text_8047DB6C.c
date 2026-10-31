@@ -163,3 +163,130 @@ void fn_804814C4(p) char* p; {
 
 
 #endif /* w3f near misses */
+
+/* ---- w3f batch 2 ---- */
+extern int OSDisableInterrupts();
+extern void OSRestoreInterrupts();
+extern int fn_8047FAD4();
+extern void fn_804819F0();
+extern void fn_8048172C();
+extern void fn_8047F4C8();
+extern void fn_8047DE88();
+
+int fn_80480C90(p) char* p; {
+    int* s = *(int**)(p + 0x260);
+    int a = *(u16*)(p + 0x288);
+    if (a < s[16]) s[16] = a;
+    switch (*(u16*)(p + 0x28A)) {
+    case 0xC023:
+        fn_8048172C(*(int*)(p + 0x260));
+        break;
+    case 0xC223:
+        fn_804819F0(*(int*)(p + 0x260));
+        break;
+    default:
+        fn_8047F4C8(*(int*)(p + 0x284));
+        break;
+    }
+    return 1;
+}
+
+int fn_80480BD4(s, pkt) char* s; u8* pkt; {
+    u8* p = pkt + 4;
+    u8* q = (u8*)s + 0x21C;
+    u8* e = p + (u16)(*(u16*)(pkt + 2) - 4);
+    while (p < e) {
+        int len = *(u16*)(s + 0x230);
+        u8 t = p[0];
+        u8* lim = (u8*)s + (len + 0x21C);
+        while (t != q[0]) {
+            if (q >= lim) return 0;
+            q += q[1];
+        }
+        *(u16*)(s + 0x230) = fn_8047FAD4(s + 0x21C, len, q);
+        p += p[1];
+    }
+    return 1;
+}
+
+int fn_80481184(s, pkt) char* s; u8* pkt; {
+    u8* p = pkt + 4;
+    u8* q = (u8*)s + 0x21C;
+    u8* e = p + (u16)(*(u16*)(pkt + 2) - 4);
+    while (p < e) {
+        int len = *(u16*)(s + 0x230);
+        u8 t = p[0];
+        u8* lim = (u8*)s + (len + 0x21C);
+        while (t != q[0]) {
+            if (q >= lim) return 0;
+            q += q[1];
+        }
+        *(u16*)(s + 0x230) = fn_8047FAD4(s + 0x21C, len, q);
+        p += p[1];
+    }
+    return 1;
+}
+
+void fn_80481678(s, pkt, n) char* s; u8* pkt; int n; {
+    char* g = lbl_805C2978;
+    if (n >= 4) {
+        int l = *(u16*)(pkt + 2);
+        if (n >= l) {
+            if ((unsigned)l >= 4) {
+                if (pkt[1] == *(u8*)g) {
+                    switch (pkt[0]) {
+                    case 2:
+                        OSCancelAlarm(g + 8);
+                        fn_8047F4C8(*(int*)(s + 0x5C));
+                        break;
+                    case 3:
+                        fn_8046F190(0, -0x6C);
+                        OSCancelAlarm(g + 8);
+                        fn_8047F648(*(int*)(s + 0x58));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void fn_80481790(s, pkt) char* s; char* pkt; {
+    int en = OSDisableInterrupts();
+    char* m = (*(char* (**)())(s + 0x68))(s, *(u16*)(pkt + 2) + 0x3E);
+    if (m != 0) {
+        char* hd = m + 0x3C;
+        *(u16*)(m + 0x3C) = 0xC223;
+        memmove(m + 0x3E, pkt, *(u16*)(pkt + 2));
+        *(int*)(m + 0x30) = 1;
+        *(char**)(m + 0x34) = hd;
+        *(int*)(m + 0x38) = *(u16*)(pkt + 2) + 2;
+        *(int*)(m + 0x28) = 0;
+        *(int*)(m + 0x2C) = 0;
+        *(u16*)(m + 0x10) = 0x8864;
+        *(u8*)(m + 0x25) = 0;
+        *(int*)(m + 4) = 0;
+        (*(void (**)())(s + 0x60))(s, m);
+    }
+    OSRestoreInterrupts(en);
+}
+
+void fn_8047F4C8(s) char* s; {
+    switch (*(int*)(s + 4)) {
+    case 0:
+        *(int*)(s + 4) = 2;
+        break;
+    case 1:
+        *(int*)(s + 0xC) = 0;
+        *(int*)(s + 0x10) = 10;
+        *(int*)(s + 0x14) = 2;
+        *(int*)(s + 0x18) = 5;
+        *(u8*)(s + 8) = *(u8*)(s + 8) + 1;
+        if (*(int*)(s + 0x10) > 0) {
+            *(int*)(s + 0x10) = *(int*)(s + 0x10) - 1;
+            fn_8047DE88(s, 1, *(u8*)(s + 8), *(u16*)(s + 0x230), s + 0x21C);
+        }
+        *(int*)(s + 4) = 6;
+        break;
+    }
+}

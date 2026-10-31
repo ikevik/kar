@@ -38,6 +38,7 @@ int fn_80481CE8(int arg)
     return fn_80481AB4(2, (void*)(arg - 8));
 }
 
+#pragma peephole off
 void fn_80481FE0(int* p)
 {
     u8 buf[6];
@@ -54,6 +55,7 @@ void fn_80481FE0(int* p)
     }
 }
 
+#pragma peephole on
 int fn_80482054(int arg)
 {
     IGMPEntry* e;
