@@ -363,7 +363,7 @@ void HSD_JObjUnref(HSD_JObj* jobj)
         return;
     }
     {
-        int t = (0xffff - o->ref_count == 0);
+        int t = (o->ref_count == (u16) HSD_OBJ_NOREF);
         int u = t ? t : (o->ref_count-- == 0);
         if (u) {
             if ((s32) o->ref_count_individual - 1 < 0) {
@@ -372,8 +372,7 @@ void HSD_JObjUnref(HSD_JObj* jobj)
                     o->parent.class_info->destroy((HSD_Class*) o);
                 }
             } else {
-                o->ref_count_individual++;
-                assert_line(0x9e, o->ref_count_individual != 0);
+                HSD_OBJ_REF_INC_IND(o);
                 ((HSD_JObjInfo*) o->parent.class_info)->release_child(jobj);
                 {
                     int t2 = (o->ref_count_individual == 0);

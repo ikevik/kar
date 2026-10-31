@@ -26,4 +26,11 @@ inline void HSD_OBJ_REF_INC(HSD_Obj* o)
     assert_line(0x5d, o->ref_count != (u16) HSD_OBJ_NOREF);
 }
 
+
+inline void HSD_OBJ_REF_INC_IND(HSD_Obj* o)
+{
+    o->ref_count_individual++;
+    assert_line(0x9e, o->ref_count_individual != 0);
+}
+
 #endif
