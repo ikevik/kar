@@ -283,7 +283,7 @@ void fn_803EEC28(u8* p, void* src)
 {
     int enabled = OSDisableInterrupts();
     F16(p, 0x19c) = *(u16*)src;
-    F16(p, 0x19e) = *((s16*)src + 1);
+    *(vs16*)((u8*)p + 0x19e) = *((s16*)src + 1);
     F32(p, 0x1c) |= 0x200;
     OSRestoreInterrupts(enabled);
 }
