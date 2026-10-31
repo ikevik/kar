@@ -849,9 +849,10 @@ void fn_8011596C(void* a)
 
 void fn_8010F92C(void* a)
 {
-    void* c = P(a, 0x2c);
-    void* t = P(P(c, 8), 8);
     int i;
+    void* t;
+    void* c = P(a, 0x2c);
+    t = P(P(c, 8), 8);
     switch (fn_80261ECC()) {
     case 0x13:
         for (i = 0; i < (int)W(t, 0xc); i++) {
@@ -957,8 +958,8 @@ void fn_8011111C(void* a)
     u8 b2[12];
     u8 b3[12];
     void* p = fn_800EE73C(a);
-    void* r;
     void* g;
+    void* r;
     fn_800EE708(a);
     r = fn_8011120C(a, b1, b2, b3);
     lbl_805DD740 = 0;
@@ -1018,8 +1019,8 @@ void fn_801117F0(void* a)
     u8 b1[12];
     u8 b2[12];
     u8 b3[12];
-    void* p;
     void* q;
+    void* p;
     void* g;
     g = lbl_805DD6CC;
     p = fn_800EE73C(a);
