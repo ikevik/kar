@@ -12,6 +12,8 @@ extern void HSD_TExpAlphaInSub(HSD_TExp* texp, s32 sel, HSD_TExp* exp, s32 idx);
 extern s32 fn_803F903C(void);
 extern void fn_803F908C(HSD_TevDesc* desc);
 
+extern void HSD_TExpUnref(HSD_TExp* texp, s32 sel);
+
 typedef struct _TExpTObj {
     u8 pad0[0xC];
     s32 id;      // 0xC
@@ -196,4 +198,86 @@ void HSD_TExpAlphaIn(HSD_TExp* texp, s32 sel_a, HSD_TExp* exp_a, s32 sel_b, HSD_
     HSD_TExpAlphaInSub(texp, sel_b, exp_b, 1);
     HSD_TExpAlphaInSub(texp, sel_c, exp_c, 2);
     HSD_TExpAlphaInSub(texp, sel_d, exp_d, 3);
+}
+
+static void TExpFree(HSD_TExp* texp)
+{
+    switch (HSD_TExpGetType(texp)) {
+    case HSD_TE_TEV:
+        hsdFreeMemPiece(texp, sizeof(HSD_TETev));
+        break;
+    case HSD_TE_CNST:
+        hsdFreeMemPiece(texp, sizeof(HSD_TECnst));
+        break;
+    }
+}
+
+HSD_TExp* HSD_TExpFreeList(HSD_TExp* list, s32 type, s32 all)
+{
+    HSD_TExp** pp = &list;
+    HSD_TExp* next;
+    HSD_TExp* p;
+
+    if (all) {
+        while (*pp != NULL) {
+            if (type == HSD_TE_ALL || type == (*pp)->type) {
+                switch ((*pp)->type) {
+                case HSD_TE_TEV:
+                    next = (*pp)->comm.next;
+                    TExpFree(*pp);
+                    *pp = next;
+                    continue;
+                case HSD_TE_CNST:
+                    next = (*pp)->comm.next;
+                    TExpFree(*pp);
+                    *pp = next;
+                    continue;
+                default:
+                    __assert("texp.c", 0xdc, "0");
+                    break;
+                }
+            }
+            pp = &(*pp)->comm.next;
+        }
+    } else {
+        if (type == HSD_TE_ALL || type == HSD_TE_TEV) {
+            for (p = list; p != NULL; p = p->comm.next) {
+                switch (p->type) {
+                case HSD_TE_TEV:
+                    if (p->tev.c_ref == 0 && p->tev.c_ref == 0) {
+                        HSD_TExpUnref(p, HSD_TE_RGB);
+                        HSD_TExpUnref(p, HSD_TE_A);
+                    }
+                    break;
+                }
+            }
+        }
+        while (*pp != NULL) {
+            if (type == HSD_TE_ALL || type == (*pp)->type) {
+                switch ((*pp)->type) {
+                case HSD_TE_TEV:
+                    if ((*pp)->tev.c_ref == 0 && (*pp)->tev.a_ref == 0) {
+                        next = (*pp)->comm.next;
+                        TExpFree(*pp);
+                        *pp = next;
+                        continue;
+                    }
+                    break;
+                case HSD_TE_CNST:
+                    if ((*pp)->cnst.ref == 0) {
+                        next = (*pp)->comm.next;
+                        TExpFree(*pp);
+                        *pp = next;
+                        continue;
+                    }
+                    break;
+                default:
+                    __assert("texp.c", 0x10c, "0");
+                    break;
+                }
+            }
+            pp = &(*pp)->comm.next;
+        }
+    }
+    return list;
 }
