@@ -41,6 +41,59 @@ extern void fn_80485314();
 extern void fn_80486D58();
 extern void memset();
 
+extern int sprintf(char*, const char*, ...);
+extern char* fn_803B7D90();
+extern char* fn_803B7DF8();
+extern char lbl_805DD24C[4];
+extern char lbl_80534C14[];
+
+char* fn_80482B08(p) char* p; {
+    for (;;) {
+        char c = p[0];
+        if (c == 0xd && p[1] == 0xa) {
+            char c2 = p[2];
+            int ok = 1;
+            if (c2 != 0x20 && c2 != 9) {
+                ok = 0;
+            }
+            if (ok == 0) {
+                return p + 2;
+            }
+        } else if (c == 0) {
+            return p;
+        }
+        p++;
+    }
+}
+int fn_80483C3C(buf, a, b) char* buf; int a; int b; {
+    char* p = fn_803B7D90(buf, lbl_805DD24C);
+    if (p == 0) {
+        return -1;
+    }
+    {
+        int n = sprintf(p, lbl_80534C14, a, b);
+        return n + (p - buf);
+    }
+}
+char* fn_80485C30(buf, ch) char* buf; int ch; {
+    char* p = fn_803B7DF8(buf, ch);
+    char* q;
+    if (p == 0) {
+        return 0;
+    }
+    if (p == buf) {
+        *++p = 0;
+        return p;
+    }
+    *p = 0;
+    q = fn_803B7DF8(buf, ch);
+    if (q == 0) {
+        buf[0] = 0;
+        return buf;
+    }
+    *++q = 0;
+    return q;
+}
 int fn_8048530C() {
     return lbl_805DE6D0;
 }
