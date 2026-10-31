@@ -54,9 +54,7 @@ typedef struct _HSD_CObj {
     Mtx view_mtx; //0x54
     struct _HSD_AObj* aobj; //0x84
     Mtx* proj_mtx; //0x88
-    u32 unk8C; //0x8C
-    u32 unk90; //0x90
-    u32 unk94; //0x94
+    Vec eye_dir; //0x8C
     u32 unk98; //0x98
 } HSD_CObj;
 

@@ -26,14 +26,16 @@ void HSD_WObjInterpretAnim(HSD_WObj*);
 HSD_WObj* HSD_WObjAlloc(void);
 void PSMTXCopy(Mtx, Mtx);
 void PSVECNormalize(Vec*, Vec*);
+void PSVECSubtract(Vec*, Vec*, Vec*);
+f32 PSVECMag(Vec*);
 Mtx* HSD_CObjGetViewingMtxPtr(HSD_CObj*);
 void fn_80401014(HSD_CObj*);
 void HSD_CObjClearFlags(HSD_CObj*, u32);
 Mtx* fn_80417C54(void);
 void fn_803D1578(Mtx, Mtx);
-int fn_80401DBC(HSD_CObj*, f32, Vec*);
-void fn_804027CC(HSD_CObj*, f32);
-void HSD_CObjGetUpVector(HSD_CObj*, Vec*);
+int HSD_CObjRollToUpVector(HSD_CObj*, Vec*, f32);
+void HSD_CObjSetRoll(HSD_CObj*, f32);
+int HSD_CObjSetUpVector(HSD_CObj*, Vec*);
 void HSD_WObjInit(HSD_WObj*, HSD_WObjDesc*);
 void fn_80417CA0(Mtx*);
 extern f32 lbl_805DC8B8[];
@@ -104,7 +106,7 @@ void HSD_CObjUpdateFunc(void* obj, u32 type, f32* fval)
         HSD_CObjSetInterest(cobj, &vec);
         break;
     case 9:
-        fn_804027CC(cobj, *fval);
+        HSD_CObjSetRoll(cobj, *fval);
         break;
     case 10:
         HSD_CObjSetFov(cobj, *fval);
@@ -178,6 +180,69 @@ void HSD_CObjSetEyePosition(HSD_CObj* cobj, Vec* eye)
 {
     assert_line(0x315, cobj);
     HSD_WObjSetPosition(HSD_CObjGetEyePositionWObj(cobj), eye);
+}
+
+static inline BOOL TryNormalize(Vec* v)
+{
+    if (v == NULL || v == NULL) {
+        return ~0;
+    }
+    if (__fabs(v->x) <= lbl_805DC8B8[0] &&
+        __fabs(v->y) <= lbl_805DC8B8[0] &&
+        __fabs(v->z) <= lbl_805DC8B8[0]) {
+        return ~0;
+    }
+    PSVECNormalize(v, v);
+    return 0;
+}
+
+BOOL HSD_CObjMtxIsDirty(HSD_CObj* cobj);
+
+BOOL HSD_CObjGetEyeVector(HSD_CObj* cobj, Vec* dir)
+{
+    Vec eye;
+    Vec interest;
+
+    if (cobj == NULL || cobj->eye_position == NULL || cobj->interest == NULL) {
+        return FALSE;
+    }
+    if (!HSD_CObjMtxIsDirty(cobj)) {
+        *dir = cobj->eye_dir;
+        return TRUE;
+    }
+    HSD_CObjGetEyePosition(cobj, &eye);
+    HSD_CObjGetInterest(cobj, &interest);
+    PSVECSubtract(&interest, &eye, dir);
+    return TryNormalize(dir) == 0;
+}
+
+f32 HSD_CObjGetEyeDistance(HSD_CObj* cobj)
+{
+    Vec eye;
+    Vec interest;
+    Vec diff;
+
+    if (cobj == NULL) {
+        return 0.0F;
+    }
+    assert_line(0x352, cobj->eye_position);
+    assert_line(0x353, cobj->interest);
+    HSD_CObjGetEyePosition(cobj, &eye);
+    HSD_CObjGetInterest(cobj, &interest);
+    PSVECSubtract(&interest, &eye, &diff);
+    return PSVECMag(&diff);
+}
+
+int HSD_CObjGetUpVector(HSD_CObj* cobj, Vec* up)
+{
+    if (cobj == NULL || up == NULL) {
+        return 0;
+    }
+    if (cobj->flags & 1) {
+        *up = cobj->u.up;
+        return 1;
+    }
+    return HSD_CObjRollToUpVector(cobj, up, cobj->u.roll);
 }
 
 void HSD_CObjSetMtxDirty(HSD_CObj* cobj)
@@ -457,12 +522,12 @@ int HSD_CObjLoad(HSD_CObj* cobj, HSD_CObjDesc* desc)
     HSD_CObjSetFar(cobj, desc->far);
     if (desc->flags & 1) {
         if (desc->vector != NULL) {
-            HSD_CObjGetUpVector(cobj, desc->vector);
+            HSD_CObjSetUpVector(cobj, desc->vector);
         } else {
-            HSD_CObjGetUpVector(cobj, &lbl_80503410);
+            HSD_CObjSetUpVector(cobj, &lbl_80503410);
         }
     } else {
-        fn_804027CC(cobj, desc->roll);
+        HSD_CObjSetRoll(cobj, desc->roll);
     }
     switch (desc->projection_type) {
     case PROJ_PERSPECTIVE:
