@@ -1,5 +1,6 @@
 typedef unsigned char u8;
 typedef unsigned long u32;
+typedef struct { float a, b; } F2;
 
 #define P(p, o) (*(void**)((u8*)(p) + (o)))
 #define W(p, o) (*(u32*)((u8*)(p) + (o)))
@@ -254,7 +255,7 @@ void fn_80110668(int i, float* out)
 {
     if (lbl_805DD730 == 0) return;
     if (lbl_805DD734 == 0) return;
-    *out = lbl_805DFB30 * *(float*)((u8*)P(lbl_805DD734, 4) + i * 8 + 4);
+    *out = lbl_805DFB30 * ((F2*)P(lbl_805DD734, 4))[i].b;
 }
 
 void fn_801106A0(int i, float* x, float* y, float* z)
@@ -270,7 +271,8 @@ void fn_801106A0(int i, float* x, float* y, float* z)
 
 void fn_80110F38(void)
 {
-    if (lbl_805DD730 != 0) {
+    void* t = lbl_805DD730;
+    if (t != 0) {
         HSD_ObjFree(lbl_80557838);
     }
     lbl_805DD730 = 0;
@@ -282,8 +284,9 @@ void fn_80110F38(void)
 
 void fn_80110F88(void* a)
 {
+    u32 v;
     int i;
-    u32 v = fn_800EE6CC(a);
+    v = fn_800EE6CC(a);
     for (i = 0; i < 5; i++) {
         int k = plGetPlayerKind(i);
         if (k == 0 || k == 1) {
@@ -302,8 +305,7 @@ void fn_80111738(void* a)
 {
     void* p = fn_800EE73C(a);
     void* q = fn_800EE708(a);
-    void* r = fn_800EE6EC(a);
-    fn_8010A5DC(P(p, 0), r, q);
+    fn_8010A5DC(P(p, 0), fn_800EE6EC(a), q);
 }
 
 void fn_8011179C(void* a)
@@ -341,8 +343,9 @@ void fn_80111934(void* a)
 void fn_8011196C(void* a)
 {
     void* p = fn_800EE770(a);
+    void* c = P(p, 0x2c);
     lbl_805DD748 = 0;
-    fn_800EE660(P(p, 0x2c));
+    fn_800EE660(c);
     fn_800ED800(0xc);
 }
 
@@ -430,7 +433,7 @@ void fn_80111FB0(void* a)
     u32 n;
     fn_800EE73C(a);
     n = fn_800EE6CC(a);
-    if (n == fn_800EE6C4(a)) {
+    if (n - fn_800EE6C4(a) == 0) {
         fn_8010D770(lbl_805DD750);
     }
 }
@@ -469,16 +472,17 @@ void THPSimpleAudioStop2(void)
     lbl_805578B8[5] = 0;
 }
 
-signed char fn_80112B20(void)
+int fn_80112B20(void)
 {
     return lbl_805578B8[5];
 }
 
 void fn_801136A8(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        if (lbl_805578B8[p + 1] != -1) {
-            fn_8011C864(lbl_805578B8[p + 1], p, 0);
+        if (b[p + 1] != -1) {
+            fn_8011C864(b[p + 1], p, 0);
         }
     }
 }
@@ -531,50 +535,57 @@ void fn_80113AD8(void)
 
 void fn_80113BE0(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_801310C4(lbl_805578B8[p + 1], p);
+        fn_801310C4(b[p + 1], p);
     }
 }
 
 void fn_80113CA8(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_8012EF08(lbl_805578B8[p + 1], p);
+        fn_8012EF08(b[p + 1], p);
     }
 }
 
 void fn_80113D00(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_8012F338(lbl_805578B8[p + 1], p);
+        fn_8012F338(b[p + 1], p);
     }
 }
 
 void fn_80113D58(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_8012F800(lbl_805578B8[p + 1], p);
+        fn_8012F800(b[p + 1], p);
     }
 }
 
 void fn_80113DB0(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_8012FAF0(lbl_805578B8[p + 1], p);
+        fn_8012FAF0(b[p + 1], p);
     }
 }
 
 void fn_80113E08(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_8012FFF4(lbl_805578B8[p + 1], p);
+        fn_8012FFF4(b[p + 1], p);
     }
 }
 
 void fn_80113E60(int p)
 {
+    signed char* b = lbl_805578B8;
     if (fn_800098C0(p)) {
-        fn_8013065C(lbl_805578B8[p + 1], p);
+        fn_8013065C(b[p + 1], p);
     }
 }
 
