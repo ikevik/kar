@@ -22,9 +22,10 @@ u8* fn_804407E0(u32 size)
 {
     u8* ptr;
     u32 offset = lbl_805DE43C;
-    lbl_805DE43C = offset + size;
+    u32 end = offset + size;
+    lbl_805DE43C = end;
     ptr = lbl_805DE438 + offset;
-    if (!(lbl_805DE43C < lbl_805DE448)) {
+    if (!(end < lbl_805DE448)) {
         __assert(__FILE__, 0x53, "AXDriver");
     }
     return ptr;
