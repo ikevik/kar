@@ -30083,3 +30083,19 @@ fn_8038CB78(r30);
 L_80288B18:
 ;
 }
+void fn_80202C18();
+int fn_80202C80();
+
+
+void fn_80202C18(r30, r4, r5) int r30; int r4; int r5; {
+int r31;
+int r3_n;
+r3_n = (r30 + (r4 << 2));
+if (r5 == *(short*)(r3_n + 1054)) return;
+*(unsigned short*)(r3_n + 1054) = r5;
+r31 = 0;
+L_80202C4C:
+fn_80202C80((r30 + 1044), r31, (r30 + 696));
+r31 = (r31 + 1);
+if (r31 < 3) goto L_80202C4C;
+}
