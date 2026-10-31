@@ -460,7 +460,7 @@ dolphin/dolphin_sdk_ax.c:
 
 dolphin/dolphin_sdk_mix.c:
 	.text       start:0x803F03FC end:0x803F3920
-	.data       start:0x80500950 end:0x80501D58
+	.data       start:0x80500950 end:0x80501D10
 	.bss        start:0x80587A60 end:0x80589260
 	.sbss       start:0x805DE148 end:0x805DE158
 	.sdata2     start:0x805E59B0 end:0x805E59C8
@@ -472,7 +472,7 @@ dolphin/dolphin_sdk_synth.c:
 
 sysdolphin/dobj.c:
 	.text       start:0x803F43D8 end:0x803F4B7C
-	.data       start:0x80501D58 end:0x80501E30
+	.data       start:0x80501D10 end:0x80501E2D
 	.sdata      start:0x805DCA38 end:0x805DCA50
 	.sbss       start:0x805DE170 end:0x805DE178
 
