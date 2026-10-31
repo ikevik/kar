@@ -25,6 +25,7 @@ extern void fn_8005B918(int);
 extern void fn_8005F6A8(int, int);
 extern void fn_80442A54(int, int);
 extern void fn_80442CFC(int, int);
+extern void fn_80442FA4(int, int);
 extern void fn_8005F6E8();
 extern void lbLoadMusicLocation(int);
 
@@ -196,6 +197,32 @@ int fn_800AF344(int arg)
         fn_8005FB64(0xff);
         lbl_80557108[8] = 0;
         fn_80445990(0);
+    }
+    return 0;
+}
+
+int fn_800AF1F4(int arg)
+{
+    int flag = 0;
+    int* p;
+    int v;
+    if (arg == 4) {
+        lbl_80557108[5] = 0;
+        flag = 1;
+    } else if (arg == 2 || arg == 3) {
+        flag = 1;
+    }
+    if (flag != 0) {
+        p = lbl_80557108;
+        v = p[5];
+        if (v < 0) {
+            p[5] = v + 0x168;
+        } else if (v > 0x168) {
+            p[5] = v - 0x168;
+        }
+        if (lbl_80557108[10] != -1) {
+            fn_80442FA4(lbl_80557108[10], p[5]);
+        }
     }
     return 0;
 }
