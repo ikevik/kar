@@ -362,20 +362,28 @@ void HSD_JObjUnref(HSD_JObj* jobj)
     if (jobj == NULL) {
         return;
     }
-    if ((0xffff - o->ref_count ? 0 : 1) || (o->ref_count-- ? 0 : 1)) {
-        if ((s32) o->ref_count_individual - 1 < 0) {
-            if (o != NULL) {
-                o->parent.class_info->release((HSD_Class*) o);
-                o->parent.class_info->destroy((HSD_Class*) o);
-            }
-        } else {
-            o->ref_count_individual++;
-            assert_line(0x9e, o->ref_count_individual != 0);
-            ((HSD_JObjInfo*) o->parent.class_info)->release_child(jobj);
-            if ((o->ref_count_individual ? 0 : 1) || (--o->ref_count_individual ? 0 : 1)) {
+    {
+        int t = (0xffff - o->ref_count == 0);
+        int u = t ? t : (o->ref_count-- == 0);
+        if (u) {
+            if ((s32) o->ref_count_individual - 1 < 0) {
                 if (o != NULL) {
                     o->parent.class_info->release((HSD_Class*) o);
                     o->parent.class_info->destroy((HSD_Class*) o);
+                }
+            } else {
+                o->ref_count_individual++;
+                assert_line(0x9e, o->ref_count_individual != 0);
+                ((HSD_JObjInfo*) o->parent.class_info)->release_child(jobj);
+                {
+                    int t2 = (o->ref_count_individual == 0);
+                    int u2 = t2 ? t2 : (o->ref_count_individual -= 1, o->ref_count_individual == 0);
+                    if (u2) {
+                        if (o != NULL) {
+                            o->parent.class_info->release((HSD_Class*) o);
+                            o->parent.class_info->destroy((HSD_Class*) o);
+                        }
+                    }
                 }
             }
         }
@@ -385,7 +393,9 @@ void HSD_JObjUnref(HSD_JObj* jobj)
 void fn_8040B670(HSD_Obj* o)
 {
     if (o != NULL) {
-        if ((o->ref_count_individual ? 0 : 1) || (--o->ref_count_individual ? 0 : 1)) {
+        int t = (o->ref_count_individual == 0);
+        int u = t ? t : (o->ref_count_individual -= 1, o->ref_count_individual == 0);
+        if (u) {
             s32 count = (o->ref_count == 0xffff) ? -1 : o->ref_count;
             if (count < 0 && o != NULL) {
                 o->parent.class_info->release((HSD_Class*) o);
