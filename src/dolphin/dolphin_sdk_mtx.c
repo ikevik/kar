@@ -10,11 +10,11 @@ extern f32 fn_803BD560(f32);
 extern void PSVECNormalize(const Vec*, Vec*);
 extern void PSVECCrossProduct(const Vec*, const Vec*, Vec*);
 
-extern f32 lbl_805DC960;
-extern f32 lbl_805E58B0;
-extern f32 lbl_805E58B4;
-extern f32 lbl_805E58B8;
-extern f32 lbl_805E58BC;
+f32 lbl_805DC960[2] = {0.0f, 1.0f};
+const f32 lbl_805E58B0[1] = {1.0f};
+const f32 lbl_805E58B4[1] = {0.0f};
+const f32 lbl_805E58B8[1] = {0.5f};
+const f32 lbl_805E58BC[1] = {3.0f};
 
 asm void PSMTXIdentity(void)
 {
@@ -255,6 +255,16 @@ L_803D16E4:
     blr
 }
 
+extern void fn_803D17A8(f32 m[3][4], u8 axis, f32 s, f32 c);
+
+void fn_803D1738(f32 m[3][4], u8 axis, f32 rad)
+{
+    f32 s, c;
+    s = fn_803BD53C(rad);
+    c = fn_803BD560(rad);
+    fn_803D17A8(m, axis, s, c);
+}
+
 asm void fn_803D17A8(f32 m[3][4], u8 axis, f32 s, f32 c)
 {
     nofralloc
@@ -357,6 +367,16 @@ asm void fn_803D1858(f32 m[3][4], const Vec* axis, f32 s, f32 c)
     blr
 }
 
+extern void fn_803D1858(f32 m[3][4], const Vec* axis, f32 s, f32 c);
+
+void fn_803D1908(f32 m[3][4], const Vec* axis, f32 rad)
+{
+    f32 s, c;
+    s = fn_803BD53C(rad);
+    c = fn_803BD560(rad);
+    fn_803D1858(m, axis, s, c);
+}
+
 asm void fn_803D1978(void)
 {
     nofralloc
@@ -437,21 +457,7 @@ asm void fn_803D19D4(void)
 }
 
 
-void fn_803D1738(f32 m[3][4], u8 axis, f32 rad)
-{
-    f32 s, c;
-    s = fn_803BD53C(rad);
-    c = fn_803BD560(rad);
-    fn_803D17A8(m, axis, s, c);
-}
 
-void fn_803D1908(f32 m[3][4], const Vec* axis, f32 rad)
-{
-    f32 s, c;
-    s = fn_803BD53C(rad);
-    c = fn_803BD560(rad);
-    fn_803D1858(m, axis, s, c);
-}
 
 void C_MTXLookAt(f32 m[3][4], const Vec* camPos, const Vec* camUp, const Vec* target)
 {
@@ -486,22 +492,22 @@ void C_MTXLightFrustum(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 n, f32 scale
 {
     f32 tmp;
 
-    tmp = 1.0f / (r - l);
+    tmp = lbl_805E58B0[0] / (r - l);
     m[0][0] = ((2 * n) * tmp) * scaleS;
-    m[0][1] = 0.0f;
+    m[0][1] = lbl_805E58B4[0];
     m[0][2] = (((r + l) * tmp) * scaleS) - transS;
-    m[0][3] = 0.0f;
+    m[0][3] = lbl_805E58B4[0];
 
-    tmp = 1.0f / (t - b);
-    m[1][0] = 0.0f;
+    tmp = lbl_805E58B0[0] / (t - b);
+    m[1][0] = lbl_805E58B4[0];
     m[1][1] = ((2 * n) * tmp) * scaleT;
     m[1][2] = (((t + b) * tmp) * scaleT) - transT;
-    m[1][3] = 0.0f;
+    m[1][3] = lbl_805E58B4[0];
 
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
+    m[2][0] = lbl_805E58B4[0];
+    m[2][1] = lbl_805E58B4[0];
     m[2][2] = -1.0f;
-    m[2][3] = 0.0f;
+    m[2][3] = lbl_805E58B4[0];
 }
 
 void C_MTXLightPerspective(f32 m[3][4], f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS,
@@ -510,24 +516,24 @@ void C_MTXLightPerspective(f32 m[3][4], f32 fovY, f32 aspect, f32 scaleS, f32 sc
     f32 angle;
     f32 cot;
 
-    angle = fovY * 0.5f;
+    angle = lbl_805E58B8[0] * fovY;
     angle = angle * 0.017453292f;
-    cot = 1.0f / fn_803BD518(angle);
+    cot = lbl_805E58B0[0] / fn_803BD518(angle);
 
     m[0][0] = (cot / aspect) * scaleS;
-    m[0][1] = 0.0f;
+    m[0][1] = lbl_805E58B4[0];
     m[0][2] = -transS;
-    m[0][3] = 0.0f;
+    m[0][3] = lbl_805E58B4[0];
 
-    m[1][0] = 0.0f;
+    m[1][0] = lbl_805E58B4[0];
     m[1][1] = cot * scaleT;
     m[1][2] = -transT;
-    m[1][3] = 0.0f;
+    m[1][3] = lbl_805E58B4[0];
 
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
+    m[2][0] = lbl_805E58B4[0];
+    m[2][1] = lbl_805E58B4[0];
     m[2][2] = -1.0f;
-    m[2][3] = 0.0f;
+    m[2][3] = lbl_805E58B4[0];
 }
 
 void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS,
@@ -535,20 +541,20 @@ void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 sc
 {
     f32 tmp;
 
-    tmp = 1.0f / (r - l);
+    tmp = lbl_805E58B0[0] / (r - l);
     m[0][0] = (2.0f * tmp * scaleS);
-    m[0][1] = 0.0f;
-    m[0][2] = 0.0f;
+    m[0][1] = lbl_805E58B4[0];
+    m[0][2] = lbl_805E58B4[0];
     m[0][3] = ((-(r + l) * tmp * scaleS) + transS);
 
-    tmp = 1.0f / (t - b);
-    m[1][0] = 0.0f;
+    tmp = lbl_805E58B0[0] / (t - b);
+    m[1][0] = lbl_805E58B4[0];
     m[1][1] = (2.0f * tmp) * scaleT;
-    m[1][2] = 0.0f;
+    m[1][2] = lbl_805E58B4[0];
     m[1][3] = ((-(t + b) * tmp * scaleT) + transT);
 
-    m[2][0] = 0.0f;
-    m[2][1] = 0.0f;
-    m[2][2] = 0.0f;
-    m[2][3] = 1.0f;
+    m[2][0] = lbl_805E58B4[0];
+    m[2][1] = lbl_805E58B4[0];
+    m[2][2] = lbl_805E58B4[0];
+    m[2][3] = lbl_805E58B0[0];
 }
