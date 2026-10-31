@@ -371,7 +371,8 @@ void HSD_CObjSetFov(struct _HSD_CObj*, f32);
 void HSD_CObjSetOrtho(struct _HSD_CObj*, f32, f32, f32, f32);
 void HSD_CObjSetFrustum(struct _HSD_CObj*, f32, f32, f32, f32);
 f32 HSD_CObjGetNear(struct _HSD_CObj*);
-double atan2_(double, double);
+extern f32 lbl_805E5DD8;
+double fn_803BD3C8(double, double);
 
 void makeMatrix(HSD_Shadow* shadow)
 {
@@ -396,4 +397,103 @@ void makeMatrix(HSD_Shadow* shadow)
         break;
     }
     PSMTXConcat(mtx, shadow->camera->view_mtx, shadow->texture->mtx);
+}
+
+extern f32 lbl_805DC8B8[];
+extern f32 lbl_805E5DDC;
+extern f32 lbl_805E5DE0;
+f32 atan2f_(f32, f32);
+void PSVECSubtract(Vec*, Vec*, Vec*);
+void PSVECNormalize(Vec*, Vec*);
+void PSVECCrossProduct(Vec*, Vec*, Vec*);
+f32 PSVECMag(Vec*);
+f32 PSVECDotProduct(Vec*, Vec*);
+void PSVECScale(Vec*, Vec*, f32);
+void fn_80417AF4(Vec*, Vec*);
+
+#ifdef NONMATCHING /* 93.7% */
+void HSD_ShadowSetViewingRect(HSD_Shadow* shadow, f32 top, f32 bottom, f32 left, f32 right)
+{
+    HSD_CObj* camera;
+    f32 dist;
+    f32 a;
+
+    assert_line(0x2d2, shadow);
+    camera = shadow->camera;
+    dist = HSD_CObjGetEyeDistance(camera);
+    if (!(dist < lbl_805DC8C0[0])) {
+        switch (HSD_CObjGetProjectionType(camera)) {
+        case PROJ_PERSPECTIVE:
+            bottom = (__fabs(top) > __fabs(bottom)) ? __fabs(top) : __fabs(bottom);
+            left = (__fabs(left) > __fabs(right)) ? __fabs(left) : __fabs(right);
+            HSD_CObjSetAspect(camera, left / (bottom + lbl_805DC8C0[0]));
+            HSD_CObjSetFov(camera, lbl_805E5DD8 * (f32) fn_803BD3C8(bottom, dist));
+            break;
+        case PROJ_ORTHO:
+            HSD_CObjSetOrtho(camera, top, bottom, left, right);
+            break;
+        case PROJ_FRUSTRUM:
+            a = HSD_CObjGetNear(camera) / dist;
+            if (a < lbl_805DC8C0[0]) {
+                a = lbl_805DC8C0[0];
+            }
+            HSD_CObjSetFrustum(camera, a * top, a * bottom, a * left, a * right);
+            break;
+        default:
+            assert_line(0x2ff, 0);
+            break;
+        }
+    }
+}
+#endif
+
+inline BOOL TryNormalize2(Vec* v, Vec* out)
+{
+    if (v == NULL || out == NULL) {
+        return ~0;
+    }
+    if (__fabs(v->x) <= lbl_805DC8B8[0] &&
+        __fabs(v->y) <= lbl_805DC8B8[0] &&
+        __fabs(v->z) <= lbl_805DC8B8[0]) {
+        return ~0;
+    }
+    PSVECNormalize(v, out);
+    return 0;
+}
+
+void HSD_ViewingRectInit(HSD_ViewingRect* rect, Vec* origin, Vec* eye, Vec* up, BOOL perspective)
+{
+    assert_line(0x31e, rect);
+    rect->invalid = 0;
+    rect->origin = *origin;
+    PSVECSubtract(eye, origin, &rect->eye_v);
+    if (TryNormalize2(&rect->eye_v, &rect->eye_vn) < 0) {
+        rect->invalid = 1;
+        return;
+    }
+    PSVECCrossProduct(&rect->eye_vn, up, &rect->right_v);
+    if (TryNormalize2(&rect->right_v, &rect->right_v) < 0) {
+        fn_80417AF4(&rect->eye_vn, &rect->right_v);
+        PSVECNormalize(&rect->right_v, &rect->right_v);
+    }
+    PSVECCrossProduct(&rect->right_v, &rect->eye_vn, &rect->up_v);
+    rect->distance = PSVECMag(&rect->eye_v);
+    rect->right = -3.4028235e38F;
+    rect->top = -3.4028235e38F;
+    rect->left = 3.4028235e38F;
+    rect->bottom = 3.4028235e38F;
+    rect->perspective = (perspective != 0);
+}
+
+BOOL HSD_ViewingRectIsValid(HSD_ViewingRect* rect)
+{
+    BOOL result;
+    assert_line(0x33c, rect);
+    result = FALSE;
+    if (!rect->invalid) {
+        if (rect->top > rect->bottom && rect->right > rect->left) {
+            result = TRUE;
+        }
+    }
+    return result;
 }
