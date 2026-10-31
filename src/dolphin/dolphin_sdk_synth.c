@@ -72,7 +72,7 @@ void fn_803F3DEC(void)
     }
 }
 
-void fn_803F3DAC(s16 interrupt)
+void fn_803F3DAC(s16 interrupt, void* context)
 {
     __PIRegs[0] = 0x1000;
     if (lbl_805DE15C) {
@@ -103,10 +103,10 @@ void fn_803F3D34(u8** a, HuCallback cb)
 }
 
 extern void fn_803F3FB0(u32 a, void* b, u32 c);
-extern void fn_803F3E28(u32* out);
+extern int fn_803F3E28(u32* out);
 extern void fn_803F408C(u32* out);
 u32 lbl_805DE160;
-u32 lbl_805DE164;
+s32 lbl_805DE164;
 
 int fn_803F3BB8(void* a, int len)
 {
@@ -122,7 +122,7 @@ int fn_803F3BB8(void* a, int len)
     return 0;
 }
 
-u32 fn_803F3C44(void)
+s32 fn_803F3C44(void)
 {
     int enabled;
     u32 x;
@@ -143,4 +143,23 @@ u32 fn_803F3C44(void)
         OSRestoreInterrupts(enabled);
     }
     return lbl_805DE164;
+}
+
+extern int fn_803F4138(void* buf, int len, int type);
+
+int fn_803F3E28(u32* out)
+{
+    int err;
+    u32 cmd;
+
+    __EXIRegsHu[10] = (__EXIRegsHu[10] & 0x405) | 0xC0;
+    cmd = 0x40000000;
+    err = !fn_803F4138(&cmd, 2, 1);
+    while (__EXIRegsHu[13] & 1) {
+    }
+    err |= !fn_803F4138(out, 4, 0);
+    while (__EXIRegsHu[13] & 1) {
+    }
+    __EXIRegsHu[10] = __EXIRegsHu[10] & 0x405;
+    return !err;
 }
