@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include <dolphin/types.h>
 
 f32 splGetHelmite(f32 a, f32 t, f32 p0, f32 p1, f32 d0, f32 d1);

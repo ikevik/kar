@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include "fobj.h"
 
 extern HSD_ObjAllocData fobj_alloc_data;

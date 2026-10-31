@@ -1,3 +1,4 @@
+#pragma fp_contract on
 #include "cobj.h"
 
 #include <sysdolphin/wobj.h>
