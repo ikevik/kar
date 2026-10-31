@@ -31,8 +31,8 @@ void fn_8033441C(void* a, float* b, float* c)
 
 void fn_8033442C(void) {}
 
-extern float lbl_805E4120;
-extern float lbl_805E4160;
+extern const float lbl_805E4120;
+extern const float lbl_805E4160;
 extern u8 lbl_804E2DC0[];
 extern u8 lbl_804E2D6C[];
 extern u8 lbl_804E3B54[];
@@ -60,14 +60,11 @@ void* fn_80334BD0(char* p)
     return e;
 }
 
-#if 0 /* instruction scheduling mismatches */
 void fn_8032A590(char* p)
 {
-    s32 z = 0;
-    float t = lbl_805E4120;
-    *(s32*)(p + 0x68) = z;
-    *(s32*)(p + 0x70) = z;
-    *(float*)(p + 0x74) = t;
+    *(s32*)(p + 0x68) = 0;
+    *(s32*)(p + 0x70) = 0;
+    *(float*)(p + 0x74) = lbl_805E4120;
     p[0x6c] = 0;
     p[0x6d] = 0;
     p[0x6e] = 0;
@@ -75,24 +72,19 @@ void fn_8032A590(char* p)
 
 void fn_80331538(char* p)
 {
-    s32 z = 0;
-    float t = lbl_805E4120;
-    *(s32*)(p + 0) = z;
-    *(s32*)(p + 4) = z;
-    *(float*)(p + 0x10) = t;
-    *(float*)(p + 0xc) = t;
-    *(float*)(p + 8) = t;
+    *(s32*)(p + 0) = 0;
+    *(s32*)(p + 4) = 0;
+    *(float*)(p + 0x10) = lbl_805E4120;
+    *(float*)(p + 0xc) = lbl_805E4120;
+    *(float*)(p + 8) = lbl_805E4120;
 }
 
 void fn_803343AC(char* p, float* q)
 {
-    float b = lbl_805E4120;
-    float a = lbl_805E4160;
-    q[0] = a;
-    q[1] = b;
+    q[0] = lbl_805E4160;
+    q[1] = lbl_805E4120;
     q[2] = *(float*)(p + 0x68);
-    q[3] = b;
-    q[4] = a;
+    q[3] = lbl_805E4120;
+    q[4] = lbl_805E4160;
     q[5] = *(float*)(p + 0x68);
 }
-#endif

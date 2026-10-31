@@ -10,3 +10,17 @@ void fn_8037E374(u8* p, u32 v)
     p[0xc] = 1;
     *(u32*)(p + 0x10) = v;
 }
+
+extern const float lbl_805E4C30;
+extern const float lbl_805E4C34;
+extern const float lbl_805E4C38;
+
+void fn_8037D528(void* a, float* q)
+{
+    q[0] = lbl_805E4C30;
+    q[1] = lbl_805E4C34;
+    q[2] = lbl_805E4C38;
+    q[3] = lbl_805E4C34;
+    q[4] = lbl_805E4C30;
+    q[5] = lbl_805E4C38;
+}

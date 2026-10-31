@@ -3,7 +3,7 @@ typedef unsigned int u32;
 typedef int s32;
 typedef unsigned short u16;
 
-extern float lbl_805E4DE0;
+extern const float lbl_805E4DE0;
 extern u8 lbl_804F4F70[];
 
 void fn_80383978(void) {}
@@ -55,8 +55,8 @@ void fn_80395A2C(u32* p, u32* a, u32* b)
     p[0] = x;
     p[1] = y;
 }
-
 #endif
+
 
 void fn_80395B04(u32* p)
 {
@@ -73,12 +73,12 @@ typedef struct {
 } Col;
 extern s32 lbl_805DDC80;
 extern Col lbl_805DDC84;
-extern float lbl_805E4DC0;
-extern float lbl_805E4DC4;
-extern float lbl_805E4DC8;
-extern float lbl_805E4DCC;
-extern float lbl_805E4DD0;
-extern float lbl_805E4EB8;
+extern const float lbl_805E4DC0;
+extern const float lbl_805E4DC4;
+extern const float lbl_805E4DC8;
+extern const float lbl_805E4DCC;
+extern const float lbl_805E4DD0;
+extern const float lbl_805E4EB8;
 extern void* lbl_805DDCA0;
 extern u8 lbl_804C0470[];
 extern char lbl_804F5440[];
@@ -132,20 +132,16 @@ void* fn_80384CC8(char* p)
     return e;
 }
 
-#if 0
 void fn_80384D5C(float* p)
 {
-    float t;
     ((s32*)p)[1] = 0;
-    t = lbl_805E4DC0;
-    p[6] = t;
-    p[5] = t;
-    p[4] = t;
+    p[6] = lbl_805E4DC0;
+    p[5] = lbl_805E4DC0;
+    p[4] = lbl_805E4DC0;
     p[7] = p[4];
     p[8] = p[5];
     p[9] = p[6];
 }
-#endif
 
 void fn_80384EA4(s32* p, s32 i, float a, float b)
 {
@@ -156,31 +152,23 @@ void fn_80384EA4(s32* p, s32 i, float a, float b)
     }
 }
 
-#if 0
 void fn_80384F18(s32* p)
 {
-    float a = lbl_805E4DC4;
-    if (a >= ((float*)p)[2]) {
-        float c = lbl_805E4DC8;
+    if (lbl_805E4DC4 >= ((float*)p)[2]) {
         p[1] = 12;
-        ((float*)p)[2] = a;
-        ((float*)p)[3] = c;
+        ((float*)p)[2] = lbl_805E4DC4;
+        ((float*)p)[3] = lbl_805E4DC8;
     }
 }
-#endif
 
-#if 0
 void fn_80384F44(s32* p)
 {
-    float a = lbl_805E4DCC;
-    if (a >= ((float*)p)[2]) {
-        float c = lbl_805E4DD0;
+    if (lbl_805E4DCC >= ((float*)p)[2]) {
         p[1] = 20;
-        ((float*)p)[2] = a;
-        ((float*)p)[3] = c;
+        ((float*)p)[2] = lbl_805E4DCC;
+        ((float*)p)[3] = lbl_805E4DD0;
     }
 }
-#endif
 
 void fn_8038528C(char* p, u8 a, s32 b, s32 c)
 {
@@ -193,15 +181,21 @@ void fn_8038528C(char* p, u8 a, s32 b, s32 c)
     p[0x48] = a;
 }
 
+typedef struct R1 {
+    char pad[0x38];
+    s32 cnt;
+} R1;
+typedef struct R2 {
+    s32 f0;
+    R1* r;
+} R2;
+
 #if 0
-void fn_80386F2C(s32* a, s32* b)
+void fn_80386F2C(R2* a, R2* b)
 {
     if (b == a) return;
-    a[1] = b[1];
-    {
-        s32* t = (s32*)a[1];
-        t[0x38 / 4] = t[0x38 / 4] + 1;
-    }
+    a->r = b->r;
+    a->r->cnt++;
 }
 #endif
 
@@ -294,8 +288,7 @@ void fn_80390954(void) { fn_80390974(); }
 #if 0
 u32 fn_80391080(float* p)
 {
-    float f = p[2];
-    return (u32)(lbl_805E4EB8 * f);
+    return (u32)(lbl_805E4EB8 * p[2]);
 }
 #endif
 
