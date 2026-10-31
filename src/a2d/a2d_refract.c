@@ -47,13 +47,16 @@ void fn_803910AC(void) {}
 u16 fn_80391F00(u16* p) { return p[2]; }
 u16 fn_80391F08(u16* p) { return p[3]; }
 
+#if 0
 void fn_80395A2C(u32* p, u32* a, u32* b)
 {
-    u32 x = *a;
     u32 y = *b;
+    u32 x = *a;
     p[0] = x;
     p[1] = y;
 }
+
+#endif
 
 void fn_80395B04(u32* p)
 {
