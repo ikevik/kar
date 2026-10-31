@@ -384,7 +384,6 @@ typedef int s32;
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
 typedef struct { u8 :7; u8 f:1; } BFu8_7_1;
-typedef struct { u8 :6; u8 f:2; } BFu8_6_2;
 typedef struct { u8 :6; u8 f:1; } BFu8_6_1;
 typedef struct { u8 :5; u8 f:2; } BFu8_5_2;
 typedef struct { u8 :4; u8 f:1; } BFu8_4_1;
@@ -889,18 +888,18 @@ void fn_8006ADA4(u32 p3) {
 float fn_8006C180(u32 p3, u32 p4, float q1, float q2) {
     float v1;
     float v5;
-    float fph1;
+    float fph2;
     float fph3;
     if ((s32)p4 != (s32)0) {
         v1 = lbl_805DEC00;
-        fph1 = (q2-q1);
+        fph2 = (q2-q1);
         if ((q2-q1) < v1) {
-            fph1 = (-(q2-q1));
+            fph2 = (-(q2-q1));
         }
-        if (fph1 > (lbl_805DEBFC)) {
-            fph1 = ((lbl_805DEBF0)-fph1);
+        if (fph2 > (lbl_805DEBFC)) {
+            fph2 = ((lbl_805DEBF0)-fph2);
         }
-        return ((MF(((u32)p3+12)))*fph1);
+        return ((MF(((u32)p3+12)))*fph2);
     }
     v5 = lbl_805DEC00;
     fph3 = (q2-q1);
@@ -1250,17 +1249,17 @@ void fn_80084B80(void) {
 void fn_80086120(void) {
     u32 v1;
     u32 v3;
-    u32 ph1;
+    u32 ph0;
     v1 = M32(((u32)(u32)lbl_80552FB0+68));
     M8((u32)lbl_80552FB0) = 0;
-    ph1 = (u32)lbl_80552FB0;
+    ph0 = (u32)lbl_80552FB0;
     if ((u32)v1 != (u32)0) {
         M8(((u32)v1+38)) = ((M8(((u32)v1+38)))|64);
         v3 = M32(((u32)(u32)lbl_80552FB0+68));
         M8(((u32)v3+38)) = ((M8(((u32)v3+38)))|128);
-        ph1 = v3;
+        ph0 = v3;
     }
-    fn_80088078(ph1, v1);
+    fn_80088078(ph0, v1);
 }
 
 u32 fn_80086D44(u32 p3, u32 p4, u32 p5, u32 p6) {

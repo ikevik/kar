@@ -287,16 +287,11 @@ typedef int s32;
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
 typedef struct { u8 :7; u8 f:1; } BFu8_7_1;
-typedef struct { u8 :6; u8 f:1; } BFu8_6_1;
 typedef struct { u8 :5; u8 f:2; } BFu8_5_2;
-typedef struct { u8 :5; u8 f:1; } BFu8_5_1;
-typedef struct { u8 :4; u8 f:2; } BFu8_4_2;
 typedef struct { u8 :4; u8 f:1; } BFu8_4_1;
 typedef struct { u8 :3; u8 f:1; } BFu8_3_1;
 typedef struct { u8 :2; u8 f:1; } BFu8_2_1;
 typedef struct { u8 :1; u8 f:1; } BFu8_1_1;
-typedef struct { u8 f:2; } BFu8_0_2;
-typedef struct { u8 f:1; } BFu8_0_1;
 extern u8 lbl_80497280[];
 extern u32 lbl_805D51B8;
 extern u8 lbl_804972D8[];
@@ -391,7 +386,6 @@ void fn_801822F4(u32, u32);
 u32 fn_8000AAC4(void);
 u32 fn_8000AF5C(void);
 u32 plGetPlayerKind(u32);
-void fn_8004D8A8(u32);
 u32 fn_8000A300(void);
 u32 fn_8000916C(void);
 void fn_8004D248(u32);
@@ -955,6 +949,11 @@ u32 fn_8005FBDC(u32 p3) {
     M16(((u32)(u32)lbl_80538088+62)) = ph1;
     return ph1;
 }
+
+typedef struct { u8 :6; u8 f:1; } BFu8_6_1;
+typedef struct { u8 :5; u8 f:1; } BFu8_5_1;
+typedef struct { u8 f:1; } BFu8_0_1;
+void fn_8004D8A8(u32);
 
 
 
