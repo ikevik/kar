@@ -2,14 +2,14 @@
 
 extern void (**lbl_805DE318)(void*);
 
-void func_80429C14(HSD_GObj* gobj, u8 kind, void* obj)
+void fn_80429C14(HSD_GObj* gobj, u8 kind, void* obj)
 {
-    assert_line(42, gobj->obj_kind == HSD_GOBJ_OBJ_NONE);
+    if (!(gobj->obj_kind == HSD_GOBJ_OBJ_NONE)) __assert("gobjobject.c", 42, "gobj->obj_kind == HSD_GOBJ_OBJ_NONE");
     gobj->obj_kind = kind;
     gobj->hsd_obj = obj;
 }
 
-void* func_80429C80(HSD_GObj* gobj)
+void* fn_80429C80(HSD_GObj* gobj)
 {
     void* obj;
     if (gobj->obj_kind != HSD_GOBJ_OBJ_NONE) {

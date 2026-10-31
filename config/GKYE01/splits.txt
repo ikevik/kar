@@ -704,9 +704,13 @@ sysdolphin/gobjgxlink.c:
 	.text       start:0x804293F4 end:0x80429C14
 	.data       start:0x80504E10 end:0x80504E78
 
-sysdolphin/gobjobject_gobjuserdata.c:
-	.text       start:0x80429C14 end:0x80429E34
-	.data       start:0x80504E78 end:0x80504F10
+sysdolphin/gobjobject.c:
+	.text       start:0x80429C14 end:0x80429D0C
+	.data       start:0x80504E78 end:0x80504EB0
+
+sysdolphin/gobjuserdata.c:
+	.text       start:0x80429D0C end:0x80429E34
+	.data       start:0x80504EB0 end:0x80504F10
 
 sysdolphin/gobj.c:
 	.text       start:0x80429E34 end:0x8042A1A8
