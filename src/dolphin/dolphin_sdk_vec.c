@@ -44,10 +44,13 @@ asm void PSVECScale(const register Vec* src, register Vec* dst, register f32 sca
     blr
 }
 
+const f32 lbl_805E58E8[1] = {0.5f};
+const f32 lbl_805E58EC[1] = {3.0f};
+
 void PSVECNormalize(const register Vec* src, register Vec* dst)
 {
-    register f32 c_half = 0.5f;
-    register f32 c_three = 3.0f;
+    register f32 c_half = lbl_805E58E8[0];
+    register f32 c_three = lbl_805E58EC[0];
     register f32 v1_xy, v1_z, xx_zz, xx_yy_zz;
     register f32 rsqrt, rsq2, tmp0, tmp1;
     asm {
@@ -79,8 +82,6 @@ asm f32 fn_803D2140(const register Vec* v)
     blr
 }
 
-extern f32 lbl_805E58E8;
-extern f32 lbl_805E58EC;
 
 asm f32 PSVECMag(const register Vec* v)
 {

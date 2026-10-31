@@ -370,7 +370,7 @@ config.libs = [
             Object(NonMatching, "dolphin/dolphin_sdk_mtx.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(Matching, "dolphin/dolphin_sdk_mtxvec.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(Matching, "dolphin/dolphin_sdk_mtx44.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
-            Object(NonMatching, "dolphin/dolphin_sdk_vec.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
+            Object(Matching, "dolphin/dolphin_sdk_vec.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_os.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
             Object(NonMatching, "init/__ppc_eabi_init.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_pad.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
