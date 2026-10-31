@@ -122,7 +122,7 @@ extern void HSD_Free();
 extern void HSD_ObjAllocInit();
 extern void HVQM4BufaSetFree();
 extern void HVQM4DecodeBpic();
-extern void OSDisableInterrupts();
+extern int OSDisableInterrupts();
 extern void OSRestoreInterrupts();
 extern void OSResumeThread();
 extern void OSSuspendThread();
@@ -223,3 +223,123 @@ unsigned fn_804721C0(a, b, c, d, e) unsigned a; unsigned b; unsigned c; unsigned
 int fn_80470110(a, b, c, d, e, f, g) int a; int b; int c; int d; int e; int f; int g; {
     return fn_8046FD10(a, b, c, d, e, 0, f, g);
 }
+
+/* ---- w3f batch 2 ---- */
+extern int lbl_805DE5C4;
+extern int lbl_805DE5C8;
+extern int lbl_805DE5A8;
+extern int lbl_805DE5BC;
+extern void fn_80467F80();
+extern void fn_804707C0();
+extern void fn_804742B0();
+extern int fn_8047033C();
+extern int fn_80476C44();
+extern void fn_8047103C();
+extern void fn_8047477C();
+extern void fn_8046A7A0();
+extern void fn_8046F190();
+extern void OSCancelAlarm();
+
+void fn_80467F44(a, b, c) int a; int b; int c; {
+    lbl_805DE5C4 = a;
+    lbl_805DE5C8 = b;
+    lbl_805DE5A8 = 1;
+    lbl_805DE5BC = c;
+    fn_80467F80(0, 0);
+}
+
+void fn_80468680(a, b) int a; int b; {
+    int en = OSDisableInterrupts();
+    lbl_805DE5AC = a;
+    lbl_805DE5B0 = b;
+    OSRestoreInterrupts(en);
+}
+
+void MD5Init(c) unsigned* c; {
+    c[5] = 0;
+    c[4] = 0;
+    c[0] = 0x67452301;
+    c[1] = 0xEFCDAB89;
+    c[2] = 0x98BADCFE;
+    c[3] = 0x10325476;
+}
+
+int fn_8046AE54(a, b) char* a; void* b; {
+    memcpy(b, a + 0x10, 8);
+    return 0;
+}
+
+void fn_8046B7C4(p) int* p; {
+    char* q = (char*)*p;
+    if (q != 0) (*(void (**)())(q + 0x64))(q, p);
+}
+
+void fn_8046C4A8(p) char* p; {
+    char* r = p + 0x48;
+    char* q = *(char**)r;
+    if (q != 0) (*(void (**)())(q + 0x64))(q, r);
+}
+
+void fn_8046CF80(p) unsigned char* p; {
+    switch (p[9]) {
+    case 0x11:
+        fn_804707C0(p);
+        break;
+    case 6:
+        fn_804742B0(p);
+        break;
+    }
+}
+
+int fn_804704E4(p) char* p; {
+    int r;
+    if (*(unsigned char*)p != 0x11) return 0x80;
+    r = 0;
+    if (*(unsigned*)(p + 0x2C) == 0 || *(unsigned*)(p + 0xE4) != 0) r |= 8;
+    if (*(int*)(p + 0xE0) > 0) r |= 1;
+    return r;
+}
+
+
+
+void fn_8047126C(a, b) int a; int b; {
+    if (b >= 0x12) fn_8047103C(lbl_805BDD20, a, b - 4);
+}
+
+void fn_80474744(p, v) char* p; int v; {
+    *(int*)(p + 0xA0) = 0;
+    if (v < 0) *(int*)(p + 0x2C) = v;
+    fn_8047477C(p, 0);
+}
+
+void fn_804751E0(p) char* p; {
+    *(unsigned*)(p + 0x90) &= ~0x200;
+    *(int*)(p + 0x1DC) = 0;
+    OSCancelAlarm(p + 0x1F8);
+}
+
+void fn_804755B4(p, q) char* p; unsigned short* q; {
+    fn_8046A7A0(&lbl_805DE650, p + 0xC, p + 0x10, q[0], q[1], 0);
+}
+
+void fn_80478650(p) char* p; {
+    char* q = p - 0x3A0;
+    fn_8046F190(0, -0x65);
+    fn_80479750(q);
+}
+
+#if 0 /* w3f near misses */
+int fn_804708C4() {
+    if ((unsigned)lbl_805DE628 == 0) return 1;
+    while ((unsigned)lbl_805DE628 != 0) fn_8047033C((unsigned)lbl_805DE628);
+    return 0;
+}
+
+int fn_804774BC() {
+    if (*(unsigned*)&lbl_805DE650 == 0) return 1;
+    while (*(unsigned*)&lbl_805DE650 != 0) fn_80476C44(*(unsigned*)&lbl_805DE650);
+    return 0;
+}
+
+
+#endif /* w3f near misses */
