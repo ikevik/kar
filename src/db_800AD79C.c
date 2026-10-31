@@ -425,13 +425,17 @@ int fn_800AE520(int arg)
 
 int fn_800AEB20(int arg)
 {
-    int v;
     if (arg == 6) {
         lbl_8049F448[2] = fn_804484C8();
     }
-    v = lbl_8049F448[2];
-    if (v == 1 || v == 0 || v == 2 || v == 3 || v == 4) {
+    switch (lbl_8049F448[2]) {
+    case 1:
+    case 0:
+    case 2:
+    case 3:
+    case 4:
         fn_804484D0();
+        break;
     }
     return 0;
 }
