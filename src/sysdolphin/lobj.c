@@ -710,3 +710,67 @@ void LObjInfoInit(void)
     hsdLObj.load = LObjLoad;
     hsdLObj.update = LObjUpdateFunc;
 }
+
+struct _HSD_SList* HSD_SListRemove(struct _HSD_SList*);
+struct _HSD_SList* HSD_SListPrepend(struct _HSD_SList*, void*);
+
+void fn_803FF1A0(HSD_LObj* lobj);
+#if 0 /* near miss: r29/r31 swap between list and node temps */
+void fn_803FF080(HSD_LObj* lobj)
+{
+    LObjListNode** list;
+    LObjListNode* cur;
+    if (lobj == NULL)
+        return;
+    for (cur = (LObjListNode*) lbl_805DE20C; cur != NULL; cur = cur->next) {
+        if (cur->data == lobj) {
+            fn_803FF1A0(lobj);
+            break;
+        }
+    }
+    if (lobj != NULL) {
+        lobj->parent.ref_count += 1;
+        if (lobj->parent.ref_count == (u16) -1) {
+            __assert("object.h", 0x5D, "HSD_OBJ(o)->ref_count != HSD_OBJ_NOREF");
+        }
+    }
+    for (list = (LObjListNode**) &lbl_805DE20C; *list != NULL; list = &(*list)->next) {
+        u8 p;
+        HSD_LObj* o;
+        if (lobj == NULL)
+            __assert("lobj.c", 0x163, "lobj");
+        p = lobj->priority;
+        o = (*list)->data;
+        if (o == NULL)
+            __assert("lobj.c", 0x163, "lobj");
+        if ((u8) o->priority > p)
+            break;
+    }
+    *list = (LObjListNode*) HSD_SListPrepend((struct _HSD_SList*) *list, lobj);
+}
+
+#endif
+
+void fn_803FF1A0(HSD_LObj* lobj)
+{
+    LObjListNode** list;
+    int i;
+    if (lobj == NULL)
+        return;
+    for (list = (LObjListNode**) &lbl_805DE20C; *list != NULL; list = &(*list)->next) {
+        if ((*list)->data == lobj) {
+            for (i = 0; i < 9; i++) {
+                if (lobj == active_lights[i])
+                    active_lights[i] = NULL;
+            }
+            *list = (LObjListNode*) HSD_SListRemove((struct _HSD_SList*) *list);
+            if (lobj != NULL) {
+                if (decref(&lobj->parent) && lobj != NULL) {
+                    HSD_CLASS_METHOD(lobj)->release((HSD_Class*) lobj);
+                    HSD_CLASS_METHOD(lobj)->destroy((HSD_Class*) lobj);
+                }
+            }
+            break;
+        }
+    }
+}
