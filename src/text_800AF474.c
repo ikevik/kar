@@ -27,6 +27,31 @@ extern int fn_8023624C();
 extern int fn_8027B600();
 extern int fn_8040A64C();
 extern int fn_8042A22C();
+typedef struct { u8 pad[168]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_168_1_1;
+typedef struct { u8 pad[168]; unsigned a:2; unsigned f:1; unsigned b:5; } BF_168_2_1;
+typedef struct { u8 pad[168]; unsigned a:3; unsigned f:1; unsigned b:4; } BF_168_3_1;
+typedef struct { u8 pad[168]; unsigned a:4; unsigned f:1; unsigned b:3; } BF_168_4_1;
+typedef struct { u8 pad[168]; unsigned a:5; unsigned f:1; unsigned b:2; } BF_168_5_1;
+typedef struct { u8 pad[168]; unsigned a:6; unsigned f:1; unsigned b:1; } BF_168_6_1;
+typedef struct { u8 pad[168]; unsigned a:7; unsigned f:1; } BF_168_7_1;
+typedef struct { u8 pad[168]; unsigned f:1; unsigned b:7; } BF_168_0_1;
+typedef struct { u8 pad[169]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_169_1_1;
+typedef struct { u8 pad[169]; unsigned a:2; unsigned f:1; unsigned b:5; } BF_169_2_1;
+typedef struct { u8 pad[169]; unsigned a:3; unsigned f:1; unsigned b:4; } BF_169_3_1;
+typedef struct { u8 pad[169]; unsigned a:4; unsigned f:1; unsigned b:3; } BF_169_4_1;
+typedef struct { u8 pad[169]; unsigned a:5; unsigned f:1; unsigned b:2; } BF_169_5_1;
+typedef struct { u8 pad[169]; unsigned a:6; unsigned f:1; unsigned b:1; } BF_169_6_1;
+typedef struct { u8 pad[169]; unsigned a:7; unsigned f:1; } BF_169_7_1;
+typedef struct { u8 pad[169]; unsigned f:1; unsigned b:7; } BF_169_0_1;
+typedef struct { u8 pad[170]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_170_1_1;
+typedef struct { u8 pad[170]; unsigned a:2; unsigned f:1; unsigned b:5; } BF_170_2_1;
+typedef struct { u8 pad[170]; unsigned f:1; unsigned b:7; } BF_170_0_1;
+typedef struct { u8 pad[300]; unsigned a:1; unsigned f:1; unsigned b:6; } BF_300_1_1;
+typedef struct { u8 pad[300]; unsigned a:3; unsigned f:1; unsigned b:4; } BF_300_3_1;
+typedef struct { u8 pad[300]; unsigned f:1; unsigned b:7; } BF_300_0_1;
+typedef struct { unsigned a:1; unsigned f:2; unsigned b:5; } BF_0_1_2;
+typedef struct { unsigned a:3; unsigned f:2; unsigned b:3; } BF_0_3_2;
+typedef struct { unsigned f:1; unsigned b:7; } BF_0_0_1;
 extern u8 lbl_80557248[];
 extern int lbl_805D6360;
 extern int lbl_805DD6C0;
@@ -1292,5 +1317,128 @@ int fn_8010E538(int a1, int a2)
     int c0;
     c0 = fn_80101148((*(int*)((u8*)(((*(int*)&lbl_805DD6CC) + (a2 * 72))) + 536)), a1, ((*(int*)&lbl_805DD6CC) + (a2 * 72)));
     return c0;
+}
+
+void fn_800B8F38(int a1, int a2)
+{
+    ((BF_168_2_1*)(a1))->f = a2;
+}
+
+void fn_800B8F48(int a1, int a2)
+{
+    ((BF_168_3_1*)(a1))->f = a2;
+}
+
+void fn_800B8F58(int a1, int a2)
+{
+    ((BF_168_4_1*)(a1))->f = a2;
+}
+
+void fn_800B8F68(int a1, int a2)
+{
+    ((BF_168_5_1*)(a1))->f = a2;
+}
+
+void fn_800B8F78(int a1, int a2)
+{
+    ((BF_168_6_1*)(a1))->f = a2;
+}
+
+void fn_800B8F88(int a1, int a2)
+{
+    ((BF_168_7_1*)(a1))->f = a2;
+}
+
+void fn_800B8F98(int a1, int a2)
+{
+    ((BF_169_0_1*)(a1))->f = a2;
+}
+
+void fn_800B8FB4(int a1, int a2)
+{
+    ((BF_169_1_1*)(a1))->f = a2;
+}
+
+void fn_800B8FC4(int a1, int a2)
+{
+    ((BF_169_2_1*)(a1))->f = a2;
+}
+
+void fn_800B8FD4(int a1, int a2)
+{
+    ((BF_169_3_1*)(a1))->f = a2;
+}
+
+void fn_800B8FE4(int a1, int a2)
+{
+    ((BF_169_4_1*)(a1))->f = a2;
+}
+
+void fn_800B8FF4(int a1, int a2)
+{
+    ((BF_169_5_1*)(a1))->f = a2;
+}
+
+void fn_800B9004(int a1, int a2)
+{
+    ((BF_169_6_1*)(a1))->f = a2;
+}
+
+void fn_800B9014(int a1, int a2)
+{
+    ((BF_169_7_1*)(a1))->f = a2;
+}
+
+void fn_800B9024(int a1, int a2)
+{
+    ((BF_170_0_1*)(a1))->f = a2;
+}
+
+void fn_800B9034(int a1, int a2)
+{
+    ((BF_170_1_1*)(a1))->f = a2;
+}
+
+void fn_800B9044(int a1, int a2)
+{
+    ((BF_170_2_1*)(a1))->f = a2;
+}
+
+void fn_800B9070(int a1, int a2)
+{
+    ((BF_168_0_1*)(a1))->f = a2;
+}
+
+void fn_800B9080(int a1, int a2)
+{
+    ((BF_168_1_1*)(a1))->f = a2;
+}
+
+void fn_800CD8E4(int a1)
+{
+    ((BF_0_1_2*)(a1))->f = 0;
+    ((BF_0_3_2*)(a1))->f = 0;
+    *(int*)((u8*)(a1) + 4) = 0;
+    ((BF_0_0_1*)(a1))->f = 0;
+    *(int*)((u8*)(a1) + 44) = 0;
+    *(int*)((u8*)(a1) + 40) = 0;
+    *(int*)((u8*)(a1) + 60) = 0;
+    *(int*)((u8*)(a1) + 56) = 0;
+}
+
+void fn_800F91C8(int a1)
+{
+    ((BF_300_0_1*)(a1))->f = 1;
+    ((BF_300_1_1*)(a1))->f = 1;
+}
+
+void fn_800F91E8(int a1)
+{
+    ((BF_300_3_1*)(a1))->f = 1;
+}
+
+void fn_800F91FC(int a1)
+{
+    ((BF_300_3_1*)(a1))->f = 1;
 }
 
