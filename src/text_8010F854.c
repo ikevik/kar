@@ -100,6 +100,34 @@ extern void fn_8012FAF0();
 extern void fn_8012FFF4();
 extern void fn_8013065C();
 extern void fn_8010A5DC();
+
+extern int lbl_805DD770, lbl_805DD76C, lbl_805DD768, lbl_805DD764, lbl_805DD760, lbl_805DD75C;
+extern char lbl_805586FC[];
+extern u8 lbl_804A7B84[];
+extern const float lbl_805DFB48, lbl_805DFB58, lbl_805DFB5C, lbl_805DFB60;
+extern void stadiumPrediction();
+extern void fn_80128108();
+extern void fn_80124F9C();
+extern void fn_80128170();
+extern void fn_80125004();
+extern void fn_801218A4();
+extern void fn_801217AC();
+extern void fn_801216B4();
+extern void fn_801221C8();
+extern void fn_8042A258();
+extern void fn_80409250(void*, float);
+extern void fn_800550BC(void*, float, int);
+extern void fn_8040A64C(void*);
+extern void fn_80055ACC(void*, float);
+extern void fn_80055AA8(void*, float);
+extern signed char getPlayerCount();
+extern void func_80428F64();
+extern int fn_80112B20();
+extern int HSD_CObjSetCurrent();
+extern void HSD_GObj_DispatchGXLink();
+extern void HSD_CObjEndCurrent();
+extern void fn_8012B580();
+typedef struct { u8 pad[8]; unsigned a : 6; unsigned f : 1; unsigned g : 1; } Flg;
 extern void fn_800EE660();
 
 
@@ -611,4 +639,157 @@ void fn_80113C38(int p)
 void fn_80113C70(int p)
 {
     fn_8012C908(lbl_805578B8[p + 1], p);
+}
+
+void* fn_80112044(void)
+{
+    return lbl_805578B8;
+}
+
+void* fn_80112050(void) { return &lbl_805DD770; }
+void* fn_80112058(void) { return &lbl_805DD76C; }
+void* fn_80112444(void) { return &lbl_805DD768; }
+void* fn_8011244C(void) { return &lbl_805DD764; }
+void* fn_80112454(void) { return &lbl_805DD760; }
+void* fn_8011245C(void) { return &lbl_805DD75C; }
+
+void fn_80113EB8(int p)
+{
+    signed char* b = lbl_805578B8;
+    if (fn_800098C0(p)) {
+        fn_8012B580(b[p + 1], p);
+    }
+}
+
+void fn_80113FB4(void* a, void* b)
+{
+    if (getTrialFlag() != 0 || fn_8000AD48() != 0) {
+        stadiumPrediction(a, b, 1);
+    }
+}
+
+void fn_801140E4(void* a)
+{
+    if (getTrialFlag() != 0 || fn_8000AD48() != 0) {
+        int i;
+        for (i = 0; i < 4; i++) {
+            fn_80128108(i, a);
+        }
+        fn_80124F9C(0, a);
+    }
+}
+
+void fn_80114154(void)
+{
+    fn_80128170();
+    fn_80125004();
+}
+
+void fn_80114524(void) { fn_801218A4(); }
+void fn_80114544(void) { fn_801217AC(); }
+void fn_80114564(void) { fn_801216B4(); }
+void fn_80114584(void) { fn_801221C8(); }
+
+void fn_80114EEC(void* a)
+{
+    ((Flg*)P(a, 0x2c))->f = 1;
+}
+
+void fn_80114F04(void* a)
+{
+    ((Flg*)P(a, 0x2c))->f = 0;
+}
+
+void fn_8011500C(void* a)
+{
+    Flg* c = P(a, 0x2c);
+    if (c->f) {
+        fn_8042A258();
+    }
+}
+
+void fn_8011503C(void* a, int i)
+{
+    fn_80409250(a, (float)i);
+    fn_800550BC(a, lbl_805DFB48, 0xffff);
+    fn_8040A64C(a);
+}
+
+void fn_801150A0(void* a, float f, int i)
+{
+    fn_80055ACC(a, (float)i);
+    fn_800550BC(a, f, 0x400);
+    fn_8040A64C(a);
+}
+
+void fn_80115114(void* a, int i)
+{
+    fn_80055ACC(a, (float)i);
+    fn_800550BC(a, lbl_805DFB48, 0x400);
+    fn_8040A64C(a);
+}
+
+void fn_80115174(void* a, float f, int i)
+{
+    fn_80055AA8(a, (float)i);
+    fn_800550BC(a, f, 0x80);
+    fn_8040A64C(a);
+}
+
+void fn_801151E8(void* x)
+{
+    HSD_ObjFree(lbl_805586FC, x);
+}
+
+float fn_80115214(void)
+{
+    if (getPlayerCount() <= 1) {
+        return lbl_805DFB58;
+    } else if (getPlayerCount() == 2) {
+        return lbl_805DFB5C;
+    }
+    return lbl_805DFB60;
+}
+
+void fn_80115264(void* a)
+{
+    void* c = P(a, 0x2c);
+    *(float*)((u8*)c + 0xc) = lbl_805DFB58;
+    if (getPlayerCount() <= 1) {
+        *(float*)((u8*)c + 0x10) = lbl_805DFB58;
+    } else if (getPlayerCount() == 2) {
+        *(float*)((u8*)c + 0x10) = lbl_805DFB5C;
+    } else {
+        *(float*)((u8*)c + 0x10) = lbl_805DFB60;
+    }
+}
+
+void fn_8011582C(void)
+{
+    func_80428F64();
+}
+
+u8 fn_8011584C(signed char a, signed char b)
+{
+    return lbl_804A7B84[a * 12 + b];
+}
+
+void fn_8011586C(void* a)
+{
+    if (fn_80112B20()) {
+        if (HSD_CObjSetCurrent(P(a, 0x28))) {
+            HSD_GObj_DispatchGXLink(a, 7);
+            HSD_CObjEndCurrent();
+        }
+    }
+}
+
+void fn_8011596C(void* a)
+{
+    if (fn_80112B20()) {
+        if (HSD_CObjSetCurrent(P(a, 0x28))) {
+            HSD_GObj_DispatchGXLink(a, 7);
+            HSD_CObjEndCurrent();
+        }
+    }
 }
