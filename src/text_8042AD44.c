@@ -273,3 +273,55 @@ void fn_8043033C() {
     lbl_805DE37C = 0;
     fn_80433154(0);
 }
+
+/* ---- w3f batch 2 ---- */
+extern unsigned lbl_8058C808[];
+extern int lbl_8058CCE8[];
+extern void HSD_JObjUnref();
+extern void HSD_JObjSetupMatrixSub();
+extern void __assert(char*, int, char*);
+extern char lbl_80505390[];
+extern char lbl_805053D4[];
+
+void fn_8042B7E4(p) int* p; {
+    unsigned v = p[1];
+    if (v & 0x8000) {
+        unsigned* t = lbl_8058C808;
+        int i = (v >> 10) & 0x1C;
+        if (*(unsigned*)((char*)t + i) != 0) {
+            HSD_JObjUnref(*(unsigned*)((char*)t + i));
+            *(unsigned*)((char*)t + i) = 0;
+        }
+    }
+}
+
+void fn_8042B77C() {
+    int i;
+    for (i = 0; i < 256; i++) {
+        if (lbl_8058C808[i] != 0) {
+            HSD_JObjUnref(lbl_8058C808[i]);
+            lbl_8058C808[i] = 0;
+        }
+    }
+}
+
+void fn_8043012C(a, b) char* a; char* b; {
+    if (a != 0) {
+        *(char**)(a + 0x10) = b;
+        if (b != 0) {
+            if (b != 0) {
+                (*(unsigned short*)(b + 4))++;
+                if (*(unsigned short*)(b + 4) == 0xFFFF) {
+                    __assert(lbl_805051E8, 0x5D, lbl_805051F4);
+                }
+            }
+        }
+    }
+}
+
+int fn_804383F0(i) int i; {
+    int ok = 0;
+    if (i >= 0 && i < 32) ok = 1;
+    if (ok == 0) __assert(lbl_80505390, 0x98, lbl_805053D4);
+    return lbl_8058CCE8[i];
+}
