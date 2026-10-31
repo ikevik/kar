@@ -382,7 +382,7 @@ config.libs = [
             Object(NonMatching, "dolphin/dolphin_sdk_si.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_exi.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_ax.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
-            Object(NonMatching, "dolphin/dolphin_sdk_mix.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
+            Object(NonMatching, "dolphin/dolphin_sdk_mix.c", mw_version="GC/1.2.5n", cflags=cflags_sdk_nopeep),
             Object(NonMatching, "dolphin/dolphin_sdk_synth.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
         ],
     ),
