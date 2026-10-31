@@ -12,7 +12,6 @@ extern void HSD_TExpAlphaInSub(HSD_TExp* texp, s32 sel, HSD_TExp* exp, s32 idx);
 extern s32 fn_803F903C(void);
 extern void fn_803F908C(HSD_TevDesc* desc);
 
-extern void HSD_TExpUnref(HSD_TExp* texp, s32 sel);
 
 typedef struct _TExpTObj {
     u8 pad0[0xC];
@@ -55,6 +54,35 @@ void HSD_TExpRef(HSD_TExp* texp, u8 sel)
         texp->cnst.ref++;
         break;
     default:
+        break;
+    }
+}
+
+void HSD_TExpUnref(HSD_TExp* texp, u8 sel)
+{
+    int i;
+    switch (HSD_TExpGetType(texp)) {
+    case HSD_TE_TEV:
+        if (sel == HSD_TE_RGB) {
+            if (texp->tev.c_ref != 0) {
+                texp->tev.c_ref--;
+            }
+        } else {
+            if (texp->tev.a_ref != 0) {
+                texp->tev.a_ref--;
+            }
+        }
+        if (texp->tev.c_ref == 0 && texp->tev.a_ref == 0) {
+            for (i = 0; i < 4; i++) {
+                HSD_TExpUnref(texp->tev.c_in[i].exp, texp->tev.c_in[i].sel);
+                HSD_TExpUnref(texp->tev.a_in[i].exp, texp->tev.a_in[i].sel);
+            }
+        }
+        break;
+    case HSD_TE_CNST:
+        if (texp->cnst.ref > 0) {
+            texp->cnst.ref--;
+        }
         break;
     }
 }
