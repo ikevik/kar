@@ -66,13 +66,18 @@ s32 __CARDPutControlBlock(u8* card, s32 result)
     return result;
 }
 
+#pragma dont_inline reset
 s32 CARDGetResultCode(s32 chan)
 {
+    u8* card;
+
     if (chan < 0 || chan >= 2) {
         return -128;
     }
-    return *(s32*)(lbl_8056E4E8 + chan * 0x110 + 4);
+    card = lbl_8056E4E8 + chan * 0x110;
+    return *(s32*)(card + 4);
 }
+#pragma dont_inline on
 
 int fn_803E30BC(int x)
 {
@@ -293,3 +298,24 @@ void __CARDUnlockedHandler(s32 chan, void* context)
         callback(chan, EXIProbe(chan) ? 1 : -3);
     }
 }
+
+extern void OSSleepThread(void* queue);
+extern u32 OSGetTick(void);
+extern u32 lbl_805DC9F8;
+
+#pragma dont_inline reset
+s32 fn_803E3024(s32 chan)
+{
+    u8* card;
+    int enabled;
+    s32 result;
+
+    card = lbl_8056E4E8 + chan * 0x110;
+    enabled = OSDisableInterrupts();
+    while ((result = CARDGetResultCode(chan)) == -1) {
+        OSSleepThread(card + 0x8c);
+    }
+    OSRestoreInterrupts(enabled);
+    return result;
+}
+#pragma dont_inline on
