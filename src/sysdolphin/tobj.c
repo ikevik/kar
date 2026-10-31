@@ -4,6 +4,9 @@ extern void* memset(void*, int, unsigned long);
 #include <sysdolphin/class.h>
 #include <sysdolphin/tobj.h>
 
+extern void* HSD_Alloc(u32 size);
+extern void HSD_AObjReqAnim(struct _HSD_AObj* aobj, f32 frame);
+extern struct _HSD_AObj* HSD_AObjLoadDesc(struct _HSD_AObjDesc* desc);
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void* hsdAllocMemPiece(s32 size);
 extern void HSD_Free(void*);
@@ -21,15 +24,98 @@ extern void TObjMakeTExp();
 extern void MakeTextureMtx();
 extern void TObjUpdateFunc();
 
-void HSD_TObjRemoveAll(HSD_TObj* tobj)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+static inline HSD_TexAnim* findTexAnim(HSD_TexAnim* texanim, u16 id)
+{
+    HSD_TexAnim* ta;
+    for (ta = texanim; ta != NULL; ta = ta->next) {
+        if (ta->id == id)
+            return ta;
+    }
+    return NULL;
+}
+
+void HSD_TObjRemoveAnimAll(HSD_TObj* tobj)
 {
     HSD_TObj* tp;
+    if (tobj != NULL) {
+        for (tp = tobj; tp != NULL; tp = tp->next) {
+            if (tp != NULL) {
+                HSD_AObjRemove(tp->aobj);
+                tp->aobj = NULL;
+            }
+        }
+    }
+}
+
+void HSD_TObjAddAnim(HSD_TObj* tobj, HSD_TexAnim* texanim)
+{
+    HSD_TObj* tp;
+    HSD_TexAnim* ta;
+    s32 i;
+    if (tobj != NULL) {
+        for (tp = tobj; tp != NULL; tp = tp->next) {
+            if (tp != NULL) {
+                ta = findTexAnim(texanim, tp->anim_id);
+                if (ta != NULL) {
+                    if (tp->aobj != NULL)
+                        HSD_AObjRemove(tp->aobj);
+                    tp->aobj = HSD_AObjLoadDesc(ta->aobjdesc);
+                    tp->imagetbl = ta->imagetbl;
+                    if (tp->tluttbl != NULL) {
+                        for (i = 0; tp->tluttbl[i] != NULL; i++)
+                            HSD_TlutFree(tp->tluttbl[i]);
+                        HSD_Free(tp->tluttbl);
+                    }
+                    if (ta->n_tluttbl != 0) {
+                        tp->tluttbl = HSD_Alloc((ta->n_tluttbl + 1) * 4);
+                        for (i = 0; i < ta->n_tluttbl; i++) {
+                            tp->tluttbl[i] = HSD_TlutLoadDesc((HSD_TlutDesc*) ta->tluttbl[i]);
+                        }
+                        tp->tluttbl[i] = NULL;
+                    } else {
+                        tp->tluttbl = NULL;
+                    }
+                    tp->tlut_no = 0xFF;
+                }
+            }
+        }
+    }
+}
+
+void HSD_TObjReqAnimAllByFlags(HSD_TObj* tobj, f32 startframe, u32 flags)
+{
+    HSD_TObj* tp;
+    if (tobj != NULL) {
+        for (tp = tobj; tp != NULL; tp = tp->next) {
+            if (tp != NULL && (flags & TOBJ_ANIM)) {
+                HSD_AObjReqAnim(tp->aobj, startframe);
+            }
+        }
+    }
+}
+
+void HSD_TObjRemoveAll(HSD_TObj* tobj)
+{
     HSD_TObj* tn;
-    for (tp = tobj; tp != NULL; tp = tn) {
-        tn = tp->next;
-        if (tp != NULL) {
-            HSD_CLASS_METHOD(tp)->release((HSD_Class*) tp);
-            HSD_CLASS_METHOD(tp)->destroy((HSD_Class*) tp);
+    for (; tobj != NULL; tobj = tn) {
+        tn = tobj->next;
+        if (tobj != NULL) {
+            HSD_CLASS_METHOD(tobj)->release((HSD_Class*) tobj);
+            HSD_CLASS_METHOD(tobj)->destroy((HSD_Class*) tobj);
         }
     }
 }
@@ -45,10 +131,10 @@ void fn_803F7870(HSD_TObj* tobj, HSD_TObj* new_tobj)
 {
     if (tobj == NULL)
         return;
-    if (new_tobj == NULL)
-        return;
-    new_tobj->next = tobj->next;
-    tobj->next = new_tobj;
+    if (new_tobj != NULL) {
+        new_tobj->next = tobj->next;
+        tobj->next = new_tobj;
+    }
 }
 
 HSD_TObj* HSD_TObjAlloc(void)
@@ -108,7 +194,7 @@ int TObjInit(HSD_TObj* tobj)
     int rc = HSD_PARENT_INFO(&lbl_80501E30)->init((HSD_Class*) tobj);
     if (rc >= 0) {
         rc = 0;
-        *(u16*) ((u8*) tobj + 0x4A) = 0xFFFF;
+        tobj->anim_id = 0xFFFF;
     }
     return rc;
 }
@@ -139,3 +225,4 @@ void TObjAmnesia(HSD_ClassInfo* info)
         lbl_805DE17C = NULL;
     HSD_PARENT_INFO(&lbl_80501E30)->amnesia(info);
 }
+
