@@ -1603,6 +1603,58 @@ OSThread* SetEffectivePriority(OSThread* thread, s32 priority)
     return 0;
 }
 
+static inline s32 EffPrio(OSThread* thread)
+{
+    s32 priority = thread->base;
+    OSMutex* mutex;
+    for (mutex = thread->queueMutex.head; mutex; mutex = mutex->link.next) {
+        OSThread* blocked = mutex->queue.head;
+        if (blocked && blocked->priority < priority) {
+            priority = blocked->priority;
+        }
+    }
+    return priority;
+}
+
+#pragma peephole on
+s32 OSResumeThread(OSThread* thread)
+{
+    int enabled = OSDisableInterrupts();
+    s32 suspendCount = thread->suspend--;
+    if (thread->suspend < 0) {
+        thread->suspend = 0;
+    } else if (thread->suspend == 0) {
+        switch (thread->state) {
+        case 1:
+            thread->priority = EffPrio(thread);
+            SetRun(thread);
+            break;
+        case 4:
+            RemoveItem(thread->queue, thread, link);
+            thread->priority = EffPrio(thread);
+            AddPrio(thread->queue, thread, link);
+            if (thread->mutex) {
+                OSThread* owner = thread->mutex->thread;
+                do {
+                    s32 priority;
+                    if (owner->suspend > 0) {
+                        break;
+                    }
+                    priority = __OSGetEffectivePriority(owner);
+                    if (owner->priority == priority) {
+                        break;
+                    }
+                    owner = SetEffectivePriority(owner, priority);
+                } while (owner);
+            }
+            break;
+        }
+        __OSReschedule();
+    }
+    OSRestoreInterrupts(enabled);
+    return suspendCount;
+}
+
 #pragma peephole on
 s32 OSSuspendThread(OSThread* thread)
 {
