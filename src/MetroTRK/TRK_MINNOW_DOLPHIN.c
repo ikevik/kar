@@ -312,6 +312,7 @@ s32 fn_803BF59C(void)
     return 0;
 }
 
+#pragma dont_inline on
 void fn_803BF730(u32 x)
 {
     lbl_8056B858[0] = x;
@@ -337,6 +338,7 @@ s32 fn_803BFF38(void* p)
     return 0;
 }
 
+#pragma dont_inline reset
 asm u32 fn_803C00C8(void)
 {
     nofralloc
