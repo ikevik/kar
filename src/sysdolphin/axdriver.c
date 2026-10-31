@@ -740,8 +740,8 @@ static void axResumeVoice(s32 id)
         if ((v->flags & SMSTATE_MASK) != SMSTATE_ACTIVE) {
             __assert(__FILE__, 0xbd4, "(v->flags&SMSTATE_MASK) == SMSTATE_ACTIVE");
         }
-        v->flags &= ~0x20000000;
     }
+    v->flags &= ~0x20000000;
     OSRestoreInterrupts(intr);
 }
 
