@@ -24,7 +24,7 @@ s32 HSD_ArchiveParse(HSD_Archive* archive, u8* src, u32 file_size)
     memcpy(archive, src, sizeof(HSD_ArchiveHeader));
 
     if (archive->header.file_size != file_size) {
-        _OSReport("HSD_ArchiveParse: byte-order mismatch! Please check data format\n");
+        OSReport("HSD_ArchiveParse: byte-order mismatch! Please check data format\n");
         return -1;
     }
 

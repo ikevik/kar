@@ -37,7 +37,7 @@ void OSReport_PrintSpaces(s32 count) {
     s32 i;
 
     for (i = 0; i < count; i++) {
-        _OSReport(lbl_805DCD58);
+        OSReport(lbl_805DCD58);
     }
 }
 
@@ -461,8 +461,8 @@ char unused5[] = "info_hash";
 void func_804212F4(HSD_ClassInfo* info, s32 indent)
 {
     OSReport_PrintSpaces(indent);
-    _OSReport("<class %s>\n", info->head.class_name);
+    OSReport("<class %s>\n", info->head.class_name);
     OSReport_PrintSpaces(indent);
-    _OSReport("    info %d object %d nb_exist %d nb_peak %d\n",
+    OSReport("    info %d object %d nb_exist %d nb_peak %d\n",
         info->head.info_size, info->head.obj_size, info->head.nb_exist, info->head.nb_peak);
 }

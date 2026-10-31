@@ -407,7 +407,7 @@ config.libs = [
             Object(NonMatching, "sysdolphin/list_object.c"),
             Object(NonMatching, "sysdolphin/memory.c"),
             Object(NonMatching, "sysdolphin/shadow.c"),
-            Object(NonMatching, "sysdolphin/archive.c"),
+            Object(Matching, "sysdolphin/archive.c"),
             Object(NonMatching, "sysdolphin/random.c"),
             Object(NonMatching, "sysdolphin/bytecode.c"),
             Object(NonMatching, "sysdolphin/class.c"),
