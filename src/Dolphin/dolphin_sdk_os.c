@@ -108,7 +108,7 @@ extern void* __OSArenaLo;
 extern char lbl_805DC974[4];
 extern int lbl_805DC978;
 
-#pragma peephole on
+#pragma peephole off
 u32 OSGetConsoleType(void)
 {
     u32 type;
@@ -1011,7 +1011,7 @@ static asm void PPCMtmsr(register u32 val)
     blr
 }
 
-#pragma peephole on
+#pragma peephole off
 void OSClearContext(OSContext* context)
 {
     context->mode = 0;
@@ -1021,22 +1021,35 @@ void OSClearContext(OSContext* context)
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void OSSetCurrentContext(OSContext* context)
 {
+    register u32 msr;
+    u32 phys;
+    u32 tmp;
     *(OSContext**)0x800000D4 = context;
-    *(u32*)0x800000C0 = (u32)context & 0x3FFFFFFF;
-    if (context == *(OSContext**)0x800000D8) {
-        context->srr1 |= 0x2000;
-        PPCMtmsr(PPCMfmsr() | 2);
+    phys = (u32)context & 0x3FFFFFFF;
+    *(u32*)0x800000C0 = phys;
+    if ((s32)*(OSContext**)0x800000D8 == (s32)context) {
+        tmp = context->srr1;
+        tmp |= 0x2000;
+        context->srr1 = tmp;
+        asm { mfmsr msr }
+        msr |= 2;
+        asm { mtmsr msr }
     } else {
-        context->srr1 &= ~0x2000;
-        PPCMtmsr((PPCMfmsr() & ~0x2000) | 2);
+        tmp = context->srr1;
+        tmp &= ~0x2000;
+        context->srr1 = tmp;
+        asm { mfmsr msr }
+        msr &= ~0x2000;
+        msr |= 2;
+        asm { mtmsr msr }
         asm { isync }
     }
 }
 
-#pragma peephole on
+#pragma peephole off
 void __OSModuleInit(void)
 {
     *(u32*)0x800030CC = 0;
@@ -1071,7 +1084,7 @@ s32 __OSGetEffectivePriority(OSThread* thread)
     return priority;
 }
 
-#pragma peephole on
+#pragma peephole off
 int OSOnReset(int final)
 {
     if (final) {
@@ -1100,7 +1113,7 @@ u16 OSGetFontEncode(void)
     return lbl_805DC998;
 }
 
-#pragma peephole on
+#pragma peephole off
 void OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
 {
     int i;
