@@ -1,5 +1,36 @@
 /* auto small functions */
 #pragma dont_inline on
+int fn_80430190();
+void fn_8043D520();
+void fn_8043E018();
+void fn_8043E6E8();
+void fn_8043E6EC();
+void fn_8043E6F0();
+void fn_8043E6F4();
+void fn_8043E6F8();
+void fn_8043E6FC();
+void fn_8043E700();
+void fn_8043E704();
+void fn_8043E708();
+void fn_8043E70C();
+void fn_8043E710();
+void fn_8043E714();
+void fn_8043E718();
+void fn_8043E71C();
+void fn_8043F0A0();
+void fn_8043010C();
+void fn_8043750C();
+void fn_8043979C();
+void fn_804397A8();
+void fn_8043FD04();
+void fn_8043FFAC();
+void fn_80440718();
+int fn_804407D8();
+int fn_80430270();
+void fn_80439D14();
+void fn_8043FFB4();
+extern char lbl_805051E8[];
+extern char lbl_805051F4[];
 extern unsigned short lbl_805DCDD0;
 extern int lbl_805DCE08;
 extern int lbl_805DCE0C;
@@ -24,49 +55,49 @@ void fn_8042BA60(p, v) char* p; int v; { *(int*)(p + 88) = v; }
 
 int fn_80430190(p) char* p; { return *(int*)(p + 0); }
 
-void fn_8043D520(void) {}
+void fn_8043D520() {}
 
-void fn_8043E018(void) {}
+void fn_8043E018() {}
 
-void fn_8043E6E8(void) {}
+void fn_8043E6E8() {}
 
-void fn_8043E6EC(void) {}
+void fn_8043E6EC() {}
 
-void fn_8043E6F0(void) {}
+void fn_8043E6F0() {}
 
-void fn_8043E6F4(void) {}
+void fn_8043E6F4() {}
 
-void fn_8043E6F8(void) {}
+void fn_8043E6F8() {}
 
-void fn_8043E6FC(void) {}
+void fn_8043E6FC() {}
 
-void fn_8043E700(void) {}
+void fn_8043E700() {}
 
-void fn_8043E704(void) {}
+void fn_8043E704() {}
 
-void fn_8043E708(void) {}
+void fn_8043E708() {}
 
-void fn_8043E70C(void) {}
+void fn_8043E70C() {}
 
-void fn_8043E710(void) {}
+void fn_8043E710() {}
 
-void fn_8043E714(void) {}
+void fn_8043E714() {}
 
-void fn_8043E718(void) {}
+void fn_8043E718() {}
 
-void fn_8043E71C(void) {}
+void fn_8043E71C() {}
 
-void fn_8043F0A0(void) {}
+void fn_8043F0A0() {}
 
-void fn_8043010C(void) {
+void fn_8043010C() {
     fn_80417580();
 }
 
-void fn_8043750C(void) {
+void fn_8043750C() {
     lbl_805DE3D8 = -1;
 }
 
-void fn_8043979C(void) {
+void fn_8043979C() {
     lbl_805DE3F0 = 0;
 }
 
@@ -92,11 +123,11 @@ void fn_80440718(a0) int a0; {
     fn_80439854();
 }
 
-int fn_804407D8(void) {
+int fn_804407D8() {
     return lbl_805DE480;
 }
 
-int fn_80430270(void) {
+int fn_80430270() {
 unsigned short t0;
 unsigned short t1;
 int m0;

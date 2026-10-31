@@ -1,15 +1,20 @@
 /* auto small functions */
 #pragma dont_inline on
+void __end_critical_region();
+void __begin_critical_region();
+void __kill_critical_regions();
+void __prep_buffer();
+int fn_803B3670();
 extern char lbl_80569B10[];
 extern unsigned char lbl_805DDCD8;
 
 
 
-void __end_critical_region(void) {}
+void __end_critical_region() {}
 
-void __begin_critical_region(void) {}
+void __begin_critical_region() {}
 
-void __kill_critical_regions(void) {}
+void __kill_critical_regions() {}
 
 
 void __prep_buffer(a0) int a0; {

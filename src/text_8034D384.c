@@ -1,5 +1,15 @@
 /* auto small functions */
 #pragma dont_inline on
+unsigned char fn_80369C94();
+unsigned char fn_8036B180();
+int fn_8036BF04();
+unsigned char fn_8036C064();
+unsigned char fn_8036E8CC();
+int fn_80369010();
+int fn_8036B0B8();
+void fn_8036E748();
+int fn_80369B14();
+void fn_8036ABD4();
 extern void fn_8036AC00();
 
 
@@ -10,7 +20,7 @@ unsigned char fn_80369C94(p) char* p; { return *(unsigned char*)(p + 124); }
 
 unsigned char fn_8036B180(p) char* p; { return *(unsigned char*)(p + 180); }
 
-int fn_8036BF04(void) { return 0; }
+int fn_8036BF04() { return 0; }
 
 unsigned char fn_8036C064(p) char* p; { return *(unsigned char*)(p + 112); }
 

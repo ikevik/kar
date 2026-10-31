@@ -1,5 +1,66 @@
 /* auto small functions */
 #pragma dont_inline on
+int fn_8045D63C();
+int fn_8045DADC();
+int fn_8045DE24();
+void fn_8045F4D0();
+int fn_8045F704();
+int fn_8045F70C();
+int fn_8045F714();
+int fn_8045F71C();
+int fn_8045F724();
+void fn_8045F72C();
+int fn_8045F828();
+int fn_8045F830();
+void fn_8046F250();
+int fn_80471034();
+void fn_8047558C();
+void fn_80479AF0();
+int HVQM4BufvChkDisp();
+int HVQM4BufvChkFree();
+void HVQM4DecodePpic();
+void HVQM4InitSeqObj();
+int HVQM4PlayerExControlExit();
+int HVQM4PlayerExStart();
+int LexicalCast();
+void UpdatePlay();
+void cPlayer_PostPhysicsUpdate();
+void fn_80446D3C();
+void fn_804479D4();
+void fn_80447A4C();
+int fn_804484C8();
+void fn_8044C710();
+void fn_8044C718();
+void fn_8044C720();
+void fn_8044E698();
+void fn_8044E6BC();
+void fn_8044ECCC();
+void fn_80452750();
+void fn_80452770();
+int fn_80452790();
+int fn_8045ADAC();
+int fn_8045ADBC();
+int fn_8045ADCC();
+void fn_8045BE44();
+void fn_8045BE58();
+void fn_8045BF84();
+void fn_8045C958();
+void fn_8045C964();
+void fn_8045D644();
+void fn_8045D664();
+void fn_8045D6A4();
+void fn_8045D6CC();
+int fn_8045D850();
+void fn_8045DE2C();
+void fn_8045E978();
+void fn_80471D90();
+void setDoneCallFunc();
+int HVQM4PlayerExGetMaxAudioTrack();
+int fn_804457E0();
+int fn_80448264();
+void fn_804567E4();
+int fn_80472174();
+int fn_804755EC();
 extern char lbl_80596DA0[];
 extern char lbl_80596E40[];
 extern char lbl_805BE470[];
@@ -80,13 +141,13 @@ int fn_8045F828(p) char* p; { return *(int*)(p + 12); }
 
 int fn_8045F830(p) char* p; { return *(int*)(p + 8); }
 
-void fn_8046F250(void) {}
+void fn_8046F250() {}
 
-int fn_80471034(void) { return 1; }
+int fn_80471034() { return 1; }
 
-void fn_8047558C(void) {}
+void fn_8047558C() {}
 
-void fn_80479AF0(void) {}
+void fn_80479AF0() {}
 
 int HVQM4BufvChkDisp(a0) int a0; {
     int t0;
@@ -134,7 +195,7 @@ int HVQM4PlayerExStart(a0) int a0; {
     return 1;
 }
 
-int LexicalCast(void) {
+int LexicalCast() {
     fn_8045D6CC();
     return 1;
 }
@@ -145,7 +206,7 @@ void UpdatePlay(a0) int a0; {
     HVQM4BufaSetFree(t0);
 }
 
-void cPlayer_PostPhysicsUpdate(void) {
+void cPlayer_PostPhysicsUpdate() {
     HSD_Free();
 }
 
@@ -161,11 +222,11 @@ void fn_804479D4(a0, a1) int a0; int a1; {
     lbl_805DE4E8 = a1;
 }
 
-void fn_80447A4C(void) {
+void fn_80447A4C() {
     ((void(*)())lbl_805DE4E8)();
 }
 
-int fn_804484C8(void) {
+int fn_804484C8() {
     return lbl_805DE538;
 }
 
@@ -181,39 +242,39 @@ void fn_8044C720(a0) int a0; {
     lbl_805DE500 = a0;
 }
 
-void fn_8044E698(void) {
+void fn_8044E698() {
     AISetStreamPlayState(0);
 }
 
-void fn_8044E6BC(void) {
+void fn_8044E6BC() {
     AISetStreamPlayState(1);
 }
 
-void fn_8044ECCC(void) {
+void fn_8044ECCC() {
     HSD_ObjAllocInit((int)lbl_8059A818, 156, 4);
 }
 
-void fn_80452750(void) {
+void fn_80452750() {
     fn_800596B4();
 }
 
-void fn_80452770(void) {
+void fn_80452770() {
     fn_80059798();
 }
 
-int fn_80452790(void) {
+int fn_80452790() {
     return *(int*)((int)lbl_8059A880 + 1432);
 }
 
-int fn_8045ADAC(void) {
+int fn_8045ADAC() {
     return *(int*)((int)lbl_8059A880 + 0);
 }
 
-int fn_8045ADBC(void) {
+int fn_8045ADBC() {
     return *(int*)((int)lbl_8059A880 + 1300);
 }
 
-int fn_8045ADCC(void) {
+int fn_8045ADCC() {
     return *(int*)((int)lbl_8059A880 + 1296);
 }
 
@@ -226,45 +287,45 @@ void fn_8045BE58(a0) int a0; {
     *(int*)((int)lbl_805B4698 + 808) = a0;
 }
 
-void fn_8045BF84(void) {
+void fn_8045BF84() {
     OSSuspendThread((int)lbl_805B4698);
 }
 
-void fn_8045C958(void) {
+void fn_8045C958() {
     lbl_805DE580 = 1;
 }
 
-void fn_8045C964(void) {
+void fn_8045C964() {
     lbl_805DE580 = 0;
 }
 
-void fn_8045D644(void) {
+void fn_8045D644() {
     DVDGetCommandBlockStatus();
 }
 
-void fn_8045D664(void) {
+void fn_8045D664() {
     HSD_Alloc();
 }
 
-void fn_8045D6A4(void) {
+void fn_8045D6A4() {
     ((void(*)())lbl_805DD1C8)();
 }
 
-void fn_8045D6CC(void) {
+void fn_8045D6CC() {
     ((void(*)())lbl_805DD1CC)();
 }
 
-int fn_8045D850(void) {
+int fn_8045D850() {
     fn_8045D6CC();
     return 1;
 }
 
-void fn_8045DE2C(void) {
+void fn_8045DE2C() {
     lbl_805DE58C = 1;
     fn_8045C958();
 }
 
-void fn_8045E978(void) {
+void fn_8045E978() {
     lbl_805DE588 = 0;
     lbl_805DE58C = 0;
     fn_8045C964();
@@ -291,7 +352,7 @@ fn_8044C284((a0 & 0xff), a1, 63, 0);
 return 1;
 }
 
-int fn_80448264(void) {
+int fn_80448264() {
 return (lbl_805DE4F0 - lbl_805DE4F4);
 }
 
