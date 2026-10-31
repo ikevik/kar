@@ -1,5 +1,8 @@
 #pragma dont_inline on
 
+extern char* gmGetClearcheckerP();
+extern char* gmGetGlobalP();
+
 extern void CSS_airRide_Main();
 extern void cityTrial_gameSettingsThink();
 extern void fn_80012E64();
@@ -13,7 +16,6 @@ extern void fn_80043B30();
 extern void fn_800444F8();
 extern void fn_80045CA4();
 extern void fn_80046430();
-extern void fn_80047844();
 extern void fn_80051AA4();
 extern void fn_8005ECA0();
 extern void fn_8007D050();
@@ -29,7 +31,6 @@ extern void fn_80282300();
 extern void fn_8028236C();
 extern void fn_80442FA4();
 extern void fn_804484C8();
-extern void gmGetGlobalP();
 extern void menuInputGrabber();
 extern void pauseMain();
 extern void shadowRendering();
@@ -60,7 +61,7 @@ void fn_80045A6C(void) { fn_800444F8(); }
 void fn_800461C4(void) { fn_80045CA4(); }
 void fn_80047330(void) { fn_80046430(); }
 void fn_800473D0(void) { fn_80139078(); }
-void fn_80047844(void) { gmGetGlobalP(); }
+char* fn_80047844(void) { return (char*)gmGetGlobalP(); }
 void fn_80049120(void) { fn_80047844(); }
 void fn_8004A7D0(void) { fn_80138E00(); }
 void fn_8004F33C(void) { fn_80282300(); }
@@ -80,6 +81,8 @@ void fn_8005F688(void) { fn_80442FA4(); }
 
 typedef unsigned int u32;
 typedef unsigned char u8;
+typedef unsigned short u16;
+#define AT(T, base, off) (*(T*)((char*)(base) + (off)))
 
 extern int* lbl_805DD570;
 extern int lbl_80497B9C[];
@@ -135,3 +138,63 @@ void fn_8005DB44(int i, V3* v, float f) { Q* q; if (i == -1) return; q = &lbl_80
 void fn_8005DB98(int i, int v, float f) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; q->x8 = 4; q->x34 = v; q->f30 = f; }
 void fn_8005DCEC(int i, int v) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; if (q->x0 == 2) q->x4 = v; }
 void fn_8005E08C(int i) { Q* q; if (i == -1) return; q = &lbl_80538088[0].arr[i]; if (q->s40 != -1 || q->s42 != -1) { q->x8 = 1; return; } q->x8 = 0; q->x0 = 0; }
+
+/* accessors */
+void fn_800132C4(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xaa4) = 0x1; }
+void fn_800132EC(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xaa4) = 0x0; }
+void fn_80015E10(void) { char* g = gmGetGlobalP(); AT(short, g, 0x4e) = -0x1; }
+u8 fn_80015E38(void) { return AT(u8, gmGetGlobalP(), 0x39); }
+u8 fn_80015E5C(void) { return AT(u8, gmGetGlobalP(), 0x3a); }
+void fn_80018A04(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x34) = 0x4; }
+void fn_8001A604(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x6d) = 0x0; }
+void fn_8001D9EC(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xba) = 0x0; }
+void fn_8001FBB0(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xd2) = 0x0; }
+void fn_80028838(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x196) = 0x1; }
+void fn_80028860(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x196) = 0x0; }
+void fn_8002D09C(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x1cf) = 0x1; }
+void fn_8002D0C4(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x1cf) = 0x0; }
+void fn_80038D1C(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x25b) = 0x1; }
+void fn_80038D44(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x25b) = 0x0; }
+void fn_8003C0C4(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xf4) = 0x1; }
+void fn_8003C0EC(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xf4) = 0x0; }
+void fn_8003D08C(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x100) = 0x1; }
+void fn_8003D0B4(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x100) = 0x0; }
+char* fn_8003D594(void) { return (char*)gmGetGlobalP() + 0x354; }
+u8 fn_8003D5F0(void) { return AT(u8, gmGetGlobalP(), 0x35d); }
+void fn_8003D614(u8 v) { AT(u8, gmGetGlobalP(), 0x35f) = v; }
+u8 fn_8003D644(void) { return AT(u8, gmGetGlobalP(), 0x35f); }
+void fn_8003D668(u8 v) { AT(u8, gmGetGlobalP(), 0x362) = v; }
+u8 fn_8003D698(void) { return AT(u8, gmGetGlobalP(), 0x362); }
+void fn_8003D6BC(u8 v) { AT(u8, gmGetGlobalP(), 0x363) = v; }
+u8 fn_8003D6EC(void) { return AT(u8, gmGetGlobalP(), 0x363); }
+void fn_8003D710(u8 v) { AT(u8, gmGetGlobalP(), 0x364) = v; }
+u8 fn_8003D740(void) { return AT(u8, gmGetGlobalP(), 0x364); }
+void fn_8003D764(int v) { AT(int, gmGetGlobalP(), 0x36c) = v; }
+int fn_8003D794(void) { return AT(int, gmGetGlobalP(), 0x36c); }
+char* fn_8003EA40(void) { return (char*)gmGetGlobalP() + 0x374; }
+u8 fn_8003EA9C(void) { return AT(u8, gmGetGlobalP(), 0x381); }
+void fn_8003EAC0(u8 v) { AT(u8, gmGetGlobalP(), 0x383) = v; }
+u8 fn_8003EAF0(void) { return AT(u8, gmGetGlobalP(), 0x383); }
+void fn_8003EB14(u8 v) { AT(u8, gmGetGlobalP(), 0x386) = v; }
+u8 fn_8003EB44(void) { return AT(u8, gmGetGlobalP(), 0x386); }
+void fn_8003EB68(u8 v) { AT(u8, gmGetGlobalP(), 0x387) = v; }
+u8 fn_8003EB98(void) { return AT(u8, gmGetGlobalP(), 0x387); }
+void fn_8003EBBC(u8 v) { AT(u8, gmGetGlobalP(), 0x388) = v; }
+u8 fn_8003EBEC(void) { return AT(u8, gmGetGlobalP(), 0x388); }
+char* fn_8003F670(void) { return (char*)gmGetGlobalP() + 0x394; }
+u8 menu_cityTrial_checkMode(void) { return AT(u8, gmGetGlobalP(), 0x399); }
+char* fn_800415F8(void) { return (char*)gmGetClearcheckerP() + 0x354; }
+char* fn_8004161C(void) { return (char*)gmGetClearcheckerP() + 0x4bc; }
+char* fn_80041640(void) { return (char*)gmGetClearcheckerP() + 0x5bc; }
+void fn_800429DC(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x2b5) = 0x1; }
+void fn_80043E08(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x2d4) = 0x1; }
+void fn_8004498C(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x331) = 0x1; }
+char* fn_8004640C(void) { return (char*)gmGetGlobalP() + 0x484; }
+void fn_80046DA0(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x485) = 0x1; }
+void fn_80046DC8(void) { char* g = gmGetGlobalP(); AT(u8, g, 0x485) = 0x0; }
+void fn_80047864(void) { char* g = gmGetGlobalP(); AT(u8, g, 0xb) = 0x1; }
+void fn_800490A8(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
+void fn_800490D0(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
+void fn_800490F8(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
+void fn_80049140(void) { char* g = fn_80047844(); AT(u8, g, 0x1) = 0x2; }
+void fn_80049168(u8 v) { AT(u8, gmGetGlobalP(), 0x7c4) = v; }

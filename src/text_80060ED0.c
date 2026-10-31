@@ -1,5 +1,7 @@
 #pragma dont_inline on
 
+extern char* fn_80073F94();
+
 extern void fn_80079518();
 extern void fn_800797A8();
 extern void fn_8007A2C0();
@@ -279,3 +281,9 @@ void fn_80083B90(float* a, float* b) { float* d = (float*)(lbl_80552E40 + 0xbc);
 int fn_8009A3A8(u8* p, u32 r) { u32 c = p[3]; int res = 0; if ((c == 0xff && r == 0) || (c != 0xff && r == 2)) res = 1; return res; }
 void fn_8009BDAC(char* p, int i) { u8* b = AT(u8*, p, 0x54); b[i / 8] |= 1 << (i % 8); }
 int fn_8009BDE4(char* p, int i) { u8* b = AT(u8*, p, 0x54); return (b[i / 8] >> (i % 8)) & 1; }
+
+/* accessors */
+void fn_800726F0(int v) { AT(int, fn_80073F94(), 0x18) = v; }
+void fn_80072720(void) { char* g = fn_80073F94(); AT(int, g, 0x24) = 0x1; }
+void fn_80072748(void) { char* g = fn_80073F94(); AT(int, g, 0x28) = 0x1; }
+void fn_80072770(u8 v) { AT(u8, fn_80073F94(), 0x7c) = v; }
