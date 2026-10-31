@@ -230,3 +230,66 @@ s32 fn_803E7264(s32* fileInfo)
     *fileInfo = -1;
     return __CARDPutControlBlock(card, 0);
 }
+
+extern s32 fn_803E4E04(s32 chan);
+extern s32 fn_803E5088(s32 chan, s32 a);
+extern s32 fn_803E52C8(s32 chan, s32 a);
+extern int EXIProbe(s32 chan);
+
+s32 fn_803E554C(s32 chan)
+{
+    s32 result = fn_803E4E04(chan);
+    s32 sum;
+    s32 a;
+    s32 b;
+
+    if (result < 0) {
+        return result;
+    }
+    a = fn_803E5088(chan, 0);
+    b = fn_803E52C8(chan, 0);
+    sum = a + b;
+    switch (sum) {
+    case 0:
+        return 0;
+    case 1:
+        return -6;
+    default:
+        return -6;
+    }
+}
+
+int fn_803E6E6C(u8* a, char* b)
+{
+    char* p = (char*)(a + 8);
+    char c1;
+    char c2;
+    int i = 0x20;
+
+    while (--i >= 0) {
+        c1 = *p++;
+        c2 = *b++;
+        if (c1 != c2) {
+            return 0;
+        }
+        if (c2 == 0) {
+            return 1;
+        }
+    }
+    if (*b == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void __CARDUnlockedHandler(s32 chan, void* context)
+{
+    CARDCallback callback;
+    u8* card = lbl_8056E4E8 + chan * 0x110;
+
+    callback = *(CARDCallback*)(card + 0xdc);
+    if (callback) {
+        *(CARDCallback*)(card + 0xdc) = 0;
+        callback(chan, EXIProbe(chan) ? 1 : -3);
+    }
+}
