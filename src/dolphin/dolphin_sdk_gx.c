@@ -158,9 +158,11 @@ void __GXFifoReadDisable(void) {
     __cpReg[1] = gx->cpEnable;
 }
 
+#pragma dont_inline on
 void __GXFlushTextureState(void) {
     BP(gx->bpMask);
 }
+#pragma dont_inline reset
 
 void fn_803CC5A0(void) {
     BP(gx->genMode);
@@ -435,4 +437,98 @@ void __GXWriteFifoIntReset(u8 a, u8 b) {
     gx->cpClr = (gx->cpClr & ~1) | a;
     gx->cpClr = (gx->cpClr & ~2) | (b << 1);
     __cpReg[2] = gx->cpClr;
+}
+
+extern void fn_803CD7D4(void* obj, u32 b, u32 c, u32 d, u32 e, u32 f, u32 g, u32 h);
+extern void fn_803CE568(u32 a, u32 b, u32 c, u32 d, u32 e, u32 f, u32 g, u32 h, u32 i, u32 j);
+extern void GXCPInterruptHandler(void);
+extern void* OSGetCurrentThread(void);
+extern void OSSleepThread(void* queue);
+extern void* lbl_805DDE38;
+extern u32 lbl_805DDE40;
+extern u8 lbl_805DDE58;
+extern u8 lbl_805DDE5C;
+
+void fn_803CDA48(u8* obj, u32 b, u32 c, u32 d, u32 e, u32 f, u32 g, u32 h, u32 lod) {
+    fn_803CD7D4(obj, b, c, d, e, f, g, h);
+    obj[0x1F] &= ~2;
+    *(u32*)(obj + 0x18) = lod;
+}
+
+void fn_803CEA1C(u32 a) {
+    fn_803CE568(a, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+}
+
+void __GXFifoInit(void) {
+    __OSSetInterruptHandler(0x11, GXCPInterruptHandler);
+    __OSUnmaskInterrupts(0x4000);
+    lbl_805DDE38 = OSGetCurrentThread();
+    lbl_805DDE40 = 0;
+    lbl_805DDE30 = 0;
+    lbl_805DDE34 = 0;
+}
+
+void fn_803CBE50(void) {
+    BOOL en = OSDisableInterrupts();
+    while (!lbl_805DDE58) {
+        OSSleepThread(&lbl_805DDE5C);
+    }
+    OSRestoreInterrupts(en);
+}
+
+void fn_803CC518(u32 n) {
+    u32 v;
+    switch (n) {
+    case 1:
+        v = 2;
+        break;
+    case 2:
+        v = 1;
+        break;
+    default:
+        v = n;
+        break;
+    }
+    gx->genMode = (gx->genMode & ~0xC000) | (v << 14);
+    gx->dirtyState |= 4;
+}
+
+void GXInvalidateTexAll(void) {
+    __GXFlushTextureState();
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = 0x66001000;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = 0x66001100;
+    __GXFlushTextureState();
+}
+
+void fn_803CDE38(u32* obj, u32 a, u32 b, u16 c) {
+    obj[0] = 0;
+    obj[0] = (obj[0] & ~0xC00) | (b << 10);
+    obj[1] = (obj[1] & ~0x1FFFFF) | ((a & 0x3FFFFFFF) >> 5);
+    obj[1] = (obj[1] & 0xFFFFFF) | 0x64000000;
+    ((u16*)obj)[4] = c;
+}
+
+void GXInitTlutRegion(u32* t, u32 addr, u32 n) {
+    t[0] = 0;
+    t[0] = (t[0] & ~0x3FF) | ((addr - 0x80000) >> 9);
+    t[0] = (t[0] & ~0x1FFC00) | (n << 10);
+    t[0] = (t[0] & 0xFFFFFF) | 0x65000000;
+}
+
+void GXSetLineWidth(u8 w, u32 offs) {
+    gx->lpSize = (gx->lpSize & ~0xFF) | w;
+    gx->lpSize = (gx->lpSize & ~0x70000) | (offs << 16);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->lpSize;
+    gx->bpSentNot = 0;
+}
+
+void fn_803CC474(u8 w, u32 offs) {
+    gx->lpSize = (gx->lpSize & ~0xFF00) | (w << 8);
+    gx->lpSize = (gx->lpSize & ~0x380000) | (offs << 19);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->lpSize;
+    gx->bpSentNot = 0;
 }
