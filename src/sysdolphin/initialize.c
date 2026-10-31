@@ -17,7 +17,7 @@ void HSD_GXInit(void);
 void HSD_ObjInit(void);
 s32 HSD_GetHeap(void);
 void HSD_ListInitAllocData(void);
-void fn_803FB13C(void);
+void HSD_AObjInitAllocData(void);
 void HSD_FObjInitAllocData(void);
 void HSD_IDInitAllocData(void);
 void HSD_VecInitAllocData(void);
@@ -419,7 +419,7 @@ void HSD_SetRenderPass(s32 pix_fmt, u32 z_fmt)
 void HSD_ObjInit(void)
 {
     HSD_ListInitAllocData();
-    fn_803FB13C();
+    HSD_AObjInitAllocData();
     HSD_FObjInitAllocData();
     HSD_IDInitAllocData();
     HSD_VecInitAllocData();
@@ -436,7 +436,7 @@ typedef struct {
     char* name;
 } AllocReportEntry;
 
-extern HSD_ObjAllocData* fn_803FB16C(void);
+extern HSD_ObjAllocData* HSD_AObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_FObjGetAllocData(void);
 extern HSD_ObjAllocData* HSD_IDGetAllocData(void);
 extern HSD_ObjAllocData* HSD_SListGetAllocData(void);
@@ -477,7 +477,7 @@ static inline u32 HSD_ObjAllocGetUsed(HSD_ObjAllocData* data)
 void HSD_ObjAllocReport(void)
 {
     AllocReportEntry list[] = {
-        { fn_803FB16C, "aobj" },
+        { HSD_AObjGetAllocData, "aobj" },
         { HSD_FObjGetAllocData, "fobj" },
         { HSD_IDGetAllocData, "id" },
         { HSD_SListGetAllocData, "slist" },
