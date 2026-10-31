@@ -88,3 +88,32 @@ void fn_803343AC(char* p, float* q)
     q[4] = lbl_805E4160;
     q[5] = *(float*)(p + 0x68);
 }
+
+void fn_80328C7C(char* p, char* e)
+{
+    *(u32*)e = *(u32*)(p + 0x3500);
+    *(u32*)(p + 0x3500) = ((u32)e - (u32)p) / 0x1a8;
+    *(s32*)(p + 0x3504) = *(s32*)(p + 0x3504) + 1;
+}
+
+extern void fn_80379784();
+extern void fn_803334CC();
+
+void fn_80327600(u8* p, float* q)
+{
+    if (p[0x65] == 0) {
+        p[0x65] = 1;
+        *(float*)(p + 0x17c) = q[4];
+        *(float*)(p + 0x180) = q[5];
+        *(float*)(p + 0x184) = q[6];
+        fn_80379784(p + 0x140, 0x80003, p + 0x17c);
+    }
+}
+
+void fn_8033343C(char* p, float* q)
+{
+    *(float*)(p + 0x168) = q[4];
+    *(float*)(p + 0x16c) = q[5];
+    *(float*)(p + 0x170) = q[6];
+    fn_803334CC();
+}

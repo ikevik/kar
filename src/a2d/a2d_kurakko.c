@@ -36,3 +36,41 @@ void* fn_803764CC(char* p)
     *(s32*)(p + 0x1a04) = *(s32*)(p + 0x1a04) - 1;
     return e;
 }
+
+extern s32 lbl_805DD964;
+
+void fn_803718F8(s32* p)
+{
+    p[0x150 / 4] = 0;
+    lbl_805DD964 = (s32)p;
+    p[0] = 1;
+    p[0x38 / 4] = 2;
+    p[0x70 / 4] = 3;
+    p[0xa8 / 4] = 4;
+    p[0xe0 / 4] = 5;
+    p[0x118 / 4] = -1;
+    p[0x154 / 4] = 6;
+}
+
+typedef struct {
+    float a, b;
+} FP;
+typedef struct {
+    FP* arr;
+    s32 n;
+} FA;
+
+#if 0
+s32 fn_80378568(FA* p)
+{
+    s32 n = p->n;
+    float* arr = (float*)p->arr;
+    s32 i;
+    for (i = 1; i < n; i++) {
+        if (arr[i * 2] < arr[i * 2 - 2]) {
+            break;
+        }
+    }
+    return i;
+}
+#endif
