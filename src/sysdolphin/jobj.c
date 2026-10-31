@@ -63,7 +63,37 @@ extern void fn_80417CA0(void*);
 extern void fn_804084B0(HSD_JObj*, void*, void*);
 extern void fn_80408BD0(HSD_JObj*, u32);
 extern void fn_80408F88(HSD_JObj*, u32, f32);
+extern HSD_AObj* HSD_AObjLoadDesc(struct _HSD_AObjDesc*);
+extern void HSD_RObjAddAnimAll(HSD_RObj*, struct _HSD_RObjAnimJoint*);
+extern void HSD_DObjAddAnimAll(HSD_DObj*, void*, void*);
+extern void fn_8040BD64(HSD_JObj*, u32);
+extern void fn_8040C0D8(HSD_JObj*, u32);
 extern void fn_8040A304(HSD_JObj*);
+
+void HSD_JObjCheckDepend(HSD_JObj* jobj)
+{
+    if (jobj == NULL) {
+        return;
+    }
+    if (HSD_JObjMtxIsDirty(jobj)) {
+        return;
+    }
+    if (jobj->flags & USER_DEF_MTX) {
+        if (!(jobj->flags & MTX_INDEP_PARENT)) {
+            HSD_JObj* parent = jobj->parent;
+            if (parent != NULL && HSD_JObjMtxIsDirty(parent)) {
+                jobj->flags |= MTX_DIRTY;
+            }
+        }
+    } else {
+        u32 type;
+        if ((jobj->parent != NULL && (jobj->parent->flags & MTX_DIRTY))
+            || (type = jobj->flags & 0x600000) == JOINT1 || type == JOINT2 || type == EFFECTOR
+            || jobj->robj != NULL) {
+            jobj->flags |= MTX_DIRTY;
+        }
+    }
+}
 
 BOOL fn_8040800C(HSD_JObj* jobj)
 {
@@ -173,6 +203,43 @@ void fn_804092E8(HSD_AObj* aobj)
             }
             prev = &fobj->next;
         }
+    }
+}
+
+void fn_80409340(HSD_JObj* jobj, HSD_AnimJoint* an, HSD_AnimJoint* mat, HSD_AnimJoint* sh)
+{
+    if (jobj == NULL) {
+        return;
+    }
+    if (an != NULL) {
+        HSD_AObj* aobj;
+        if (jobj->aobj != NULL) {
+            HSD_AObjRemove(jobj->aobj);
+        }
+        jobj->aobj = HSD_AObjLoadDesc(an->aobjdesc);
+        aobj = jobj->aobj;
+        if (aobj != NULL && aobj->fobj != NULL) {
+            HSD_FObj* fobj;
+            HSD_FObj** prev = &aobj->fobj;
+            while ((fobj = *prev) != NULL) {
+                if (fobj->obj_type == TYPE_JOBJ) {
+                    *prev = fobj->next;
+                    fobj->next = aobj->fobj;
+                    aobj->fobj = fobj;
+                    break;
+                }
+                prev = &fobj->next;
+            }
+        }
+        HSD_RObjAddAnimAll(jobj->robj, an->robj_anim);
+        if (an->flags & 1) {
+            fn_8040BD64(jobj, CLASSICAL_SCALE);
+        } else {
+            fn_8040C0D8(jobj, CLASSICAL_SCALE);
+        }
+    }
+    if (union_type_dobj(jobj)) {
+        HSD_DObjAddAnimAll(jobj->u.dobj, mat != NULL ? mat->aobjdesc : NULL, sh != NULL ? sh->aobjdesc : NULL);
     }
 }
 
