@@ -301,6 +301,10 @@ extern u8 lbl_80497280[];
 extern u32 lbl_805D51B8;
 extern u8 lbl_804972D8[];
 extern u32 lbl_805D51C0;
+extern u32 lbl_805DD578;
+extern const float lbl_805DE900;
+extern const float lbl_805DE904;
+extern const float lbl_805DE908;
 extern u32 lbl_805DD598;
 extern u8 lbl_80497BA8[];
 extern u32 lbl_805D51D8;
@@ -337,6 +341,9 @@ u32 fn_80078CC0(void);
 u32 menu_getCurrentMenuID(void);
 void fn_800064F0(void);
 void fn_80008220(void);
+u32 fn_8042A0A0(u32, u32);
+void fn_80078028(u32, u32, u32, u32);
+void fn_80076F8C(u32, u32, u32, u32, u32, float, float, float, float);
 void func_80428F64(u32);
 void fn_80077A5C(void);
 void menuGetNextMenuID(u32);
@@ -538,6 +545,19 @@ void fn_80048F68(void) {
 
 void fn_80049040(void) {
     __assert((u32)lbl_804972D8, 388, (u32)&lbl_805D51C0);
+}
+
+void fn_80049250(u32 p3, u32 p4) {
+    u32 L16[4];
+    u32 L12;
+    u32 L8;
+    u32 c0;
+    c0 = fn_8042A0A0(p4, p4);
+    if ((s32)c0 != (s32)2) {
+    return;
+    }
+    fn_80078028((lbl_805DD578), (u32)L16, (u32)&L12, (u32)&L8);
+    fn_80076F8C((L16[0]), (L12), (L8), 70, 0, (lbl_805DE900), (lbl_805DE900), (lbl_805DE904), (lbl_805DE908));
 }
 
 void fn_80049A40(void) {

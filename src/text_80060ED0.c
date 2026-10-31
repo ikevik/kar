@@ -423,6 +423,12 @@ extern u8 lbl_80499CF8[];
 extern u8 lbl_80499D08[];
 extern u32 lbl_805DD5D0;
 extern u32 lbl_805DD5D8;
+extern u32 lbl_805DED30;
+extern u32 lbl_805DED34;
+extern u32 lbl_805DED38;
+extern u32 lbl_805DED3C;
+extern u32 lbl_805DED40;
+extern u32 lbl_805DED44;
 extern u32 lbl_805D53CC;
 extern u32 lbl_805DD5EC;
 extern const float lbl_805DED50;
@@ -453,6 +459,8 @@ extern const float lbl_805DF074;
 extern u8 lbl_8049E6B4[];
 extern const float lbl_805DF080;
 extern const float lbl_805DF084;
+extern const float lbl_805DF098;
+extern const float lbl_805DF09C;
 extern u32 lbl_805DD6CC;
 extern const float lbl_805DF140;
 extern const float lbl_805DF144;
@@ -504,6 +512,26 @@ void HSD_StartRender(u32);
 void fn_804516E4(u32, u32);
 void HSD_IsEFBCopyPass(void);
 void fn_804112B4(u32);
+void fn_803CC518(u32);
+void GXSetTexCoordGen2(u32, u32, u32, u32, u32, u32);
+void GXSetNumTexGens(u32);
+void fn_803CD4A0(u32);
+void fn_803CF30C(u32);
+void fn_803CF874(u32);
+void fn_803CF8A0(u32);
+void fn_803CEF00(u32, u32);
+void fn_803CEF6C(u32, u32, u32);
+void fn_803CF134(u32, u32, u32, u32);
+void fn_803CEBE0(u32, u32, u32, u32, u32);
+void fn_803CEC68(u32, u32, u32, u32, u32, u32);
+void fn_803CEC24(u32, u32, u32, u32, u32);
+void fn_803CECD0(u32, u32, u32, u32, u32, u32);
+void fn_803CEE94(u32, u32);
+void fn_803CEDAC(u32, u32, u32);
+void fn_803CEE20(u32, u32);
+void fn_803CEFC0(u32, u32, u32, u32, u32);
+void fn_803CF05C(u32, u32, u32, u32, u32);
+void fn_803CF820(u32, u32, u32, u32);
 void fn_803EE8B8(u32, u32);
 void fn_803F28A4(u32);
 void fn_8007744C(u32, u32);
@@ -553,6 +581,7 @@ u32 fn_800E2C84(u32, u32, u32, u32, u32, float, float);
 u32 fn_800CF600(u32);
 u32 fn_800CF66C(u32);
 void fn_800A16A8(float, float);
+void fn_800A24AC(u32, u32, u32, u32, float);
 u32 HSD_CObjGetCurrent(u32, u32, u32);
 void HSD_CObjGetViewingMtx(u32, u32);
 void fn_803CAC04(void);
@@ -565,7 +594,6 @@ void GXSetCurrentMtx(u32);
 void fn_80098E30(u32);
 void fn_803CD3AC(u32, u32);
 void fn_803CD2B8(u32, u32);
-void fn_803CC518(u32);
 void fn_800A1680(u32, u32, u32, u32);
 void HSD_GObj_AddProc(u32, u32, u32);
 u32 fn_8044F674(u32, u32, u32, u32, u32, u32, u32, u32);
@@ -897,6 +925,86 @@ void fn_80076504(void) {
     fn_804112B4(0);
 }
 
+void fn_80076A90(void) {
+    u32 L24[2];
+    u32 L20;
+    u32 L16;
+    u32 L12;
+    u32 L8;
+    u32 v1;
+    u32 v2;
+    fn_803CC518(0);
+    GXSetTexCoordGen2(0, 1, 4, 60, 0, 125);
+    GXSetTexCoordGen2(1, 1, 4, 60, 0, 125);
+    GXInvalidateTexAll();
+    GXSetNumTexGens(2);
+    fn_803CD4A0(1);
+    fn_803CF30C(6);
+    fn_803CF874(1);
+    fn_803CF8A0(0);
+    fn_803CEF00(0, 4);
+    fn_803CEF6C(0, 0, 1);
+    fn_803CF134(0, 0, 0, 4);
+    fn_803CEBE0(0, 13, 8, 10, 8);
+    fn_803CEC68(0, 0, 2, 0, 1, 2);
+    fn_803CEC24(0, 6, 4, 5, 4);
+    fn_803CECD0(0, 0, 2, 0, 1, 2);
+    fn_803CEF00(1, 4);
+    fn_803CEF6C(1, 0, 2);
+    fn_803CF134(1, 0, 0, 4);
+    fn_803CEBE0(1, 13, 8, 10, 8);
+    fn_803CEC68(1, 0, 2, 0, 1, 3);
+    fn_803CEC24(1, 6, 4, 5, 4);
+    fn_803CECD0(1, 0, 2, 0, 1, 3);
+    fn_803CF134(2, 255, 255, 255);
+    fn_803CEBE0(2, 15, 4, 14, 2);
+    fn_803CEC68(2, 0, 0, 0, 0, 0);
+    fn_803CEC24(2, 7, 2, 6, 1);
+    fn_803CECD0(2, 1, 0, 0, 0, 0);
+    fn_803CEE94(2, 12);
+    fn_803CEF00(2, 28);
+    fn_803CF134(3, 1, 1, 255);
+    fn_803CEBE0(3, 15, 8, 14, 0);
+    fn_803CEC68(3, 0, 0, 1, 0, 0);
+    fn_803CEC24(3, 7, 4, 6, 0);
+    fn_803CECD0(3, 0, 0, 1, 0, 0);
+    fn_803CEE94(3, 13);
+    fn_803CEF00(3, 29);
+    fn_803CEF6C(3, 0, 0);
+    fn_803CF134(4, 255, 255, 255);
+    fn_803CEBE0(4, 15, 6, 14, 0);
+    fn_803CEC68(4, 0, 0, 0, 1, 0);
+    fn_803CEC24(4, 7, 3, 6, 0);
+    fn_803CECD0(4, 1, 0, 0, 1, 0);
+    fn_803CEE94(4, 14);
+    fn_803CEF00(4, 30);
+    fn_803CF134(5, 255, 255, 255);
+    fn_803CEBE0(5, 0, 1, 14, 15);
+    fn_803CEC68(5, 0, 0, 0, 1, 0);
+    fn_803CEC24(5, 7, 7, 7, 7);
+    fn_803CECD0(5, 0, 0, 0, 1, 0);
+    fn_803CEF6C(5, 0, 0);
+    fn_803CEE94(5, 15);
+    v1 = lbl_805DED30;
+    v2 = lbl_805DED34;
+    L24[0] = v1;
+    L24[1] = v2;
+    fn_803CEDAC(1, (u32)L24, v1);
+    L20 = (lbl_805DED38);
+    fn_803CEE20(0, (u32)&L20);
+    L16 = (lbl_805DED3C);
+    fn_803CEE20(1, (u32)&L16);
+    L12 = (lbl_805DED40);
+    fn_803CEE20(2, (u32)&L12);
+    L8 = (lbl_805DED44);
+    fn_803CEE20(3, (u32)&L8);
+    fn_803CEFC0(0, 0, 1, 2, 3);
+    fn_803CEFC0(1, 0, 3, 3, 3);
+    fn_803CEFC0(2, 0, 0, 3, 0);
+    fn_803CF05C(7, 0, 1, 7, 0);
+    fn_803CF820(0, 1, 0, 0);
+}
+
 void fn_80077404(void) {
     u32 v1;
     u32 v2;
@@ -1210,8 +1318,8 @@ void fn_80098AD8(void) {
 }
 
 void fn_8009A3D8(u32 p3, float q1, float q2) {
-    float L8[3];
     float L20[5];
+    float L8[3];
     float v1;
     float v2;
     v1 = lbl_805DF004;
@@ -1268,6 +1376,22 @@ void fn_800A14C4(u32 p3, u32 p4, u32 p5, u32 p6, u32 p7, float q1, float q2) {
 
 void fn_800A1680(u32 p3, u32 p4, u32 p5, u32 p6) {
     fn_800A16A8((lbl_805DF080), (lbl_805DF084));
+}
+
+void fn_800A2464(u32 p3, u32 p4) {
+    float L20[3];
+    float L8[3];
+    float v1;
+    float v2;
+    v1 = lbl_805DF098;
+    v2 = lbl_805DF09C;
+    L20[0] = v1;
+    L20[1] = v1;
+    L20[2] = v2;
+    L8[0] = v1;
+    L8[1] = v2;
+    L8[2] = v1;
+    fn_800A24AC(p3, p4, (u32)L20, (u32)L8, v1);
 }
 
 void fn_800A9618(u32 p3, u32 p4) {
