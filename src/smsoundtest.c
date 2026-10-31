@@ -25,6 +25,10 @@ extern void fn_8005B918(int);
 extern void fn_8005F6A8(int, int);
 extern void fn_80442A54(int, int);
 extern void fn_80442CFC(int, int);
+extern char lbl_804A128C[];
+extern char lbl_805D5ED0[2];
+extern void __assert(char*, int, char*);
+extern int fn_80442A10(int, int, int, int, int);
 extern void fn_80442FA4(int, int);
 extern void fn_8005F6E8();
 extern void lbLoadMusicLocation(int);
@@ -223,6 +227,47 @@ int fn_800AF1F4(int arg)
         if (lbl_80557108[10] != -1) {
             fn_80442FA4(lbl_80557108[10], p[5]);
         }
+    }
+    return 0;
+}
+
+typedef struct Ent {
+    int x0;
+    int x4;
+    int pad[4];
+} Ent;
+
+int fn_800AEF6C(int arg)
+{
+    if (arg == 4) {
+        lbl_80557108[1] = 0;
+        lbl_80557108[10] = -1;
+    } else if (arg == 1) {
+        int v;
+        int i = 0;
+        Ent* start = (Ent*)lbl_80557108[11];
+        Ent* e = start;
+        int count = lbl_80557108[0];
+        int id = lbl_80557108[9];
+        while (e->x0 != -1) {
+            if (id == e->x4) {
+                if (--count < 0) {
+                    break;
+                }
+            }
+            e++;
+            i++;
+        }
+        v = start[i].x0;
+        if (v == -1) {
+            __assert(lbl_804A128C, 0xb1, lbl_805D5ED0);
+            v = 0;
+        }
+        lbl_80557108[2] = 0;
+        lbl_80557108[3] = 0x7f;
+        lbl_80557108[4] = 0;
+        lbl_80557108[5] = 0;
+        lbl_80557108[10] = fn_80442A10((v << 16) + lbl_80557108[1], 0xff, 0x7f, 2, 3);
     }
     return 0;
 }
