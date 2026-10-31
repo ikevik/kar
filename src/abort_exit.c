@@ -8,11 +8,11 @@ extern void _ExitProcess(void);
 extern int fn_803B7CD0(int);
 extern vfunc _dtors[];
 
-vfunc __atexit_funcs[32];
-int __aborting;
-int __atexit_curr_func;
-vfunc __stdio_exit;
+vfunc __atexit_funcs[64];
 vfunc __console_exit;
+vfunc __stdio_exit;
+int __atexit_curr_func;
+int __aborting;
 
 void exit(int status)
 {

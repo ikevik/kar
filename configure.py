@@ -326,7 +326,7 @@ config.libs = [
         "Dolphin SDK",
         "sdk",
         [
-            Object(NonMatching, "abort_exit.c"),
+            Object(Matching, "abort_exit.c"),
         ],
     ),
     Lib(
@@ -459,7 +459,7 @@ config.libs = [
         "MetroTRK",
         "sdk",
         [
-            Object(NonMatching, "TRK_MINNOW_DOLPHIN/mem_TRK.c"),
+            Object(Matching, "TRK_MINNOW_DOLPHIN/mem_TRK.c"),
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/__exception.c"),
         ],
     ),
