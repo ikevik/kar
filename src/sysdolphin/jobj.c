@@ -156,18 +156,17 @@ void fn_804092E8(HSD_AObj* aobj)
     if (aobj == NULL) {
         return;
     }
-    if (aobj->fobj == NULL) {
-        return;
-    }
-    prev = &aobj->fobj;
-    while ((fobj = *prev) != NULL) {
-        if (fobj->obj_type == TYPE_JOBJ) {
-            *prev = fobj->next;
-            fobj->next = aobj->fobj;
-            aobj->fobj = fobj;
-            return;
+    if (aobj->fobj != NULL) {
+        prev = &aobj->fobj;
+        while ((fobj = *prev) != NULL) {
+            if (fobj->obj_type == TYPE_JOBJ) {
+                *prev = fobj->next;
+                fobj->next = aobj->fobj;
+                aobj->fobj = fobj;
+                return;
+            }
+            prev = &fobj->next;
         }
-        prev = &fobj->next;
     }
 }
 
@@ -214,27 +213,20 @@ void fn_8040B4DC(HSD_JObj* jobj)
 
 HSD_JObj* fn_8040BCA0(HSD_JObj* jobj)
 {
-    if (jobj != NULL && union_type_dobj(jobj)) {
-        return (HSD_JObj*) jobj->u.dobj;
-    }
-    return NULL;
+    return (jobj != NULL && union_type_dobj(jobj)) ? (HSD_JObj*) jobj->u.dobj : NULL;
 }
 
 void fn_8040BCCC(HSD_JObj* jobj, HSD_RObj* robj)
 {
-    if (jobj == NULL) {
-        return;
-    }
-    if (robj == NULL) {
-        return;
-    }
-    {
-        HSD_RObj* r = jobj->robj;
+    if (jobj != NULL) {
         if (robj != NULL) {
-            robj->next = r;
-            r = robj;
+            HSD_RObj* r = jobj->robj;
+            if (robj != NULL) {
+                robj->next = r;
+                r = robj;
+            }
+            jobj->robj = r;
         }
-        jobj->robj = r;
     }
 }
 
@@ -261,10 +253,10 @@ void fn_8040C0D8(HSD_JObj* jobj, u32 flags)
 void fn_8040C450(HSD_JObj* jobj, u32 flags, u32 mask)
 {
     if (jobj != NULL) {
-        u32 f = flags & mask;
-        if ((jobj->flags ^ f) & CLASSICAL_SCALE) {
+        flags &= mask;
+        if ((jobj->flags ^ flags) & CLASSICAL_SCALE) {
             HSD_JObjSetMtxDirty(jobj);
         }
-        jobj->flags = f | (jobj->flags & ~mask);
+        jobj->flags = flags | (jobj->flags & ~mask);
     }
 }
