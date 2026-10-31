@@ -4,19 +4,19 @@ extern void fn_8036AC00();
 
 
 
-void fn_803589F4(char* p) { *(int*)(p + 0) = 0; }
+void fn_803589F4(p) char* p; { *(int*)(p + 0) = 0; }
 
-unsigned char fn_80369C94(char* p) { return *(unsigned char*)(p + 124); }
+unsigned char fn_80369C94(p) char* p; { return *(unsigned char*)(p + 124); }
 
-unsigned char fn_8036B180(char* p) { return *(unsigned char*)(p + 180); }
+unsigned char fn_8036B180(p) char* p; { return *(unsigned char*)(p + 180); }
 
 int fn_8036BF04(void) { return 0; }
 
-unsigned char fn_8036C064(char* p) { return *(unsigned char*)(p + 112); }
+unsigned char fn_8036C064(p) char* p; { return *(unsigned char*)(p + 112); }
 
-unsigned char fn_8036E8CC(char* p) { return *(unsigned char*)(p + 204); }
+unsigned char fn_8036E8CC(p) char* p; { return *(unsigned char*)(p + 204); }
 
-int fn_80369010(int a0) {
+int fn_80369010(a0) int a0; {
     int t0;
     int t1;
     int t2;
@@ -30,7 +30,7 @@ int fn_80369010(int a0) {
     return t1;
 }
 
-int fn_8036B0B8(int a0) {
+int fn_8036B0B8(a0) int a0; {
     int t0;
     int t1;
     int t2;
@@ -44,7 +44,7 @@ int fn_8036B0B8(int a0) {
     return t1;
 }
 
-void fn_8036E748(int a0, int a1) {
+void fn_8036E748(a0, a1) int a0; int a1; {
     float t0;
     float t1;
     float t2;
@@ -56,7 +56,7 @@ void fn_8036E748(int a0, int a1) {
     *(float*)(a0 + 444) = t2;
 }
 
-int fn_80369B14(int a0) {
+int fn_80369B14(a0) int a0; {
 int t0;
 int t1;
 int t2;
@@ -70,7 +70,7 @@ t3 = (*(int*)(a0 + 16388) - 1);
 return t0;
 }
 
-void fn_8036ABD4(int a0) {
+void fn_8036ABD4(a0) int a0; {
 int t0;
 int m0;
 m0 = *(unsigned short*)(a0 + 126);

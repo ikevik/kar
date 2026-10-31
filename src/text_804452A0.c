@@ -54,31 +54,31 @@ extern void fn_8045C958();
 extern void fn_8045C964();
 extern void fn_8045D6CC();
 
-void fn_8045C950(char* p, int v) { *(int*)(p + 120) = v; }
+void fn_8045C950(p, v) char* p; int v; { *(int*)(p + 120) = v; }
 
-int fn_8045D63C(char* p) { return *(int*)(p + 84); }
+int fn_8045D63C(p) char* p; { return *(int*)(p + 84); }
 
-int fn_8045DADC(char* p) { return *(int*)(p + 12); }
+int fn_8045DADC(p) char* p; { return *(int*)(p + 12); }
 
-int fn_8045DE24(char* p) { return *(int*)(p + 16); }
+int fn_8045DE24(p) char* p; { return *(int*)(p + 16); }
 
-void fn_8045F4D0(char* p, int v) { *(int*)(p + 936) = v; }
+void fn_8045F4D0(p, v) char* p; int v; { *(int*)(p + 936) = v; }
 
-int fn_8045F704(char* p) { return *(int*)(p + 928); }
+int fn_8045F704(p) char* p; { return *(int*)(p + 928); }
 
-int fn_8045F70C(char* p) { return *(int*)(p + 84); }
+int fn_8045F70C(p) char* p; { return *(int*)(p + 84); }
 
-int fn_8045F714(char* p) { return *(int*)(p + 88); }
+int fn_8045F714(p) char* p; { return *(int*)(p + 88); }
 
-int fn_8045F71C(char* p) { return *(int*)(p + 68); }
+int fn_8045F71C(p) char* p; { return *(int*)(p + 68); }
 
-int fn_8045F724(char* p) { return *(int*)(p + 16); }
+int fn_8045F724(p) char* p; { return *(int*)(p + 16); }
 
-void fn_8045F72C(char* p, int v) { *(int*)(p + 20) = v; }
+void fn_8045F72C(p, v) char* p; int v; { *(int*)(p + 20) = v; }
 
-int fn_8045F828(char* p) { return *(int*)(p + 12); }
+int fn_8045F828(p) char* p; { return *(int*)(p + 12); }
 
-int fn_8045F830(char* p) { return *(int*)(p + 8); }
+int fn_8045F830(p) char* p; { return *(int*)(p + 8); }
 
 void fn_8046F250(void) {}
 
@@ -88,7 +88,7 @@ void fn_8047558C(void) {}
 
 void fn_80479AF0(void) {}
 
-int HVQM4BufvChkDisp(int a0) {
+int HVQM4BufvChkDisp(a0) int a0; {
     int t0;
     OSDisableInterrupts();
     t0 = *(int*)(a0 + 4);
@@ -96,7 +96,7 @@ int HVQM4BufvChkDisp(int a0) {
     return t0;
 }
 
-int HVQM4BufvChkFree(int a0) {
+int HVQM4BufvChkFree(a0) int a0; {
     int t0;
     OSDisableInterrupts();
     t0 = *(int*)(a0 + 8);
@@ -104,11 +104,11 @@ int HVQM4BufvChkFree(int a0) {
     return t0;
 }
 
-void HVQM4DecodePpic(int a0, int a1, int a2, int a3) {
+void HVQM4DecodePpic(a0, a1, a2, a3) int a0; int a1; int a2; int a3; {
     HVQM4DecodeBpic(a0, a1, a2, a3, a2);
 }
 
-void HVQM4InitSeqObj(int a0, int a1) {
+void HVQM4InitSeqObj(a0, a1) int a0; int a1; {
     int t0;
     int t1;
     int t2;
@@ -123,13 +123,13 @@ void HVQM4InitSeqObj(int a0, int a1) {
     *(unsigned char*)(a0 + 9) = t3;
 }
 
-int HVQM4PlayerExControlExit(int a0) {
+int HVQM4PlayerExControlExit(a0) int a0; {
     *(int*)(a0 + 960) = 1;
     *(int*)(a0 + 948) = 1;
     return 1;
 }
 
-int HVQM4PlayerExStart(int a0) {
+int HVQM4PlayerExStart(a0) int a0; {
     OSResumeThread((a0 + 120));
     return 1;
 }
@@ -139,7 +139,7 @@ int LexicalCast(void) {
     return 1;
 }
 
-void UpdatePlay(int a0) {
+void UpdatePlay(a0) int a0; {
     int t0;
     t0 = *(int*)(a0 + 104);
     HVQM4BufaSetFree(t0);
@@ -149,14 +149,14 @@ void cPlayer_PostPhysicsUpdate(void) {
     HSD_Free();
 }
 
-void fn_80446D3C(int a0, int a1) {
+void fn_80446D3C(a0, a1) int a0; int a1; {
     OSDisableInterrupts();
     lbl_805DE4C0 = a0;
     lbl_805DE4C4 = a1;
     OSRestoreInterrupts();
 }
 
-void fn_804479D4(int a0, int a1) {
+void fn_804479D4(a0, a1) int a0; int a1; {
     lbl_805DE4E4 = a0;
     lbl_805DE4E8 = a1;
 }
@@ -169,15 +169,15 @@ int fn_804484C8(void) {
     return lbl_805DE538;
 }
 
-void fn_8044C710(int a0) {
+void fn_8044C710(a0) int a0; {
     lbl_805DE4F8 = a0;
 }
 
-void fn_8044C718(int a0) {
+void fn_8044C718(a0) int a0; {
     lbl_805DE4FC = a0;
 }
 
-void fn_8044C720(int a0) {
+void fn_8044C720(a0) int a0; {
     lbl_805DE500 = a0;
 }
 
@@ -217,12 +217,12 @@ int fn_8045ADCC(void) {
     return *(int*)((int)lbl_8059A880 + 1296);
 }
 
-void fn_8045BE44(int a0, int a1) {
+void fn_8045BE44(a0, a1) int a0; int a1; {
     *(int*)((int)lbl_805B4698 + 792) = a0;
     *(int*)((int)lbl_805B4698 + 796) = a1;
 }
 
-void fn_8045BE58(int a0) {
+void fn_8045BE58(a0) int a0; {
     *(int*)((int)lbl_805B4698 + 808) = a0;
 }
 
@@ -270,23 +270,23 @@ void fn_8045E978(void) {
     fn_8045C964();
 }
 
-void fn_80471D90(int a0, int a1, int a2) {
+void fn_80471D90(a0, a1, a2) int a0; int a1; int a2; {
     *(int*)(a0 + 4) = a2;
     *(int*)(a0 + 0) = a1;
     *(int*)(a0 + 8) = a1;
     *(int*)(a0 + 12) = 0;
 }
 
-void setDoneCallFunc(int a0, int a1, int a2) {
+void setDoneCallFunc(a0, a1, a2) int a0; int a1; int a2; {
     *(int*)(a0 + 984) = a1;
     *(int*)(a0 + 988) = a2;
 }
 
-int HVQM4PlayerExGetMaxAudioTrack(int a0) {
+int HVQM4PlayerExGetMaxAudioTrack(a0) int a0; {
 return (*(unsigned char*)(a0 + 67) & 0xf);
 }
 
-int fn_804457E0(int a0, int a1) {
+int fn_804457E0(a0, a1) int a0; int a1; {
 fn_8044C284((a0 & 0xff), a1, 63, 0);
 return 1;
 }
@@ -295,7 +295,7 @@ int fn_80448264(void) {
 return (lbl_805DE4F0 - lbl_805DE4F4);
 }
 
-void fn_804567E4(int a0) {
+void fn_804567E4(a0) int a0; {
 if (a0 == 0) {
 fn_804563AC();
 } else {
@@ -303,7 +303,7 @@ fn_80455FEC();
 }
 }
 
-int fn_80472174(int a0, int a1, int a2, int a3, int a4, int a5) {
+int fn_80472174(a0, a1, a2, a3, a4, a5) int a0; int a1; int a2; int a3; int a4; int a5; {
 int m0;
 m0 = a2;
 if ((unsigned)(a0 + a1) <= (unsigned)a2) {
@@ -321,7 +321,7 @@ return 1;
 return 2;
 }
 
-int fn_804755EC(int a0) {
+int fn_804755EC(a0) int a0; {
 if (*(unsigned char*)(a0 + 0) != 6) {
 return -12;
 }

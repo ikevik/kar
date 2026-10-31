@@ -20,9 +20,9 @@ extern void fn_80417580();
 extern void fn_80439854();
 extern void fn_80439C40();
 
-void fn_8042BA60(char* p, int v) { *(int*)(p + 88) = v; }
+void fn_8042BA60(p, v) char* p; int v; { *(int*)(p + 88) = v; }
 
-int fn_80430190(char* p) { return *(int*)(p + 0); }
+int fn_80430190(p) char* p; { return *(int*)(p + 0); }
 
 void fn_8043D520(void) {}
 
@@ -70,21 +70,21 @@ void fn_8043979C(void) {
     lbl_805DE3F0 = 0;
 }
 
-void fn_804397A8(int a0) {
+void fn_804397A8(a0) int a0; {
     int t0;
     t0 = *(int*)(a0 + 0);
     lbl_805DCE00 = t0;
 }
 
-void fn_8043FD04(int a0, int a1) {
+void fn_8043FD04(a0, a1) int a0; int a1; {
     OSLoadContext(a1);
 }
 
-void fn_8043FFAC(int a0) {
+void fn_8043FFAC(a0) int a0; {
     lbl_805DE434 = a0;
 }
 
-void fn_80440718(int a0) {
+void fn_80440718(a0) int a0; {
     int t0;
     t0 = *(int*)(a0 + 40);
     HSD_CObjSetCurrent(t0);
@@ -111,7 +111,7 @@ t1 = lbl_805DCDD0;
 return t1;
 }
 
-void fn_80439D14(int a0, int a1, int a2) {
+void fn_80439D14(a0, a1, a2) int a0; int a1; int a2; {
 float t0;
 lbl_805DCE08 = a0;
 lbl_805DCE0C = a1;
@@ -126,6 +126,6 @@ lbl_805DE424 = t0;
 lbl_805DE428 = a2;
 }
 
-void fn_8043FFB4(int a0) {
+void fn_8043FFB4(a0) int a0; {
 lbl_805DE430 = ((unsigned)(a0 + 15) >> 4);
 }

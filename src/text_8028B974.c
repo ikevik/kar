@@ -89,7 +89,7 @@ extern void fn_8038CB78();
 extern void fn_80393820();
 extern void fn_8039E780();
 
-void fn_8028EE10(char* p) { *(int*)(p + 0) = 0; }
+void fn_8028EE10(p) char* p; { *(int*)(p + 0) = 0; }
 
 void fn_80291874(void) {}
 
@@ -105,11 +105,11 @@ void fn_802927F4(void) {}
 
 int fn_80292A7C(void) { return 0; }
 
-void fn_80292FF0(char* p) { *(int*)(p + 12) = 1; }
+void fn_80292FF0(p) char* p; { *(int*)(p + 12) = 1; }
 
-char* fn_80293298(char* p) { return p + 4; }
+char* fn_80293298(p) char* p; { return p + 4; }
 
-float fn_802932BC(char* p) { return *(float*)(p + 16); }
+float fn_802932BC(p) char* p; { return *(float*)(p + 16); }
 
 void fn_802932C4(char* p, float v) { *(float*)(p + 16) = v; }
 
@@ -121,41 +121,41 @@ void fn_80293558(void) {}
 
 int fn_8029355C(void) { return 1; }
 
-unsigned char fn_80293564(char* p) { return *(unsigned char*)(p + 76); }
+unsigned char fn_80293564(p) char* p; { return *(unsigned char*)(p + 76); }
 
-void fn_8029356C(char* p) { *(unsigned char*)(p + 76) = 1; }
+void fn_8029356C(p) char* p; { *(unsigned char*)(p + 76) = 1; }
 
-void fn_8029625C(char* p, int v) { *(int*)(p + 0) = v; }
+void fn_8029625C(p, v) char* p; int v; { *(int*)(p + 0) = v; }
 
 void fn_80296858(void) {}
 
 void fn_8029685C(void) {}
 
-char* fn_80296884(char* p) { return p + 4; }
+char* fn_80296884(p) char* p; { return p + 4; }
 
 void fn_8029688C(void) {}
 
 void fn_80296890(void) {}
 
-unsigned short fn_80298AC4(char* p) { return *(unsigned short*)(p + 4); }
+unsigned short fn_80298AC4(p) char* p; { return *(unsigned short*)(p + 4); }
 
-unsigned short fn_80298ACC(char* p) { return *(unsigned short*)(p + 6); }
+unsigned short fn_80298ACC(p) char* p; { return *(unsigned short*)(p + 6); }
 
-unsigned short fn_80298FDC(char* p) { return *(unsigned short*)(p + 4); }
+unsigned short fn_80298FDC(p) char* p; { return *(unsigned short*)(p + 4); }
 
-unsigned short fn_80298FE4(char* p) { return *(unsigned short*)(p + 6); }
+unsigned short fn_80298FE4(p) char* p; { return *(unsigned short*)(p + 6); }
 
-char* fn_80299700(char* p) { return p + 4; }
+char* fn_80299700(p) char* p; { return p + 4; }
 
-char* fn_80299708(char* p) { return p + 16; }
+char* fn_80299708(p) char* p; { return p + 16; }
 
-float fn_80299710(char* p) { return *(float*)(p + 28); }
+float fn_80299710(p) char* p; { return *(float*)(p + 28); }
 
-float fn_80299718(char* p) { return *(float*)(p + 32); }
+float fn_80299718(p) char* p; { return *(float*)(p + 32); }
 
 int fn_80299C98(void) { return 0; }
 
-char* fn_8029CF24(char* p) { return p + 148; }
+char* fn_8029CF24(p) char* p; { return p + 148; }
 
 int fn_8029CF2C(void) { return 1; }
 
@@ -167,19 +167,19 @@ int fn_8029CF84(void) { return 0; }
 
 int fn_8029D6FC(void) { return 0; }
 
-unsigned char fn_802A0488(char* p) { return *(unsigned char*)(p + 15); }
+unsigned char fn_802A0488(p) char* p; { return *(unsigned char*)(p + 15); }
 
-int fn_802A0490(char* p) { return *(int*)(p + 28); }
+int fn_802A0490(p) char* p; { return *(int*)(p + 28); }
 
-unsigned char fn_802A0498(char* p) { return *(unsigned char*)(p + 16); }
+unsigned char fn_802A0498(p) char* p; { return *(unsigned char*)(p + 16); }
 
-int fn_802A04A0(char* p) { return *(int*)(p + 32); }
+int fn_802A04A0(p) char* p; { return *(int*)(p + 32); }
 
-unsigned char fn_802A04A8(char* p) { return *(unsigned char*)(p + 62); }
+unsigned char fn_802A04A8(p) char* p; { return *(unsigned char*)(p + 62); }
 
-unsigned char fn_802A0548(char* p) { return *(unsigned char*)(p + 13); }
+unsigned char fn_802A0548(p) char* p; { return *(unsigned char*)(p + 13); }
 
-unsigned char fn_802A0550(char* p) { return *(unsigned char*)(p + 12); }
+unsigned char fn_802A0550(p) char* p; { return *(unsigned char*)(p + 12); }
 
 int fn_802A0558(void) { return 1; }
 
@@ -187,7 +187,7 @@ int fn_802A05EC(void) { return 0; }
 
 int fn_802A05F4(void) { return 1; }
 
-unsigned char fn_802A05FC(char* p) { return *(unsigned char*)(p + 12); }
+unsigned char fn_802A05FC(p) char* p; { return *(unsigned char*)(p + 12); }
 
 int fn_802A0658(void) { return 1; }
 
@@ -199,25 +199,25 @@ int fn_802A07C8(void) { return 0; }
 
 int fn_802A07D0(void) { return 1; }
 
-int fn_802A0F18(char* p) { return *(int*)(p + 2880); }
+int fn_802A0F18(p) char* p; { return *(int*)(p + 2880); }
 
-unsigned char fn_802A0F20(char* p) { return *(unsigned char*)(p + 2884); }
+unsigned char fn_802A0F20(p) char* p; { return *(unsigned char*)(p + 2884); }
 
-char* fn_802AE5CC(char* p) { return p + 160; }
+char* fn_802AE5CC(p) char* p; { return p + 160; }
 
-char* fn_802AEC6C(char* p) { return p + 316; }
+char* fn_802AEC6C(p) char* p; { return p + 316; }
 
 void fn_802AEC74(void) {}
 
 void fn_802AEC78(void) {}
 
-void fn_802AECA0(char* p) { *(int*)(p + 4) = 0; }
+void fn_802AECA0(p) char* p; { *(int*)(p + 4) = 0; }
 
 int fn_802AEDB8(void) { return 1; }
 
 void fn_802AEF98(void) {}
 
-unsigned char fn_802AEF9C(char* p) { return *(unsigned char*)(p + 196); }
+unsigned char fn_802AEF9C(p) char* p; { return *(unsigned char*)(p + 196); }
 
 void fn_802AF02C(void) {}
 
@@ -227,17 +227,17 @@ void fn_802B0A18(void) {}
 
 void fn_802B0A1C(void) {}
 
-char* fn_802B0A44(char* p) { return p + 4; }
+char* fn_802B0A44(p) char* p; { return p + 4; }
 
 void fn_802B0AB4(void) {}
 
-char* fn_802B3B6C(char* p) { return p + 4; }
+char* fn_802B3B6C(p) char* p; { return p + 4; }
 
 int fn_802B4D08(void) { return 0; }
 
-void fn_802B5630(char* p) { *(int*)(p + 0) = 0; }
+void fn_802B5630(p) char* p; { *(int*)(p + 0) = 0; }
 
-int fn_8028BEEC(int a0) {
+int fn_8028BEEC(a0) int a0; {
     int t0;
     *(int*)(a0 + 0) = (int)lbl_804BE46C;
     *(int*)(a0 + 4) = 0;
@@ -249,7 +249,7 @@ int fn_8028BEEC(int a0) {
     return a0;
 }
 
-void fn_80290CE8(int a0) {
+void fn_80290CE8(a0) int a0; {
     *(int*)(a0 + 0) = (int)lbl_804BC32C;
     *(unsigned char*)(a0 + 4) = 10;
     *(unsigned char*)(a0 + 5) = 40;
@@ -257,7 +257,7 @@ void fn_80290CE8(int a0) {
     *(unsigned short*)(a0 + 8) = 0;
 }
 
-void fn_80291E58(int a0) {
+void fn_80291E58(a0) int a0; {
     int t0;
     t0 = *(int*)(a0 + 8);
     HSD_CObjAnim(t0);
@@ -268,7 +268,7 @@ void fn_80291EBC(void) {
     lbl_805DDC90 = 0;
 }
 
-void fn_802927C8(int a0) {
+void fn_802927C8(a0) int a0; {
     float t0;
     t0 = lbl_805E3358;
     *(float*)(a0 + 20) = t0;
@@ -278,14 +278,14 @@ void fn_80292AB4(void) {
     fn_8037CFEC();
 }
 
-void fn_80292AD4(int a0, int a1, int a2) {
+void fn_80292AD4(a0, a1, a2) int a0; int a1; int a2; {
     float t0;
     t0 = lbl_805E336C;
     *(float*)(a1 + 0) = t0;
     *(float*)(a2 + 0) = t0;
 }
 
-void fn_80292B40(int a0, int a1) {
+void fn_80292B40(a0, a1) int a0; int a1; {
     PSMTXIdentity(a1);
 }
 
@@ -301,11 +301,11 @@ float fn_8029626C(float fa0) {
     return (fa0 * t0);
 }
 
-void fn_80296860(int a0, int a1) {
+void fn_80296860(a0, a1) int a0; int a1; {
     fn_8038CB78(a1);
 }
 
-void fn_80299604(int a0) {
+void fn_80299604(a0) int a0; {
     fn_80393820((a0 + 36));
 }
 
@@ -314,7 +314,7 @@ void fn_80299754(int a0, float fa0, float fa1) {
     *(float*)(a0 + 32) = fa1;
 }
 
-void fn_80299DB0(int a0) {
+void fn_80299DB0(a0) int a0; {
     fn_80393820((a0 + 36));
 }
 
@@ -323,7 +323,7 @@ void fn_8029D704(void) {
     lbl_805DDC90 = 0;
 }
 
-void fn_802A0428(int a0, int a1) {
+void fn_802A0428(a0, a1) int a0; int a1; {
     float t0;
     t0 = *(float*)(a1 + 180);
     *(float*)(a0 + 0) = t0;
@@ -333,18 +333,18 @@ void fn_802A05CC(void) {
     fn_8029CF8C();
 }
 
-void fn_802A0EE8(int a0, int a1) {
+void fn_802A0EE8(a0, a1) int a0; int a1; {
     *(unsigned char*)(a0 + 2852) = 1;
     *(int*)(a0 + 2856) = a1;
 }
 
-void fn_802AE5C0(int a0, int a1) {
+void fn_802AE5C0(a0, a1) int a0; int a1; {
     float t0;
     t0 = *(float*)(a1 + 52);
     *(float*)(a0 + 0) = t0;
 }
 
-void fn_802AEC7C(int a0, int a1, int a2, int a3, int a4) {
+void fn_802AEC7C(a0, a1, a2, a3, a4) int a0; int a1; int a2; int a3; int a4; {
     int t0;
     int t1;
     t0 = *(int*)(a0 + 4);
@@ -353,42 +353,42 @@ void fn_802AEC7C(int a0, int a1, int a2, int a3, int a4) {
     *(int*)(a4 + 0) = t1;
 }
 
-void fn_802AEC90(int a0, int a1) {
+void fn_802AEC90(a0, a1) int a0; int a1; {
     int t0;
     t0 = (*(int*)(a0 + 4) + a1);
     *(int*)(a0 + 4) = t0;
 }
 
-void fn_802AF030(int a0) {
+void fn_802AF030(a0) int a0; {
     *(unsigned short*)(a0 + 28) = 192;
     *(unsigned char*)(a0 + 32) = 1;
     *(unsigned short*)(a0 + 30) = 24;
     *(unsigned char*)(a0 + 32) = 1;
 }
 
-int fn_802AF3CC(int a0) {
+int fn_802AF3CC(a0) int a0; {
     fn_802AF548();
     *(int*)(a0 + 0) = (int)lbl_804F8278;
     *(int*)(a0 + 8) = ((int)lbl_804F8278 + 16);
     return a0;
 }
 
-int fn_802AF87C(int a0) {
+int fn_802AF87C(a0) int a0; {
     fn_802AF548();
     *(int*)(a0 + 0) = (int)lbl_804C1150;
     *(int*)(a0 + 8) = ((int)lbl_804C1150 + 16);
     return a0;
 }
 
-void fn_802B0A20(int a0, int a1) {
+void fn_802B0A20(a0, a1) int a0; int a1; {
     fn_8038CB78(a1);
 }
 
-void fn_802B4D10(int a0) {
+void fn_802B4D10(a0) int a0; {
     lbl_805DDC00 = a0;
 }
 
-int fn_802B57F4(int a0, int a1) {
+int fn_802B57F4(a0, a1) int a0; int a1; {
     int t0;
     fn_8039E780(a0, a1, 0);
     *(int*)(a0 + 0) = (int)lbl_804BBFF4;
@@ -401,7 +401,7 @@ int fn_802B57F4(int a0, int a1) {
     return a0;
 }
 
-int fn_80291E7C(int a0) {
+int fn_80291E7C(a0) int a0; {
 int t0;
 int t1;
 t0 = *(int*)(a0 + 8);
@@ -424,7 +424,7 @@ t2 = *(unsigned char*)(a0 + 12);
 *(float*)(a0 + 20) = t1;
 }
 
-void fn_802939F4(int a0) {
+void fn_802939F4(a0) int a0; {
 int t0;
 int t1;
 int t2;
@@ -443,7 +443,7 @@ m0 = t1;
 }
 }
 
-void fn_8029B280(int a0, int a1) {
+void fn_8029B280(a0, a1) int a0; int a1; {
 int t0;
 int t1;
 int t2;
@@ -455,7 +455,7 @@ t2 = (*(int*)(a0 + 16388) + 1);
 *(int*)(a0 + 16388) = t2;
 }
 
-int fn_8029D72C(int a0) {
+int fn_8029D72C(a0) int a0; {
 int t0;
 int t1;
 t0 = *(int*)(a0 + 8);
@@ -464,7 +464,7 @@ lbl_805DDC90 = a0;
 return ((unsigned)((-t1) | t1) >> 31);
 }
 
-void fn_802A051C(int a0) {
+void fn_802A051C(a0) int a0; {
 int t0;
 int m0;
 m0 = *(int*)(a0 + 16);
@@ -475,12 +475,12 @@ m0 = t0;
 }
 }
 
-int fn_802A0F08(int a0, int a1, int a2) {
+int fn_802A0F08(a0, a1, a2) int a0; int a1; int a2; {
 *(int*)((a0 + (a1 << 2)) + 2864) = a2;
 return (a0 + (a1 << 2));
 }
 
-void fn_802ADCEC(int a0) {
+void fn_802ADCEC(a0) int a0; {
 int t0;
 int m0;
 m0 = *(unsigned char*)(a0 + 256);

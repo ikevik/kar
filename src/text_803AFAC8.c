@@ -12,7 +12,7 @@ void __begin_critical_region(void) {}
 void __kill_critical_regions(void) {}
 
 
-void __prep_buffer(int a0) {
+void __prep_buffer(a0) int a0; {
 int t0;
 int t1;
 int t2;
@@ -31,6 +31,6 @@ t5 = *(int*)(a0 + 24);
 *(int*)(a0 + 52) = t5;
 }
 
-int fn_803B3670(int a0) {
+int fn_803B3670(a0) int a0; {
 return (((a0 >> 31) ^ a0) - (a0 >> 31));
 }
