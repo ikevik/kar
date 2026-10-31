@@ -390,7 +390,7 @@ void fn_803ED268(void)
     }
 }
 
-#pragma peephole off
+#pragma peephole on
 void fn_803ED2DC(void)
 {
     if (lbl_805DE0DC == 2) {
@@ -615,5 +615,116 @@ void fn_803EE7F4(u8* p, int mode)
         break;
     }
     F32(p, 0x1c) |= 1;
+    OSRestoreInterrupts(old);
+}
+
+static inline AXVPBw* __AXPopFreeStack(void)
+{
+    AXVPBw** head = STACK_HEAD;
+    AXVPBw* p = head[0];
+    if (p) {
+        head[0] = p->next;
+    }
+    return p;
+}
+
+static inline AXVPBw* __AXPopStackFromBottom(AXVPBw** tp, AXVPBw** hp)
+{
+    AXVPBw* p = 0;
+    if (*hp) {
+        if (*hp == *tp) {
+            p = *hp;
+            *tp = 0;
+            *hp = 0;
+        } else if (*tp) {
+            p = *tp;
+            *tp = p->prev;
+            (*tp)->next = 0;
+        }
+    }
+    return p;
+}
+
+AXVPBw* AXAcquireVoice(u32 priority, void (*callback)(AXVPBw*), u32 userContext)
+{
+    AXVPBw* p;
+    AXVPBw** head = STACK_HEAD;
+    int old = OSDisableInterrupts();
+    p = __AXPopFreeStack();
+    if (p == 0) {
+        AXVPBw** hp;
+        AXVPBw** tp;
+        u32 i;
+        for (i = 1, hp = &head[1], tp = &head[33]; i < priority; i++, hp++, tp++) {
+            p = __AXPopStackFromBottom(tp, hp);
+            if (p) {
+                if (F16(p, 0x146) == 1) {
+                    F32(p, 0x20) = 1;
+                }
+                if (p->callback) {
+                    p->callback(p);
+                }
+                break;
+            }
+        }
+    }
+    if (p) {
+        AXVPBw** hp = &head[priority];
+        p->next = *hp;
+        p->prev = 0;
+        if (p->next) {
+            (*hp)->prev = p;
+            *hp = p;
+        } else {
+            head[32 + priority] = p;
+            *hp = p;
+        }
+        p->priority = priority;
+        p->callback = callback;
+        p->next_loop = (AXVPBw*)userContext;
+        fn_803EE5BC((u8*)p);
+    }
+    OSRestoreInterrupts(old);
+    return p;
+}
+
+void fn_803EECCC(u8* p, u32* src)
+{
+    u32* dst = (u32*)(p + 0x1a6);
+    int old = OSDisableInterrupts();
+    dst[0] = src[0];
+    dst[1] = src[1];
+    dst[2] = src[2];
+    dst[3] = src[3];
+    switch (*(u16*)((u8*)src + 2)) {
+    case 0:
+        break;
+    case 10:
+        dst[4] = 0;
+        dst[5] = 0;
+        dst[6] = 0;
+        dst[7] = 0;
+        dst[8] = 0;
+        dst[9] = 0;
+        dst[10] = 0;
+        dst[11] = 0;
+        dst[12] = 0x8000000;
+        dst[13] = 0;
+        break;
+    case 25:
+        dst[4] = 0;
+        dst[5] = 0;
+        dst[6] = 0;
+        dst[7] = 0;
+        dst[8] = 0;
+        dst[9] = 0;
+        dst[10] = 0;
+        dst[11] = 0;
+        dst[12] = 0x1000000;
+        dst[13] = 0;
+        break;
+    }
+    F32(p, 0x1c) &= ~0x1E000;
+    F32(p, 0x1c) |= 0x21000;
     OSRestoreInterrupts(old);
 }
