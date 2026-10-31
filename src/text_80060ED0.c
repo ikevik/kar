@@ -325,3 +325,44 @@ void fn_8007B3C4(char* o) { SH* s = AT(SH*, o, 0x2c); if (s->a) { s->a = 0; HSD_
 void fn_8007B408(char* o) { SH* s = AT(SH*, o, 0x2c); if (!s->a) { s->a = 1; HSD_ShadowSetActive(s->p0, 0); } }
 void fn_8007B470(char* o) { AT(SH*, o, 0x2c)->b = 1; }
 int fn_8007B954(void) { if (AT(u8, lbl_80552A30, 0x24) != 0) return AT(u8, lbl_80552A30, 0x25); return fn_80487C48(); }
+
+extern void* memset();
+extern void* memcpy();
+extern void HSD_PadRumbleRemove(u8), HSD_PadRumbleOffH(u8), HSD_ShadowFree(), fn_80059CFC(), fn_80073FBC(), fn_8013128C(), OSRestoreInterrupts();
+extern void func_80428F64(), fn_801AE4EC(), fn_801DB278(), fn_8007E1A0(), fn_8007E40C(), fn_8007A7E0(), fn_80079518();
+extern int fn_80069F74(), fn_80072964(), fn_80074F10(), fn_8007514C(), fn_80078D7C(), fn_8045A238(), OSDisableInterrupts();
+extern int fn_8007B9CC();
+extern int fn_80487C84();
+extern char lbl_80499D20[], lbl_80552338[], lbl_8055294C[], lbl_80552978[], lbl_805529A4[], lbl_80552C2C[];
+
+void fn_8007133C(char* p, char* q) { memset(AT(void*, q, 0x54), 0, ((u32)AT(u16, q, 0x58) >> 3) + 1); AT(short, p, 0x198) = 0; AT(short, p, 0x196) = 0; }
+void fn_80071D48(u8 a) { HSD_PadRumbleRemove(a); HSD_PadRumbleOffH(a); }
+void fn_80071D7C(void) { int i; for (i = 0; i < 4; i++) { HSD_PadRumbleRemove((u8)i); HSD_PadRumbleOffH((u8)i); } }
+void fn_80072490(char* p) { char* o = AT(char*, p, 0x2c); while (fn_80069F74(o, o + 0x20, fn_8007242C) != 0) fn_8006A250(o + 0x20); }
+void fn_800724EC(void* p) { if (p != 0) func_80428F64(); }
+void fn_80072A28(int p) { while (fn_80072964(p) != 0) fn_80059CFC(); }
+void fn_8007510C(int p) { while (fn_80074F10(p) == 1) fn_80059CFC(); }
+void fn_80075360(int p) { while (fn_8007514C(p) == 1) fn_80059CFC(); }
+void fn_80072D18(void) { char* g = fn_80073F94(); AT(int, g, 0x10) = 1; fn_80073FBC(); }
+void fn_80072D44(void) { char* g = fn_80073F94(); AT(int, g, 0x10) = 3; fn_80073FBC(); }
+void fn_800753FC(void) { fn_8013128C(); AT(int, lbl_80550F68, 0x10) = AT(int, lbl_80499D20, 0xc); }
+void fn_80075D44(void) { memset(lbl_80552338, 0, 16); AT(int, lbl_80552338, 8) = -1; AT(int, lbl_80552338, 0) = -1; AT(int, lbl_80552338, 4) = -1; AT(int, lbl_80552338, 0xc) = -1; }
+void fn_8007604C(void) { int e = OSDisableInterrupts(); AT(int, lbl_80552338, 0) = AT(int, lbl_80552338, 4); AT(int, lbl_80552338, 4) = AT(int, lbl_80552338, 0xc); OSRestoreInterrupts(e); }
+int fn_80078BEC(void) { if (fn_80078D7C() != 0) return -1; AT(int, lbl_805528F8, 0x20) = 1; return fn_8045A238(0, lbl_8049AB40); }
+void fn_8007A62C(char* p) { HSD_ObjFree(lbl_8055294C, AT(int, p, 0x34)); fn_80079518(p); }
+void fn_8007A9E4(char* p) { HSD_ObjFree(lbl_80552978, AT(int, p, 0x34)); fn_80079518(p); }
+void fn_8007ACC8(char* p) { HSD_ObjFree(lbl_805529A4, AT(int, p, 0x34)); fn_80079518(p); }
+void fn_8007AB78(int a, char* b, int c) { fn_8007A7E0(a, b, AT(u8, AT(char*, *(char**)b, 0x34), 0x44), c); }
+void fn_8007AD08(int a, char* b, int c) { fn_8007A7E0(a, b, AT(u8, AT(char*, *(char**)b, 0x34), 0x34), c); }
+void fn_8007B488(char* p) { HSD_ShadowFree(*(int*)p); HSD_ObjFree(lbl_80552A00, p); }
+int fn_8007B990(void) { if (AT(u8, lbl_80552A30, 0x24) != 0) return AT(u8, lbl_80552A30, 0x26); return fn_80487C84(); }
+void fn_8007C888(void) { fn_8007B9CC(lbl_80552C2C, lbl_80552C2C); AT(int, lbl_80552C2C, 0) = AT(int, lbl_80552C2C, 0) + 1; }
+void fn_8007FFB0(char* p, int a) { char* q = AT(char*, p, 0x2c); fn_8007E1A0(a, q + 0x300, q + 0x324, q + 0x330); }
+void fn_8008003C(char* p, int a) { char* q = AT(char*, p, 0x2c); fn_8007E1A0(a, q + 0x318, q + 0x978, q + 0x984); }
+void fn_800808D0(char* p, int a) { char* q = AT(char*, p, 0x2c); fn_8007E1A0(a, q + 0x3e8, q + 0x418, q + 0x424); }
+void fn_80082250(char* p, int a) { char* q = AT(char*, p, 0x2c); fn_8007E1A0(a, q + 0xdc, q + 0x100, q + 0x10c); }
+void fn_80080904(char* p, int a) { char* q = AT(char*, p, 0x2c); fn_8007E40C(a, q + 0x3e8, q + 0x324); }
+void fn_80082284(char* p, int a) { char* q = AT(char*, p, 0x2c); fn_8007E40C(a, q + 0xdc, q + 0xc4); }
+void fn_800807E0(char* p) { fn_801AE4EC(AT(int, p, 0x2c)); }
+void fn_80081208(char* p) { fn_801DB278(AT(int, p, 0x2c)); }
+void fn_800811CC(void* d) { memcpy(d, (void*)fn_8007D580(), 0x68); }
