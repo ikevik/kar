@@ -88,14 +88,14 @@ void HSD_PadRumbleFree(s8 pad)
 }
 
 void HSD_PadRumbleRemove(s8 pad);
-#if 0 /* not yet matching */
+
 void HSD_PadRumbleRemove(s8 pad)
 {
     if (lbl_8058B080.adc_type == lbl_8058B080.multi[pad].stat) {
         int en;
+        RumbleNode* next;
         RumbleStatus* st;
         RumbleNode* node;
-        RumbleNode* next;
         en = OSDisableInterrupts();
         st = &lbl_8058BB88[lbl_8058B080.multi[pad].rumble];
         for (node = st->list; node != NULL; node = next) {
@@ -112,13 +112,11 @@ void HSD_PadRumbleRemove(s8 pad)
         OSRestoreInterrupts(en);
     }
 }
-#endif
 
 void HSD_PadRumbleRemoveAll(void);
-#if 0 /* not yet matching */
+#if 0 /* near miss: base/index regs swapped */
 void HSD_PadRumbleRemoveAll(void)
 {
-    PadLibData* d = &lbl_8058B080;
     s32 i;
     for (i = 0; i < 4; i++) {
         HSD_PadRumbleRemove((u8) i);
@@ -127,14 +125,13 @@ void HSD_PadRumbleRemoveAll(void)
 #endif
 
 void HSD_PadRumbleRemoveId(s8 pad, u32 id);
-#if 0 /* not yet matching */
 void HSD_PadRumbleRemoveId(s8 pad, u32 id)
 {
     if (lbl_8058B080.adc_type == lbl_8058B080.multi[pad].stat) {
         int en;
-        RumbleStatus* st;
-        RumbleNode* node;
-        RumbleNode* next;
+    RumbleNode* next;
+    RumbleStatus* st;
+    RumbleNode* node;
         en = OSDisableInterrupts();
         st = &lbl_8058BB88[lbl_8058B080.multi[pad].rumble];
         for (node = st->list; node != NULL; node = next) {
@@ -152,7 +149,6 @@ void HSD_PadRumbleRemoveId(s8 pad, u32 id)
         OSRestoreInterrupts(en);
     }
 }
-#endif
 
 void HSD_PadRumblePauseAll(void)
 {
@@ -193,21 +189,20 @@ void HSD_PadRumbleActiveAll(void)
 }
 
 int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data);
-#if 0 /* not yet matching */
 int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data)
 {
     PadLibData* d = &lbl_8058B080;
     int ret = 0;
     if (d->adc_type == d->multi[pad].stat) {
         int en;
-        RumbleStatus* st;
-        RumbleNode* node;
+    RumbleNode* n;
+    RumbleStatus* st;
+    RumbleNode* p;
+    RumbleNode* node;
         en = OSDisableInterrupts();
         node = d->rumble_free;
         st = &lbl_8058BB88[lbl_8058B080.multi[pad].rumble];
         if (node != NULL && st->count < d->rumble_max) {
-            RumbleNode* p;
-            RumbleNode* n;
             d->rumble_free = node->next;
             node->id = id;
             node->pause = 0;
@@ -231,7 +226,6 @@ int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data)
     }
     return ret;
 }
-#endif
 
 int HSD_PadRumbleInterpret1(RumbleNode* node, u8* out)
 {
