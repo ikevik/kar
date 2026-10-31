@@ -32,3 +32,4 @@ objdiff.json
 __pycache__
 .cache/
 .mypy_cache
+compile_commands.json
