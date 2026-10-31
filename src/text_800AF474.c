@@ -19,6 +19,7 @@ extern int fn_8007125C();
 extern int fn_8007133C();
 extern int fn_800793B8();
 extern int fn_8007A598();
+extern int fn_8007AD58();
 extern int fn_8018C2E4();
 extern int fn_802339C4();
 extern int fn_802361A0();
@@ -1215,6 +1216,81 @@ int fn_8010E928(void)
 {
     int c0;
     c0 = fn_800DB654((*(int*)&lbl_805DD6CC), (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)((*(int*)&lbl_805DD6CC)) + 8))) + 8))) + 8)), 0);
+    return c0;
+}
+
+int fn_800CEE08(int a1)
+{
+
+    return (((unsigned)(*(unsigned char*)((u8*)((*(int*)((u8*)((*(int*)&lbl_805DD6CC)) + 92))) + 60 + (a1 << 6))) >> 6) & 1);
+}
+
+int fn_800DDD1C(int a1, int a2)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)(a1) + 116))) + 312 + (a2 * 320)));
+}
+
+int fn_800DDFEC(int a1, int a2)
+{
+
+    return ((*(int*)((u8*)((*(int*)((u8*)(a1) + 116))) + 312 + (a2 * 320))) + 8);
+}
+
+int fn_800EE6CC(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 0))) + 48))) + 4 + ((*(int*)((u8*)(a1) + 8)) * 12)));
+}
+
+int fn_800EE6EC(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 8 + ((*(int*)((u8*)(a1) + 8)) * 20)));
+}
+
+int fn_800EE708(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 12 + ((*(int*)((u8*)(a1) + 8)) * 20)));
+}
+
+int fn_800EE724(int a1, int a2)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 8 + (a2 * 20)));
+}
+
+int fn_800EE73C(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 16 + ((*(int*)((u8*)(a1) + 8)) * 20)));
+}
+
+int fn_800EE758(int a1, int a2)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 16 + (a2 * 20)));
+}
+
+int fn_800EF894(int a1, int a2, int a3, int a4)
+{
+    int c0;
+    c0 = fn_8007AD58(a3, a4, (*(int*)((u8*)((*(int*)((u8*)(a1) + 32))) + 312 + (a2 * 320))), a4, (*(int*)((u8*)(a1) + 32)));
+    return c0;
+}
+
+int fn_8010E504(int a1, int a2)
+{
+    int c0;
+    c0 = fn_800FCBB4((*(int*)((u8*)(((*(int*)&lbl_805DD6CC) + (a2 * 72))) + 536)), a1, ((*(int*)&lbl_805DD6CC) + (a2 * 72)));
+    return c0;
+}
+
+int fn_8010E538(int a1, int a2)
+{
+    int c0;
+    c0 = fn_80101148((*(int*)((u8*)(((*(int*)&lbl_805DD6CC) + (a2 * 72))) + 536)), a1, ((*(int*)&lbl_805DD6CC) + (a2 * 72)));
     return c0;
 }
 
