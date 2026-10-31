@@ -2,7 +2,11 @@
 
 extern void OSRegisterVersion(const char* version);
 extern void OSWakeupThread(void* queue);
+extern int OSDisableInterrupts(void);
+extern int OSRestoreInterrupts(int level);
 extern void __AXAllocInit(void);
+#define F32(p, o) (*(vu32*)((u8*)(p) + (o)))
+#define F16(p, o) (*(vu16*)((u8*)(p) + (o)))
 extern void __AXVPBInit(void);
 extern void __AXAuxInit(void);
 extern void __AXOutInit(void);
@@ -240,4 +244,89 @@ void fn_803EE5BC(u8* p)
     *(u16*)(p + 0x180) = 0;
     *(u16*)(p + 0x17e) = 0;
     *(u16*)(p + 0x17c) = 0;
+}
+
+void fn_803EE8B8(u8* p, u16 state)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x146) = state;
+    F32(p, 0x1c) |= 4;
+    if (state == 0) {
+        F32(p, 0x20) = 1;
+    }
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEB68(u8* p)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x16e) = 1;
+    F16(p, 0x17a) = 0;
+    F16(p, 0x178) = 0;
+    F16(p, 0x176) = 0;
+    F16(p, 0x174) = 0;
+    F32(p, 0x1c) &= ~0x40;
+    F32(p, 0x1c) |= 0x20;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEBCC(u8* p, u16 a, u16 b)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x178) = a;
+    F16(p, 0x17a) = b;
+    F32(p, 0x1c) |= 0x40;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEC28(u8* p, void* src)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x19c) = *(u16*)src;
+    F16(p, 0x19e) = *((s16*)src + 1);
+    F32(p, 0x1c) |= 0x200;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEC80(u8* p, u16 v)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x19e) = v;
+    F32(p, 0x1c) |= 0x400;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEDDC(u8* p, u16 v)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x1a6) = v;
+    F32(p, 0x1c) |= 0x2000;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEE28(u8* p, u32 v)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x1aa) = v >> 16;
+    F16(p, 0x1ac) = v;
+    F32(p, 0x1c) |= 0x4000;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEE7C(u8* p, u32 v)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x1ae) = v >> 16;
+    F16(p, 0x1b0) = v;
+    F32(p, 0x1c) |= 0x8000;
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803EEED0(u8* p, u32 v)
+{
+    int enabled = OSDisableInterrupts();
+    F16(p, 0x1b2) = v >> 16;
+    F16(p, 0x1b4) = v;
+    F32(p, 0x1c) |= 0x10000;
+    OSRestoreInterrupts(enabled);
 }
