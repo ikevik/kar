@@ -89,7 +89,12 @@ extern int WorkAroundType;
 extern u32 WorkAroundSeekLocation;
 extern s32 NextCommandNumber;
 extern u8* BootInfo;
-extern u8* FstStart;
+typedef struct FSTEntry {
+    u32 isDirAndStringOff;
+    u32 parentOrPosition;
+    u32 nextEntryOrLength;
+} FSTEntry;
+extern FSTEntry* FstStart;
 extern u8* FstStringStart;
 extern u32 MaxEntryNum;
 extern DVDDiskID* IDShouldBe;
@@ -166,12 +171,12 @@ void stateCheckID2a(void)
 void __DVDFSInit(void)
 {
     BootInfo = (u8*)0x80000000;
-    FstStart = *(u8**)(BootInfo + 0x38);
+    FstStart = *(FSTEntry**)(BootInfo + 0x38);
     if (FstStart == 0) {
         return;
     }
-    MaxEntryNum = *(u32*)(FstStart + 8);
-    FstStringStart = FstStart + MaxEntryNum * 12;
+    MaxEntryNum = FstStart[0].nextEntryOrLength;
+    FstStringStart = (u8*)(FstStart + MaxEntryNum);
 }
 
 void stateCheckID2(void)
@@ -507,9 +512,9 @@ void cbForUnrecoveredError(u32 intType)
 }
 
 #pragma dont_inline reset
-static inline int isDir(int off)
+static inline int isDir(int entrynum)
 {
-    if ((*(u32*)(FstStart + off) & 0xFF000000) == 0) {
+    if ((FstStart[entrynum].isDirAndStringOff & 0xFF000000) == 0) {
         return 0;
     }
     return 1;
@@ -517,13 +522,11 @@ static inline int isDir(int off)
 
 int DVDFastOpen(int entrynum, DVDFileInfo* fileInfo)
 {
-    int off = entrynum * 12;
-
-    if (entrynum < 0 || entrynum >= MaxEntryNum || isDir(off)) {
+    if (entrynum < 0 || entrynum >= MaxEntryNum || isDir(entrynum)) {
         return 0;
     }
-    fileInfo->startAddr = *(u32*)(FstStart + off + 4);
-    fileInfo->length = *(u32*)(FstStart + off + 8);
+    fileInfo->startAddr = FstStart[entrynum].parentOrPosition;
+    fileInfo->length = FstStart[entrynum].nextEntryOrLength;
     fileInfo->callback = 0;
     fileInfo->cb.state = 0;
     return 1;
