@@ -1,3 +1,4 @@
+#pragma dont_inline on
 typedef unsigned char u8;
 typedef unsigned long u32;
 typedef signed long s32;
@@ -114,6 +115,7 @@ extern s32 fn_803F3CE0(void);
 extern void fn_803C2430(void);
 
 
+#pragma dont_inline reset
 static inline s32 ReadBuf(TRKBuffer* buf, void* data, u32 n)
 {
     s32 err = 0;
@@ -275,6 +277,7 @@ s32 TRKInitializeMessageBuffers(void)
 }
 
 
+#pragma dont_inline on
 void TRKDestructEvent(TRKEvent* event)
 {
     TRKReleaseBuffer(event->msgBufID);
@@ -331,7 +334,6 @@ s32 fn_803BF59C(void)
     return 0;
 }
 
-#pragma dont_inline on
 void fn_803BF730(u32 x)
 {
     lbl_8056B858[0] = x;
@@ -357,7 +359,6 @@ s32 fn_803BFF38(void* p)
     return 0;
 }
 
-#pragma dont_inline reset
 asm u32 fn_803C00C8(void)
 {
     nofralloc
@@ -383,7 +384,6 @@ s32 fn_803C046C(void)
     return 0;
 }
 
-#pragma dont_inline on
 void TRKTargetSetStopped(s32 stopped)
 {
     gTRKState.stopped = stopped;
@@ -451,7 +451,6 @@ void ReserveEXI2Port(void)
     gDBCommTable.f[9]();
 }
 
-#pragma dont_inline reset
 void fn_803C2400(void)
 {
     gDBCommTable.f[3]();
