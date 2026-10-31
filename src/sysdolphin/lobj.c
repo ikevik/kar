@@ -1,4 +1,5 @@
 #include "lobj.h"
+#include <sysdolphin/wobj.h>
 
 extern s32 lightmask_diffuse;
 extern s32 lightmask_attnfunc;
@@ -475,6 +476,7 @@ extern struct _HSD_SList* lbl_805DE20C;
 extern HSD_LObjInfo* lbl_805DE208;
 extern HSD_LObjInfo hsdLObj;
 extern HSD_ClassInfo objInfo;
+void* hsdNew(HSD_ClassInfo*);
 struct _HSD_WObj* HSD_WObjAlloc(void);
 void HSD_WObjSetPosition(struct _HSD_WObj*, Vec*);
 void HSD_WObjGetPosition(struct _HSD_WObj*, Vec*);
@@ -565,6 +567,31 @@ u32 HSD_Index2LightID(u32 idx)
     }
 }
 
+HSD_LObj* HSD_LObjLoadDescAll(HSD_LightDesc* ldesc)
+{
+    HSD_LObj* head;
+    HSD_LObj** p = &head;
+
+    for (; ldesc != NULL; ldesc = ldesc->next) {
+        HSD_ClassInfo* info;
+        if (ldesc->class_name == NULL || (info = hsdSearchClassInfo(ldesc->class_name)) == NULL) {
+            HSD_LObj* new = hsdNew((HSD_ClassInfo*) (lbl_805DE208 ? lbl_805DE208 : &hsdLObj));
+            assert_line(0x5dc, new);
+            *p = new;
+        } else {
+            *p = hsdNew(info);
+            assert_line(0x682, *p);
+        }
+        {
+            HSD_LObj* l = *p;
+            HSD_LOBJ_METHOD(l)->load(l, ldesc);
+        }
+        p = &(*p)->next;
+    }
+    *p = NULL;
+    return head;
+}
+
 void HSD_LObjSetPosition(HSD_LObj* lobj, Vec* position)
 {
     assert_line(0x56f, lobj);
@@ -613,6 +640,53 @@ void HSD_LObjAddAnim(HSD_LObj* lobj, HSD_LightAnim* anim)
         HSD_WObjAddAnim(HSD_LObjGetPositionWObj(lobj), anim->position_anim);
         HSD_WObjAddAnim(HSD_LObjGetInterestWObj(lobj), anim->interest_anim);
     }
+}
+
+void HSD_LObjAddAnimAll(HSD_LObj* lobj, HSD_LightAnim* anim)
+{
+    if (lobj != NULL) {
+        HSD_LObj* lp = lobj;
+        HSD_LightAnim* ap = anim;
+        while (lp != NULL) {
+            HSD_LObjAddAnim(lp, ap);
+            lp = next_p(lp);
+            ap = next_p(ap);
+        }
+    }
+}
+
+static inline BOOL decref(HSD_Obj* obj)
+{
+    u16 ref_count = obj->ref_count;
+    BOOL noref = ref_count == 0xffff;
+    if (noref) {
+        return noref;
+    }
+    obj->ref_count--;
+    return ref_count == 0;
+}
+
+void LObjRelease(HSD_Class* o)
+{
+    HSD_LObj* lobj = (HSD_LObj*) o;
+    HSD_WObj* wobj;
+
+    HSD_AObjRemove(lobj->aobj);
+    wobj = HSD_LObjGetPositionWObj(lobj);
+    if (wobj != NULL) {
+        if (decref(&wobj->parent) && wobj != NULL) {
+            HSD_CLASS_METHOD(wobj)->release((HSD_Class*) wobj);
+            HSD_CLASS_METHOD(wobj)->destroy((HSD_Class*) wobj);
+        }
+    }
+    wobj = HSD_LObjGetInterestWObj(lobj);
+    if (wobj != NULL) {
+        if (decref(&wobj->parent) && wobj != NULL) {
+            HSD_CLASS_METHOD(wobj)->release((HSD_Class*) wobj);
+            HSD_CLASS_METHOD(wobj)->destroy((HSD_Class*) wobj);
+        }
+    }
+    HSD_OBJECT_PARENT_INFO(&hsdLObj)->release(o);
 }
 
 void LObjAmnesia(HSD_ClassInfo* info)
