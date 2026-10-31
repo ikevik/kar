@@ -394,3 +394,79 @@ bytes:
     }
 }
 #endif
+
+char* fn_803B8004(char* dst, const char* src, unsigned long n)
+{
+    const unsigned char* p = (const unsigned char*)src - 1;
+    unsigned char* q = (unsigned char*)dst - 1;
+
+    n++;
+    while (--n) {
+        if (!(*++q = *++p)) {
+            while (--n) {
+                *++q = 0;
+            }
+            break;
+        }
+    }
+    return dst;
+}
+
+typedef struct InStrCtrl {
+    char* NextChar;
+    int NullCharDetected;
+} InStrCtrl;
+
+int fn_803B6D4C(void* isc, int ch, int behavior)
+{
+    char c;
+    InStrCtrl* ctrl = (InStrCtrl*)isc;
+
+    switch (behavior) {
+    case 0:
+        c = *ctrl->NextChar;
+        if (c == '\0') {
+            ctrl->NullCharDetected = 1;
+            return -1;
+        }
+        ctrl->NextChar++;
+        return (unsigned char)c;
+    case 1:
+        if (ctrl->NullCharDetected == 0) {
+            ctrl->NextChar--;
+        } else {
+            ctrl->NullCharDetected = 0;
+        }
+        return ch;
+    case 2:
+        return ctrl->NullCharDetected;
+    }
+    return 0;
+}
+
+extern const double lbl_805E5718;
+
+double fn_803BCEEC(double x, int* eptr)
+{
+    int hx;
+    int ix;
+    int lx;
+
+    hx = *(int*)&x;
+    ix = hx & 0x7FFFFFFF;
+    lx = *((int*)&x + 1);
+    *eptr = 0;
+    if (ix >= 0x7FF00000 || ((ix | lx) == 0)) {
+        return x;
+    }
+    if (ix < 0x00100000) {
+        x *= lbl_805E5718;
+        hx = *(int*)&x;
+        ix = hx & 0x7FFFFFFF;
+        *eptr = -54;
+    }
+    *eptr += (ix >> 20) - 1022;
+    hx = (hx & 0x800FFFFF) | 0x3FE00000;
+    *(int*)&x = hx;
+    return x;
+}
