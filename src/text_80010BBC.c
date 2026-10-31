@@ -982,7 +982,7 @@ u32 fn_80446ACC(u32, u32, u32, u32, u32, u32, u32, u32);
 u32 HSD_ArchiveParse();
 u32 HSD_ArchiveGetExtern();
 u32 HSD_ArchiveLocateExtern(u32, u32, u32);
-u32 fn_8005915C(u32);
+u32 fn_8005915C();
 u32 fn_8005884C(u32, u32);
 void fn_80059364(u32, u32, u32);
 u32 fn_80440BB0(u32);
@@ -1621,6 +1621,35 @@ void fn_8005E788(void) {
         s31 = (s31+1);
     } while ((s32)s31 <= (s32)62);
     fn_8044511C();
+}
+
+
+void fn_80048A24(void) {
+    u32 c0;
+    c0 = fn_8007863C();
+    if ((s32)c0 == (s32)11) {
+    return;
+    }
+    if (((s32)c0 == (s32)0) || ((s32)c0 == (s32)3)) {
+        fn_8004788C(28);
+        return;
+    }
+    fn_8004788C(26);
+}
+
+u32 fn_8004BB1C(void) {
+    u32 v1;
+    u32 s31;
+    u32 c0;
+    u32 c1;
+    u32 c2;
+    c0 = gmGetClearcheckerType0Ptr();
+    v1 = M32((c0+276));
+    s31 = v1;
+    c1 = fn_800092D8();
+    c2 = fn_80261CE8(((s8)c1));
+    s31 = (s31|(1<<c2));
+    return s31;
 }
 
 
