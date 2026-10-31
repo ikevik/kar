@@ -59,7 +59,7 @@ void _HSD_ZListSort(void)
 }
 
 void _HSD_ZListDisp(void);
-#if 0 /* not yet matching */
+#if 1
 void _HSD_ZListDisp(void)
 {
     HSD_ZListEnt* z;
