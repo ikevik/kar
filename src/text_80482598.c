@@ -94,6 +94,112 @@ char* fn_80485C30(buf, ch) char* buf; int ch; {
     *++q = 0;
     return q;
 }
+extern int OSDisableInterrupts();
+extern void MD5Init();
+extern void MD5Update();
+extern void MD5Final();
+extern int fn_803B38AC();
+extern int fn_804838C0();
+extern int fn_80483B34();
+extern char lbl_80534C54[];
+extern char lbl_805DD2BC[8];
+typedef struct QNode {
+    int x0;
+    void (*x4)();
+    struct QNode* x8;
+    struct QNode* xc;
+    int x10;
+    int x14;
+} QNode;
+extern struct { QNode* head; QNode* tail; } lbl_805DE6D4;
+
+#if 0 /* 97% */
+void fn_80485864() {
+    int en = OSDisableInterrupts();
+    QNode* n;
+    while (lbl_805DE6D4.head != 0) {
+        QNode* next;
+        QNode* cur;
+        n = lbl_805DE6D4.head;
+        cur = n;
+        next = cur->x8;
+        if (next == 0) {
+            lbl_805DE6D4.tail = 0;
+        } else {
+            next->xc = 0;
+        }
+        lbl_805DE6D4.head = next;
+        OSRestoreInterrupts(en);
+        en = OSDisableInterrupts();
+        cur->x14 = 0;
+        OSRestoreInterrupts(en);
+        cur->x4(0, 0, cur);
+        en = OSDisableInterrupts();
+    }
+    OSRestoreInterrupts(en);
+}
+#endif
+void fn_80485A08(out, a, b, len) char* out; void* a; void* b; int len; {
+    char ctx[0x58];
+    MD5Init(ctx);
+    MD5Update(ctx, a, 0x10);
+    MD5Update(ctx, b, len);
+    MD5Final(out, ctx);
+    *(unsigned short*)(out + 6) &= ~0xF000;
+    *(unsigned short*)(out + 6) |= 0x3000;
+    *(unsigned char*)(out + 8) &= ~0xC0;
+    *(unsigned char*)(out + 8) |= 0x80;
+}
+int fn_80485908(a) int a; {
+    char tok[0x18];
+    char num[0x18];
+    int n;
+    char* p;
+    if (fn_804838C0(a, lbl_80534C54, tok, 0x18) <= 0) {
+        return -1;
+    }
+    if (fn_80483B34(tok, lbl_805DD2BC, num) <= 0) {
+        return -1;
+    }
+    p = num;
+    n = 0;
+    while (fn_803B38AC(*p) != 0) {
+        n = n * 10;
+        n = *p + n;
+        n -= 0x30;
+        p++;
+    }
+    if (*p != 0) {
+        return -1;
+    }
+    return n;
+}
+#pragma dont_inline off
+static inline int lws(char c) {
+    int r = 1;
+    if (c != 0x20 && c != 9) {
+        r = 0;
+    }
+    return r;
+}
+char* fn_80482980(p, out) char* p; char** out; {
+    while (lws(*p)) {
+        p++;
+    }
+    if ((int)*(unsigned char*)p == 0xd && p[1] == 0xa) {
+        if (!lws(p[2])) {
+            *out = 0;
+            return p + 2;
+        }
+        p += 2;
+        while (lws(*p)) {
+            p++;
+        }
+    }
+    *out = p;
+    return p;
+}
+#pragma dont_inline on
 int fn_8048530C() {
     return lbl_805DE6D0;
 }
