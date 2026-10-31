@@ -69,6 +69,7 @@ int fn_80482054(int arg)
 int fn_804820D4(u8* addr, u32* group)
 {
     IGMPEntry* e;
+    IGMPEntry* base = lbl_805C2A18;
     u32 ip;
     if ((addr[0] & 0xf0) != 0xe0) {
         return -12;
@@ -77,9 +78,9 @@ int fn_804820D4(u8* addr, u32* group)
     if (ip == *(u32*)lbl_805E62C0) {
         return 4;
     }
-    for (e = lbl_805C2A18; e < lbl_805C2A18 + 4; e++) {
+    for (e = base; e < base + 4; e++) {
         if (e->addr == ip && e->group == *group) {
-            return e - lbl_805C2A18;
+            return e - base;
         }
     }
     return -4;
@@ -111,9 +112,10 @@ int fn_80482420(u8* addr, u32* group)
 int IPClose(u8* sock)
 {
     int i;
+    u32 mask;
     IGMPEntry* e = lbl_805C2A18;
     for (i = 0; i < 4; i++, e++) {
-        u32 mask = 1 << i;
+        mask = 1 << i;
         if (*(u16*)(sock + 6) & mask) {
             fn_80482420((u8*)&e->addr, &e->group);
             *(u16*)(sock + 6) &= ~mask;
