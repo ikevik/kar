@@ -70,9 +70,9 @@ void grSetupCityEventData(void* self)
 int fn_8010F720(int v)
 {
     void* c = P(P(lbl_805DD6CC, 8), 8);
-    int i;
-    int n;
     void* e;
+    int n;
+    int i;
     if (!((int)W(P(c, 0x14), 4) > 6)) {
         __assert(lbl_804A77F4, 0x1c3, lbl_804A7800);
     }
