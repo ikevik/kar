@@ -55,7 +55,7 @@ typedef struct GXData {
     u32 nextTexRgnCI;
     u32 tlutRegions[20][4];
     void* (*texRegionCallback)(void*, u32);
-    void* (*tlutRegionCallback)(void*, u32);
+    void* (*tlutRegionCallback)(u32);
     u32 nrmType;
     u8 hasNrms;
     u8 hasBiNrms;
@@ -191,9 +191,8 @@ void fn_803CBED4(u32 a) {
     __peReg[4] = (a & ~0x4) | 4;
 }
 
-void fn_803CBFA8(u8 a, u8 b) {
-    u32 t = a << 8;
-    __peReg[2] = t | b;
+void fn_803CBFA8(u8 a, u32 b) {
+    __peReg[2] = __rlwimi(a << 8, b, 0, 24, 31);
 }
 
 void* (*fn_803CE0CC(void* (*v)(void*, u32)))(void*, u32) {
@@ -202,8 +201,8 @@ void* (*fn_803CE0CC(void* (*v)(void*, u32)))(void*, u32) {
     return old;
 }
 
-void* (*fn_803CE0E0(void* (*v)(void*, u32)))(void*, u32) {
-    void* (*old)(void*, u32) = gx->tlutRegionCallback;
+void* (*fn_803CE0E0(void* (*v)(u32)))(u32) {
+    void* (*old)(u32) = gx->tlutRegionCallback;
     gx->tlutRegionCallback = v;
     return old;
 }
@@ -558,7 +557,7 @@ void fn_803CC474(u8 w, u32 offs) {
 
 extern u32 lbl_805DDE44;
 extern void GXSetViewportJitter(f32, f32, f32, f32, f32, f32, u32);
-extern void fn_803D0B20(u32);
+extern void fn_803D0B20(s32);
 extern void __GXXfVtxSpecs(void);
 extern void fn_803CDC4C(void*, void*, u32);
 
@@ -995,3 +994,88 @@ void fn_803CBDB8(void) {
     lbl_805DDE58 = zero;
     OSRestoreInterrupts(en);
 }
+
+extern void fn_803CA9C0(u32 a, u32* out);
+
+#if 0 /* NONMATCHING */
+void fn_803CF0B0(u32 a, s32 b, u32 c) {
+    u32 w;
+    u32 v;
+    w = (c & 0xFFFFFF) | 0xF4000000;
+    switch (b) {
+    case 0x11:
+        v = 0;
+        break;
+    case 0x13:
+        v = 1;
+        break;
+    case 0x16:
+        v = 2;
+        break;
+    default:
+        v = 2;
+        break;
+    }
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = w;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = (((v & ~0xC) | (a << 2)) & 0xFFFFFF) | 0xF5000000;
+    gx->bpSentNot = 0;
+}
+#endif
+
+void fn_803D0B20(s32 n) {
+    if (n < 5) {
+        u32 v;
+        GXWGFifo_u8 = 8;
+        GXWGFifo_u8 = 0x30;
+        v = gx->matIdxA;
+        GXWGFifo_u32 = v;
+        GXWGFifo_u8 = 0x10;
+        GXWGFifo_u32 = 0x1018;
+        GXWGFifo_u32 = v;
+    } else {
+        u32 v;
+        GXWGFifo_u8 = 8;
+        GXWGFifo_u8 = 0x40;
+        v = gx->matIdxB;
+        GXWGFifo_u32 = v;
+        GXWGFifo_u8 = 0x10;
+        GXWGFifo_u32 = 0x1019;
+        GXWGFifo_u32 = v;
+    }
+    gx->bpSentNot = 1;
+}
+
+#if 0 /* NONMATCHING */
+void fn_803CAB74(u8* out) {
+    s32 off = 0;
+    s32 i = 0;
+    do {
+        *(u32*)(out + off) = i;
+        fn_803CA9C0(i, (u32*)(out + off + 4));
+        i++;
+        off += 8;
+    } while (i <= 20);
+    *(u32*)(out + i * 8) = 0x19;
+    fn_803CA9C0(0x19, (u32*)(out + i * 8 + 4));
+    i++;
+    *(u32*)(out + i * 8) = 0xFF;
+}
+#endif
+
+#if 0 /* NONMATCHING */
+void fn_803CDE80(u32* obj, u32 tlut) {
+    u32* region = gx->tlutRegionCallback(tlut);
+    __GXFlushTextureState();
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = obj[1];
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = region[0];
+    __GXFlushTextureState();
+    obj[0] = __rlwimi(region[0] & 0x3FF, obj[0], 0, 0, 21);
+    region[1] = obj[0];
+    region[2] = obj[1];
+    region[3] = obj[2];
+}
+#endif
