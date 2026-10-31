@@ -391,9 +391,14 @@ u32 fn_803CC0CC(u32 v) {
 }
 
 void fn_803D0AB8(u32 a, u32 b) {
-    u32 v = (((a + 0x156) >> 1) & 0xFFF003FF) | (((b + 0x156) << 9) & 0xFFFFFC00);
+    u32 x = (a + 0x156) >> 1;
+    u32 y = (b + 0x156) >> 1;
+    u32 reg = 0;
+    reg = (reg & ~0x3FF) | x;
+    reg = (reg & ~0xFFC00) | (y << 10);
+    reg = (reg & 0xFFFFFF) | 0x59000000;
     GXWGFifo_u8 = 0x61;
-    GXWGFifo_u32 = (v & 0xFFFFFF) | 0x59000000;
+    GXWGFifo_u32 = reg;
     gx->bpSentNot = 0;
 }
 
@@ -415,11 +420,17 @@ void fn_803CC564(u8 a) {
     GXWGFifo_u32 = gx->genMode;
 }
 
+#if 0 /* NONMATCHING */
 void fn_803CC6E4(u32 a) {
-    gx->cpDispStride = 0;
-    gx->cpDispStride = (gx->cpDispStride & ~0x3FF) | (((s32)((a & 0x7FFF) << 1)) >> 5);
-    gx->cpDispStride = (gx->cpDispStride & 0xFFFFFF) | 0x4D000000;
+    u32* p = &gx->cpDispStride;
+    u32 reg;
+    *p = 0;
+    reg = gx->cpDispStride;
+    reg = (reg & ~0x3FF) | (((s32)((a & 0x7FFF) << 1)) >> 5);
+    *p = reg;
+    *p = (*p & 0xFFFFFF) | 0x4D000000;
 }
+#endif
 
 void __GXFifoLink(u8 a) {
     u32 en = a ? 1 : 0;
