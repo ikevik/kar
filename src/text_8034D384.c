@@ -157,3 +157,6 @@ L_803690F8:
 r3 = r0;
 return r3;
 }
+extern int lbl_805DD994;
+
+
