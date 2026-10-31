@@ -183,3 +183,18 @@ int fn_8010F720(int v)
     }
     return 0;
 }
+
+typedef unsigned short u16;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+
+
+
+
+

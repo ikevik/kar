@@ -121,3 +121,30 @@ void fn_803AFB38(heap, p) void* heap; unsigned* p; {
 
 
 #endif /* w3f near misses */
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+typedef struct { u16 :7; u16 f:3; } BFu16_7_3;
+u32 __fwrite(u32, u32, u32, u32);
+u32 fn_803B4068(u32, u32, u32);
+
+u32 fwrite(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 c1;
+    __begin_critical_region(2, p4, p5, p6);
+    c1 = __fwrite(p3, p4, p5, p6);
+    __end_critical_region(2);
+    return c1;
+}
+
+
+
+

@@ -1084,3 +1084,150 @@ void fn_80112A78(void)
         fn_8012532C();
     }
 }
+
+typedef unsigned short u16;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+typedef struct { u8 :7; u8 f:1; } BFu8_7_1;
+typedef struct { u8 :6; u8 f:1; } BFu8_6_1;
+typedef struct { u8 :5; u8 f:3; } BFu8_5_3;
+typedef struct { u8 :5; u8 f:1; } BFu8_5_1;
+typedef struct { u8 :4; u8 f:1; } BFu8_4_1;
+typedef struct { u8 :3; u8 f:1; } BFu8_3_1;
+typedef struct { u8 f:5; } BFu8_0_5;
+typedef struct { u8 f:4; } BFu8_0_4;
+typedef struct { u8 f:3; } BFu8_0_3;
+typedef struct { u32 :15; u32 f:7; } BFu32_15_7;
+typedef struct { u16 :6; u16 f:8; } BFu16_6_8;
+extern u8 lbl_805DE351;
+void fn_800F9D80(u32, u32);
+void fn_800FA2A0(u32, u32);
+void fn_800FA610(u32, u32);
+void fn_800FA708(u32, u32);
+void fn_800FB378(u32, u32);
+void fn_800FBF60(u32, u32);
+void fn_800FE5D4(u32, u32);
+void fn_800FED20(u32, u32);
+void fn_80102C40(u32, u32);
+void fn_80103654(u32, u32);
+void fn_80105DB8(u32, u32);
+void fn_80106144(u32, u32);
+void fn_801063BC(u32, u32);
+void fn_80106824(u32, u32);
+void fn_801044CC(u32, u32);
+void fn_8010250C(u32, u32);
+void fn_80103C58(u32, u32);
+void fn_80107120(u32, u32);
+void fn_80107BFC(u32, u32);
+void fn_80107D64(u32, u32);
+void fn_80109138(u32, u32);
+u32 fn_8000AE2C(void);
+void fn_8011C040(u32, u32);
+void fn_8011CC88(u32, u32);
+void fn_80130DB8(u32, u32);
+u32 fn_8000AAC4(u32, u32, u32);
+u32 fn_8000AF5C(void);
+u32 fn_8000A97C(void);
+void fn_8012A640(u32, u32, u32, u32);
+void fn_801143E8(u32);
+void fn_80121534(u32, float);
+u32 func_80428F28(u32, u32, u32, u32);
+u32 HSD_JObjLoadJoint(u32);
+void fn_80429C14(u32, u32, u32);
+void HSD_GObj_AddGXLink(u32, u32, u32, u32);
+void fn_80052FB8(u32, u32);
+u32 fn_80066DF8(u32);
+void fn_80429728(u32, u32, u32);
+void fn_80066EE0(void);
+
+void fn_8010FF08(u32 p3) {
+    fn_800F9D80(p3, 0);
+    fn_800FA2A0(p3, 1);
+    fn_800FA2A0(p3, 2);
+    fn_800FA610(p3, 3);
+    fn_800FA708(p3, 4);
+    fn_800FA708(p3, 5);
+    fn_800FA708(p3, 6);
+    fn_800FA708(p3, 7);
+    fn_800FB378(p3, 8);
+    fn_800FB5D0(p3, 9, 0);
+    fn_800FB5D0(p3, 10, 0);
+    fn_800FB5D0(p3, 11, 0);
+    fn_800FB5D0(p3, 12, 0);
+    fn_800FB5D0(p3, 13, 0);
+    fn_800FBF60(p3, 14);
+    fn_800FCD44(p3, 15);
+    fn_800FCD44(p3, 16);
+    fn_800FE5D4(p3, 17);
+    fn_800FED20(p3, 18);
+    fn_80102C40(p3, 19);
+    fn_80102C40(p3, 20);
+    fn_80103654(p3, 21);
+    fn_80105DB8(p3, 22);
+    fn_80106144(p3, 23);
+    fn_801063BC(p3, 24);
+    fn_80106824(p3, 25);
+    fn_801044CC(p3, 26);
+    fn_8010250C(p3, 27);
+    fn_80103C58(p3, 28);
+    fn_80107120(p3, 29);
+    fn_80107120(p3, 30);
+    fn_80107120(p3, 31);
+    fn_80107BFC(p3, 32);
+    fn_80107D64(p3, 33);
+    fn_80109138(p3, 34);
+}
+
+u32 fn_801147DC(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 c0;
+    u32 c1;
+    c0 = func_80428F28(27, p4, 0, p6);
+    c1 = HSD_JObjLoadJoint(p3);
+    fn_80429C14(c0, (lbl_805DE351), c1);
+    HSD_GObj_AddGXLink(c0, (u32)fn_8011500C, p5, p6);
+    fn_80052FB8(c1, (10240<<16));
+    return c0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void fn_80111070(void) {}
+
+void fn_80111074(void) {}
+
+void fn_801118D8(void) {}
+
+void fn_8011192C(void) {}
+
+void fn_80111930(void) {}
+
+void fn_80111968(void) {}
+
+void fn_80111D68(void) {}
+
+void fn_80111D6C(void) {}
+

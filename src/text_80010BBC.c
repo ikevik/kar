@@ -955,6 +955,138 @@ typedef struct { u8 :5; u8 f:1; } BFu8_5_1;
 typedef struct { u8 f:1; } BFu8_0_1;
 void fn_8004D8A8(u32);
 
+typedef struct { u8 :4; u8 f:2; } BFu8_4_2;
+typedef struct { u8 f:2; } BFu8_0_2;
+extern u8 lbl_80497E00[];
+extern u32 lbl_805D5238;
+u32 gmGetClearcheckerType0Ptr(void);
+u32 fn_8000979C(u32);
+u32 fn_8022E7E0(u32);
+u32 fn_802309E0(u32);
+u32 fn_800092D8(void);
+u32 fn_80261CE8(u32);
+u32 fn_8022E788(u32);
+u32 fn_8022E838(u32);
+u32 fn_8022DEC8(u32);
+u32 fn_80230AE0(u32);
+u32 fn_8023088C(u32);
+u32 gmGetClearcheckerType2Ptr(void);
+u32 fn_8022F19C(u32);
+float fn_8004A054(u32, u32);
+u32 fn_80231510(u32, float);
+u32 fn_8000C228(u32, float);
+u32 fn_8004A130(u32, u32);
+u32 HSD_LObjGetFlags(u32);
+void fn_80057D94(u32, u32, u32, u32);
+u32 fn_80446ACC(u32, u32, u32, u32, u32, u32, u32, u32);
+u32 HSD_ArchiveParse(u32);
+u32 HSD_ArchiveGetExtern(u32, u32, float);
+u32 HSD_ArchiveLocateExtern(u32, u32, u32);
+u32 fn_8005915C(u32);
+u32 fn_8005884C(u32, u32);
+void fn_80059364(u32, u32, u32);
+u32 fn_80440BB0(u32);
+void fn_8044511C(u32, float);
+
+u32 fn_8004BABC(void) {
+    u32 ph0;
+    u32 c0;
+    u32 c1;
+    ph0 = 0;
+    do {
+        c0 = plGetPlayerKind(ph0);
+        if ((s32)c0 == (s32)0) {
+            c1 = fn_8022E7E0(ph0);
+            if ((s32)c1 != (s32)0) {
+                return 1;
+            }
+        }
+        ph0 = (ph0+1);
+    } while ((s32)ph0 < (s32)5);
+    return 0;
+}
+
+u32 fn_8004C254(void) {
+    u32 ph0;
+    u32 c0;
+    u32 c1;
+    ph0 = 0;
+    do {
+        c0 = plGetPlayerKind(ph0);
+        if ((s32)c0 == (s32)0) {
+            c1 = fn_802309E0(ph0);
+            if ((u32)c1 >= (u32)3) {
+                return 1;
+            }
+        }
+        ph0 = (ph0+1);
+    } while ((s32)ph0 < (s32)5);
+    return 0;
+}
+
+u32 fn_80057514(u32 p3) {
+    u32 ph1;
+    u32 c0;
+    ph1 = p3;
+    while ((u32)ph1 != (u32)0) {
+        if ((s32)((M16(((u32)ph1+8)))&0x3) == (s32)0) {
+            c0 = HSD_LObjGetFlags(ph1);
+            if ((s32)(c0&0x20) == (s32)0) {
+                return ph1;
+            }
+        }
+        if ((u32)ph1 == (u32)0) {
+            ph1 = 0;
+        } else {
+            ph1 = (M32(((u32)ph1+12)));
+        }
+    }
+    __assert((u32)lbl_80497E00, 46, (u32)&lbl_805D5238);
+    return 0;
+}
+
+u32 fn_80057598(u32 p3) {
+    u32 ph1;
+    u32 c0;
+    ph1 = p3;
+    while ((u32)ph1 != (u32)0) {
+        if ((u32)((M16(((u32)ph1+8)))&0x3) == (u32)1) {
+            c0 = HSD_LObjGetFlags(ph1);
+            if ((s32)(c0&0x20) == (s32)0) {
+                return ph1;
+            }
+        }
+        if ((u32)ph1 == (u32)0) {
+            ph1 = 0;
+        } else {
+            ph1 = (M32(((u32)ph1+12)));
+        }
+    }
+    __assert((u32)lbl_80497E00, 60, (u32)&lbl_805D5238);
+    return 0;
+}
+
+u32 fn_80057D14(u32 p3, u32 p4, u32 p5) {
+    u32 v3;
+    u32 ph2;
+    u32 ph4;
+    M32(((u32)(u32)lbl_80537510+2600)) = p4;
+    M32(((u32)(u32)lbl_80537510+2592)) = p5;
+    M32(((u32)(u32)lbl_80537510+2596)) = (M32(((u32)p3+4)));
+    ph2 = (M32(((u32)p3+12)));
+    ph4 = (u32)lbl_80537510;
+    while ((u32)ph2 != (u32)0) {
+        v3 = M32(((u32)ph2+4));
+        if ((u32)v3 != (u32)(M32(((u32)ph4+2596)))) {
+            fn_80057D94(0, ph2, 0, 0);
+            return 1;
+        }
+        M32(((u32)ph4+2596)) = (v3+(M32(((u32)ph2+8))));
+        ph2 = (M32(ph2));
+    }
+    return 0;
+}
+
 
 
 
