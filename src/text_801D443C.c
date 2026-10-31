@@ -2459,7 +2459,7 @@ extern int fn_8005D4C4();
 extern void fn_8005DB44();
 extern int fn_8005DC5C();
 extern int fn_8005E108();
-extern int fn_8005E7D8();
+extern void fn_8005E7D8();
 extern void fn_80063F8C();
 extern void fn_8006417C();
 extern int fn_80066B34();
@@ -2496,7 +2496,7 @@ extern void fn_801C7628();
 extern void fn_801C7648();
 extern int fn_801C8258();
 extern void fn_801C841C();
-extern int fn_801C85BC();
+extern void fn_801C85BC();
 extern void fn_801C8A08();
 extern void fn_801C8BA8();
 extern void fn_801C8BE4();
@@ -2926,7 +2926,7 @@ extern void fn_801D7E5C();
 extern void fn_801D8388();
 extern void fn_801D8B4C();
 extern void fn_801D8F7C();
-extern float fn_801D8FDC();
+extern void fn_801D8FDC();
 extern void fn_801D9064();
 extern void fn_801D9264();
 extern void fn_801D96AC();
@@ -3078,9 +3078,9 @@ extern void fn_8021917C();
 extern void fn_802193B8();
 extern void fn_80219674();
 extern void fn_80219E44();
-extern float fn_80219EEC();
-extern float fn_8021A0E0();
-extern float fn_8021A2D4();
+extern void fn_80219EEC();
+extern void fn_8021A0E0();
+extern void fn_8021A2D4();
 extern void fn_8021A778();
 extern void fn_8021CBC0();
 extern void fn_8021CD90();
@@ -3157,7 +3157,7 @@ extern void fn_8042A258();
 extern void fn_80430198();
 extern void fn_804324EC();
 extern void fn_8044F350();
-extern int func_80428F64();
+extern void func_80428F64();
 extern void gmGetClearcheckerType1_2Ptr();
 extern void gmGetUnkP();
 extern void memset();
@@ -16180,7 +16180,7 @@ void fn_801DA7C8();
 int fn_801DAFAC();
 int fn_801DB154();
 void fn_801DB320();
-int fn_801DD48C(int, float);
+void fn_801DD48C();
 void fn_801DD6C0();
 int fn_801DFE84();
 int fn_801E0654();
@@ -16327,7 +16327,7 @@ void fn_8020EC80();
 void fn_8020EF3C();
 void fn_8020F088();
 void fn_8020F154();
-float fn_8020F22C();
+void fn_8020F22C();
 void fn_8020F390();
 void fn_8020F9F8();
 void fn_8020FF94();
@@ -21735,7 +21735,7 @@ void fn_8020267C();
 void fn_80203FCC();
 int fn_80206E2C();
 int fn_8020728C();
-int fn_80207CE8();
+void fn_80207CE8();
 void fn_8020AE7C();
 void fn_8020D484();
 void fn_802205B0();
@@ -31139,82 +31139,39 @@ L_80283E58:
 lbLoadArchive((int)&lbl_805DD928, (r3_w2 + 16), (int)&lbl_805DD920, (r3_w2 + 44), 0);
 t1 = lbl_805DD920;
 }
-extern float lbl_805E31A4;
-extern float lbl_805E31A8;
-extern float lbl_805E31AC;
-extern float lbl_805E31B0;
-extern float lbl_805E31B4;
-extern float lbl_805E31B8;
 void HSD_AObjClearFlags();
 void OSReport(int, ...);
-int fn_80009190();
-int fn_800091B4();
-int fn_8000AF38();
-int fn_8005F034();
-int fn_8005F600();
-float fn_80062E5C();
-void fn_80063610();
-void fn_80064C18();
+void fn_8005F034();
 int fn_8007A958();
-float fn_800CEA80();
-int fn_800CEAA4();
 void fn_800D1860();
-float fn_800DB3DC();
-void fn_800EA1F4();
 int fn_800F7DB0();
 void fn_80114564();
 void fn_8018C754();
 float fn_801928C0();
 void fn_801A20F4();
 float fn_801C7668();
-float fn_801C8F84();
 void fn_801C992C();
-void fn_801CA968();
-void fn_801CC2A4();
-void fn_801CF340();
 void fn_801D5744();
 void fn_801D5C18();
-float fn_801D8108();
-float fn_801D8190();
-float fn_801D87F8();
-float fn_801D88D8();
 int fn_801DD17C();
 void fn_801DD1C0();
 void fn_801DD3EC();
-int fn_801DD578();
-int fn_801DECBC();
-int fn_801DED8C();
 void fn_801DFA74();
 void fn_801E10E8();
-void fn_801E1278();
-void fn_801E1350();
-int fn_801E17F0();
-void fn_801E2244();
-float fn_801E276C();
 void fn_801E36BC();
-void fn_801E3A20();
 void fn_801EBC0C();
-int fn_801ECDDC();
-void fn_801EE374();
 void fn_801EF278();
-int fn_801F85E4();
 void fn_801F8698();
 void fn_801F870C();
 int fn_801FC398();
-void fn_801FD714();
 void fn_802007E0();
 float fn_80200D38();
 void fn_80204198();
 int fn_802096B4();
 int fn_8020A608();
-void fn_8020A9DC();
-void fn_8020ACD0();
-void fn_8020D780();
 void fn_8020DFE8();
 void fn_8020E0BC();
 void fn_8020E63C();
-void fn_8020E6EC();
-void fn_8020E978();
 void fn_8020F104();
 void fn_8020F308();
 void fn_8020F920();
@@ -31224,8 +31181,6 @@ void fn_8020FFFC();
 void fn_802101E4();
 int fn_80210B68();
 void fn_80211F14();
-void fn_80211F64();
-float fn_8021202C();
 void fn_802122E0();
 void fn_802124EC();
 void fn_802127B4();
@@ -31264,8 +31219,6 @@ void fn_802181AC();
 void fn_80218620();
 void fn_802186E4();
 void fn_802190BC();
-void fn_8021910C();
-float fn_802191D4();
 void fn_80219324();
 void fn_80219DB8();
 void fn_80219F68();
@@ -31296,59 +31249,35 @@ void fn_802249A0();
 void fn_80224B4C();
 void fn_80224B98();
 void fn_80227B48();
-int fn_80228608();
-int fn_802291FC();
-void fn_802292F8();
-void fn_802295A8();
-void fn_80229A2C();
-void fn_80229D50();
-float fn_8022A270();
 void fn_8022EC34();
 int fn_8022FD48();
 void fn_80231B88();
 void fn_80231CEC();
 void fn_80232930();
-void fn_8023303C();
 void fn_802330C4();
-void fn_80233258();
 void fn_802349B0();
 void fn_80234A8C();
-void fn_80234CF0();
-int fn_80234E4C();
-int fn_8023624C();
+void fn_8023624C();
 void fn_80236284();
 int fn_80236AB0();
-int fn_80236C40(int, ...);
-int fn_8023B844();
+void fn_80236C40(int, ...);
 void fn_8023C950();
 int fn_8023CC20();
 void fn_8023E7A4();
-int fn_8023E978();
 void fn_8023F514();
 void fn_8023FFC4();
 void fn_80241428();
 void fn_802433C4();
-void fn_8024347C();
-void fn_80246718();
 int fn_80247004();
-void fn_80248070();
 void fn_8024FC1C();
-int fn_80251F64();
 void fn_8025611C();
 void fn_80256EC0();
 void fn_80256F40();
 int fn_80258278();
-int fn_80261DCC();
-void fn_80262060();
-int fn_802625F8();
 void fn_802707C4();
 void fn_80276228();
-void fn_802767F8();
-void fn_802768A8();
-int fn_80276DE4();
 void fn_8027D364();
 void fn_8027D548();
-void fn_80281CF4();
 void fn_802820C0();
 void fn_80282F8C();
 void fn_80283874();
@@ -31360,23 +31289,15 @@ int fn_8039FBC4();
 int fn_803AD760();
 float fn_803FCDB8(int, ...);
 void fn_80409250();
-int fn_8040D92C();
-void fn_8042B5A8();
+void fn_8040D92C();
 void func_80429CB0();
-void grInitObject();
 void fn_801D7F44(int, float);
-float fn_801D7FDC(int, float);
-float fn_801D8298(int, int, float);
-void fn_801DD320(int, int, float);
-void fn_801E2140(int, int, float);
-float fn_80228F08(int, int, float);
 void fn_8023B914(int, float);
 void fn_8023B9B4(int, float);
 void fn_8023BA5C(int, float);
 void fn_8023BB1C(int, float);
 void fn_8023BBDC(int, float);
 float fn_80240154(int, float);
-float fn_802415A8(int, float);
 
 
 void fn_801D5744(r3, r31) int r3; int r31; {
@@ -31452,287 +31373,6 @@ t4 = *(float*)(r31 + 812);
 *(float*)(r31 + 812) = (t4 * ((f1 - f31) / f1));
 }
 
-float fn_801D7FDC(int r3, float f1) {
-float t0;
-float t1;
-float t2;
-float t3;
-float t4;
-float t5;
-float t6;
-float t7;
-float t8;
-float t9;
-float t10;
-float t11;
-float t12;
-float t13;
-float t14;
-float t15;
-float f1_w1;
-float f1_w5;
-float f30;
-float f31;
-float f31_w2;
-int r31;
-int loc[5];
-f30 = f1;
-r31 = r3;
-f1_w1 = PSVECMag((r31 + 804), f1);
-f31 = f1_w1;
-if (f31 == lbl_805E1BAC) goto L_801D80E4;
-t0 = fn_800CEA80();
-t1 = *(float*)lbl_805DD848;
-t2 = *(float*)(r31 + 804);
-t3 = (*(float*)(r31 + 804) + *(float*)(r31 + 792));
-*(float*)((char*)loc) = t3;
-f31_w2 = (((f31 * f31) * (f30 * t0)) * t1);
-t4 = *(float*)(r31 + 808);
-t5 = (*(float*)(r31 + 808) + *(float*)(r31 + 796));
-*(float*)((char*)loc + 4) = t5;
-f1_w5 = *(float*)(r31 + 812);
-t6 = (f1_w5 + *(float*)(r31 + 800));
-*(float*)((char*)loc + 8) = t6;
-f1_w1 = PSVECMag(((int)loc));
-if (!(f1_w1 < f31_w2)) goto L_801D80A0;
-t7 = (-*(float*)(r31 + 804));
-*(float*)(r31 + 792) = t7;
-t8 = (-*(float*)(r31 + 808));
-*(float*)(r31 + 796) = t8;
-t9 = (-*(float*)(r31 + 812));
-*(float*)(r31 + 800) = t9;
-goto L_801D80E4;
-L_801D80A0:
-if (!(f1_w1 > lbl_805E1BA8)) goto L_801D80E4;
-t10 = *(float*)((char*)loc);
-t11 = (*(float*)((char*)loc) * ((-f31_w2) / f1_w1) + *(float*)(r31 + 792));
-*(float*)(r31 + 792) = t11;
-t12 = (*(float*)((char*)loc + 4) * ((-f31_w2) / f1_w1) + *(float*)(r31 + 796));
-t13 = *(float*)((char*)loc + 4);
-*(float*)(r31 + 796) = t12;
-t14 = ((-f31_w2) / f1_w1);
-f1_w1 = *(float*)((char*)loc + 8);
-t15 = (f1_w1 * t14 + *(float*)(r31 + 800));
-*(float*)(r31 + 800) = t15;
-L_801D80E4:
-return f1_w1;
-}
-
-float fn_801D8108(r3) int r3; {
-float t0;
-float t1;
-float t2;
-float f0_w2;
-float f1;
-float f2_w2;
-int r31;
-r31 = r3;
-f1 = PSVECMag((r31 + 828));
-if (!(f1 > lbl_805E1BA8)) goto L_801D817C;
-f0_w2 = lbl_805E1BAC;
-f2_w2 = (f1 - *(float*)(r31 + 1180));
-if (!(f2_w2 < f0_w2)) goto L_801D8154;
-*(float*)(r31 + 836) = f0_w2;
-*(float*)(r31 + 832) = f0_w2;
-*(float*)(r31 + 828) = f0_w2;
-goto L_801D817C;
-L_801D8154:
-f1 = (f2_w2 / f1);
-t0 = (*(float*)(r31 + 828) * f1);
-*(float*)(r31 + 828) = t0;
-t1 = (*(float*)(r31 + 832) * f1);
-*(float*)(r31 + 832) = t1;
-t2 = (*(float*)(r31 + 836) * f1);
-*(float*)(r31 + 836) = t2;
-L_801D817C:
-return f1;
-}
-
-float fn_801D8190(r3, r4) int r3; int r4; {
-float t0;
-float t1;
-float t2;
-float f1_w10;
-float f1_w6;
-float f2_w3;
-float f31;
-float f3_w3;
-float f3_w6;
-int r30;
-int r31;
-int loc[4];
-r31 = r4;
-r30 = r3;
-fn_801CA968(r3, ((int)loc));
-t0 = PSVECMag(((int)loc));
-if (!(t0 > lbl_805E1BA8)) goto L_801D8274;
-f2_w3 = *(float*)(r30 + 1380);
-f31 = (-(*(float*)(r31 + 8) * *(float*)((char*)loc + 8) + (*(float*)r31 * *(float*)((char*)loc) + (*(float*)(r31 + 4) * *(float*)((char*)loc + 4)))));
-if (!(f2_w3 < lbl_805E1BB0)) goto L_801D8220;
-f1_w6 = *(float*)(r30 + 920);
-f3_w3 = (f31 - f1_w6);
-if (!(f3_w3 > lbl_805E1BAC)) goto L_801D8220;
-f31 = (f3_w3 * f2_w3 + f1_w6);
-L_801D8220:
-t1 = fn_800CEA80();
-f3_w6 = __fabs(f31);
-f1_w10 = (*(float*)lbl_805DD848 * ((f31 * f31) * (*(float*)(r30 + 1768) * t1)));
-if (!(f1_w10 > f3_w6)) goto L_801D8254;
-f1_w10 = f3_w6;
-L_801D8254:
-t2 = (*(float*)(r30 + 2112) + f1_w10);
-*(float*)(r30 + 2112) = t2;
-if (!(f31 > lbl_805E1BAC)) goto L_801D8278;
-f1_w10 = (-f1_w10);
-goto L_801D8278;
-L_801D8274:
-f1_w10 = lbl_805E1BAC;
-L_801D8278:
-return f1_w10;
-}
-
-float fn_801D8298(int r3, int r4, float f1) {
-float t0;
-float t1;
-float t2;
-float f1_w8;
-float f2_w5;
-float f30;
-float f31;
-int r30;
-int r31;
-int loc[4];
-f30 = f1;
-r31 = r4;
-r30 = r3;
-fn_801CA968(r3, ((int)loc), f1);
-t0 = PSVECMag(((int)loc));
-if (!(t0 > lbl_805E1BA8)) goto L_801D835C;
-f31 = (-(*(float*)(r31 + 8) * *(float*)((char*)loc + 8) + (*(float*)r31 * *(float*)((char*)loc) + (*(float*)(r31 + 4) * *(float*)((char*)loc + 4)))));
-t1 = fn_800CEA80();
-f2_w5 = __fabs(f31);
-f1_w8 = (*(float*)lbl_805DD848 * ((f31 * f31) * (f30 * t1)));
-if (!(f1_w8 > f2_w5)) goto L_801D833C;
-f1_w8 = f2_w5;
-L_801D833C:
-t2 = (*(float*)(r30 + 2112) + f1_w8);
-*(float*)(r30 + 2112) = t2;
-if (!(f31 > lbl_805E1BAC)) goto L_801D8360;
-f1_w8 = (-f1_w8);
-goto L_801D8360;
-L_801D835C:
-f1_w8 = lbl_805E1BAC;
-L_801D8360:
-return f1_w8;
-}
-
-float fn_801D87F8(r3, r4) int r3; int r4; {
-float t0;
-float t1;
-float t2;
-float f1_w7;
-float f31;
-float f3_w5;
-int r30;
-int r31;
-int loc[4];
-r31 = r4;
-r30 = r3;
-fn_801CA968(r3, ((int)loc));
-t0 = PSVECMag(((int)loc));
-if (!(t0 > lbl_805E1BA8)) goto L_801D88B4;
-f31 = (-(*(float*)(r31 + 8) * *(float*)((char*)loc + 8) + (*(float*)r31 * *(float*)((char*)loc) + (*(float*)(r31 + 4) * *(float*)((char*)loc + 4)))));
-t1 = fn_800CEA80();
-f3_w5 = __fabs(f31);
-f1_w7 = (*(float*)lbl_805DD848 * ((f31 * f31) * (*(float*)(r30 + 1776) * t1)));
-if (!(f1_w7 > f3_w5)) goto L_801D8894;
-f1_w7 = f3_w5;
-L_801D8894:
-t2 = (*(float*)(r30 + 2112) + f1_w7);
-*(float*)(r30 + 2112) = t2;
-if (!(f31 > lbl_805E1BAC)) goto L_801D88B8;
-f1_w7 = (-f1_w7);
-goto L_801D88B8;
-L_801D88B4:
-f1_w7 = lbl_805E1BAC;
-L_801D88B8:
-return f1_w7;
-}
-
-float fn_801D88D8(r3) int r3; {
-float t0;
-float t1;
-float t2;
-float t3;
-float t4;
-float t5;
-float f1_w1;
-float f2_w5;
-float f31;
-float f3_w5;
-int r31;
-int loc[5];
-r31 = r3;
-fn_801CA968(r3, ((int)loc));
-f1_w1 = PSVECMag(((int)loc));
-if (!(f1_w1 > lbl_805E1BA8)) goto L_801D898C;
-f31 = (-(*(float*)(r31 + 1068) * *(float*)((char*)loc + 8) + (*(float*)(r31 + 1060) * *(float*)((char*)loc) + (*(float*)(r31 + 1064) * *(float*)((char*)loc + 4)))));
-t0 = fn_800CEA80();
-f3_w5 = __fabs(f31);
-f2_w5 = (*(float*)lbl_805DD848 * ((f31 * f31) * (*(float*)(r31 + 1776) * t0)));
-if (!(f2_w5 > f3_w5)) goto L_801D896C;
-f2_w5 = f3_w5;
-L_801D896C:
-f1_w1 = (*(float*)(r31 + 2112) + f2_w5);
-*(float*)(r31 + 2112) = f1_w1;
-if (!(f31 > lbl_805E1BAC)) goto L_801D8990;
-f2_w5 = (-f2_w5);
-goto L_801D8990;
-L_801D898C:
-f2_w5 = lbl_805E1BAC;
-L_801D8990:
-if (f2_w5 == lbl_805E1BAC) goto L_801D89CC;
-t1 = *(float*)(r31 + 1060);
-t2 = (*(float*)(r31 + 1060) * f2_w5 + *(float*)(r31 + 792));
-*(float*)(r31 + 792) = t2;
-t3 = *(float*)(r31 + 1064);
-t4 = (*(float*)(r31 + 1064) * f2_w5 + *(float*)(r31 + 796));
-*(float*)(r31 + 796) = t4;
-f1_w1 = *(float*)(r31 + 1068);
-t5 = (f1_w1 * f2_w5 + *(float*)(r31 + 800));
-*(float*)(r31 + 800) = t5;
-L_801D89CC:
-return f1_w1;
-}
-
-float fn_801D8FDC(r3) int r3; {
-float f0_w3;
-float f1;
-float f1_w1;
-float f3_w2;
-int r31;
-int r3_w3;
-int r4_w2;
-int loc[5];
-r31 = r3;
-f1 = fn_80062E5C((r31 + 1060), (r31 + 1908));
-if (f1 == lbl_805E1BAC) goto L_801D9050;
-r3_w3 = (r31 + 1060);
-r4_w2 = (r31 + 1908);
-f3_w2 = (f1 * *(float*)(r31 + 1460));
-f0_w3 = (lbl_805E1BB4 * *(float*)(r31 + 1464));
-if (!(f3_w2 > f0_w3)) goto L_801D9034;
-f1_w1 = (f0_w3 / f1);
-goto L_801D9038;
-L_801D9034:
-f1_w1 = (f3_w2 / f1);
-L_801D9038:
-fn_80063610(r3_w3, r4_w2, ((int)loc), f1_w1);
-f1 = fn_801C8F84(r31, (r31 + 1048), ((int)loc));
-L_801D9050:
-return f1;
-}
-
 void fn_801DCABC(r31) int r31; {
 int t0;
 if (*(int*)(r31 + 2172) != -1) return;
@@ -31742,37 +31382,6 @@ t0 = fn_801DD17C(r31, *(int*)(*(int*)(lbl_805DD844 + (*(int*)(r31 + 16) << 2)) +
 
 void fn_801DD1C0(r3, r4, r5) int r3; int r4; int r5; {
 fn_8005F034(r4, 0, *(int*)(r3 + 2116), (int)((lbl_805E1C50 * ((float)(int)(r5)))));
-}
-
-void fn_801DD320(int r3, int r4, float f1) {
-int t0;
-float f0_w1;
-float f0_w2;
-float f3_w1;
-int r0_w1;
-int r31;
-int r5;
-r31 = r3;
-r5 = lbl_805DD840;
-if (!(f1 >= *(float*)(r5 + 40))) goto L_801DD3D4;
-r0_w1 = *(int*)(r31 + 2580);
-if (r0_w1 != 0) goto L_801DD3D4;
-f0_w1 = lbl_805E1C40;
-f3_w1 = ((f1 - *(float*)(r5 + 48)) / (*(float*)(r5 + 52) - *(float*)(r5 + 48)));
-if (!(f3_w1 < f0_w1)) goto L_801DD37C;
-f3_w1 = f0_w1;
-goto L_801DD38C;
-L_801DD37C:
-f0_w2 = lbl_805E1C44;
-if (!(f3_w1 > f0_w2)) goto L_801DD38C;
-f3_w1 = f0_w2;
-L_801DD38C:
-fn_8005F034(r4, *(int*)(r31 + 2120), *(int*)(r31 + 2116), (int)((lbl_805E1C50 * (f3_w1 * (*(float*)(r5 + 60) - *(float*)(r5 + 56)) + *(float*)(r5 + 56)))));
-t0 = *(int*)(lbl_805DD840 + 44);
-*(int*)(r31 + 2580) = t0;
-return;
-L_801DD3D4:
-;
 }
 
 void fn_801DD3EC(r3) int r3; {
@@ -31795,190 +31404,6 @@ L_801DD45C:
 r3_w5 = *(int*)(r3_w4 + 24);
 L_801DD460:
 fn_8005F034(r3_w5, *(int*)(r5 + 2124), *(int*)(r5 + 2116), 255);
-}
-
-int fn_801DD48C(int r3, float f1) {
-int t0;
-float t1;
-float t2;
-unsigned char t3;
-int t4;
-int t5;
-int t6;
-int t7;
-int t8;
-int t9;
-float t10;
-float f0_w1;
-float f31;
-int r0_w1;
-int r0_w2;
-int r0_w4;
-int r31;
-int r3_w8;
-int r4;
-r31 = r3;
-t0 = lbl_805DD83C;
-r4 = *(int*)(r31 + 16);
-t1 = lbl_805E1C40;
-r0_w1 = (r4 * 28);
-t2 = *(float*)((t0 + r0_w1) + 4);
-f31 = (f1 * t2);
-if (f31 == t1) goto L_801DD544;
-f0_w1 = lbl_805E1C44;
-if (!(f31 > f0_w1)) goto L_801DD4DC;
-f31 = f0_w1;
-L_801DD4DC:
-r0_w2 = *(int*)(r31 + 2208);
-if (r0_w2 != -1) goto L_801DD518;
-t3 = *(unsigned char*)(r31 + 36);
-t4 = lbl_805DD844;
-r0_w4 = (t3 * 148);
-t5 = *(int*)(r31 + 2120);
-t6 = *(int*)(t4 + (r4 << 2));
-t7 = *(int*)(r31 + 2116);
-t8 = *(int*)((t6 + r0_w4) + 32);
-t9 = fn_8005F034(t8, t5, t7, 0, f1);
-*(int*)(r31 + 2208) = t9;
-L_801DD518:
-r3_w8 = *(int*)(r31 + 2208);
-if (r3_w8 == -1) goto L_801DD55C;
-t10 = lbl_805E1C50;
-r3_w8 = fn_8005F600(r3_w8, (int)((t10 * f31)), 1);
-goto L_801DD55C;
-L_801DD544:
-r3_w8 = *(int*)(r31 + 2208);
-if (r3_w8 == -1) goto L_801DD55C;
-r3_w8 = fn_8005E7D8(f1);
-*(int*)(r31 + 2208) = -1;
-L_801DD55C:
-return r3_w8;
-}
-
-int fn_801DD578(r3) int r3; {
-int t0;
-float t1;
-float t2;
-float t3;
-unsigned char t4;
-int t5;
-int t6;
-int t7;
-int t8;
-int t9;
-int t10;
-float t11;
-float f0_w1;
-float f31;
-int r0_w1;
-int r0_w2;
-int r0_w4;
-int r31;
-int r3_w8;
-int r4;
-r31 = r3;
-t0 = lbl_805DD83C;
-r4 = *(int*)(r31 + 16);
-t1 = *(float*)(r31 + 2948);
-r0_w1 = (r4 * 28);
-t2 = lbl_805E1C40;
-t3 = *(float*)((t0 + r0_w1) + 4);
-f31 = (t1 * t3);
-if (f31 == t2) goto L_801DD634;
-f0_w1 = lbl_805E1C44;
-if (!(f31 > f0_w1)) goto L_801DD5CC;
-f31 = f0_w1;
-L_801DD5CC:
-r0_w2 = *(int*)(r31 + 2208);
-if (r0_w2 != -1) goto L_801DD608;
-t4 = *(unsigned char*)(r31 + 36);
-t5 = lbl_805DD844;
-r0_w4 = (t4 * 148);
-t6 = *(int*)(r31 + 2120);
-t7 = *(int*)(t5 + (r4 << 2));
-t8 = *(int*)(r31 + 2116);
-t9 = *(int*)((t7 + r0_w4) + 32);
-t10 = fn_8005F034(t9, t6, t8, 0);
-*(int*)(r31 + 2208) = t10;
-L_801DD608:
-r3_w8 = *(int*)(r31 + 2208);
-if (r3_w8 == -1) goto L_801DD64C;
-t11 = lbl_805E1C50;
-r3_w8 = fn_8005F600(r3_w8, (int)((t11 * f31)), 1);
-goto L_801DD64C;
-L_801DD634:
-r3_w8 = *(int*)(r31 + 2208);
-if (r3_w8 == -1) goto L_801DD64C;
-r3_w8 = fn_8005E7D8();
-*(int*)(r31 + 2208) = -1;
-L_801DD64C:
-return r3_w8;
-}
-
-int fn_801DECBC(r3, r4, r5) int r3; int r4; int r5; {
-int r28;
-int r29;
-int r30;
-int r31;
-int r31_w1;
-int r6;
-r31 = r4;
-r29 = r5;
-r28 = r3;
-r6 = lbl_805DD860;
-if ((unsigned)r6 == (unsigned)0) goto L_801DED6C;
-r30 = *(int*)(r6 + 44);
-r3 = fn_8000AF38(r3, r4, r5);
-if (((char)r3) != 2) goto L_801DED18;
-r3 = *(unsigned char*)((r30 + r28) + 172);
-*(unsigned char*)((r30 + r28) + 172) = (r3 + 1);
-goto L_801DED6C;
-L_801DED18:
-if (r31 == -1) goto L_801DED6C;
-r31_w1 = (r30 + r31);
-if (((char)*(unsigned char*)(r31_w1 + 108)) < 128) goto L_801DED4C;
-__assert((int)lbl_804B0E10, 611, (int)lbl_804B0E20);
-L_801DED4C:
-r3 = *(unsigned char*)(r31_w1 + 108);
-*(unsigned char*)(r31_w1 + 108) = (r3 + 1);
-if (r29 != 0) goto L_801DED6C;
-r3 = *(short*)(r30 + 16);
-*(unsigned short*)(r30 + 16) = (r3 + 1);
-L_801DED6C:
-return r3;
-}
-
-int fn_801DED8C(r3, r4, r5) int r3; int r4; int r5; {
-int r28;
-int r29;
-int r30;
-int r31;
-int r31_w1;
-int r6;
-r31 = r4;
-r29 = r5;
-r28 = r3;
-r6 = lbl_805DD860;
-if ((unsigned)r6 == (unsigned)0) goto L_801DEE38;
-r30 = *(int*)(r6 + 44);
-r3 = fn_8000AF38(r3, r4, r5);
-if (((char)r3) != 2) goto L_801DEDE8;
-r3 = *(unsigned char*)((r30 + r28) + 172);
-*(unsigned char*)((r30 + r28) + 172) = (r3 - 1);
-goto L_801DEE38;
-L_801DEDE8:
-if (r31 == -1) goto L_801DEE38;
-r31_w1 = (r30 + r31);
-if (((char)*(unsigned char*)(r31_w1 + 108)) != 0) goto L_801DEE18;
-__assert((int)lbl_804B0E10, 645, (int)lbl_804B0E54);
-L_801DEE18:
-r3 = *(unsigned char*)(r31_w1 + 108);
-*(unsigned char*)(r31_w1 + 108) = (r3 - 1);
-if (r29 != 0) goto L_801DEE38;
-r3 = *(short*)(r30 + 16);
-*(unsigned short*)(r30 + 16) = (r3 - 1);
-L_801DEE38:
-return r3;
 }
 
 void fn_801DFA74(r3) int r3; {
@@ -32008,180 +31433,6 @@ t6 = __rlwimi(*(unsigned char*)(r31 + 3129), 1, 0, 31, 31);
 *(unsigned char*)(r31 + 3129) = t6;
 fn_801CA294(r31);
 *(int*)(r31 + 6984) = 0;
-}
-
-void fn_801E1278(r3, r4, r5) int r3; int r4; int r5; {
-float f0_w5;
-float f1;
-float f2_w3;
-float f3_w2;
-int r29;
-int r30;
-int r31;
-int r3_w1;
-r31 = r5;
-r30 = r4;
-r29 = r3;
-r3_w1 = *(unsigned char*)(r3 + 3125);
-if ((((unsigned)r3_w1 >> 4) & 0x1) == 0) goto L_801E1330;
-if ((((unsigned)*(unsigned char*)(r30 + 3125) >> 4) & 0x1) != 0) goto L_801E1330;
-if ((((unsigned)r3_w1 >> 2) & 0x1) != 0) goto L_801E1330;
-f1 = PSVECMag(r31, r4, r5);
-f3_w2 = (*(float*)(lbl_805DD848 + 316) * *(float*)(r30 + 1132) + (*(float*)(lbl_805DD848 + 320) * *(float*)(r30 + 1256)));
-f2_w3 = (*(float*)(lbl_805DD848 + 316) * *(float*)(r29 + 1132));
-if (!(f3_w2 > lbl_805E1CC0)) goto L_801E1304;
-f0_w5 = ((f2_w3 * *(float*)(r29 + 1552)) / f3_w2);
-goto L_801E130C;
-L_801E1304:
-f0_w5 = (f2_w3 * *(float*)(r29 + 1552));
-L_801E130C:
-if (!(f1 >= f0_w5)) goto L_801E1330;
-fn_801E1350(r29, r31, (f3_w2 / f2_w3));
-return;
-L_801E1330:
-;
-}
-
-int fn_801E17F0(r3) int r3; {
-int t0;
-int t1;
-float f1;
-int r31;
-int r3_w3;
-int r3_w4;
-int r3_w5;
-int r4_w4;
-r31 = r3;
-f1 = *(float*)(r3 + 6984);
-if (f1 == lbl_805E1CD0) goto L_801E1820;
-*(float*)(r31 + 6984) = (f1 - lbl_805E1CD4);
-L_801E1820:
-if (!(*(float*)(r31 + 6984) <= lbl_805E1CD0)) goto L_801E1868;
-t0 = fn_802361A0(*(int*)(r31 + 6992), *(int*)(r31 + 6996));
-if (t0 != 0) goto L_801E1854;
-r3_w3 = *(int*)r31;
-r3_w4 = func_80428F64(r3_w3);
-goto L_801E1890;
-L_801E1854:
-r3_w4 = 1;
-t1 = __rlwimi(*(unsigned char*)(r31 + 3127), r3_w4, 4, 27, 27);
-*(unsigned char*)(r31 + 3127) = t1;
-goto L_801E1890;
-L_801E1868:
-r3_w5 = *(int*)r31;
-r3_w4 = fn_80236C40(r3_w5, 20137, *(int*)(r31 + 1692), 202, *(int*)*(int*)(r31 + 788));
-*(int*)(r31 + 6996) = r4_w4;
-*(int*)(r31 + 6992) = r3_w4;
-L_801E1890:
-return r3_w4;
-}
-
-void fn_801E2140(int r3, int r4, float f1) {
-float t0;
-int t1;
-float t2;
-float t3;
-int t4;
-int t5;
-int t6;
-float f0_w4;
-float f31;
-int r29;
-int r30;
-int r31;
-int r3_w3;
-r29 = r3;
-f31 = f1;
-t0 = *(float*)(r3 + 1712);
-r30 = r4;
-*(float*)(r3 + 1712) = (t0 + f31);
-t1 = fn_8000A188(r3, r4, f1);
-if (t1 == 0) goto L_801E219C;
-t2 = *(float*)(r29 + 1228);
-t3 = *(float*)(r29 + 2584);
-f0_w4 = (t2 - t3);
-if (!(f0_w4 < f31)) goto L_801E219C;
-f31 = f0_w4;
-L_801E219C:
-t4 = lbl_805DD848;
-r3_w3 = *(int*)(t4 + 368);
-if (!(f31 < ((float)(int)(r3_w3)))) goto L_801E21D0;
-r31 = r3_w3;
-goto L_801E21DC;
-L_801E21D0:
-r31 = (int)(f31);
-L_801E21DC:
-t5 = *(int*)(r29 + 2984);
-if (t5 != 0) goto L_801E2210;
-fn_801D5CA0(r29, 5, 0);
-if (r30 != 1) goto L_801E2210;
-fn_801DC548(r29, 26, -2);
-L_801E2210:
-t6 = *(int*)(r29 + 2984);
-if (r31 <= t6) return;
-*(int*)(r29 + 2984) = r31;
-}
-
-void fn_801E2244(r3) int r3; {
-float t0;
-int t1;
-float f1_w2;
-float f31;
-int r30;
-int r31;
-r30 = r3;
-f31 = lbl_805E1D00;
-t0 = (*(float*)(r3 + 1712) + f31);
-*(float*)(r3 + 1712) = t0;
-t1 = fn_8000A188(r3);
-if (t1 == 0) goto L_801E229C;
-f1_w2 = (*(float*)(r30 + 1228) - *(float*)(r30 + 2584));
-if (!(f1_w2 < lbl_805E1D00)) goto L_801E229C;
-f31 = f1_w2;
-L_801E229C:
-r31 = *(int*)(lbl_805DD848 + 368);
-if (!(f31 < ((float)(int)(r31)))) goto L_801E22CC;
-goto L_801E22D8;
-L_801E22CC:
-r31 = (int)(f31);
-L_801E22D8:
-if (*(int*)(r30 + 2984) != 0) goto L_801E22F4;
-fn_801D5CA0(r30, 5, 0);
-L_801E22F4:
-if (r31 <= *(int*)(r30 + 2984)) return;
-*(int*)(r30 + 2984) = r31;
-}
-
-float fn_801E276C(r3) int r3; {
-float t0;
-float t1;
-float t2;
-float t3;
-float f1;
-float f1_w1;
-float f31_w2;
-int r31;
-r31 = r3;
-f1 = *(float*)(r31 + 1260);
-f31_w2 = ((*(float*)(r3 + 1184) * f1) * *(float*)(r31 + 2876));
-f1_w1 = PSVECMag((r31 + 804));
-if (!(f1_w1 < f31_w2)) goto L_801E27C0;
-*(float*)(r31 + 812) = lbl_805E1D04;
-*(float*)(r31 + 808) = lbl_805E1D04;
-*(float*)(r31 + 804) = lbl_805E1D04;
-goto L_801E27F8;
-L_801E27C0:
-if (!(f1_w1 > lbl_805E1D20)) goto L_801E27F8;
-f1_w1 = ((-f31_w2) / f1_w1);
-t0 = (*(float*)(r31 + 804) * f1_w1 + *(float*)(r31 + 804));
-t1 = *(float*)(r31 + 804);
-*(float*)(r31 + 804) = t0;
-t2 = (*(float*)(r31 + 808) * f1_w1 + *(float*)(r31 + 808));
-*(float*)(r31 + 808) = t2;
-t3 = (*(float*)(r31 + 812) * f1_w1 + *(float*)(r31 + 812));
-*(float*)(r31 + 812) = t3;
-L_801E27F8:
-return f1_w1;
 }
 
 void fn_801E36BC(r3) int r3; {
@@ -32222,46 +31473,6 @@ L_801E37F8:
 t0 = *(float*)(r10 + 1428);
 *(float*)((char*)loc) = t0;
 fn_80236C40(*(int*)r10, (0x60000 - 23119), *(int*)(r10 + 1700), 214, *(int*)(*(int*)(r10 + 788) + (r0 << 3)), r8, ((int)loc));
-}
-
-void fn_801E3A20(r3) int r3; {
-unsigned char t0;
-int t1;
-unsigned char t2;
-int t3;
-float t4;
-int t5;
-int t6;
-float t7;
-float t8;
-float t9;
-float t10;
-unsigned char t11;
-int r0_w1;
-int r0_w3;
-int r31;
-r31 = r3;
-t0 = *(unsigned char*)(r3 + 196);
-r0_w1 = (((unsigned)t0 >> 5) & 0x1);
-if (r0_w1 == 0) goto L_801E3A68;
-t1 = *(int*)(r31 + 16);
-t2 = *(unsigned char*)(r31 + 36);
-t3 = lbl_805DD844;
-r0_w3 = (t2 * 148);
-t4 = lbl_805E1D8C;
-t5 = *(int*)(t3 + (t1 << 2));
-t6 = *(int*)((t5 + r0_w3) + 36);
-fn_801DD17C(r3, t6, t4);
-L_801E3A68:
-t7 = *(float*)(r31 + 7072);
-t8 = lbl_805E1D8C;
-t9 = lbl_805E1D88;
-*(float*)(r31 + 7072) = (t7 - t8);
-t10 = *(float*)(r31 + 7072);
-if (!(t10 < t9)) return;
-t11 = *(unsigned char*)(r31 + 196);
-if ((((unsigned)t11 >> 5) & 0x1) == 0) return;
-fn_801E3AFC(r31);
 }
 
 int fn_801E6FB8(r3) int r3; {
@@ -32331,155 +31542,6 @@ L_801EBC7C:
 fn_801EF908(r3);
 }
 
-int fn_801ECDDC(r3, r4) int r3; int r4; {
-int r31;
-int r3_w6;
-int loc[4];
-r31 = r4;
-fn_801CC2A4(r3, r4);
-fn_801CF340(r3, ((int)loc));
-if (!((*(float*)(r3 + 1904) * *(float*)((char*)loc + 8) + (*(float*)(r3 + 1896) * *(float*)((char*)loc) + (*(float*)(r3 + 1900) * *(float*)((char*)loc + 4)))) <= lbl_805E1E80)) goto L_801ECE54;
-fn_80064C18(((int)loc), r31, r31);
-r3_w6 = 1;
-goto L_801ECE58;
-L_801ECE54:
-r3_w6 = 0;
-L_801ECE58:
-return r3_w6;
-}
-
-void fn_801EE374(r3) int r3; {
-unsigned char t0;
-unsigned char t1;
-float t2;
-float t3;
-int t4;
-float t5;
-float t6;
-float t7;
-int t8;
-float t9;
-int t10;
-int t11;
-int t12;
-int t13;
-int t14;
-int t15;
-float t16;
-int r0_w3;
-int r31;
-int loc[9];
-r31 = r3;
-t0 = *(unsigned char*)(r3 + 6719);
-if ((((unsigned)t0 >> 3) & 0x1) != 0) return;
-t1 = *(unsigned char*)(r31 + 3123);
-r0_w3 = (t1 & 0x1);
-if (r0_w3 == 0) return;
-t2 = *(float*)(r31 + 2972);
-t3 = *(float*)(r31 + 2948);
-*(float*)(r31 + 2972) = (t2 + t3);
-t4 = lbl_805DD848;
-t5 = *(float*)(r31 + 2972);
-t6 = *(float*)(t4 + 160);
-if (!(t5 >= t6)) return;
-t7 = lbl_805E1ED0;
-*(float*)((char*)loc + 4) = t7;
-*(float*)((char*)loc) = t7;
-t8 = *(int*)(r31 + 1616);
-t9 = *(float*)(t8 + 100);
-*(float*)((char*)loc + 8) = t9;
-t10 = *(int*)(r31 + 16);
-t11 = *(int*)(r31 + 788);
-t12 = *(int*)((int)&lbl_805DD850 + (t10 << 2));
-t13 = *(int*)(t12 + 4);
-t14 = *(int*)t13;
-t15 = *(int*)(t11 + (t14 << 3));
-fn_80053F34(t15, ((int)loc), ((int)loc + 12));
-fn_80236C40(0, 20136, 0, 100, ((int)loc + 12));
-t16 = lbl_805E1ED0;
-*(float*)(r31 + 2972) = t16;
-}
-
-int fn_801F636C(r3) int r3; {
-float t0;
-float t1;
-float t2;
-int t3;
-float t4;
-float t5;
-float t6;
-int t7;
-float t8;
-float t9;
-float f0_w4;
-float f1_w1;
-float f1_w2;
-float f3_w2;
-int r31;
-int r3_w3;
-int r4_w2;
-int loc[5];
-t0 = lbl_805E2098;
-r31 = r3;
-t1 = *(float*)(r3 + 3152);
-if (!(t1 > t0)) goto L_801F6410;
-f1_w1 = fn_80062E5C((r31 + 1060), (r31 + 1848));
-t2 = lbl_805E209C;
-if (f1_w1 == t2) goto L_801F63F4;
-t3 = *(int*)(r31 + 1616);
-r3_w3 = (r31 + 1060);
-t4 = lbl_805E20A0;
-r4_w2 = (r31 + 1848);
-t5 = *(float*)(t3 + 108);
-t6 = *(float*)(t3 + 112);
-f3_w2 = (f1_w1 * t5);
-f0_w4 = (t4 * t6);
-if (!(f3_w2 > f0_w4)) goto L_801F63D8;
-f1_w2 = (f0_w4 / f1_w1);
-goto L_801F63DC;
-L_801F63D8:
-f1_w2 = (f3_w2 / f1_w1);
-L_801F63DC:
-fn_80063610(r3_w3, r4_w2, ((int)loc), f1_w2);
-fn_801C8F84(r31, (r31 + 1048), ((int)loc));
-L_801F63F4:
-t7 = *(int*)(r31 + 1616);
-t8 = *(float*)(r31 + 3152);
-t9 = *(float*)(t7 + 104);
-*(float*)(r31 + 3152) = (t8 - t9);
-return;
-L_801F6410:
-;
-}
-
-int fn_801F85E4(r3) int r3; {
-int r31;
-int r3_w1;
-int r3_w3;
-int r3_w4;
-int r4_w3;
-r31 = r3;
-r3_w1 = *(unsigned char*)(r3 + 3124);
-if ((((unsigned)r3_w1 >> 1) & 0x1) != 0) goto L_801F860C;
-if ((r3_w1 & 0x1) == 0) goto L_801F8658;
-L_801F860C:
-r3_w3 = (*(int*)(r31 + 5580) ^ 0);
-if ((r3_w3 | (*(int*)(r31 + 5576) ^ 0)) != 0) goto L_801F8684;
-r3_w4 = *(int*)r31;
-r3_w3 = fn_80236C40(r3_w4, (0x40000 - 22106), *(int*)(r31 + 1692), 200, *(int*)(*(int*)(r31 + 788) + 8));
-*(int*)(r31 + 5580) = r4_w3;
-*(int*)(r31 + 5576) = r3_w3;
-goto L_801F8684;
-L_801F8658:
-r3_w3 = *(int*)(r31 + 5576);
-if (((*(int*)(r31 + 5580) ^ 0) | (r3_w3 ^ 0)) == 0) goto L_801F8684;
-r3_w3 = fn_8023624C();
-*(int*)(r31 + 5580) = 0;
-*(int*)(r31 + 5576) = 0;
-L_801F8684:
-return r3_w3;
-}
-
 void fn_801F8698(r31) int r31; {
 float t0;
 float t1;
@@ -32525,36 +31587,6 @@ r3 = (r3 + 4);
 HSD_ObjAllocInit((int)lbl_8055A1E0, r4, 4);
 }
 
-float fn_80200D38(r3) int r3; {
-float f31;
-int r28;
-int r29;
-int r30;
-int r31;
-int r3_w2;
-r28 = r3;
-r29 = 0;
-r30 = 0;
-f31 = lbl_805E2288;
-goto L_80200DB8;
-L_80200D74:
-r3_w2 = *(int*)(*(int*)(r28 + 692) + r30);
-if ((unsigned)r3_w2 == (unsigned)0) goto L_80200DB0;
-r31 = *(int*)(r3_w2 + 124);
-if ((unsigned)r31 == (unsigned)0) goto L_80200DB0;
-if ((unsigned)r31 != (unsigned)0) goto L_80200DA4;
-__assert((int)&lbl_805D70F8, 171, (int)&lbl_805D7100);
-L_80200DA4:
-if (!(f31 == *(float*)(r31 + 12))) goto L_80200DCC;
-L_80200DB0:
-r30 = (r30 + 4);
-r29 = (r29 + 1);
-L_80200DB8:
-if ((unsigned)r29 < (unsigned)*(int*)(*(int*)(*(int*)(r28 + 20) + 8) + 4)) goto L_80200D74;
-L_80200DCC:
-;
-}
-
 float fn_802042FC(r30) int r30; {
 int r31;
 int r3_n;
@@ -32566,179 +31598,6 @@ fn_801FECF8(*(int*)(r3_n + 40));
 L_80204334:
 fn_80114564(r30);
 *(int*)(r31 + 2392) = 0;
-}
-
-int fn_80207CE8(r3) int r3; {
-int t0;
-float t1;
-int t2;
-int t3;
-int t4;
-int t5;
-float f1_w2;
-int r31;
-int r3_w1;
-int r3_w2;
-int r3_w22;
-int loc[9];
-r31 = r3;
-r3_w1 = *(int*)r3;
-r3_w2 = fn_802043C8(r3_w1);
-if (r3_w2 == 0) goto L_80207DD8;
-t0 = fn_800CEAA4();
-if (t0 == 0) goto L_80207D20;
-f1_w2 = lbl_805E2370;
-goto L_80207D54;
-L_80207D20:
-fn_80062DD0((r31 + 832), (r31 + 1636), ((int)loc));
-fn_80062DD0(((int)loc), (r31 + 832), ((int)loc + 12));
-t1 = fn_80062ECC((r31 + 820), ((int)loc + 12));
-f1_w2 = (lbl_805E23D0 * t1);
-L_80207D54:
-if (!(f1_w2 < lbl_805E23D4)) goto L_80207D78;
-*(int*)(r31 + 1528) = 1;
-fn_80209CE4(r31, 0);
-goto L_80207D8C;
-L_80207D78:
-*(int*)(r31 + 1528) = -1;
-fn_80209CE4(r31, 1);
-L_80207D8C:
-if (*(int*)(r31 + 1528) != 1) goto L_80207DB4;
-t2 = fn_800CF3AC(*(int*)(r31 + 1500));
-*(int*)(r31 + 1492) = t2;
-t3 = fn_800CF44C(*(int*)(r31 + 1500));
-*(int*)(r31 + 1496) = t3;
-goto L_80207DCC;
-L_80207DB4:
-t4 = fn_800CF44C(*(int*)(r31 + 1500));
-*(int*)(r31 + 1492) = t4;
-t5 = fn_800CF3AC(*(int*)(r31 + 1500));
-*(int*)(r31 + 1496) = t5;
-L_80207DCC:
-r3_w22 = r31;
-r3_w2 = fn_8020728C(r3_w22, 0);
-L_80207DD8:
-return r3_w2;
-}
-
-int fn_8020A608(r3) int r3; {
-unsigned char t0;
-float f0_w1;
-float f1;
-int r0_w2;
-f1 = fn_803D22F4((r3 + 760));
-t0 = *(unsigned char*)(r3 + 2826);
-r0_w2 = (((unsigned)t0 >> 5) & 0x3);
-if (r0_w2 == 0) goto L_8020A638;
-f0_w1 = lbl_805E2444;
-goto L_8020A63C;
-L_8020A638:
-f0_w1 = lbl_805E2448;
-L_8020A63C:
-if (!(f1 > f0_w1)) goto L_8020A64C;
-return;
-L_8020A64C:
-;
-}
-
-void fn_8020A9DC(r3, r4, r5, r6) int r3; int r4; int r5; int r6; {
-float t0;
-float t1;
-float t2;
-float t3;
-float t4;
-float t5;
-float t6;
-float t7;
-float f2_w4;
-int r29;
-int r30;
-int r31;
-int r3_w3;
-int loc[7];
-r31 = r6;
-r30 = r5;
-r29 = r3;
-fn_80062DD0(r4, r30, r31, r6);
-t0 = *(float*)(r31 + 4);
-t1 = lbl_805E244C;
-if (!(t0 < t1)) return;
-r3_w3 = *(int*)(r29 + 1436);
-if (r3_w3 != -1) goto L_8020AA44;
-t2 = lbl_805E2370;
-t3 = lbl_805E2374;
-*(float*)((char*)loc + 12) = t2;
-*(float*)((char*)loc + 16) = t3;
-*(float*)((char*)loc + 20) = t2;
-goto L_8020AA4C;
-L_8020AA44:
-fn_800D1860(r3_w3, ((int)loc + 12));
-L_8020AA4C:
-fn_80062DD0(r30, ((int)loc + 12), ((int)loc));
-fn_80062DD0(((int)loc), r30, r31);
-f2_w4 = lbl_805E2370;
-t4 = *(float*)r31;
-if (!(f2_w4 == t4)) return;
-t5 = lbl_805E2418;
-t6 = *(float*)(r31 + 4);
-if (!(t5 == t6)) return;
-t7 = *(float*)(r31 + 8);
-if (!(f2_w4 == t7)) return;
-OSReport((int)lbl_804B2B20);
-__assert((int)lbl_804B2B14, 2646, (int)&lbl_805D7160);
-}
-
-void fn_8020D780(r3, r4) int r3; int r4; {
-float t0;
-float t1;
-int t2;
-int r0_w7;
-int r28;
-int r29;
-int r30;
-int r31;
-int r5;
-r5 = 0x50000;
-r28 = r3;
-if (r4 >= (r5 + 21)) goto L_8020D7DC;
-if (r4 >= (r5 + 11)) goto L_8020D80C;
-if (r4 >= (r5 + 6)) goto L_8020D80C;
-if (r4 >= r5) return;
-goto L_8020D80C;
-goto L_8020D80C;
-L_8020D7DC:
-if (r4 == (r5 + 32)) goto L_8020D814;
-if (r4 >= (r5 + 32)) goto L_8020D7FC;
-if (r4 >= (r5 + 31)) goto L_8020D80C;
-goto L_8020D814;
-L_8020D7FC:
-if (r4 >= (r5 + 35)) goto L_8020D80C;
-return;
-L_8020D80C:
-return;
-L_8020D814:
-r30 = 0;
-r31 = (int)lbl_8055A280;
-r29 = r31;
-goto L_8020D850;
-L_8020D828:
-t0 = fn_803D22F4((r29 + 4), r28);
-t1 = lbl_805D7168;
-if (!(t0 < t1)) goto L_8020D848;
-r0_w7 = 1;
-goto L_8020D860;
-L_8020D848:
-r29 = (r29 + 12);
-r30 = (r30 + 1);
-L_8020D850:
-t2 = *(int*)r31;
-if (r30 < t2) goto L_8020D828;
-r0_w7 = 0;
-L_8020D860:
-if (r0_w7 != 0) goto L_8020D870;
-return;
-L_8020D870:
-;
 }
 
 void fn_8020DFE8(r30) int r30; {
@@ -32772,41 +31631,6 @@ L_8020E094:
 *(int*)(r30 + 2184) = (r4 - 1);
 L_8020E09C:
 fn_80204D8C(r30);
-}
-
-void fn_8020E0BC(r3) int r3; {
-int t0;
-int t1;
-float t2;
-float t3;
-float t4;
-float t5;
-int r12_w3;
-int r31;
-r31 = r3;
-t0 = __rlwimi(*(unsigned char*)(r31 + 2827), 0, 3, 28, 28);
-*(unsigned char*)(r31 + 2827) = t0;
-HSD_JObjUnref(*(int*)(r31 + 2384));
-*(int*)(r31 + 2384) = 0;
-t1 = __rlwimi(*(unsigned char*)(r31 + 2826), 0, 5, 25, 26);
-*(unsigned char*)(r31 + 2826) = t1;
-fn_801FBA8C(r31);
-if (*(int*)(r31 + 2312) != 1) goto L_8020E140;
-fn_802054E4(r31);
-t2 = *(float*)(r31 + 932);
-t3 = (*(float*)(r31 + 1480) * *(float*)(r31 + 932));
-*(float*)(r31 + 736) = t3;
-t4 = (*(float*)(r31 + 1484) * t2);
-*(float*)(r31 + 740) = t4;
-t5 = (*(float*)(r31 + 1488) * t2);
-*(float*)(r31 + 744) = t5;
-L_8020E140:
-r12_w3 = *(int*)(r31 + 2780);
-if ((unsigned)r12_w3 == (unsigned)0) goto L_8020E15C;
-((void(*)())r12_w3)(r31);
-return;
-L_8020E15C:
-fn_801FBF2C(*(int*)r31);
 }
 
 void fn_8020E63C(r31) int r31; {
@@ -32843,96 +31667,10 @@ L_8020E6D0:
 fn_801FBF2C(*(int*)r31);
 }
 
-void fn_8020E6EC(r3) int r3; {
-int t0;
-float t1;
-float t2;
-float t3;
-float t4;
-float t5;
-int r0_w7;
-int r31;
-int r3_w12;
-int r4;
-int loc[13];
-r4 = 1;
-r31 = r3;
-t0 = __rlwimi(*(unsigned char*)(r3 + 2827), r4, 3, 28, 28);
-*(unsigned char*)(r3 + 2827) = t0;
-if (*(int*)(r3 + 12) >= 76) return;
-*(int*)(r31 + 2312) = r4;
-fn_801FD6B0(r3);
-fn_8018CB04(*(int*)(r31 + 1040));
-fn_802041B0(*(int*)r31);
-fn_8020ACD0(r31);
-r0_w7 = 30;
-*(int*)(r31 + 2284) = r0_w7;
-fn_800D2828(*(int*)(r31 + 1332), ((int)loc + 24), ((int)loc), ((int)loc + 12));
-t1 = (*(float*)(r31 + 760) - *(float*)((char*)loc + 24));
-*(float*)(r31 + 2288) = t1;
-t2 = (*(float*)(r31 + 764) - *(float*)((char*)loc + 28));
-t3 = *(float*)(r31 + 764);
-*(float*)(r31 + 2292) = t2;
-t4 = (*(float*)(r31 + 768) - *(float*)((char*)loc + 32));
-t5 = *(float*)(r31 + 768);
-*(float*)(r31 + 2296) = t4;
-fn_801FC398(r31, 13, 17, lbl_805E24E0, lbl_805E24E4, lbl_805E24E0);
-r3_w12 = *(int*)(r31 + 4);
-if ((unsigned)r3_w12 == (unsigned)0) return;
-fn_801FC398(*(int*)(r3_w12 + 44), 14, 0, lbl_805E24E0, lbl_805E24E4, lbl_805E24E0);
-}
-
-void fn_8020E978(r3) int r3; {
-int t0;
-int r31;
-int r3_w14;
-int r4;
-int loc[9];
-r4 = 1;
-r31 = r3;
-t0 = __rlwimi(*(unsigned char*)(r3 + 2827), r4, 3, 28, 28);
-*(unsigned char*)(r3 + 2827) = t0;
-if (*(int*)(r3 + 12) >= 76) goto L_8020EA30;
-*(int*)(r31 + 2312) = r4;
-fn_801FD6B0(r3);
-fn_8018CB04(*(int*)(r31 + 1040));
-fn_802041B0(*(int*)r31);
-fn_802042FC(*(int*)r31);
-fn_800D2828(*(int*)(r31 + 1332), (r31 + 760), ((int)loc + 12), ((int)loc));
-fn_801FD714(r31, ((int)loc + 12), ((int)loc));
-fn_801FC398(r31, 13, 17, lbl_805E24F8, lbl_805E24FC, lbl_805E24F8);
-r3_w14 = *(int*)(r31 + 4);
-if ((unsigned)r3_w14 == (unsigned)0) goto L_8020EA30;
-fn_801FC398(*(int*)(r3_w14 + 44), 14, 0, lbl_805E24F8, lbl_805E24FC, lbl_805E24F8);
-L_8020EA30:
-;
-}
-
 void fn_8020F104(r31) int r31; {
 *(int*)(r31 + 2312) = 1;
 fn_801FED40(r31);
 fn_801FC398(r31, 14, 0, lbl_805E2500, lbl_805E2504, lbl_805E2500);
-}
-
-float fn_8020F22C(r31) int r31; {
-float t0;
-float t1;
-float t2;
-float f1_w2;
-int r3_n;
-fn_801FC398(r31, 16, 0, lbl_805E2500, lbl_805E2504, lbl_805E2500);
-f1_w2 = *(float*)(r31 + 912);
-t0 = (*(float*)(r31 + 820) * f1_w2);
-*(float*)(r31 + 748) = t0;
-t1 = (*(float*)(r31 + 824) * f1_w2);
-*(float*)(r31 + 752) = t1;
-t2 = (*(float*)(r31 + 828) * f1_w2);
-*(float*)(r31 + 756) = t2;
-r3_n = *(int*)(r31 + 4);
-if ((unsigned)r3_n == (unsigned)0) goto L_8020F294;
-f1_w2 = fn_80219EEC(*(int*)(r3_n + 44));
-L_8020F294:
-return f1_w2;
 }
 
 void fn_8020F308(r3) int r3; {
@@ -33022,50 +31760,6 @@ void fn_80211F14(r31) int r31; {
 *(int*)(r31 + 2312) = 0;
 fn_801FED40(r31);
 fn_801FC398(r31, 14, 0, lbl_805E2550, lbl_805E2554, lbl_805E2550);
-}
-
-void fn_80211F64(r3) int r3; {
-int t0;
-int t1;
-int r0_w3;
-int r31;
-r31 = r3;
-fn_801FF754(r3);
-t0 = *(int*)(r31 + 4);
-t1 = *(int*)(t0 + 44);
-fn_801FF754(t1);
-fn_801FED74(r31);
-r0_w3 = *(int*)(r31 + 12);
-if (r0_w3 == 53) goto L_80211FB8;
-if (r0_w3 >= 53) return;
-if (r0_w3 == 29) goto L_80211FAC;
-return;
-L_80211FAC:
-fn_80211FD4(r31);
-return;
-L_80211FB8:
-fn_8021202C(r31);
-}
-
-float fn_8021202C(r31) int r31; {
-float t0;
-float t1;
-float t2;
-float f1_w2;
-int r3_n;
-fn_801FC398(r31, 16, 0, lbl_805E2550, lbl_805E2554, lbl_805E2550);
-f1_w2 = *(float*)(r31 + 912);
-t0 = (*(float*)(r31 + 820) * f1_w2);
-*(float*)(r31 + 748) = t0;
-t1 = (*(float*)(r31 + 824) * f1_w2);
-*(float*)(r31 + 752) = t1;
-t2 = (*(float*)(r31 + 828) * f1_w2);
-*(float*)(r31 + 756) = t2;
-r3_n = *(int*)(r31 + 4);
-if ((unsigned)r3_n == (unsigned)0) goto L_80212094;
-f1_w2 = fn_8021A0E0(*(int*)(r3_n + 44));
-L_80212094:
-return f1_w2;
 }
 
 void fn_802124EC(r31) int r31; {
@@ -33452,50 +32146,6 @@ fn_801FED40(r31);
 fn_801FC398(r31, 14, 0, lbl_805E2688, lbl_805E268C, lbl_805E2688);
 }
 
-void fn_8021910C(r3) int r3; {
-int t0;
-int t1;
-int r0_w3;
-int r31;
-r31 = r3;
-fn_801FF754(r3);
-t0 = *(int*)(r31 + 4);
-t1 = *(int*)(t0 + 44);
-fn_801FF754(t1);
-fn_801FED74(r31);
-r0_w3 = *(int*)(r31 + 12);
-if (r0_w3 == 70) goto L_80219160;
-if (r0_w3 >= 70) return;
-if (r0_w3 == 46) goto L_80219154;
-return;
-L_80219154:
-fn_8021917C(r31);
-return;
-L_80219160:
-fn_802191D4(r31);
-}
-
-float fn_802191D4(r31) int r31; {
-float t0;
-float t1;
-float t2;
-float f1_w2;
-int r3_n;
-fn_801FC398(r31, 16, 0, lbl_805E2688, lbl_805E268C, lbl_805E2688);
-f1_w2 = *(float*)(r31 + 912);
-t0 = (*(float*)(r31 + 820) * f1_w2);
-*(float*)(r31 + 748) = t0;
-t1 = (*(float*)(r31 + 824) * f1_w2);
-*(float*)(r31 + 752) = t1;
-t2 = (*(float*)(r31 + 828) * f1_w2);
-*(float*)(r31 + 756) = t2;
-r3_n = *(int*)(r31 + 4);
-if ((unsigned)r3_n == (unsigned)0) goto L_8021923C;
-f1_w2 = fn_8021A2D4(*(int*)(r3_n + 44));
-L_8021923C:
-return f1_w2;
-}
-
 void fn_80219324(r31) int r31; {
 fn_801FD6B0(r31);
 fn_801FED40(r31);
@@ -33706,32 +32356,6 @@ r3 = (r3 + 4);
 HSD_ObjAllocInit((int)lbl_8055A97C, r4, 4);
 }
 
-void fn_80221FD4(r3) int r3; {
-int t0;
-int r31;
-int r3_w8;
-int r4_w5;
-int r5_w4;
-r31 = r3;
-fn_80245F70(*(int*)(r3 + 312), (r31 + 172), (r31 + 208), (r31 + 220), 0, lbl_805E2860, lbl_805E2864);
-fn_80246144(*(int*)(r31 + 312));
-fn_8024625C(*(int*)(r31 + 312), (r31 + 172));
-r4_w5 = 1;
-r5_w4 = r4_w5;
-r3_w8 = *(int*)(*(int*)(r31 + 312) + 68);
-if (*(int*)(r3_w8 + 324) != 0) goto L_80222048;
-if (*(int*)(r3_w8 + 368) != 0) goto L_80222048;
-r5_w4 = 0;
-L_80222048:
-if (r5_w4 != 0) goto L_80222060;
-if (*(int*)(r3_w8 + 412) != 0) goto L_80222060;
-r4_w5 = 0;
-L_80222060:
-if (r4_w5 == 0) return;
-t0 = __rlwimi(*(unsigned char*)(r31 + 437), 1, 0, 31, 31);
-*(unsigned char*)(r31 + 437) = t0;
-}
-
 void fn_802221B8(r3, r30) int r3; int r30; {
 int r31;
 r31 = *(int*)(*(int*)(*(int*)(r3 + 312) + 68) + 284);
@@ -33853,131 +32477,6 @@ t9 = *(float*)(r31 + 444);
 *(float*)(r31 + 116) = t9;
 }
 
-int fn_80228608(r3) int r3; {
-int t0;
-int t1;
-int r0;
-int r31;
-int r3_w2;
-int r4_w1;
-int loc[5];
-r31 = r3;
-r0 = *(int*)(r3 + 412);
-if ((unsigned)r0 == (unsigned)0) goto L_80228670;
-t0 = *(int*)(r31 + 108);
-t1 = *(int*)*(int*)(r31 + 108);
-*(float*)((char*)loc + 8) = lbl_805E29D0;
-*(float*)((char*)loc + 4) = lbl_805E29D0;
-*(float*)((char*)loc) = lbl_805E29D0;
-r3_w2 = *(int*)r31;
-r3 = fn_80236C40(r3_w2, (0x60000 - 23163), *(int*)(r31 + 280), 215, t1, ((int)loc));
-*(int*)(r31 + 444) = r4_w1;
-*(int*)(r31 + 440) = r3;
-*(int*)(r31 + 412) = 0;
-L_80228670:
-return r3;
-}
-
-float fn_80228F08(int r3, int r4, float f1) {
-int t0;
-int t1;
-int t2;
-int t3;
-int t4;
-float f1_w2;
-int r30;
-int r31;
-r30 = r4;
-r31 = *(int*)(r3 + 44);
-if (*(int*)(r31 + 444) == 0) goto L_80228FAC;
-fn_80229D50(r31, r4, f1);
-f1_w2 = lbl_805E29E0;
-t0 = *(int*)r30;
-t1 = *(int*)(r30 + 4);
-*(int*)(r31 + 148) = t0;
-*(int*)(r31 + 152) = t1;
-t2 = *(int*)(r30 + 8);
-*(int*)(r31 + 156) = t2;
-fn_8021F7DC(r31, 1, 1, f1_w2, lbl_805E29E4, f1_w2);
-fn_8018CB28(*(int*)(r31 + 264));
-*(int*)(r31 + 364) = (int)fn_80229A2C;
-t3 = __rlwimi(*(unsigned char*)(r31 + 437), 1, 3, 28, 28);
-*(unsigned char*)(r31 + 437) = t3;
-t4 = __rlwimi(*(unsigned char*)(r31 + 437), (((unsigned)t3 >> 3) & 0x1), 4, 27, 27);
-*(unsigned char*)(r31 + 437) = t4;
-fn_80221C9C(r31);
-f1 = fn_8022A270();
-L_80228FAC:
-return f1;
-}
-
-int fn_802291FC(r3) int r3; {
-float t0;
-float t1;
-float t2;
-float t3;
-float t4;
-int r31;
-int r3_w2;
-int r3_w6;
-int r4_w6;
-int loc[9];
-r31 = r3;
-fn_80229E64(r3);
-r3_w2 = *(int*)(r31 + 472);
-if (((*(int*)(r31 + 476) ^ 0) | (r3_w2 ^ 0)) == 0) goto L_802292BC;
-r3_w2 = fn_802361A0();
-if (r3_w2 != 0) goto L_802292BC;
-r3_w2 = *(int*)(r31 + 260);
-if (*(float*)(r31 + 456) == *(float*)(r3_w2 + 52)) goto L_802292BC;
-t0 = *(float*)(r31 + 172);
-*(float*)((char*)loc + 4) = t0;
-t1 = (*(float*)(r31 + 176) - *(float*)(r31 + 248));
-t2 = *(float*)(r31 + 176);
-*(float*)((char*)loc + 8) = t1;
-t3 = *(float*)(r31 + 180);
-*(float*)((char*)loc + 12) = t3;
-fn_80062DD0((r31 + 480), (r31 + 232), ((int)loc + 16));
-t4 = *(float*)(r31 + 456);
-*(float*)((char*)loc) = t4;
-r3_w6 = *(int*)r31;
-r3_w2 = fn_80236C40(r3_w6, (0x50000 + 32325), *(int*)(r31 + 276), 109, ((int)loc + 4), ((int)loc + 16), (r31 + 480), ((int)loc));
-*(int*)(r31 + 476) = r4_w6;
-*(int*)(r31 + 472) = r3_w2;
-L_802292BC:
-return r3_w2;
-}
-
-void fn_802292F8(r3) int r3; {
-float t0;
-int r30;
-int r31;
-int r3_w1;
-int loc[4];
-r30 = r3;
-r3_w1 = *(short*)(r3 + 450);
-if (r3_w1 == 0) goto L_80229328;
-*(unsigned short*)(r30 + 450) = (r3_w1 - 1);
-goto L_80229384;
-L_80229328:
-r31 = *(int*)(lbl_805DE334 + 40);
-goto L_8022937C;
-L_80229334:
-fn_8019203C(r31);
-fn_80191FFC(r31, ((int)loc));
-t0 = fn_803D22F4((r30 + 196), ((int)loc));
-if (!(t0 < *(float*)(*(int*)(r30 + 260) + 44))) goto L_80229378;
-*(int*)(r30 + 444) = 0;
-fn_802295A8(r30);
-goto L_80229384;
-L_80229378:
-r31 = *(int*)(r31 + 8);
-L_8022937C:
-if ((unsigned)r31 != (unsigned)0) goto L_80229334;
-L_80229384:
-;
-}
-
 void fn_8022EC34(r31) int r31; {
 if (r31 < 5) goto L_8022EC68;
 __assert((int)lbl_804B4CDC, 694, (int)lbl_804B4CF0);
@@ -34015,29 +32514,6 @@ void fn_80232930(r3) int r3; {
 HSD_ObjFree((int)lbl_8055D770, r3);
 }
 
-void fn_8023303C(r3, r4) int r3; int r4; {
-int t0;
-int r29;
-int r30;
-int r31;
-int r3_w4;
-r30 = r4;
-r29 = r3;
-r31 = *(int*)(r3 + 44);
-if (r30 != 0) goto L_80233074;
-t0 = HSD_CObjGetCurrent(r3, r4);
-fn_80233258(r31, t0);
-L_80233074:
-r3_w4 = *(unsigned char*)(r31 + 116);
-if ((((unsigned)r3_w4 >> 7) & 0x1) == 0) goto L_802330A8;
-if ((*(unsigned char*)(r31 + 117) & 0x1) == 0) goto L_802330A8;
-if ((((unsigned)r3_w4 >> 4) & 0x1) != 0) goto L_802330A8;
-if ((((unsigned)r3_w4 >> 3) & 0x1) != 0) goto L_802330A8;
-fn_8042A258(r29, r30);
-L_802330A8:
-;
-}
-
 void fn_802330C4(r3) int r3; {
 int r4;
 if (*(int*)(r3 + 28) == -1) return;
@@ -34066,92 +32542,7 @@ L_802349E0:
 HSD_ObjFree(((int)lbl_8055D7A0 + 44), r3);
 }
 
-void fn_80234CF0(r3) int r3; {
-int r0_w1;
-int r31;
-r31 = r3;
-if ((unsigned)*(int*)((int)lbl_8055D7A0 + 596) == (unsigned)0) goto L_80234D20;
-return;
-L_80234D20:
-r0_w1 = 0;
-if (r31 <= -1) goto L_80234D38;
-if (r31 >= 518) goto L_80234D38;
-r0_w1 = 1;
-L_80234D38:
-if (r0_w1 != 0) goto L_80234D58;
-__assert((int)lbl_804B4D9C, 950, (int)lbl_804B4DDC);
-L_80234D58:
-;
-}
-
-int fn_80234E4C(r3) int r3; {
-int t0;
-int t1;
-float t2;
-float t3;
-float t4;
-int t5;
-int t6;
-float t7;
-float t8;
-float t9;
-float t10;
-float t11;
-int t12;
-int r30;
-int r30_w1;
-int r31;
-int r3_w6;
-r31 = r3;
-r30 = *(int*)(r3 + 140);
-if ((unsigned)r30 != (unsigned)0) goto L_80234E84;
-__assert((int)lbl_804B4E14, 36, (int)&lbl_805D7270);
-L_80234E84:
-t0 = fn_80234A04(r30, 0);
-r30_w1 = t0;
-if (r30_w1 != 0) goto L_80234EA0;
-r3_w6 = 0;
-goto L_80234F48;
-L_80234EA0:
-if ((unsigned)*(int*)(r30_w1 + 32) == (unsigned)0) goto L_80234EBC;
-fn_8042B5A8(*(unsigned char*)(r30_w1 + 36));
-t1 = *(unsigned char*)(r30_w1 + 36);
-*(unsigned char*)(r31 + 89) = t1;
-L_80234EBC:
-if ((((unsigned)*(unsigned char*)(r30_w1 + 44) >> 7) & 0x1) == 0) goto L_80234EEC;
-t2 = *(float*)(r30_w1 + 48);
-*(float*)(r31 + 44) = t2;
-t3 = *(float*)(r30_w1 + 52);
-*(float*)(r31 + 48) = t3;
-t4 = *(float*)(r30_w1 + 56);
-*(float*)(r31 + 52) = t4;
-t5 = (*(unsigned short*)(r31 + 156) | 1);
-*(unsigned short*)(r31 + 156) = t5;
-L_80234EEC:
-if ((((unsigned)*(unsigned char*)(r30_w1 + 44) >> 6) & 0x1) == 0) goto L_80234F0C;
-t6 = (*(int*)(r31 + 4) | 2);
-*(int*)(r31 + 4) = t6;
-t7 = *(float*)(r30_w1 + 72);
-*(float*)(r31 + 60) = t7;
-L_80234F0C:
-if ((((unsigned)*(unsigned char*)(r30_w1 + 44) >> 5) & 0x1) == 0) goto L_80234F44;
-t8 = *(float*)(r30_w1 + 60);
-*(float*)(r31 + 160) = t8;
-t9 = *(float*)(r30_w1 + 64);
-*(float*)(r31 + 164) = t9;
-t10 = *(float*)(r30_w1 + 68);
-*(float*)(r31 + 168) = t10;
-t11 = *(float*)(r30_w1 + 76);
-*(float*)(r31 + 172) = t11;
-t12 = (*(unsigned short*)(r31 + 156) | 2);
-*(unsigned short*)(r31 + 156) = t12;
-L_80234F44:
-r3_w6 = 0;
-L_80234F48:
-return r3_w6;
-}
-
-int fn_8023624C() {
+void fn_8023624C() {
 int r3;
 int r4;
 int loc[2];
@@ -34177,44 +32568,6 @@ r3_n = (*(int*)((int)lbl_8055D7A0 + 588) + (r30 << 3));
 *(int*)(r3_n + 4) = r31;
 L_80236B20:
 return r3_n;
-}
-
-int fn_8023B844(r3, r4) int r3; int r4; {
-int t0;
-int r30;
-int r30_w1;
-int r31;
-int r3_w1;
-int r3_w2;
-int r3_w5;
-int r4_w8;
-r31 = r4;
-if (r3 != 0) goto L_8023B874;
-r3_w1 = (int)&lbl_805D729C;
-r3 = __assert(r3_w1, 937, (int)&lbl_805D72A4);
-L_8023B874:
-if ((unsigned)r31 != (unsigned)0) goto L_8023B890;
-r3_w2 = (int)&lbl_805D729C;
-r3 = __assert(r3_w2, 938, (int)lbl_804B54E4);
-L_8023B890:
-*(KS3*)(r30 + 56) = *(KS3*)(r31 + 0);
-t0 = *(int*)(r30_w1 + 20);
-if ((t0 & 0x2000000) != 0) goto L_8023B8FC;
-if ((unsigned)r30_w1 == (unsigned)0) goto L_8023B8FC;
-if ((unsigned)r30_w1 != (unsigned)0) goto L_8023B8D0;
-__assert((int)&lbl_805D729C, 605, (int)&lbl_805D72A4);
-L_8023B8D0:
-r4_w8 = *(int*)(r30_w1 + 20);
-r3 = 0;
-if ((r4_w8 & 0x800000) != 0) goto L_8023B8EC;
-if ((r4_w8 & 0x40) == 0) goto L_8023B8EC;
-r3 = 1;
-L_8023B8EC:
-if (r3 != 0) goto L_8023B8FC;
-r3_w5 = r30_w1;
-r3 = fn_8040D92C(r3_w5);
-L_8023B8FC:
-return r3;
 }
 
 void fn_8023B914(int r31, float f1) {
@@ -34386,48 +32739,6 @@ fn_8023FF80(r31, 1, lbl_805E2AE8);
 fn_80240040(r31);
 }
 
-int fn_8023E978(r3) int r3; {
-int t0;
-int t1;
-int t2;
-int r31_w1;
-int r3_w2;
-int r3_w3;
-int r3_w4;
-int r3_w7;
-int r4_w8;
-t0 = *(int*)(r3 + 44);
-*(float*)(t0 + 80) = lbl_805E2AE8;
-t1 = *(int*)(r3 + 44);
-t2 = fn_80055AF0(r3, 0);
-*(int*)(t1 + 84) = t2;
-r3_w2 = r3;
-r3_w3 = fn_80055AF0(r3_w2, 1);
-*(int*)(t1 + 88) = r3_w3;
-r31_w1 = *(int*)(t1 + 88);
-if ((unsigned)r31_w1 != (unsigned)0) goto L_8023E9D8;
-r3_w4 = (int)&lbl_805D72EC;
-r3_w3 = __assert(r3_w4, 819, (int)&lbl_805D72F4);
-L_8023E9D8:
-*(float*)(r31_w1 + 48) = lbl_805E2AFC;
-if ((*(int*)(r31_w1 + 20) & 0x2000000) != 0) goto L_8023EA34;
-if ((unsigned)r31_w1 == (unsigned)0) goto L_8023EA34;
-if ((unsigned)r31_w1 != (unsigned)0) goto L_8023EA08;
-__assert((int)&lbl_805D72EC, 605, (int)&lbl_805D72F4);
-L_8023EA08:
-r4_w8 = *(int*)(r31_w1 + 20);
-r3_w3 = 0;
-if ((r4_w8 & 0x800000) != 0) goto L_8023EA24;
-if ((r4_w8 & 0x40) == 0) goto L_8023EA24;
-r3_w3 = 1;
-L_8023EA24:
-if (r3_w3 != 0) goto L_8023EA34;
-r3_w7 = r31_w1;
-r3_w3 = fn_8040D92C(r3_w7);
-L_8023EA34:
-return r3_w3;
-}
-
 void fn_8023F514(r3) int r3; {
 int t0;
 int r29;
@@ -34499,29 +32810,6 @@ fn_8024170C(*(int*)(r31 + 68));
 HSD_ObjFree((int)lbl_8055DBC8, r31);
 }
 
-float fn_802415A8(int r3, float f1) {
-float f1_w7;
-float f31;
-int r30;
-int r31;
-r30 = r3;
-f31 = f1;
-if (*(int*)(r3 + 828) == 0) goto L_802415F0;
-__assert((int)lbl_804B5694, 249, (int)lbl_804B56A0, f1);
-L_802415F0:
-r31 = *(int*)(r30 + 832);
-if (*(int*)(r30 + 828) == 0) goto L_80241618;
-__assert((int)lbl_804B5694, 249, (int)lbl_804B56A0);
-L_80241618:
-if (((float)(int)(((unsigned)__cntlzw((*(float*)(*(int*)(r30 + 832) + 48) == *(float*)(*(int*)(r30 + 832) + 52))) >> 5))) == lbl_805E2B38) goto L_80241674;
-f1_w7 = (f31 * (*(float*)(r31 + 52) - *(float*)(r31 + 48)) + *(float*)(r31 + 48));
-goto L_80241678;
-L_80241674:
-f1_w7 = *(float*)(r31 + 48);
-L_80241678:
-return f1_w7;
-}
-
 void fn_802433C4(r28, r29, r30, r31) int r28; int r29; int r30; int r31; {
 float t0;
 float t1;
@@ -34563,159 +32851,6 @@ t11 = *(float*)(r28 + 8);
 *(float*)(r31 + 44) = t11;
 }
 
-void fn_8024347C(r3, r4, r5, r6) int r3; int r4; int r5; int r6; {
-float t0;
-float t1;
-float t2;
-float t3;
-float t4;
-float t5;
-float t6;
-float t7;
-int t8;
-int t9;
-float t10;
-int r0_w1;
-int r31;
-int loc[5];
-r31 = r6;
-t0 = ((*(float*)(r5 + 8) - *(float*)(r3 + 8)) * (*(float*)r4 - *(float*)r3) - ((*(float*)r5 - *(float*)r3) * (*(float*)(r4 + 8) - *(float*)(r3 + 8))));
-t1 = (*(float*)(r5 + 4) - *(float*)(r3 + 4));
-t2 = (*(float*)r5 - *(float*)r3);
-t3 = ((*(float*)(r5 + 4) - *(float*)(r3 + 4)) * (*(float*)r4 - *(float*)r3));
-t4 = (*(float*)(r4 + 4) - *(float*)(r3 + 4));
-t5 = (*(float*)r4 - *(float*)r3);
-t6 = (*(float*)(r5 + 8) - *(float*)(r3 + 8));
-t7 = ((*(float*)(r5 + 4) - *(float*)(r3 + 4)) * (*(float*)(r4 + 8) - *(float*)(r3 + 8)) - ((*(float*)(r5 + 8) - *(float*)(r3 + 8)) * (*(float*)(r4 + 4) - *(float*)(r3 + 4))));
-*(float*)((char*)loc) = t7;
-*(float*)((char*)loc + 4) = t0;
-t8 = *(int*)((char*)loc);
-*(float*)((char*)loc + 8) = (t2 * t4 - t3);
-t9 = *(int*)((char*)loc + 4);
-*(int*)r6 = t8;
-r0_w1 = *(int*)((char*)loc + 8);
-*(int*)(r6 + 4) = t9;
-*(int*)(r6 + 8) = r0_w1;
-t10 = PSVECMag(r31, t9, r5, r6);
-if (!(t10 < lbl_805E2B84)) goto L_80243534;
-*(float*)r31 = lbl_805E2B50;
-*(float*)(r31 + 4) = lbl_805E2B50;
-*(float*)(r31 + 8) = lbl_805E2B50;
-return;
-L_80243534:
-fn_80062CA4(r31, r31);
-}
-
-void fn_80246718(r3, r4) int r3; int r4; {
-int r30;
-int r31;
-int r31_w1;
-int r4_w2;
-int r5;
-int r6;
-int r7;
-int loc[4];
-r30 = r4;
-r6 = (r30 * 320);
-r7 = *(int*)(lbl_805DD6CC + 116);
-r5 = (r7 + r6);
-r4_w2 = (*(int*)(r5 + 36) & 0x1ffffff);
-if (r4_w2 == 2) goto L_80246758;
-if (r4_w2 != 3) goto L_802467A0;
-L_80246758:
-r31 = *(int*)((r7 + r6) + 312);
-if ((unsigned)r31 == (unsigned)0) return;
-if (*(int*)r31 < 0) return;
-*(int*)((char*)loc + 4) = 0;
-fn_80248070(r3, r4_w2, ((int)loc + 4));
-fn_800EA1F4(lbl_805DD6CC, r30, *(int*)r31, 0, *(int*)((char*)loc + 4));
-return;
-L_802467A0:
-if (r4_w2 != 4) goto L_802467EC;
-r31_w1 = *(int*)(r5 + 312);
-if ((unsigned)r31_w1 == (unsigned)0) return;
-if (*(int*)r31_w1 < 0) return;
-*(int*)((char*)loc) = 0;
-fn_80248070(r3, r4_w2, ((int)loc));
-fn_800EA1F4(lbl_805DD6CC, r30, *(int*)r31_w1, 0, *(int*)((char*)loc));
-return;
-L_802467EC:
-__assert((int)&lbl_805D7340, 616, (int)&lbl_805D7348);
-}
-
-int fn_80246814(r3, r4) int r3; int r4; {
-int t0;
-int t1;
-int t2;
-int t3;
-int t4;
-int t5;
-int t6;
-int t7;
-int t8;
-int t9;
-float t10;
-int ctr0;
-int ctr1;
-int r30;
-int r31;
-int r4_w1;
-int r7;
-int r7_w1;
-int r8;
-int r9;
-int r9_w1;
-r8 = (r3 + 68);
-r7 = 0;
-r9 = r8;
-r31 = r4;
-t0 = lbl_805DD6CC;
-t1 = *(int*)(r3 + 152);
-r4_w1 = (t0 + 84);
-ctr0 = t1;
-if (t1 <= 0) goto L_8024688C;
-for (; ctr0 != 0; ctr0--) {
-L_80246850:
-t2 = *(int*)(r9 + 4);
-t3 = *(int*)(r4_w1 + 32);
-t4 = *(int*)(t3 + ((t2 * 320) + 36));
-if ((t4 & 0x1ffffff) != 7) goto L_80246880;
-r30 = *(int*)((r8 + (r7 << 2)) + 4);
-goto L_802468F0;
-L_80246880:
-r9 = (r9 + 4);
-r7 = (r7 + 1);
-}
-L_8024688C:
-t5 = *(int*)(r8 + 728);
-r7_w1 = r8;
-r9_w1 = 0;
-ctr1 = t5;
-if (t5 <= 0) goto L_802468EC;
-for (; ctr1 != 0; ctr1--) {
-L_802468A4:
-t6 = *(int*)(r7_w1 + 88);
-t7 = *(int*)(r7_w1 + 92);
-t8 = *(int*)(r4_w1 + 32);
-t9 = *(int*)(t8 + (((t6 * 320) + (t7 * 36)) + 36));
-if ((t9 & 0x1ffffff) != 7) goto L_802468E0;
-r30 = *(int*)((r8 + (r9_w1 << 5)) + 88);
-goto L_802468F0;
-L_802468E0:
-r7_w1 = (r7_w1 + 32);
-r9_w1 = (r9_w1 + 1);
-}
-L_802468EC:
-r30 = -1;
-L_802468F0:
-if (r30 == -1) goto L_80246910;
-t10 = fn_800DB3DC((r3 + 8), r4_w1, r30);
-*(float*)r31 = t10;
-return;
-L_80246910:
-;
-}
-
 void fn_80247E2C(r3, r4) int r3; int r4; {
 int t0;
 t0 = __rlwimi(*(unsigned char*)(r3 + 844), r4, 7, 24, 24);
@@ -34745,61 +32880,6 @@ HSD_ObjFree((r31 + 44), r30);
 
 void fn_802503C0(r3) int r3; {
 fn_80054414(*(int*)(*(int*)r3 + 40), (r3 + 256), (r3 + 268), (r3 + 220), (*(float*)(r3 + 172) * *(float*)(r3 + 280)));
-}
-
-int fn_80251F64(r3, r4) int r3; int r4; {
-int t0;
-int r0_w1;
-int r29;
-int r30;
-int r31;
-int r3_w10;
-int r4_w3;
-int r4_w4;
-int r7_w1;
-r30 = r4;
-r29 = r3;
-r31 = *(int*)(r3 + 44);
-t0 = fn_80055AF0(r3, 1);
-r0_w1 = *(int*)(r31 + 28);
-r7_w1 = t0;
-r4_w3 = -1;
-if (r0_w1 == 1) goto L_80251FE0;
-if (r0_w1 >= 1) goto L_80251FB4;
-if (r0_w1 >= 0) goto L_80251FC0;
-goto L_8025201C;
-L_80251FB4:
-if (r0_w1 >= 3) goto L_8025201C;
-goto L_80252000;
-L_80251FC0:
-if (r30 == 0) goto L_80251FD4;
-r4_w3 = (0x10000 - 15535);
-goto L_8025201C;
-L_80251FD4:
-r4_w3 = (0x10000 - 15536);
-goto L_8025201C;
-L_80251FE0:
-if (r30 == 0) goto L_80251FF4;
-r4_w3 = (0x10000 - 15532);
-goto L_8025201C;
-L_80251FF4:
-r4_w3 = (0x10000 - 15531);
-goto L_8025201C;
-L_80252000:
-if (r30 == 0) goto L_80252014;
-r4_w3 = (0x10000 - 15534);
-goto L_8025201C;
-L_80252014:
-r4_w3 = (0x10000 - 15533);
-L_8025201C:
-if (r4_w3 == -1) goto L_80252040;
-fn_80236C40(r29, r4_w3, *(int*)(r31 + 556), 205, r7_w1);
-r3_w10 = r4_w4;
-goto L_80252044;
-L_80252040:
-r3_w10 = 0;
-L_80252044:
-return r3_w10;
 }
 
 void fn_8025611C(r30) int r30; {
@@ -35132,82 +33212,6 @@ fn_80250340(*(int*)(r31 + 44));
 fn_8024F488(r31, 4, 8, lbl_805E2FA8, lbl_805E2FAC, lbl_805E2FA8);
 }
 
-int fn_80261DCC(r3) int r3; {
-int t0;
-int t1;
-int t2;
-int t3;
-int r0_w3;
-int r29;
-int r30;
-int r31;
-int r3_w11;
-int r3_w13;
-int r3_w9;
-r31 = (int)lbl_804B7870;
-r30 = (int)&lbl_805DD8D8;
-r29 = r3;
-t0 = lbl_805DD8D8;
-if (t0 == -1) goto L_80261E10;
-__assert((int)&lbl_805D73D8, 128, (r31 + 72));
-L_80261E10:
-*(int*)r30 = r29;
-r0_w3 = 0;
-if (r29 <= -1) goto L_80261E2C;
-if (r29 >= 59) goto L_80261E2C;
-r0_w3 = 1;
-L_80261E2C:
-if (r0_w3 != 0) goto L_80261E54;
-OSReport((r31 + 0), r29);
-__assert((int)&lbl_805D73D8, 48, (r31 + 12));
-L_80261E54:
-t1 = lbl_805DD8DC;
-t2 = *(int*)t1;
-r3_w9 = *(int*)(t2 + (r29 * 88));
-grInitObject(r3_w9);
-r3_w11 = fn_80009190();
-if (((char)r3_w11) != 0) goto L_80261E80;
-t3 = fn_802625F8();
-r3_w13 = ((char)t3);
-r3_w11 = fn_800091B4(r3_w13);
-L_80261E80:
-return r3_w11;
-}
-
-void fn_80262060(r3) int r3; {
-int r0;
-int r30;
-int r31;
-int r3_w10;
-int r3_w12;
-int r3_w8;
-r0 = 0;
-r30 = r3;
-r31 = lbl_805DD8D8;
-if (r31 <= -1) goto L_80262094;
-if (r31 >= 59) goto L_80262094;
-r0 = 1;
-L_80262094:
-if (r0 != 0) goto L_802620C4;
-OSReport((int)lbl_804B7870, r31);
-__assert((int)&lbl_805D73D8, 48, (int)lbl_804B787C);
-L_802620C4:
-r3_w8 = (*(int*)lbl_805DD8DC + (r31 * 88));
-if (r3_w8 != 0) goto L_802620E0;
-goto L_8026210C;
-L_802620E0:
-r3_w10 = *(int*)(r3_w8 + 20);
-if ((unsigned)r3_w10 != (unsigned)0) goto L_802620F4;
-goto L_8026210C;
-L_802620F4:
-r3_w12 = (r3_w10 + (r30 << 3));
-if (r3_w12 == 0) goto L_80262108;
-goto L_8026210C;
-L_80262108:
-L_8026210C:
-;
-}
-
 void fn_802707C4(r30) int r30; {
 float t0;
 int t1;
@@ -35242,105 +33246,6 @@ t1 = (*(int*)(r30 + 280) + 1);
 *(int*)(r30 + 280) = t1;
 *(int*)(r30 + 276) = (r30 + 284);
 *(int*)(r30 + 272) = 1;
-}
-
-void fn_802767F8(r3) int r3; {
-int r0;
-int r29;
-int r30_w1;
-int r31;
-r0 = 0;
-r29 = r3;
-r31 = (int)lbl_804B7F30;
-if (r29 <= -1) goto L_80276834;
-if ((unsigned)r29 >= (unsigned)69) goto L_80276834;
-r0 = 1;
-L_80276834:
-if (r0 != 0) goto L_8027684C;
-__assert((r31 + 3260), 681, (r31 + 3364));
-L_8027684C:
-r30_w1 = ((r31 + 1788) + (r29 << 3));
-if (*(int*)r30_w1 == r29) goto L_80276874;
-__assert((r31 + 3260), 683, (r31 + 3428));
-L_80276874:
-if ((((unsigned)*(unsigned char*)(r30_w1 + 6) >> 5) & 0x1) == 0) goto L_80276888;
-return;
-L_80276888:
-;
-}
-
-void fn_802768A8(r3, r4) int r3; int r4; {
-float f1_w3;
-int r0;
-int r0_w6;
-int r28;
-int r29;
-int r30_w1;
-int r31;
-int r3_w5;
-int r4_w6;
-r0 = 0;
-r29 = r4;
-r28 = r3;
-r31 = (int)lbl_804B7F30;
-if (r29 <= -1) goto L_802768EC;
-if ((unsigned)r29 >= (unsigned)69) goto L_802768EC;
-r0 = 1;
-L_802768EC:
-if (r0 != 0) goto L_80276904;
-__assert((r31 + 3260), 681, (r31 + 3364));
-L_80276904:
-r30_w1 = ((r31 + 1788) + (r29 << 3));
-if (*(int*)r30_w1 == r29) goto L_8027692C;
-__assert((r31 + 3260), 683, (r31 + 3428));
-L_8027692C:
-r3_w5 = *(short*)(r30_w1 + 4);
-r0_w6 = (((unsigned)*(unsigned char*)(r30_w1 + 6) >> 4) & 0x1);
-if (r0_w6 == 0) return;
-r4_w6 = *(int*)(r28 + 1012);
-if ((unsigned)r4_w6 == (unsigned)0) return;
-f1_w3 = (*(float*)(*(int*)(r4_w6 + 44) + 2584) / *(float*)(*(int*)(r4_w6 + 44) + 1228));
-if (!(f1_w3 < lbl_805E3198)) goto L_8027696C;
-return;
-L_8027696C:
-if (!(f1_w3 < lbl_805E319C)) return;
-}
-
-int fn_80276DE4(r3, r4, r5) int r3; int r4; int r5; {
-int r30;
-int r31;
-int r3_w1;
-int r3_w2;
-r31 = r5;
-r30 = r4;
-r3_w1 = fn_801C85BC(r3, r4, r5);
-if (r3_w1 != 5) goto L_80276E24;
-r3_w2 = 1;
-*(float*)r31 = lbl_805E31A4;
-*(float*)r30 = lbl_805E31A8;
-goto L_80276E88;
-L_80276E24:
-if (r3_w1 != 4) goto L_80276E44;
-r3_w2 = 1;
-*(float*)r31 = lbl_805E31AC;
-*(float*)r30 = lbl_805E31B0;
-goto L_80276E88;
-L_80276E44:
-if (r3_w1 != 10) goto L_80276E64;
-r3_w2 = 1;
-*(float*)r31 = lbl_805E31A4;
-*(float*)r30 = lbl_805E31B4;
-goto L_80276E88;
-L_80276E64:
-if (r3_w1 != 7) goto L_80276E84;
-r3_w2 = 1;
-*(float*)r31 = lbl_805E31A4;
-*(float*)r30 = lbl_805E31B8;
-goto L_80276E88;
-L_80276E84:
-r3_w2 = 0;
-L_80276E88:
-return r3_w2;
 }
 
 void fn_8027D364(r3) int r3; {
@@ -35413,16 +33318,6 @@ t1 = func_80428F28(27, 26, 0);
 *(int*)r30 = t1;
 fn_80429C14(*(int*)r30, lbl_805DE351, t0);
 HSD_GObj_AddGXLink(*(int*)r30, (int)fn_8042A258, 21, 1);
-}
-
-void fn_80281CF4(r3) int r3; {
-int r3_w5;
-fn_8040A64C(*(int*)(r3 + 40));
-r3_w5 = *(int*)(((int)lbl_8055F480 + (*(int*)*(int*)(r3 + 44) << 2)) + 644);
-if ((unsigned)r3_w5 == (unsigned)0) goto L_80281D3C;
-fn_8040A64C(*(int*)(r3_w5 + 40));
-L_80281D3C:
-;
 }
 
 void fn_802820C0(r3) int r3; {
