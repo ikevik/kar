@@ -749,25 +749,25 @@ s32 fn_80444CC4(s32 prio)
 {
     s32 intr;
     AXVoice* v;
-    if (prio >= 0 && prio <= 0x3f) {
-        intr = OSDisableInterrupts();
-        for (v = lbl_805DE480; v != NULL; v = v->next) {
-            if ((v->flags & SMSTATE_MASK) != 0 && v->prio == prio) {
-                axPauseVoice(v->id);
-            }
-        }
-        lbl_805DE450 |= 1 << prio;
-        OSRestoreInterrupts(intr);
-        return 1;
+    if (prio < 0 || prio > 0x3f) {
+        return 0;
     }
-    return 0;
+    intr = OSDisableInterrupts();
+    for (v = lbl_805DE480; v != NULL; v = v->next) {
+        if ((v->flags & SMSTATE_MASK) != 0 && v->prio == prio) {
+            axPauseVoice(v->id);
+        }
+    }
+    lbl_805DE450 |= 1 << prio;
+    OSRestoreInterrupts(intr);
+    return 1;
 }
 
 s32 fn_80444E00(void)
 {
     s32 intr;
     AXVoice* v;
-    s32 i;
+    u32 i;
     intr = OSDisableInterrupts();
     for (v = lbl_805DE480; v != NULL; v = v->next) {
         if ((v->flags & SMSTATE_MASK) != 0) {
@@ -785,25 +785,25 @@ s32 fn_80444FE0(s32 prio)
 {
     s32 intr;
     AXVoice* v;
-    if (prio >= 0 && prio <= 0x3f) {
-        intr = OSDisableInterrupts();
-        for (v = lbl_805DE480; v != NULL; v = v->next) {
-            if ((v->flags & SMSTATE_MASK) != 0 && v->prio == prio) {
-                axResumeVoice(v->id);
-            }
-        }
-        lbl_805DE450 &= ~(1 << prio);
-        OSRestoreInterrupts(intr);
-        return 1;
+    if (prio < 0 || prio > 0x3f) {
+        return 0;
     }
-    return 0;
+    intr = OSDisableInterrupts();
+    for (v = lbl_805DE480; v != NULL; v = v->next) {
+        if ((v->flags & SMSTATE_MASK) != 0 && v->prio == prio) {
+            axResumeVoice(v->id);
+        }
+    }
+    lbl_805DE450 &= ~(1 << prio);
+    OSRestoreInterrupts(intr);
+    return 1;
 }
 
 s32 fn_8044511C(void)
 {
     s32 intr;
     AXVoice* v;
-    s32 i;
+    u32 i;
     intr = OSDisableInterrupts();
     for (v = lbl_805DE480; v != NULL; v = v->next) {
         if ((v->flags & SMSTATE_MASK) != 0) {
