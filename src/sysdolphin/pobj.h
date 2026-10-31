@@ -145,6 +145,7 @@ typedef struct _HSD_PObjInfo {
 #define HSD_POBJ_METHOD(o) HSD_POBJ_INFO(HSD_CLASS_METHOD(o))
 
 u32 HSD_PObjGetFlags(HSD_PObj* pobj);
+HSD_PObj* HSD_PObjAlloc(void);
 void HSD_PObjRemoveAnimAllByFlags(HSD_PObj* pobj, u32 flags);
 void HSD_PObjReqAnimAllByFlags(HSD_PObj* pobj, f32 startframe, u32 flags);
 
