@@ -892,10 +892,10 @@ s32 fn_803BF6CC(void)
 
 s32 fn_803BFF40(s32 cmd)
 {
-    TRKBuffer* buf;
-    s32 bufIdx;
-    s32 outIdx;
     s32 err;
+    s32 outIdx;
+    s32 bufIdx;
+    TRKBuffer* buf;
     err = TRKGetFreeBuffer(&bufIdx, &buf);
     if (err == 0) {
         if (err == 0) {
