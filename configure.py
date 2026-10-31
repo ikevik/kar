@@ -424,7 +424,7 @@ config.libs = [
             Object(Matching, "sysdolphin/hash.c"),
             Object(NonMatching, "sysdolphin/texp.c"),
             Object(NonMatching, "sysdolphin/texpdag.c"),
-            Object(NonMatching, "sysdolphin/debug.c"),
+            Object(Matching, "sysdolphin/debug.c"),
             Object(NonMatching, "sysdolphin/gobjproc.c"),
             Object(Matching, "sysdolphin/gobjplink.c"),
             Object(Matching, "sysdolphin/gobjgxlink.c"),

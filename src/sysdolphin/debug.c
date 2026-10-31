@@ -1,12 +1,11 @@
 #include <dolphin/types.h>
 #include <functions.h>
 
-extern u8 lbl_8058BEC8[];
-extern char lbl_805DCDA8[8];
-void (*lbl_805DE308)(int, int, int, int);
-s32 lbl_805DE30C;
-void (*lbl_805DE310)(void*, ...);
+u8 lbl_8058BEC8[0x2C8];
 void (*lbl_805DE314)(int, int);
+void (*lbl_805DE310)(void*, ...);
+s32 lbl_805DE30C;
+void (*lbl_805DE308)(int, int, int, int);
 extern u8 __files[];
 int fn_80428430(int a, int b, int* c, int d);
 extern void fn_803D4BBC(void);
@@ -68,7 +67,7 @@ int fn_80428430(int a, int b, int* c, int d)
 void __assert(const char* file, unsigned long line, const char* expr)
 {
     OSReport("assertion \"%s\" failed", expr);
-    HSD_Panic(file, line, lbl_805DCDA8);
+    HSD_Panic(file, line, "");
 }
 
 void HSD_Panic(const char* file, int line, const char* msg)
