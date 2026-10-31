@@ -109,7 +109,7 @@ extern u32 lbl_805DE2A4;
 extern u32 lbl_805DE2AC;
 extern s32 lbl_805DE2B4;
 extern s32 lbl_805DE2B8;
-extern u32 lbl_805DE2C0;
+extern s32 lbl_805DE2C0;
 extern u32 lbl_805DE2C4;
 
 void* HSD_AllocateXFB(int nbuffer, GXRenderModeObj* rm)
@@ -252,10 +252,76 @@ void HSD_GetArena(u32* lo, u32* hi)
     }
 }
 
+extern GXRenderModeObj lbl_80589A80;
+extern void _HSD_AObjForgetMemory(void);
+extern void _HSD_DispForgetMemory(void);
+extern void _HSD_IDForgetMemory(void);
+extern void _HSD_ObjAllocForgetMemory(void);
+extern void fn_8041E6A4(void);
+extern void fn_8041A504(void);
+
+void HSD_Reinit(void)
+{
+    void (*forget[])(void) = {
+        _HSD_AObjForgetMemory,
+        _HSD_DispForgetMemory,
+        _HSD_IDForgetMemory,
+        _HSD_ObjAllocForgetMemory,
+        fn_8041E6A4,
+        fn_8041A504,
+        NULL
+    };
+    void (**fp)(void);
+
+    func_8042122C("sysdolphin_base_library");
+    for (fp = forget; *fp != NULL; fp++) {
+        (*fp)();
+    }
+    HSD_ObjInit();
+    _HSD_MemGetRemain();
+    memReport.heap = _HSD_MemFree();
+}
+
 u32 HSD_GetCurrentRenderPass(void)
 {
     return lbl_805DE2C4;
 }
+
+#ifdef NONMATCHING /* 99.7%: register swap */
+void HSD_StartRender(int pass)
+{
+    GXRenderModeObj* vi = &lbl_80589A80;
+    u16 xfb_height;
+    u16 vi_height;
+
+    lbl_805DE2C4 = pass;
+    if (vi->aa) {
+        fn_803CF938(2, lbl_805DCBB8);
+    } else {
+        fn_803CF938(lbl_805DE2AC, 0);
+    }
+    xfb_height = vi->xfbHeight;
+    vi_height = vi->viHeight;
+    fn_803CFAC0(vi->field_rendering, (u32) (xfb_height - vi_height) >> 31);
+    if (lbl_805DE2C0 != 0) {
+        if (lbl_805DE2C0 & 1) {
+            GXInvalidateVtxCache();
+        }
+        if (lbl_805DE2C0 & 2) {
+            GXInvalidateTexAll();
+        }
+        lbl_805DE2C0 = 0;
+    }
+}
+#endif
+
+#ifdef NONMATCHING /* compare result is dropped; not expressible in C */
+void HSD_IsEFBCopyPass(void)
+{
+    if (lbl_805DE2C4 == 3) {
+    }
+}
+#endif
 
 void HSD_AddInvalidateFlags(u32 flags)
 {
@@ -284,3 +350,4 @@ void HSD_ObjInit(void)
     HSD_ShadowInitAllocData();
     HSD_ZListInitAllocData();
 }
+
