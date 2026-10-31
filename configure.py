@@ -345,7 +345,7 @@ config.libs = [
         "sdk",
         [
             Object(NonMatching, "cstring.c"),
-            Object(NonMatching, "dolphin/dolphin_sdk_other.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
+            Object(NonMatching, "dolphin/dolphin_sdk_other.c", mw_version="GC/1.3.2", cflags=cflags_runtime),
         ],
     ),
     Lib(
