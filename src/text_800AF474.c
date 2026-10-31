@@ -10,6 +10,8 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+#define MD(a) (*(double*)(a))
+float __fabsf(float);
 typedef struct { u8 :7; u8 f:1; } BFu8_7_1;
 typedef struct { u8 :6; u8 f:1; } BFu8_6_1;
 typedef struct { u8 :5; u8 f:1; } BFu8_5_1;
@@ -115,8 +117,6 @@ extern u8 lbl_804A596C[];
 extern const float lbl_805DF7E4;
 extern const float lbl_805DF7E0;
 extern const float lbl_805DF808;
-extern u8 lbl_804A5B30[];
-extern u8 lbl_804A5B40[];
 extern u8 lbl_804A5B60[];
 extern u8 lbl_804A5B6C[];
 extern u8 lbl_804A5B90[];
@@ -256,7 +256,6 @@ u32 fn_800D4EF4();
 void fn_800C2FD4();
 u32 fn_800C3510();
 u32 fn_800C6E6C();
-void fn_800B6040();
 void HSD_JObjUnref();
 u32 fn_800D307C();
 void fn_800CCE4C();
@@ -462,9 +461,6 @@ void fn_800E9A4C();
 u32 fn_800E9EA8();
 u32 fn_800E9F30();
 void fn_800E9A68();
-void fn_800E9F50(u32, u32, u32, float);
-void fn_800F7B48();
-void fn_800D4BF4();
 u32 fn_800D1D3C();
 void fn_8010F400(u32, float);
 u32 fn_8010E56C();
@@ -499,6 +495,7 @@ void fn_800FCD7C();
 void fn_800FDFA4();
 void fn_800FE204();
 void fn_800FE60C();
+void fn_800D4BF4();
 void fn_800D4CA0();
 void fn_800D4D58();
 void fn_800FEB58();
@@ -1064,7 +1061,7 @@ void fn_800B6018(u32 p3) {
     HSD_CObjGetViewportf(v2);
 }
 
-void fn_800B6040(u32 p3, u32 p4, u32 p5) {
+void fn_800B6040(u32 p3, u32 p4) {
     u32 v1;
     u32 v2;
     u32 v3;
@@ -2488,25 +2485,6 @@ u32 fn_800C892C(u32 p3) {
     v3 = M32(((u32)p3+436));
     M32(((u32)p3+436)) = (v3+1);
     return v3;
-}
-
-void fn_800C897C(u32 p3) {
-    u32 v1;
-    u32 v2;
-    u32 v3;
-    u32 v4;
-    u32 v5;
-    u32 v6;
-    u32 v7;
-    u32 v8;
-    u32 v9;
-    u32 v10;
-    *(S8*)((u8*)p3+232) = *(S8*)((u8*)p3+192);
-    *(S8*)((u8*)p3+240) = *(S8*)((u8*)p3+200);
-    *(S8*)((u8*)p3+248) = *(S8*)((u8*)p3+208);
-    *(S8*)((u8*)p3+256) = *(S8*)((u8*)p3+216);
-    *(S8*)((u8*)p3+264) = *(S8*)((u8*)p3+224);
-    fn_800B6040(p3, (p3+244), v9);
 }
 
 u32 fn_800C9298(void) {
@@ -6128,43 +6106,6 @@ void fn_800F784C(u32 p3) {
     fn_800E9A68((p3+280));
 }
 
-void fn_800F7870(u32 p3, u32 p4, u32 p5) {
-    u32 stk[1];
-    u32 v1;
-    u32 v2;
-    u32 v3;
-    u32 v4;
-    u32 v5;
-    u32 v6;
-    float v7;
-    u32 v8;
-    u32 v9;
-    float v10;
-    v1 = M32(((u32)p3+44));
-    v2 = M32(((u32)v1+8));
-    v3 = M32(((u32)v2+20));
-    v4 = M32(((u32)v3+20));
-    if ((u32)v4 != (u32)0) {
-        v5 = M32(((u32)v3+12));
-        v6 = M32(((u32)v1+292));
-        v7 = MF(((u32)v3+16));
-        fn_800E9F50(v5, v6, v4, v7);
-    } else {
-        if ((s32)p4 == (s32)-1) {
-            __assert((u32)lbl_804A5B30, 182, (u32)lbl_804A5B40);
-        }
-        if ((s32)p5 != (s32)0) {
-            fn_800F7B48(p3, p4, (u32)((u8*)stk+0));
-        } else {
-            fn_800D4BF4(p4);
-        }
-        v8 = M32(((u32)v3+12));
-        v9 = M32(((u32)v1+292));
-        v10 = MF(((u32)v3+16));
-        fn_800E9F50(v8, v9, (u32)((u8*)stk+0), v10);
-    }
-}
-
 u32 fn_800F7A50(u32 p3, u32 p4) {
     u32 v1;
     v1 = M16(p3);
@@ -9553,6 +9494,192 @@ void fn_8010E098(void) {}
 
 void fn_8010EC0C(void) {}
 
+int fn_8010E768(int a1, int a2)
+{
+    int t0;
+    int c0;
+    t0 = (*(int*)&lbl_805DD6CC);
+    t0 += (a2 * 72);
+    c0 = fn_800FD890((*(int*)((u8*)(t0) + 536)), a2);
+    return c0;
+}
+
+int fn_800CF07C(int r3, int r4, int r5)
+{
+    int r0;
+    int r6;
+    int r28;
+    int r29;
+    int r30;
+    int r31;
+    r30 = r5;
+    r29 = r4;
+    r28 = r3;
+    r31 = *(int*)&lbl_805DD6CC;
+    r0 = *(int*)((u8*)r31 + 284);
+    if ((unsigned)r0 != (unsigned)0) goto L_800CF0C8;
+    r4 = (int)lbl_804A33A4;
+    r3 = (int)&lbl_805D6090;
+    r5 = (int)lbl_804A33A4;
+    r4 = 444;
+    r3 = __assert(r3, r4, r5);
+    L_800CF0C8: ;
+    r3 = r31;
+    r4 = r28;
+    r5 = r29;
+    r6 = r30;
+    r3 = fn_800E3484(r3, r4, r5, r6);
+    return r3;
+}
+
+int fn_8010F0DC(int r3, int r4)
+{
+    int r0;
+    r0 = r4 * 72;
+    r3 = *(int*)&lbl_805DD6CC;
+    r3 = r3 + r0;
+    r3 = *(int*)((u8*)r3 + 536);
+    if ((unsigned)r3 == (unsigned)0) goto L_8010F104;
+    r3 = fn_80106658(r3, r4);
+    L_8010F104: ;
+    return r3;
+}
+
+int fn_800EE758(int a1, int a2)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 16 + (a2 * 20)));
+}
+
+int fn_800EE6CC(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 0))) + 48))) + 4 + ((*(int*)((u8*)(a1) + 8)) * 12)));
+}
+
+int fn_800DDD1C(int a1, int a2)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)(a1) + 116))) + 312 + (a2 * 320)));
+}
+
+int fn_800D12F0(void)
+{
+    int r3;
+    int r31;
+    r31 = *(int*)&lbl_805DD6CC;
+    r3 = r31;
+    r3 = fn_800DA5C8(r3);
+    if ((unsigned)r3 == (unsigned)0) goto L_800D1324;
+    r3 = r31;
+    r3 = fn_800DA5C8(r3);
+    r3 = *(int*)((u8*)r3 + 8);
+    goto L_800D1328;
+    L_800D1324: ;
+    r3 = 0;
+    L_800D1328: ;
+    return r3;
+}
+
+int fn_800EE708(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 12 + ((*(int*)((u8*)(a1) + 8)) * 20)));
+}
+
+int fn_8010F0A4(int r3, int r4)
+{
+    int r0;
+    r0 = r4 * 72;
+    r3 = *(int*)&lbl_805DD6CC;
+    r3 = r3 + r0;
+    r3 = *(int*)((u8*)r3 + 536);
+    if ((unsigned)r3 == (unsigned)0) goto L_8010F0CC;
+    r3 = fn_801006F4(r3, r4);
+    L_8010F0CC: ;
+    return r3;
+}
+
+int fn_800D1090(void)
+{
+    int r3;
+    int r31;
+    r31 = *(int*)&lbl_805DD6CC;
+    r3 = r31;
+    r3 = fn_800DA474(r3);
+    if ((unsigned)r3 == (unsigned)0) goto L_800D10C4;
+    r3 = r31;
+    r3 = fn_800DA474(r3);
+    r3 = *(int*)((u8*)r3 + 8);
+    goto L_800D10C8;
+    L_800D10C4: ;
+    r3 = 0;
+    L_800D10C8: ;
+    return r3;
+}
+
+int fn_800EE73C(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 16 + ((*(int*)((u8*)(a1) + 8)) * 20)));
+}
+
+int fn_800DDFEC(int a1, int a2)
+{
+
+    return ((*(int*)((u8*)((*(int*)((u8*)(a1) + 116))) + 312 + (a2 * 320))) + 8);
+}
+
+int fn_800EE724(int a1, int a2)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 8 + (a2 * 20)));
+}
+
+void fn_800F8E68(int a1, int a2)
+{
+    int c0;
+    c0 = fn_8018C824((*(int*)((u8*)(a1) + 236)), a2);
+    *(int*)((u8*)(a2) + 8) = ((*(int*)((u8*)(a2) + 8)) + 4);
+}
+
+int fn_800D0C88(void)
+{
+    int r3;
+    int r31;
+    r31 = *(int*)&lbl_805DD6CC;
+    r3 = r31;
+    r3 = fn_800DA424(r3);
+    if ((unsigned)r3 == (unsigned)0) goto L_800D0CBC;
+    r3 = r31;
+    r3 = fn_800DA424(r3);
+    r3 = *(int*)((u8*)r3 + 8);
+    goto L_800D0CC0;
+    L_800D0CBC: ;
+    r3 = 0;
+    L_800D0CC0: ;
+    return r3;
+}
+
+int fn_8010F06C(int r3, int r4)
+{
+    int r0;
+    r0 = r4 * 72;
+    r3 = *(int*)&lbl_805DD6CC;
+    r3 = r3 + r0;
+    r3 = *(int*)((u8*)r3 + 536);
+    if ((unsigned)r3 == (unsigned)0) goto L_8010F094;
+    r3 = fn_80100084(r3, r4);
+    L_8010F094: ;
+    return r3;
+}
+
+int fn_800EE6EC(int a1)
+{
+
+    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 8 + ((*(int*)((u8*)(a1) + 8)) * 20)));
+}
+
 int fn_80105CB0(int r3)
 {
     int r0;
@@ -9606,48 +9733,6 @@ int fn_80105CB0(int r3)
     return r3;
 }
 
-int fn_800EE758(int a1, int a2)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 16 + (a2 * 20)));
-}
-
-int fn_800D1090(void)
-{
-    int r3;
-    int r31;
-    r31 = *(int*)&lbl_805DD6CC;
-    r3 = r31;
-    r3 = fn_800DA474(r3);
-    if ((unsigned)r3 == (unsigned)0) goto L_800D10C4;
-    r3 = r31;
-    r3 = fn_800DA474(r3);
-    r3 = *(int*)((u8*)r3 + 8);
-    goto L_800D10C8;
-    L_800D10C4: ;
-    r3 = 0;
-    L_800D10C8: ;
-    return r3;
-}
-
-int fn_800D12F0(void)
-{
-    int r3;
-    int r31;
-    r31 = *(int*)&lbl_805DD6CC;
-    r3 = r31;
-    r3 = fn_800DA5C8(r3);
-    if ((unsigned)r3 == (unsigned)0) goto L_800D1324;
-    r3 = r31;
-    r3 = fn_800DA5C8(r3);
-    r3 = *(int*)((u8*)r3 + 8);
-    goto L_800D1328;
-    L_800D1324: ;
-    r3 = 0;
-    L_800D1328: ;
-    return r3;
-}
-
 int fn_800EF894(int a1, int a2, int a3, int a4)
 {
     int c0;
@@ -9673,153 +9758,9 @@ int fn_800D0B30(void)
     return r3;
 }
 
-int fn_8010F0A4(int r3, int r4)
-{
-    int r0;
-    r0 = r4 * 72;
-    r3 = *(int*)&lbl_805DD6CC;
-    r3 = r3 + r0;
-    r3 = *(int*)((u8*)r3 + 536);
-    if ((unsigned)r3 == (unsigned)0) goto L_8010F0CC;
-    r3 = fn_801006F4(r3, r4);
-    L_8010F0CC: ;
-    return r3;
-}
-
-int fn_800EE724(int a1, int a2)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 8 + (a2 * 20)));
-}
-
-int fn_800DDD1C(int a1, int a2)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)(a1) + 116))) + 312 + (a2 * 320)));
-}
-
-int fn_800EE708(int a1)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 12 + ((*(int*)((u8*)(a1) + 8)) * 20)));
-}
-
-int fn_800EE6EC(int a1)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 8 + ((*(int*)((u8*)(a1) + 8)) * 20)));
-}
-
-int fn_800D0C88(void)
-{
-    int r3;
-    int r31;
-    r31 = *(int*)&lbl_805DD6CC;
-    r3 = r31;
-    r3 = fn_800DA424(r3);
-    if ((unsigned)r3 == (unsigned)0) goto L_800D0CBC;
-    r3 = r31;
-    r3 = fn_800DA424(r3);
-    r3 = *(int*)((u8*)r3 + 8);
-    goto L_800D0CC0;
-    L_800D0CBC: ;
-    r3 = 0;
-    L_800D0CC0: ;
-    return r3;
-}
-
-int fn_800EE6CC(int a1)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 0))) + 48))) + 4 + ((*(int*)((u8*)(a1) + 8)) * 12)));
-}
-
-int fn_8010F0DC(int r3, int r4)
-{
-    int r0;
-    r0 = r4 * 72;
-    r3 = *(int*)&lbl_805DD6CC;
-    r3 = r3 + r0;
-    r3 = *(int*)((u8*)r3 + 536);
-    if ((unsigned)r3 == (unsigned)0) goto L_8010F104;
-    r3 = fn_80106658(r3, r4);
-    L_8010F104: ;
-    return r3;
-}
-
 int fn_800CEE08(int a1)
 {
 
     return (((unsigned)(*(unsigned char*)((u8*)((*(int*)((u8*)((*(int*)&lbl_805DD6CC)) + 92))) + 60 + (a1 << 6))) >> 6) & 1);
-}
-
-int fn_8010F06C(int r3, int r4)
-{
-    int r0;
-    r0 = r4 * 72;
-    r3 = *(int*)&lbl_805DD6CC;
-    r3 = r3 + r0;
-    r3 = *(int*)((u8*)r3 + 536);
-    if ((unsigned)r3 == (unsigned)0) goto L_8010F094;
-    r3 = fn_80100084(r3, r4);
-    L_8010F094: ;
-    return r3;
-}
-
-int fn_800EE73C(int a1)
-{
-
-    return (*(int*)((u8*)((*(int*)((u8*)((*(int*)((u8*)(a1) + 0))) + 4))) + 16 + ((*(int*)((u8*)(a1) + 8)) * 20)));
-}
-
-int fn_800DDFEC(int a1, int a2)
-{
-
-    return ((*(int*)((u8*)((*(int*)((u8*)(a1) + 116))) + 312 + (a2 * 320))) + 8);
-}
-
-void fn_800F8E68(int a1, int a2)
-{
-    int c0;
-    c0 = fn_8018C824((*(int*)((u8*)(a1) + 236)), a2);
-    *(int*)((u8*)(a2) + 8) = ((*(int*)((u8*)(a2) + 8)) + 4);
-}
-
-int fn_8010E768(int a1, int a2)
-{
-    int t0;
-    int c0;
-    t0 = (*(int*)&lbl_805DD6CC);
-    t0 += (a2 * 72);
-    c0 = fn_800FD890((*(int*)((u8*)(t0) + 536)), a2);
-    return c0;
-}
-
-int fn_800CF07C(int r3, int r4, int r5)
-{
-    int r0;
-    int r6;
-    int r28;
-    int r29;
-    int r30;
-    int r31;
-    r30 = r5;
-    r29 = r4;
-    r28 = r3;
-    r31 = *(int*)&lbl_805DD6CC;
-    r0 = *(int*)((u8*)r31 + 284);
-    if ((unsigned)r0 != (unsigned)0) goto L_800CF0C8;
-    r4 = (int)lbl_804A33A4;
-    r3 = (int)&lbl_805D6090;
-    r5 = (int)lbl_804A33A4;
-    r4 = 444;
-    r3 = __assert(r3, r4, r5);
-    L_800CF0C8: ;
-    r3 = r31;
-    r4 = r28;
-    r5 = r29;
-    r6 = r30;
-    r3 = fn_800E3484(r3, r4, r5, r6);
-    return r3;
 }
 
