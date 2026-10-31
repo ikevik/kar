@@ -11,6 +11,9 @@ extern GXRenderModeObj* rmode;
 extern int lbl_805DCBC0;
 extern int lbl_805DCBBC, lbl_805DE2A8;
 void HSD_OSInit();
+void* HSD_AllocateXFB(int nbuffer, GXRenderModeObj* rm);
+void HSD_GXInit(void);
+void HSD_ObjInit(void);
 
 char lbl_80503C60[] = "initialize.c";
 
@@ -51,4 +54,100 @@ void HSD_InitComponent(void)
 
 void HSD_DVDInit(void)
 {
+}
+
+extern void* fn_803D3C04(u32 size, u32 align);
+extern void fn_803CD204(GXLightObj*, f32, f32, f32);
+extern void func_803CD214(GXLightObj*, f32, f32, f32);
+extern void func_803CD230(GXLightObj*, GXColor);
+extern void GXInitLightAttn(GXLightObj*, f32, f32, f32, f32, f32, f32);
+extern void GXLoadLightObjImm(GXLightObj*, u32);
+extern u32 fn_803FF9D0(u32);
+extern void HSD_StateInvalidate(u32);
+extern void HSD_Panic(char* file, int line, char* msg);
+extern void __assert(const char*, unsigned long, const char*);
+extern void OSReport(const char*, ...);
+extern void* OSGetArenaLo(void);
+extern void* OSGetArenaHi(void);
+extern void OSSetArenaLo(void*);
+extern u32 OSGetPhysicalMemSize(void);
+extern s32 OSCreateHeap(void*, void*);
+extern s32 OSSetCurrentHeap(s32);
+extern void OSDestroyHeap(s32);
+extern s32 OSCheckHeap(s32);
+extern void* fn_803D360C(s32 heap, u32 size);
+extern void fn_803D3708(s32 heap, void* ptr);
+extern void _HSD_MemSetCallbacks(void* cbs, u32 size);
+extern u32 _HSD_MemGetRemain(void);
+extern u32 _HSD_MemFree(void);
+extern void HSD_ObjSetHeap(u32 size, void* ptr);
+extern void fn_803CF938(u32, u32);
+extern void fn_803CFAC0(u32, u32);
+extern void GXInvalidateVtxCache(void);
+extern void GXInvalidateTexAll(void);
+extern void func_8042122C(const char*);
+
+extern s32 lbl_805DCBB0;
+extern u32 lbl_805DCBB8;
+extern GXColor lbl_805DCBC4;
+extern u32 lbl_805DE290;
+extern u32 lbl_805DE294;
+extern u32 lbl_805DE298;
+extern u32 lbl_805DE29C;
+extern u32 lbl_805DE2A0;
+extern u32 lbl_805DE2A4;
+extern u32 lbl_805DE2AC;
+extern s32 lbl_805DE2B4;
+extern s32 lbl_805DE2B8;
+extern u32 lbl_805DE2C0;
+extern u32 lbl_805DE2C4;
+
+void* HSD_AllocateXFB(int nbuffer, GXRenderModeObj* rm)
+{
+    int i;
+    u32 size;
+    void* fb;
+
+    if (rm == NULL) {
+        return NULL;
+    }
+    size = ((rm->fbWidth + 15) & 0xFFF0) * rm->xfbHeight * 2;
+    memReport.xfb = size * nbuffer;
+    for (i = 0; i < nbuffer; i++) {
+        fb = fn_803D3C04(size, 32);
+        FrameBuffer[i] = fb;
+        if (fb == NULL) {
+            HSD_Panic("initialize.c", 244, "No memory space remains for XFB.\n");
+        }
+    }
+    for (i = nbuffer; i < HSD_VI_XFB_MAX; i++) {
+        FrameBuffer[i] = NULL;
+    }
+    return FrameBuffer;
+}
+
+void* HSD_AllocateFIFO(u32 size)
+{
+    void* fifo = fn_803D3C04(size, 32);
+    if (fifo == NULL) {
+        HSD_Panic("initialize.c", 263, "no space remains for gx fifo.\n");
+    }
+    return fifo;
+}
+
+void HSD_GXInit(void)
+{
+    GXLightObj lobj;
+    GXColor color;
+    int i;
+
+    fn_803CD204(&lobj, 1.0F, 0.0F, 0.0F);
+    func_803CD214(&lobj, 1.0F, 0.0F, 0.0F);
+    GXInitLightAttn(&lobj, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+    color = lbl_805DCBC4;
+    func_803CD230(&lobj, color);
+    for (i = 0; i < 8; i++) {
+        GXLoadLightObjImm(&lobj, fn_803FF9D0(i));
+    }
+    HSD_StateInvalidate(-1);
 }
