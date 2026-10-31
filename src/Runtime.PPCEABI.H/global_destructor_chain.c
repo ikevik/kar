@@ -23,3 +23,10 @@ void* __register_global_object(void* object, void* destructor, void* regmem)
     __global_destructor_chain = (DestructorChain*)regmem;
     return object;
 }
+
+extern char lbl_8048B5A8[];
+
+char* fn_803AD23C(void)
+{
+    return lbl_8048B5A8;
+}

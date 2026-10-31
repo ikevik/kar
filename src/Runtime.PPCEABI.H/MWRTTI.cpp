@@ -18,6 +18,24 @@ L_end:
     bctr
 }
 
+extern char lbl_804F874C[];
+extern char lbl_804F8730[];
+extern void fn_8038CB78(void*);
+
+void* fn_803AD9C4(void* self, short flags)
+{
+    if (self != 0) {
+        *(void**)self = lbl_804F874C;
+        if (self != 0) {
+            *(void**)self = lbl_804F8730;
+        }
+        if (flags > 0) {
+            fn_8038CB78(self);
+        }
+    }
+    return self;
+}
+
 char* fn_803ADA20(void)
 {
     return lbl_8048B5FC;
