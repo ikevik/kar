@@ -86,7 +86,43 @@ typedef void (*OSInterruptHandler)(s16 interrupt, OSContext* context);
 
 extern void OSReport(const char* msg, ...);
 extern void __OSSaveFPUContext(void);
-extern void UnlockSram(int commit, u32 offset);
+typedef struct SramControl {
+    u8 sram[64];
+    u32 offset;
+    int enabled;
+    int locked;
+    int sync;
+} SramControl;
+typedef struct OSSram {
+    u16 checkSum;
+    u16 checkSum2;
+    u32 ead0;
+    u32 ead1;
+    u32 counterBias;
+    s8 displayOffsetH;
+    u8 ntd;
+    u8 language;
+    u8 flags;
+} OSSram;
+typedef struct OSSramEx {
+    u8 flashID[2][12];
+    u32 wirelessKeyboardID;
+    u16 wirelessPadID[4];
+    u8 dvdErrorCode;
+    u8 padding0;
+    u8 flashIDCheckSum[2];
+    u16 gbs;
+    u8 padding1[2];
+} OSSramEx;
+extern int EXILock(s32 chan, u32 dev, void* cb);
+extern int EXIUnlock(s32 chan);
+extern int EXISelect(s32 chan, u32 dev, u32 freq);
+extern int EXIDeselect(s32 chan);
+extern int EXIImm(s32 chan, void* buf, s32 len, u32 type, void* cb);
+extern int EXIImmEx(s32 chan, void* buf, s32 len, u32 type);
+extern int EXISync(s32 chan);
+extern int EXIDma(s32 chan, void* buf, s32 len, u32 type, void* cb);
+extern void DCInvalidateRange(void* addr, u32 nBytes);
 extern int OSGetResetButtonState(void);
 extern void SelectThread(int yield);
 extern void OSInitThreadQueue(OSThreadQueue* queue);
@@ -96,7 +132,7 @@ extern u32 __OSMaskInterrupts(u32 mask);
 
 extern OSBootInfo* BootInfo_805DDE68;
 extern u8 DriveInfo_8056D560[];
-extern u8 Scb[];
+static SramControl Scb;
 extern OSExceptionHandler* OSExceptionTable;
 extern OSInterruptHandler* InterruptHandlerTable;
 extern HeapDesc* lbl_805DDEB0;
@@ -292,10 +328,123 @@ void fn_803D997C(void)
 }
 
 
+static int WriteSram(void* buffer, u32 offset, u32 size);
+
+#pragma peephole on
+void WriteSramCallback(s32 chan, OSContext* context)
+{
+    Scb.sync = WriteSram(Scb.sram + Scb.offset, Scb.offset, 64 - Scb.offset);
+    if (Scb.sync) {
+        Scb.offset = 64;
+    }
+}
+
+static int WriteSram(void* buffer, u32 offset, u32 size)
+{
+    int err;
+    u32 cmd;
+    if (!EXILock(0, 1, WriteSramCallback)) {
+        return 0;
+    }
+    if (!EXISelect(0, 1, 3)) {
+        EXIUnlock(0);
+        return 0;
+    }
+    offset <<= 6;
+    cmd = (offset + 0x100) | 0xA0000000;
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIImmEx(0, buffer, size, 1);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+static int ReadSram(void* buffer)
+{
+    int err;
+    u32 cmd;
+    DCInvalidateRange(buffer, 64);
+    if (!EXILock(0, 1, 0)) {
+        return 0;
+    }
+    if (!EXISelect(0, 1, 3)) {
+        EXIUnlock(0);
+        return 0;
+    }
+    cmd = 0x20000100;
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIDma(0, buffer, 64, 0, 0);
+    err |= !EXISync(0);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+void __OSInitSram(void)
+{
+    Scb.locked = Scb.enabled = 0;
+    Scb.sync = ReadSram(Scb.sram);
+    Scb.offset = 64;
+}
+
+static void* LockSram(u32 offset)
+{
+    int enabled = OSDisableInterrupts();
+    if (Scb.locked != 0) {
+        OSRestoreInterrupts(enabled);
+        return 0;
+    }
+    Scb.enabled = enabled;
+    Scb.locked = 1;
+    return Scb.sram + offset;
+}
+
+void* __OSLockSram(void)
+{
+    return LockSram(0);
+}
+
+void* __OSLockSramEx(void)
+{
+    return LockSram(20);
+}
+
+int UnlockSram(int commit, u32 offset)
+{
+    u16* p;
+    if (commit) {
+        if (offset == 0) {
+            OSSram* sram = (OSSram*)Scb.sram;
+            if (2 < (u32)(sram->flags & 3)) {
+                sram->flags &= ~3;
+            }
+            sram->checkSum = sram->checkSum2 = 0;
+            for (p = (u16*)&sram->counterBias; p < (u16*)(Scb.sram + 20); p++) {
+                sram->checkSum += *p;
+                sram->checkSum2 += ~*p;
+            }
+        }
+        if (offset < Scb.offset) {
+            Scb.offset = offset;
+        }
+        Scb.sync = WriteSram(Scb.sram + Scb.offset, Scb.offset, 64 - Scb.offset);
+        if (Scb.sync) {
+            Scb.offset = 64;
+        }
+    }
+    Scb.locked = 0;
+    OSRestoreInterrupts(Scb.enabled);
+    return Scb.sync;
+}
+
 #pragma peephole on
 u32 __OSSyncSram(void)
 {
-    return *(u32*)(Scb + 0x4C);
+    return Scb.sync;
 }
 
 #pragma peephole on
@@ -308,6 +457,89 @@ void __OSUnlockSram(int commit)
 void __OSUnlockSramEx(int commit)
 {
     UnlockSram(commit, 0x14);
+}
+
+int fn_803D946C(void* buffer, s32 length, s32 offset)
+{
+    u32 cmd;
+    int err;
+    DCInvalidateRange(buffer, (u32)length);
+    if (EXILock(0, 1, 0) == 0) {
+        return 0;
+    }
+    if (EXISelect(0, 1, 3) == 0) {
+        EXIUnlock(0);
+        return 0;
+    }
+    cmd = (u32)(offset << 6);
+    err = 0;
+    err |= !EXIImm(0, &cmd, 4, 1, 0);
+    err |= !EXISync(0);
+    err |= !EXIDma(0, buffer, length, 0, 0);
+    err |= !EXISync(0);
+    err |= !EXIDeselect(0);
+    EXIUnlock(0);
+    return !err;
+}
+
+u32 OSGetSoundMode(void)
+{
+    OSSram* sram;
+    u32 mode;
+    sram = (OSSram*)__OSLockSram();
+    mode = (sram->flags & 4) ? 1 : 0;
+    __OSUnlockSram(0);
+    return mode;
+}
+
+void OSSetSoundMode(u32 mode)
+{
+    OSSram* sram;
+    mode <<= 2;
+    mode &= 4;
+    sram = (OSSram*)__OSLockSram();
+    if (mode == (sram->flags & 4)) {
+        __OSUnlockSram(0);
+    } else {
+        sram->flags &= ~4;
+        sram->flags |= mode;
+        __OSUnlockSram(1);
+    }
+}
+
+u32 OSGetProgressiveMode(void)
+{
+    OSSram* sram;
+    u32 mode;
+    sram = (OSSram*)__OSLockSram();
+    mode = (sram->flags >> 7) & 1;
+    __OSUnlockSram(0);
+    return mode;
+}
+
+void OSSetProgressiveMode(u32 mode)
+{
+    OSSram* sram;
+    mode <<= 7;
+    mode &= 0x80;
+    sram = (OSSram*)__OSLockSram();
+    if (mode == (sram->flags & 0x80)) {
+        __OSUnlockSram(0);
+        return;
+    }
+    sram->flags &= ~0x80;
+    sram->flags |= mode;
+    __OSUnlockSram(1);
+}
+
+u16 OSGetWirelessID(s32 channel)
+{
+    OSSramEx* sram;
+    u16 id;
+    sram = (OSSramEx*)__OSLockSramEx();
+    id = sram->wirelessPadID[channel];
+    __OSUnlockSramEx(0);
+    return id;
 }
 
 #pragma peephole on
@@ -1059,13 +1291,12 @@ void OSSetCurrentContext(OSContext* context)
 #endif
 
 #if 1
-#pragma peephole off
+#pragma peephole on
 void __OSModuleInit(void)
 {
-    u32* base = (u32*)0x80003000;
-    base[0xCC / 4] = 0;
-    base[0xC8 / 4] = 0;
-    base[0xD0 / 4] = 0;
+    *(u32*)0x800030CC = 0;
+    *(u32*)0x800030C8 = 0;
+    *(u32*)0x800030D0 = 0;
 }
 #endif
 
@@ -1097,7 +1328,7 @@ s32 __OSGetEffectivePriority(OSThread* thread)
 }
 
 #if 1
-#pragma peephole off
+#pragma peephole on
 int OSOnReset(int final)
 {
     if (final) {
