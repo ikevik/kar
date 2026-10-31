@@ -329,6 +329,8 @@ return 0;
 }
 
 /* ---- w3f batch 1 ---- */
+typedef struct { int f0, f4, f8, fc, f10, f14, f18; } E1C;
+typedef struct { char pad[0x600]; E1C a[2]; } S600;
 extern int lbl_805DE5A0;
 extern char lbl_805B9C90[];
 extern int fn_80471DA8();
@@ -346,11 +348,12 @@ int fn_8045BC18(a, b) int a; int b; {
     return (a + b - 33) / (b - 32);
 }
 void fn_8045ADDC(i, v) int i; int v; {
-    *(int*)(lbl_8059A880 + i * 0x1C + 0x618) = v;
+    ((S600*)lbl_8059A880)->a[i].f18 = v;
 }
 void fn_8045BE20(a) int a; {
+    char* b = lbl_805B4698;
     if (a < 0 || a > 31) a = 31;
-    *(int*)(lbl_805B4698 + 0x320) = a;
+    *(int*)(b + 0x320) = a;
 }
 void fn_8045BDC4(d, s) char* d; char* s; {
     char c;
@@ -362,14 +365,17 @@ void fn_8045BDC4(d, s) char* d; char* s; {
     *d = 0;
 }
 int fn_8045336C(i) int i; {
+    S600* b = (S600*)lbl_8059A880;
     if (i < 0 || i > 1) i = 0;
-    return *(int*)(lbl_8059A880 + i * 0x1C + 0x608);
+    return b->a[i].f8;
 }
 int fn_80453398(i) int i; {
+    S600* b = (S600*)lbl_8059A880;
     if (i < 0 || i > 1) i = 0;
-    return *(int*)(lbl_8059A880 + i * 0x1C + 0x614);
+    return b->a[i].f14;
 }
 int fn_804533C4(i) int i; {
+    S600* b = (S600*)lbl_8059A880;
     if (i < 0 || i > 1) i = 0;
-    return *(int*)(lbl_8059A880 + i * 0x1C + 0x600);
+    return b->a[i].f0;
 }
