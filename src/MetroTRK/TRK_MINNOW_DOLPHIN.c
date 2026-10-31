@@ -658,8 +658,8 @@ s32 TRKGetNextEvent(TRKEvent* event)
     fn_803BFF30(&lbl_80569E60);
     if (lbl_80569E60.count > 0) {
         TRK_memcpy(event, &lbl_80569E60.events[lbl_80569E60.next], 12);
-        lbl_80569E60.next++;
         lbl_80569E60.count--;
+        lbl_80569E60.next++;
         if (lbl_80569E60.next == 2) {
             lbl_80569E60.next = 0;
         }
@@ -787,6 +787,7 @@ s32 TRKInitializeSerialHandler(void)
     return 0;
 }
 
+#pragma peephole off
 s32 TRKDoSetOption(TRKBuffer* buf)
 {
     TRKReply reply;
@@ -809,6 +810,7 @@ s32 TRKDoSetOption(TRKBuffer* buf)
     fn_803C2388(&reply, 0x40);
     return 0;
 }
+#pragma peephole reset
 
 s32 TRKDoStop(void)
 {
