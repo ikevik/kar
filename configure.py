@@ -312,14 +312,14 @@ config.libs = [
         "Runtime.PPCEABI.H",
         "sdk",
         [
-            Object(NonMatching, "Runtime.PPCEABI.H/__va_arg.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/NMWException.cpp"),
-            Object(NonMatching, "Runtime.PPCEABI.H/MWRTTI.cpp"),
-            Object(Matching, "Runtime.PPCEABI.H/runtime.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/__va_arg.c", cflags=cflags_runtime),
+            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c", cflags=cflags_runtime),
+            Object(NonMatching, "Runtime.PPCEABI.H/NMWException.cpp", cflags=cflags_runtime),
+            Object(NonMatching, "Runtime.PPCEABI.H/MWRTTI.cpp", cflags=cflags_runtime),
+            Object(Matching, "Runtime.PPCEABI.H/runtime.c", cflags=cflags_runtime),
             Object(NonMatching, "__init_cpp_exceptions.cpp"),
-            Object(NonMatching, "Runtime.PPCEABI.H/Gecko_ExceptionPPC.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/Gecko_ExceptionPPC.c", cflags=cflags_runtime),
+            Object(NonMatching, "Runtime.PPCEABI.H/GCN_mem_alloc.c", cflags=cflags_runtime),
         ],
     ),
     Lib(
@@ -452,7 +452,7 @@ config.libs = [
         "Runtime.PPCEABI.H",
         "sdk",
         [
-            Object(NonMatching, "Runtime.PPCEABI.H/__mem.c"),
+            Object(NonMatching, "Runtime.PPCEABI.H/__mem.c", cflags=cflags_runtime),
         ],
     ),
     Lib(
