@@ -399,6 +399,8 @@ typedef struct { u8 f:2; } BFu8_0_2;
 typedef struct { u8 f:1; } BFu8_0_1;
 extern u8 lbl_80550D58[];
 extern u8 lbl_80499468[];
+extern const float lbl_805DEB24;
+extern const float lbl_805DEB20;
 extern u8 lbl_80550D88[];
 extern u32 lbl_805D5358;
 extern u8 lbl_80499CD8[];
@@ -419,6 +421,7 @@ void fn_8007D718(void);
 void fn_8007D7F0(void);
 extern u32 lbl_805D5478;
 extern u8 lbl_8049B9D0[];
+extern const float lbl_805DEE10;
 extern u8 lbl_80552F78[];
 void fn_800849B8(void);
 extern u8 lbl_80553044[];
@@ -430,6 +433,8 @@ extern u8 lbl_8049BFB0[];
 extern u32 lbl_805D5758;
 extern u8 lbl_805530D8[];
 void fn_80098548(void);
+extern const float lbl_805DF004;
+extern const float lbl_805DF010;
 extern const float lbl_805DF070;
 extern const float lbl_805DF074;
 extern u8 lbl_8049E6B4[];
@@ -451,12 +456,15 @@ extern u32 lbl_805DD6A8;
 u32 fn_80442A10(u32, u32, u32, u32, u32);
 void fn_80442CFC(u32, u32);
 void fn_803D798C(u32, u32, u32);
+void fn_803D7A54(u32, u32, u32);
 void fn_80413A6C(void);
 void fn_80413AA4(void);
 void fn_800638F8(u32, float, float);
 float PSVECMag(u32);
 void fn_80063F8C(u32, u32, float);
-void HSD_CObjLoadDesc(u32);
+u32 HSD_CObjLoadDesc(u32);
+void HSD_CObjGetViewportf(u32, u32);
+void HSD_CObjSetAspect(float, float, float);
 void fn_80064770(u32, u32);
 u32 fn_80057468(u32, u32, u32);
 u32 fn_8006DCC0(u32, u32, u32, u32, u32, u32, u32);
@@ -508,6 +516,7 @@ void fn_80080804(u32, u32);
 void fn_80083D20(u32, u32);
 void fn_80080858(u32, u32);
 void fn_801957AC(u32);
+void fn_8007E500(u32, u32, u32);
 u32 fn_80005D04(u32);
 void gmSetFreezeGameFlag(u32);
 u32 func_80428F28(u32, u32, u32);
@@ -523,11 +532,25 @@ void fn_800A0650(void);
 void fn_800A3E64(void);
 void fn_800A9AE4(void);
 void fn_800A9F60(void);
+void fn_8008B1E0(u32, u32, u32, float, float, float);
 void fn_800A12F0(u32, u32, u32, u32, u32, float, float);
 u32 fn_800E2C84(u32, u32, u32, u32, u32, float, float);
 u32 fn_800CF600(u32);
 u32 fn_800CF66C(u32);
 void fn_800A16A8(float, float);
+u32 HSD_CObjGetCurrent(u32, u32, u32);
+void HSD_CObjGetViewingMtx(u32, u32);
+void fn_803CAC04(void);
+void GXSetVtxAttrFmt(u32, u32, u32, u32, u32);
+void GXSetVtxDesc(u32, u32);
+void GXLoadPosMtxImm(u32, u32);
+void fn_803D1670(u32, u32);
+void fn_803D078C(u32, u32);
+void GXSetCurrentMtx(u32);
+void fn_80098E30(u32);
+void fn_803CD3AC(u32, u32);
+void fn_803CD2B8(u32, u32);
+void fn_803CC518(u32);
 void fn_800A1680(u32, u32, u32, u32);
 void HSD_GObj_AddProc(u32, u32, u32);
 u32 fn_8044F674(u32, u32, u32, u32, u32, u32, u32, u32);
@@ -596,6 +619,11 @@ void fn_80062900(u32 p3) {
     fn_803D798C((((u32)lbl_80550CA8+(p3*36))+52), 1, 0);
 }
 
+void fn_8006293C(u32 p3) {
+    u32 L8[2];
+    fn_803D7A54((((u32)lbl_80550CA8+(p3*36))+52), (u32)L8, 1);
+}
+
 void fn_80062978(void) {
     u32 c0;
     c0 = fn_8007B640();
@@ -648,6 +676,24 @@ void fn_800657E0(u32 p3) {
 
 void InitCamera(void) {
     HSD_CObjLoadDesc((u32)lbl_80499468);
+}
+
+float fn_80066D44(u32 p3) {
+    float L8[6];
+    float v1;
+    float v2;
+    float v3;
+    float v4;
+    float v5;
+    float v6;
+    HSD_CObjGetViewportf(p3, (u32)L8);
+    v1 = L8[1];
+    v2 = L8[0];
+    v3 = L8[3];
+    v4 = L8[2];
+    v5 = lbl_805DEB24;
+    v6 = lbl_805DEB20;
+    return (v6*(((v1-v2)/(v3-v4))/v5));
 }
 
 void fn_80068538(u32 p3) {
@@ -918,6 +964,24 @@ void fn_8007FEF4(u32 p3) {
     fn_80083D20(p3, (v10&0xff));
 }
 
+void fn_8007FFE4(u32 p3, u32 p4) {
+    float L8[6];
+    float v1;
+    u32 v2;
+    float v3;
+    float v4;
+    float v5;
+    v1 = lbl_805DEE10;
+    v2 = M32(((u32)p3+44));
+    v3 = MF(((u32)v2+732));
+    L8[0] = (v3*v1);
+    v4 = MF(((u32)v2+736));
+    L8[1] = (v4*v1);
+    v5 = MF(((u32)v2+740));
+    L8[2] = (v5*v1);
+    fn_8007E40C(p4, (v2+768), (u32)L8, v2, v1);
+}
+
 u32 fn_800822B4(void) {
     u32 v1;
     v1 = M8(&lbl_80552E08[0]);
@@ -928,12 +992,6 @@ void fn_80083644(u32 p3, u32 p4) {
     u32 v1;
     v1 = M32(((u32)p3+44));
     fn_8007E1A0(p4, (v1+760), (v1+820), (v1+832));
-}
-
-void fn_800836E4(u32 p3, u32 p4) {
-    u32 v1;
-    v1 = M32(((u32)p3+44));
-    fn_8007E40C(p4, (v1+760), (v1+748));
 }
 
 u32 fn_80083714(void) {
@@ -958,12 +1016,6 @@ void fn_80083D90(u32 p3, u32 p4) {
     u32 v1;
     v1 = M32(((u32)p3+44));
     fn_8007E1A0(p4, (v1+172), (v1+208), (v1+220));
-}
-
-void fn_80083DC4(u32 p3, u32 p4) {
-    u32 v1;
-    v1 = M32(((u32)p3+44));
-    fn_8007E40C(p4, (v1+172), (v1+148));
 }
 
 void fn_80084B80(void) {
@@ -1112,6 +1164,23 @@ void fn_80098AD8(void) {
     fn_800A98FC();
     fn_800A9AE4();
     fn_800A9F60();
+}
+
+void fn_8009A3D8(u32 p3, float q1, float q2) {
+    float L8[3];
+    float L20[5];
+    float v1;
+    float v2;
+    v1 = lbl_805DF004;
+    v2 = lbl_805DF010;
+    L20[0] = v1;
+    L20[1] = v1;
+    L20[2] = v1;
+    L8[0] = v1;
+    L8[1] = v2;
+    L8[2] = v1;
+    fn_8008B1E0(p3, (u32)L20, (u32)L8, q1, q2, v1);
+    fn_80062CA4(p3, p3);
 }
 
 float fn_8009DB18(void) {
