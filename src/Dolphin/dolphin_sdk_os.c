@@ -1113,12 +1113,14 @@ u16 OSGetFontEncode(void)
     return lbl_805DC998;
 }
 
-#pragma peephole off
-void OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
+#pragma peephole on
+void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
 {
+    u32 arraySize;
     int i;
     lbl_805DDEB0 = arenaStart;
     lbl_805DDEB4 = maxHeaps;
+    arraySize = maxHeaps * sizeof(HeapDesc);
     for (i = 0; i < lbl_805DDEB4; i++) {
         HeapDesc* hd = &lbl_805DDEB0[i];
         hd->size = -1;
@@ -1126,7 +1128,10 @@ void OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
     }
     lbl_805DDEBC = (u32)arenaEnd & ~31;
     lbl_805DC978 = -1;
-    lbl_805DDEB8 = (void*)(((u32)(lbl_805DDEB0 + maxHeaps) + 31) & ~31);
+    arenaStart = (void*)((u32)lbl_805DDEB0 + arraySize);
+    arenaStart = (void*)(((u32)arenaStart + 31) & ~31);
+    lbl_805DDEB8 = arenaStart;
+    return arenaStart;
 }
 
 #pragma peephole on
