@@ -1643,6 +1643,47 @@ u32 debug_subMenu_InBetween1(u32 p3) {
     return 0;
 }
 
+typedef struct { u8 :6; u8 f:2; } BFu8_6_2;
+u32 fn_80060FA0(u32);
+u32 fn_800604BC(u32, u32, float);
+u32 fn_80060ED0(u32, u32, float);
+u32 fn_80444CC4(u32);
+u32 fn_80444FE0(u32);
+u32 fn_8006580C(u32, u32);
+u32 fn_802414D4(u32, u32);
+u32 fn_800A3AB0(u32, u32, u32, float);
+u32 fn_800AAD94(u32, float);
+
+u32 fn_80061ACC(void) {
+    u32 ph0;
+    u32 c0;
+    ph0 = 4;
+    do {
+        c0 = fn_80444CC4(ph0);
+        ph0 = (ph0+1);
+    } while ((s32)ph0 <= (s32)62);
+    return c0;
+}
+
+u32 fn_80061B08(void) {
+    u32 ph0;
+    u32 c0;
+    ph0 = 4;
+    do {
+        c0 = fn_80444FE0(ph0);
+        ph0 = (ph0+1);
+    } while ((s32)ph0 <= (s32)62);
+    return c0;
+}
+
+void fn_800836E4(u32 p3, u32 p4) {
+    fn_8007E40C(p4, ((M32(((u32)p3+44)))+760), ((M32(((u32)p3+44)))+748));
+}
+
+void fn_80083DC4(u32 p3, u32 p4) {
+    fn_8007E40C(p4, ((M32(((u32)p3+44)))+172), ((M32(((u32)p3+44)))+148));
+}
+
 
 
 
