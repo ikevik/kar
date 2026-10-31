@@ -35,22 +35,33 @@ typedef struct OSThreadQueue {
     void* tail;
 } OSThreadQueue;
 
-extern vu32 __DIRegs_[];
-#define __DIRegs ((u32*)0xCC006000)
+#define __DIRegs ((vu32*)0xCC006000)
 
 extern int OSDisableInterrupts(void);
 extern int OSRestoreInterrupts(int level);
 extern void OSWakeupThread(OSThreadQueue* queue);
 extern void OSInitAlarm(void);
+typedef struct OSAlarm OSAlarm;
+typedef void (*OSAlarmHandler)(OSAlarm* alarm, void* context);
+extern void OSCreateAlarm(OSAlarm* alarm);
+extern void OSSetAlarm(OSAlarm* alarm, s64 tick, OSAlarmHandler handler);
+extern OSAlarm AlarmForTimeout_8056CBA8;
+extern void AlarmHandlerForTimeout(OSAlarm* alarm, void* context);
+#define OS_BUS_CLOCK (*(u32*)0x800000F8)
+#define OS_TIMER_CLOCK (OS_BUS_CLOCK / 4)
+#define OSSecondsToTicks(sec) ((s64)(u32)((sec) * OS_TIMER_CLOCK))
+#define SET_TIMEOUT() { u32 ticks = OS_TIMER_CLOCK * 10; OSCreateAlarm(&AlarmForTimeout_8056CBA8); OSSetAlarm(&AlarmForTimeout_8056CBA8, (s64)ticks, AlarmHandlerForTimeout); }
 extern void DCInvalidateRange(void* addr, u32 nBytes);
 extern int DVDCancel(DVDCommandBlock* block);
 
 extern void DVDLowReset(void);
-extern int DVDLowRequestError(DVDLowCallback cb);
-extern int DVDLowStopMotor(DVDLowCallback cb);
-extern int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback cb);
-extern int DVDLowRead(void* addr, u32 length, u32 offset, DVDLowCallback cb);
-extern void fn_803C4958(void* addr, DVDLowCallback cb);
+int DVDLowRead(void* addr, u32 length, u32 offset, DVDLowCallback cb);
+int fn_803C4958(void* addr, DVDLowCallback cb);
+int DVDLowStopMotor(DVDLowCallback cb);
+int DVDLowRequestError(DVDLowCallback cb);
+int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback cb);
+int DVDLowWaitCoverClose(DVDLowCallback cb);
+int fn_803C4898(u32 offset, DVDLowCallback cb);
 extern void __DVDStoreErrorCode(u32 error);
 extern void cbForStateError(u32 intType);
 extern void cbForStateGettingError(u32 intType);
@@ -258,4 +269,95 @@ void fn_803C78BC(void)
         stateReady();
     }
     OSRestoreInterrupts(enabled);
+}
+
+int DVDLowStopMotor(DVDLowCallback callback)
+{
+    vu32* regs = __DIRegs;
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    regs[2] = 0xE3000000;
+    regs[7] = 1;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int DVDLowRequestError(DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0xE0000000;
+    __DIRegs[7] = 1;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int fn_803C4898(u32 offset, DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0xAB000000;
+    __DIRegs[3] = offset >> 2;
+    __DIRegs[7] = 1;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0xE2000000 | subcmd;
+    __DIRegs[7] = 1;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0xE1000000 | mode;
+    __DIRegs[3] = offset >> 2;
+    __DIRegs[4] = length;
+    __DIRegs[7] = 1;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int fn_803C4B14(void* addr, DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0x12000000;
+    __DIRegs[4] = 0x20;
+    __DIRegs[5] = (u32)addr;
+    __DIRegs[6] = 0x20;
+    __DIRegs[7] = 3;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int fn_803C4958(void* addr, DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0xA8000040;
+    __DIRegs[3] = 0;
+    __DIRegs[4] = 0x20;
+    __DIRegs[5] = (u32)addr;
+    __DIRegs[6] = 0x20;
+    __DIRegs[7] = 3;
+    SET_TIMEOUT();
+    return 1;
+}
+
+int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
+{
+    Callback = callback;
+    StopAtNextInt_805DDD40 = 0;
+    __DIRegs[2] = 0xE4000000 | (enable ? 0x10000 : 0) | size;
+    __DIRegs[7] = 1;
+    SET_TIMEOUT();
+    return 1;
 }
