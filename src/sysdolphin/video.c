@@ -77,7 +77,7 @@ HSD_VICallback fn_80410AE4(HSD_VICallback cb)
 }
 
 void fn_80410B8C(void* retrace);
-#if 0 /* not yet matching */
+#if 0 /* near miss: 2 lines (store order) */
 void fn_80410B8C(void* retrace)
 {
     s32 changed = 0;
@@ -115,9 +115,8 @@ void fn_80410B8C(void* retrace)
         lbl_805DE2CC++;
     lbl_805DE2C8++;
     if (lbl_805DE2C8 >= VI_AT(s32, 0x1EC)) {
-        s32 t = lbl_805DE2CC;
+        VI_AT(s32, 0x1F0) = lbl_805DE2CC;
         lbl_805DE2C8 = 0;
-        VI_AT(s32, 0x1F0) = t;
         lbl_805DE2CC = 0;
     }
     if (lbl_80589A80.pre_retrace != NULL)
