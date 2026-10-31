@@ -4,7 +4,7 @@ typedef signed long s32;
 
 typedef struct TRKBuffer {
     u32 mutex;
-    u32 isUsed;
+    s32 isUsed;
     u32 length;
     u32 position;
     u8 data[0x880];
@@ -185,11 +185,12 @@ void TRKReleaseBuffer(s32 idx)
 
 s32 TRKGetFreeBuffer(s32* idxOut, TRKBuffer** bufOut)
 {
+    TRKBuffer* buf;
     s32 err = 0x300;
     s32 i;
     *bufOut = 0;
     for (i = 0; i < 3; i++) {
-        TRKBuffer* buf = 0;
+        buf = 0;
         if (i >= 0 && i < 3) {
             buf = (TRKBuffer*)(lbl_80569E90 + i * 0x890);
         }
@@ -213,8 +214,9 @@ s32 TRKGetFreeBuffer(s32* idxOut, TRKBuffer** bufOut)
 
 s32 TRKInitializeMessageBuffers(void)
 {
+    TRKBuffer* buf;
     s32 i;
-    TRKBuffer* buf = (TRKBuffer*)lbl_80569E90;
+    buf = (TRKBuffer*)lbl_80569E90;
     for (i = 0; i < 3; i++) {
         fn_803BFF38(buf);
         fn_803BFF30(buf);
