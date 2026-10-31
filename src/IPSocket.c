@@ -1,3 +1,4 @@
+#pragma dont_inline on
 typedef unsigned char u8;
 typedef signed short s16;
 typedef unsigned long u32;
@@ -45,9 +46,9 @@ char* SOInetNtoP(int af, u8* src, char* dst, u32 len)
     return 0;
 }
 
-int SOGetHostID(void)
+u32 SOGetHostID(void)
 {
-    int id;
+    u32 id;
     fn_8046D7FC(0, &id);
     return id;
 }
