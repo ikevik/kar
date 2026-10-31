@@ -540,10 +540,10 @@ void fn_803F28A4(u32);
 void fn_8007744C(u32, u32);
 void fn_8045E978(void);
 void OSEnableInterrupts(u32);
-u32 HSD_Alloc(u32);
+u32 HSD_Alloc();
 float __assert(u32, u32, u32);
-u32 OSCreateThread(u32, u32, u32, u32, u32, u32, u32, float);
-void OSResumeThread(u32, float);
+u32 OSCreateThread();
+void OSResumeThread();
 u32 HVQM4PlayerExControlExit(u32);
 void fn_80459FBC(u32, u32);
 float fn_80062CA4();
@@ -564,7 +564,7 @@ void fn_80440130(u32, u32, u32);
 u32 fn_80191C84(u32);
 void fn_8008C718(u32);
 void fn_8008C63C(u32);
-u32 fn_80192764(u32, u32, u32);
+u32 fn_80192764();
 float fn_80080804(u32, u32);
 void fn_80083D20(u32, u32, float);
 float fn_80080858(u32, u32);
@@ -576,10 +576,10 @@ void gmSetFreezeGameFlag(u32);
 u32 func_80428F28();
 void HSD_GObj_AddGXLink(u32, u32, u32, u32);
 float fn_80085D1C(u32);
-u32 fn_80084FA0(u32, float);
-u32 fn_80085674(u32, float);
-u32 fn_8008A1F8(u32, float);
-void fn_80084D0C(u32, float);
+u32 fn_80084FA0();
+u32 fn_80085674();
+u32 fn_8008A1F8();
+void fn_80084D0C();
 void fn_80086120(void);
 void fn_80088078(u32, u32);
 void fn_80088110(u32);
@@ -1712,11 +1712,11 @@ u32 fn_8045F714(u32);
 u32 fn_800A97E0(void);
 u32 fn_800A9854(u32, u32);
 u32 fn_8020438C(u32);
-void HSD_StateInvalidate(u32);
+void HSD_StateInvalidate();
 void fn_8040E390(u32, u32);
 void GXSetLineWidth(u32, u32);
-void GXBegin(u32, u32, u32);
-void fn_8007E128(u32, u32, u32);
+void GXBegin();
+void fn_8007E128();
 void fn_803CC474(u32, u32);
 
 void fn_800611B0(void) {
@@ -2385,6 +2385,45 @@ void fn_800AB9BC(float q1) {
     float v1;
     v1 = lbl_805DF18C;
     fn_803CC474(((s32)(v1*q1)), 5);
+}
+
+extern u8 lbl_80553C9C[];
+u32 fn_800CF058(void);
+
+u32 fn_8008FCA4(u32 p3, u32 p4) {
+    u32 s31;
+    u32 s30;
+    u32 v1;
+    u32 c0;
+    s31 = 0;
+    s30 = p4;
+    c0 = fn_800CF058();
+    if ((s32)c0 > (s32)1) {
+        if ((s32)(s30&0xc0000) != (s32)0) {
+            s31 = 1;
+            v1 = M32(((u32)(u32)lbl_80553C9C+120));
+            M32(((u32)(u32)lbl_80553C9C+120)) = (v1^1);
+        }
+    }
+    return s31;
+}
+
+u32 fn_8008FD08(u32 p3, u32 p4) {
+    u32 s31;
+    u32 s30;
+    u32 v1;
+    u32 c0;
+    s31 = 0;
+    s30 = p4;
+    c0 = fn_800CF058();
+    if ((s32)c0 > (s32)1) {
+        if ((s32)(s30&0xc0000) != (s32)0) {
+            s31 = 1;
+            v1 = M32(((u32)(u32)lbl_80553C9C+120));
+            M32(((u32)(u32)lbl_80553C9C+120)) = (v1^2);
+        }
+    }
+    return s31;
 }
 
 
