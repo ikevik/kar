@@ -1,6 +1,7 @@
 #include "initialize.h"
 
 #include <sysdolphin/video.h>
+#include <sysdolphin/objalloc.h>
 
 extern void* FrameBuffer[HSD_VI_XFB_MAX];
 extern HSD_MemReport memReport;
@@ -109,6 +110,7 @@ extern u32 lbl_805DE2A4;
 extern u32 lbl_805DE2AC;
 extern s32 lbl_805DE2B4;
 extern s32 lbl_805DE2B8;
+extern s32 lbl_805DE2BC;
 extern s32 lbl_805DE2C0;
 extern u32 lbl_805DE2C4;
 
@@ -161,6 +163,83 @@ void HSD_GXInit(void)
     }
     HSD_StateInvalidate(-1);
 }
+
+typedef struct {
+    void* (*alloc)(u32);
+    void (*free)(void*);
+    void (*reset)(void);
+    void (*check)(void);
+    BOOL (*in_range)(u32);
+} HSD_MemCallbacks;
+
+void* HSD_MemAllocCallback(u32 size);
+void HSD_MemFreeCallback(void* ptr);
+void HSD_MemCheckCallback(void);
+void HSD_MemResetCallback(void);
+BOOL HSD_MemInRangeCallback(u32 ptr);
+
+#ifdef NONMATCHING /* 99.1% */
+void HSD_OSInit()
+{
+    HSD_MemCallbacks callbacks;
+    u32 arena_lo;
+    u32 arena_hi;
+    u32 i;
+
+    OSGetArenaLo();
+    OSGetArenaHi();
+    memReport.total = OSGetPhysicalMemSize();
+    arena_lo = (u32) OSGetArenaLo();
+    arena_hi = (u32) OSGetArenaHi();
+    memReport.system = memReport.total - arena_hi + arena_lo - memReport.xfb - memReport.gxfifo;
+    if (lbl_805DE2B8 == 0) {
+        callbacks.alloc = HSD_MemAllocCallback;
+        callbacks.free = HSD_MemFreeCallback;
+        callbacks.check = HSD_MemCheckCallback;
+        callbacks.reset = HSD_MemResetCallback;
+        callbacks.in_range = HSD_MemInRangeCallback;
+        _HSD_MemSetCallbacks(&callbacks, sizeof(callbacks));
+        if (lbl_805DE298 != 0 && lbl_805DE29C != 0) {
+            lbl_805DE290 = lbl_805DE298;
+            lbl_805DE294 = lbl_805DE29C;
+            lbl_805DE298 = 0;
+            lbl_805DE29C = 0;
+            if (lbl_805DE2A0 != 0) {
+                for (i = 0; i < (lbl_805DE294 - lbl_805DE290) >> 2; i++) {
+                    ((u32*) lbl_805DE290)[i] = lbl_805DE2A4;
+                }
+            }
+            lbl_805DCBB0 = OSCreateHeap((void*) lbl_805DE290, (void*) lbl_805DE294);
+            OSSetCurrentHeap(lbl_805DCBB0);
+            memReport.heap = lbl_805DE294 - lbl_805DE290;
+            HSD_ObjSetHeap(memReport.heap, NULL);
+        } else {
+            arena_lo = ((u32) OSGetArenaLo() + 31) & ~31;
+            arena_hi = (u32) OSGetArenaHi();
+            lbl_805DE290 = arena_lo;
+            if (lbl_805DE2B4 > 0) {
+                lbl_805DE294 = arena_lo + lbl_805DE2B4;
+                if (lbl_805DE294 > arena_hi) {
+                    lbl_805DE294 = arena_hi;
+                }
+                lbl_805DE294 &= ~31;
+            } else {
+                lbl_805DE294 = arena_hi & ~31;
+            }
+            if (lbl_805DE2A0 != 0) {
+                for (i = 0; i < (lbl_805DE294 - lbl_805DE290) >> 2; i++) {
+                    ((u32*) lbl_805DE290)[i] = lbl_805DE2A4;
+                }
+            }
+            lbl_805DCBB0 = OSCreateHeap((void*) lbl_805DE290, (void*) lbl_805DE294);
+            OSSetCurrentHeap(lbl_805DCBB0);
+            memReport.heap = lbl_805DE294 - lbl_805DE290;
+            HSD_ObjSetHeap(memReport.heap, NULL);
+            OSSetArenaLo((void*) lbl_805DE294);
+        }
+    }
+}
+#endif
 
 void* HSD_MemAllocCallback(u32 size)
 {
@@ -351,3 +430,187 @@ void HSD_ObjInit(void)
     HSD_ZListInitAllocData();
 }
 
+
+typedef struct {
+    HSD_ObjAllocData* (*get)(void);
+    char* name;
+} AllocReportEntry;
+
+extern HSD_ObjAllocData* fn_803FB16C(void);
+extern HSD_ObjAllocData* HSD_FObjGetAllocData(void);
+extern HSD_ObjAllocData* HSD_IDGetAllocData(void);
+extern HSD_ObjAllocData* HSD_SListGetAllocData(void);
+extern HSD_ObjAllocData* HSD_DListGetAllocData(void);
+extern HSD_ObjAllocData* HSD_VecGetAllocData(void);
+extern HSD_ObjAllocData* HSD_MtxGetAllocData(void);
+extern HSD_ObjAllocData* HSD_RObjGetAllocData(void);
+extern HSD_ObjAllocData* HSD_RvalueObjGetAllocData(void);
+extern HSD_ObjAllocData* HSD_ShadowGetAllocData(void);
+extern HSD_ObjAllocData* HSD_RenderGetAllocData(void);
+extern HSD_ObjAllocData* HSD_ChanGetAllocData(void);
+extern HSD_ObjAllocData* HSD_TevRegGetAllocData(void);
+
+static inline u32 HSD_ObjAllocGetPeak(HSD_ObjAllocData* data)
+{
+    if (data == NULL) {
+        __assert("objalloc.h", 237, "data");
+    }
+    return data->peak;
+}
+
+static inline u32 HSD_ObjAllocGetFree(HSD_ObjAllocData* data)
+{
+    if (data == NULL) {
+        __assert("objalloc.h", 221, "data");
+    }
+    return data->free;
+}
+
+static inline u32 HSD_ObjAllocGetUsed(HSD_ObjAllocData* data)
+{
+    if (data == NULL) {
+        __assert("objalloc.h", 205, "data");
+    }
+    return data->used;
+}
+
+void HSD_ObjAllocReport(void)
+{
+    AllocReportEntry list[] = {
+        { fn_803FB16C, "aobj" },
+        { HSD_FObjGetAllocData, "fobj" },
+        { HSD_IDGetAllocData, "id" },
+        { HSD_SListGetAllocData, "slist" },
+        { HSD_DListGetAllocData, "dlist" },
+        { HSD_VecGetAllocData, "vec" },
+        { HSD_MtxGetAllocData, "mtx" },
+        { HSD_RObjGetAllocData, "robj" },
+        { HSD_RvalueObjGetAllocData, "rval" },
+        { HSD_ShadowGetAllocData, "shadow" },
+        { HSD_RenderGetAllocData, "render" },
+        { HSD_ChanGetAllocData, "chan" },
+        { HSD_TevRegGetAllocData, "tevreg" },
+        { NULL, NULL }
+    };
+    AllocReportEntry* e;
+
+    for (e = list; e->name != NULL; e++) {
+        u32 peak = HSD_ObjAllocGetPeak(e->get());
+        u32 free = HSD_ObjAllocGetFree(e->get());
+        u32 used = HSD_ObjAllocGetUsed(e->get());
+        OSReport("objalloc: %s\tusing %d\tfreed %d\tpeak %d\n", e->name, used, free, peak);
+    }
+}
+
+typedef struct {
+    char gpr;
+    char fpr;
+    char reserved[2];
+    char* input_arg_area;
+    char* reg_save_area;
+} __va_list_struct;
+typedef __va_list_struct va_list[1];
+#define va_start(ap, fmt) __builtin_va_info(&ap)
+#define va_arg(ap, t) (*(t*) __va_arg(ap, _var_arg_typeof(t)))
+#define va_end(ap) (void) 0
+
+extern void* __va_arg(va_list ap, int type);
+typedef void* (*AllocFn)(u32);
+typedef void (*FreeFn)(void*);
+typedef void (*VoidFn)(void);
+typedef BOOL (*RangeFn)(u32);
+
+BOOL HSD_SetInitParameter(u32 param, ...)
+{
+    va_list ap;
+    BOOL result = FALSE;
+
+    if (init_done) {
+        if (lbl_805DE2BC == 0) {
+            OSReport("init parameter should be set before invoking HSD_Init().\n");
+            lbl_805DE2BC = 1;
+        }
+        return FALSE;
+    }
+    va_start(ap, param);
+    switch (param) {
+    case 0: {
+        u32 v = va_arg(ap, u32);
+        if (v != 0) {
+            lbl_805DCBBC = v;
+            result = TRUE;
+        }
+        break;
+    }
+    case 1: {
+        u32 v = va_arg(ap, u32);
+        if (v != 0) {
+            lbl_805DCBC0 = v;
+            result = TRUE;
+        }
+        break;
+    }
+    case 2: {
+        u32 v = va_arg(ap, u32);
+        if (v < OSGetPhysicalMemSize()) {
+            lbl_805DE2B4 = v;
+            result = TRUE;
+        }
+        break;
+    }
+    case 3: {
+        u32 lo = va_arg(ap, u32);
+        u32 hi = va_arg(ap, u32);
+        result = TRUE;
+        lbl_805DE298 = lo;
+        lbl_805DE29C = hi;
+        break;
+    }
+    case 4: {
+        u32 v = va_arg(ap, u32);
+        result = TRUE;
+        lbl_805DE2A0 = 1;
+        lbl_805DE2A4 = v;
+        break;
+    }
+    case 5: {
+        HSD_MemCallbacks cbs;
+        u32 v;
+        cbs.alloc = va_arg(ap, AllocFn);
+        cbs.free = va_arg(ap, FreeFn);
+        cbs.reset = va_arg(ap, VoidFn);
+        cbs.check = va_arg(ap, VoidFn);
+        cbs.in_range = va_arg(ap, RangeFn);
+        v = va_arg(ap, u32);
+        if (v != 0) {
+            OSReport("ERROR in HSD_SetInitParameter():\n");
+            OSReport("  HSD_INIT_MEMORY_CALLBACKS was given invalid arguments.\n");
+        } else {
+            _HSD_MemSetCallbacks(&cbs, sizeof(cbs));
+            result = TRUE;
+            lbl_805DE2B8 = 1;
+        }
+        break;
+    }
+    case 6: {
+        GXRenderModeObj* v = va_arg(ap, GXRenderModeObj*);
+        if (v != NULL) {
+            rmode = v;
+            result = TRUE;
+        }
+        break;
+    }
+    case 7:
+        OSReport("ERROR in HSD_SetInitParameter():\n");
+        OSReport("  HSD_INIT_HEAP_MAX_NUM is obsolete since 1.3.0.0. \n");
+        if (va_arg(ap, int) == 0) {
+            result = TRUE;
+        }
+        break;
+    case 8:
+        OSReport("ERROR in HSD_SetInitParameter():\n");
+        OSReport("  HSD_INIT_AUDIO_HEAP_SIZE is obsolete since 1.3.0.0. \n");
+        break;
+    }
+    return result;
+}
