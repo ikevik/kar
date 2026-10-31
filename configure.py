@@ -246,6 +246,10 @@ cflags_rel = [
 config.linker_version = "GC/1.3.2"
 
 
+cflags_sdk = [x for x in cflags_base if x != "-inline all"] + ["-inline auto"]
+cflags_sdk_nopeep = cflags_sdk + ["-opt nopeephole"]
+
+
 # Helper for a group of objects built with the project-wide settings
 def Lib(lib_name: str, category: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -344,7 +348,7 @@ config.libs = [
         "sdk",
         [
             Object(NonMatching, "cstring.c", cflags=cflags_runtime),
-            Object(NonMatching, "dolphin/dolphin_sdk_other.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_other.c", mw_version="GC/1.3.2", cflags=cflags_runtime),
         ],
     ),
     Lib(
@@ -359,26 +363,26 @@ config.libs = [
         "sdk",
         [
             Object(Matching, "PPCArch.c"),
-            Object(NonMatching, "dolphin/dolphin_sdk_db.c"),
+            Object(Matching, "dolphin/dolphin_sdk_db.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
             Object(NonMatching, "dolphin/dolphin_sdk_dsp.c", cflags=cflags_dolphin_pool, mw_version="GC/1.2.5n"),
-            Object(NonMatching, "dolphin/dolphin_sdk_dvd.c"),
-            Object(NonMatching, "dolphin/dolphin_sdk_gx.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_dvd.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
+            Object(NonMatching, "dolphin/dolphin_sdk_gx.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
             Object(NonMatching, "dolphin/dolphin_sdk_mtx.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(Matching, "dolphin/dolphin_sdk_mtxvec.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(Matching, "dolphin/dolphin_sdk_mtx44.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_vec.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
-            Object(NonMatching, "dolphin/dolphin_sdk_os.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_os.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
             Object(NonMatching, "init/__ppc_eabi_init.c"),
             Object(NonMatching, "dolphin/dolphin_sdk_pad.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_vi.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_ai.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_ar.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_arq.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
-            Object(NonMatching, "dolphin/dolphin_sdk_card.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_card.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
             Object(NonMatching, "dolphin/dolphin_sdk_si.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
             Object(NonMatching, "dolphin/dolphin_sdk_exi.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
-            Object(NonMatching, "dolphin/dolphin_sdk_ax.c"),
-            Object(NonMatching, "dolphin/dolphin_sdk_mix.c"),
+            Object(NonMatching, "dolphin/dolphin_sdk_ax.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
+            Object(NonMatching, "dolphin/dolphin_sdk_mix.c", mw_version="GC/1.2.5n", cflags=cflags_sdk),
             Object(NonMatching, "dolphin/dolphin_sdk_synth.c", cflags=cflags_dolphin, mw_version="GC/1.2.5n"),
         ],
     ),
