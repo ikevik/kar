@@ -41,13 +41,18 @@ u16 __CARDGetFontEncode(void)
     return lbl_805DE048;
 }
 
-#if 0
+typedef struct CARDBlock {
+    u8 pad[0x10c];
+    void* diskID;
+} CARDBlock;
+
 void __CARDSetDiskID(void* diskID)
 {
-    *(void**)(lbl_8056E4E8 + 0x10c) = diskID ? diskID : lbl_8056E4E8 + 0x220;
-    *(void**)(lbl_8056E4E8 + 0x21c) = diskID ? diskID : lbl_8056E4E8 + 0x220;
+    u8* base = lbl_8056E4E8;
+    CARDBlock* block = (CARDBlock*)base;
+    block[0].diskID = diskID ? diskID : base + 0x220;
+    block[1].diskID = diskID ? diskID : base + 0x220;
 }
-#endif
 
 s32 __CARDPutControlBlock(u8* card, s32 result)
 {
@@ -147,4 +152,81 @@ s32 fn_803E6F6C(u8* p)
 s32 fn_803E72B8(void)
 {
     return 0;
+}
+
+extern s32 fn_803E55D8(s32 chan, s32* xfer, CARDCallback cb);
+
+s32 fn_803E7610(s32 a, s32 b, s32 c, s32 d)
+{
+    s32 result = fn_803E73F0(a, b, c, d, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E7A88(s32* fileInfo, s32 b, s32 c, s32 d)
+{
+    s32 result = fn_803E7940((s32)fileInfo, b, c, d, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(*fileInfo);
+}
+
+s32 fn_803E7E04(s32* fileInfo, s32 b, s32 c, s32 d)
+{
+    s32 result = fn_803E7CF0((s32)fileInfo, b, c, d, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(*fileInfo);
+}
+
+s32 fn_803E8000(s32 a, s32 b)
+{
+    s32 result = fn_803E7EF0(a, b, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E84E0(s32 a, s32 b, s32 c)
+{
+    s32 result = fn_803E836C(a, b, c, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E8724(s32 a, s32 b, s32 c)
+{
+    s32 result = fn_803E8528(a, b, c, __CARDSyncCallback);
+    if (result < 0) {
+        return result;
+    }
+    return fn_803E3024(a);
+}
+
+s32 fn_803E5B68(s32 chan)
+{
+    s32 x;
+    s32 result = fn_803E55D8(chan, &x, __CARDSyncCallback);
+    if (result >= 0 && &x != 0) {
+        result = fn_803E3024(chan);
+    }
+    return result;
+}
+
+s32 fn_803E7264(s32* fileInfo)
+{
+    void* card;
+    s32 result = __CARDGetControlBlock(*fileInfo, &card);
+    if (result < 0) {
+        return result;
+    }
+    *fileInfo = -1;
+    return __CARDPutControlBlock(card, 0);
 }
