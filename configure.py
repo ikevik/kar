@@ -426,7 +426,7 @@ config.libs = [
             Object(NonMatching, "sysdolphin/gobjplink.c"),
             Object(Matching, "sysdolphin/gobjgxlink.c"),
             Object(NonMatching, "sysdolphin/gobjobject_gobjuserdata.c"),
-            Object(NonMatching, "sysdolphin/gobj.c"),
+            Object(Matching, "sysdolphin/gobj.c"),
             Object(NonMatching, "sysdolphin/particle.c"),
         ],
     ),
