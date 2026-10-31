@@ -29,6 +29,20 @@ extern HSD_ZListEnt* fn_8040F518(HSD_ZListEnt* head, HSD_ZListEnt* tail, s32 off
 extern void fn_80417CA0(void*);
 extern void fn_8040F2E8(void*);
 extern u8* HSD_CObjGetCurrent(void);
+void _HSD_ZListClear(void);
+
+
+
+
+void fn_8040F848(u32* jobj);
+#if 0 /* not yet matching */
+#endif
+
+
+
+
+
+typedef void (*HSD_ZDispFn)(void* obj, void* mtx, void* z, int type, u32 rmode);
 
 void HSD_ZListInitAllocData(void)
 {
@@ -41,6 +55,42 @@ void _HSD_ZListSort(void)
         lbl_805DE27C = fn_8040F518(lbl_805DE27C, lbl_805DE280, 0x3C);
         lbl_805DE284 = fn_8040F518(lbl_805DE284, lbl_805DE288, 0x40);
     }
+}
+
+void _HSD_ZListDisp(void);
+#if 0 /* not yet matching */
+void _HSD_ZListDisp(void)
+{
+    HSD_ZListEnt* z;
+    u8* vmtx = HSD_CObjGetCurrent() + 0x54;
+    for (z = lbl_805DE27C; z != NULL; z = z->next_a) {
+        (*(HSD_ZDispFn*) (*(u8**) z->obj + 0x48))(z->obj, z->mtx ? z->mtx : vmtx, z, 4, z->rendermode);
+    }
+    for (z = lbl_805DE284; z != NULL; z = z->next_b) {
+        (*(HSD_ZDispFn*) (*(u8**) z->obj + 0x48))(z->obj, z->mtx ? z->mtx : vmtx, z, 2, z->rendermode);
+    }
+    _HSD_ZListClear();
+}
+#endif
+
+void _HSD_ZListClear(void)
+{
+    HSD_ZListEnt* z = lbl_805DE278;
+    HSD_ZListEnt* next;
+    for (; z != NULL; z = next) {
+        next = z->next;
+        if (z->mtx != NULL)
+            fn_80417CA0(z->mtx);
+        HSD_ObjFree(&lbl_80589A18, z);
+    }
+    lbl_805DE278 = NULL;
+    lbl_805DCB8C = &lbl_805DE278;
+    lbl_805DE27C = NULL;
+    lbl_805DCB90 = &lbl_805DE27C;
+    lbl_805DE280 = NULL;
+    lbl_805DE284 = NULL;
+    lbl_805DCB94 = &lbl_805DE284;
+    lbl_805DE288 = NULL;
 }
 
 void fn_8040F83C(s32 a, s32 b)
