@@ -497,3 +497,51 @@ BOOL HSD_ViewingRectIsValid(HSD_ViewingRect* rect)
     }
     return result;
 }
+
+void HSD_ViewingRectAddPoint(HSD_ViewingRect* rect, f32 a, f32 b, f32 c, f32 d, Vec* position)
+{
+    Vec v;
+    Vec w;
+    Vec u;
+    f32 x;
+    f32 y;
+    f32 s;
+
+    assert_line(0x362, rect);
+    assert_line(0x363, position);
+    if (!rect->invalid) {
+        PSVECSubtract(position, &rect->origin, &v);
+        x = PSVECDotProduct(&v, &rect->eye_vn);
+        if (rect->perspective) {
+            if (x <= 0.0F) {
+                return;
+            }
+            s = rect->distance / x;
+            PSVECScale(&v, &v, s);
+            PSVECSubtract(&v, &rect->eye_v, &w);
+            y = PSVECDotProduct(&rect->right_v, &w);
+            x = PSVECDotProduct(&rect->up_v, &w);
+            a *= s;
+            b *= s;
+            c *= s;
+            d *= s;
+        } else {
+            PSVECScale(&rect->eye_vn, &u, x);
+            PSVECSubtract(&v, &u, &w);
+            y = PSVECDotProduct(&rect->right_v, &w);
+            x = PSVECDotProduct(&rect->up_v, &w);
+        }
+        if (y + d > rect->right) {
+            rect->right = y + d;
+        }
+        if (y + c < rect->left) {
+            rect->left = y + c;
+        }
+        if (x + a > rect->top) {
+            rect->top = x + a;
+        }
+        if (x + b < rect->bottom) {
+            rect->bottom = x + b;
+        }
+    }
+}
