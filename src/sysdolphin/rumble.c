@@ -87,6 +87,8 @@ void HSD_PadRumbleFree(s8 pad)
     }
 }
 
+void HSD_PadRumbleRemove(s8 pad);
+#if 0 /* not yet matching */
 void HSD_PadRumbleRemove(s8 pad)
 {
     if (lbl_8058B080.adc_type == lbl_8058B080.multi[pad].stat) {
@@ -110,15 +112,22 @@ void HSD_PadRumbleRemove(s8 pad)
         OSRestoreInterrupts(en);
     }
 }
+#endif
 
+void HSD_PadRumbleRemoveAll(void);
+#if 0 /* not yet matching */
 void HSD_PadRumbleRemoveAll(void)
 {
+    PadLibData* d = &lbl_8058B080;
     s32 i;
     for (i = 0; i < 4; i++) {
         HSD_PadRumbleRemove((u8) i);
     }
 }
+#endif
 
+void HSD_PadRumbleRemoveId(s8 pad, u32 id);
+#if 0 /* not yet matching */
 void HSD_PadRumbleRemoveId(s8 pad, u32 id)
 {
     if (lbl_8058B080.adc_type == lbl_8058B080.multi[pad].stat) {
@@ -143,6 +152,7 @@ void HSD_PadRumbleRemoveId(s8 pad, u32 id)
         OSRestoreInterrupts(en);
     }
 }
+#endif
 
 void HSD_PadRumblePauseAll(void)
 {
@@ -182,6 +192,8 @@ void HSD_PadRumbleActiveAll(void)
     }
 }
 
+int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data);
+#if 0 /* not yet matching */
 int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data)
 {
     PadLibData* d = &lbl_8058B080;
@@ -191,8 +203,8 @@ int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data)
         RumbleStatus* st;
         RumbleNode* node;
         en = OSDisableInterrupts();
-        st = &lbl_8058BB88[d->multi[pad].rumble];
         node = d->rumble_free;
+        st = &lbl_8058BB88[lbl_8058B080.multi[pad].rumble];
         if (node != NULL && st->count < d->rumble_max) {
             RumbleNode* p;
             RumbleNode* n;
@@ -219,6 +231,7 @@ int HSD_PadRumbleActiveId(s8 pad, u32 id, s32 time, u8 pri, u16* data)
     }
     return ret;
 }
+#endif
 
 int HSD_PadRumbleInterpret1(RumbleNode* node, u8* out)
 {
@@ -302,6 +315,26 @@ void HSD_PadRumbleInterpret(void)
                 break;
             }
             st->cur = st->next;
+        }
+    }
+}
+
+void HSD_PadRumbleInit(u16 count, RumbleNode* buf)
+{
+    PadLibData* d = &lbl_8058B080;
+    s32 i;
+    d->rumble_max = count;
+    d->rumble_free = buf;
+    if (count != 0) {
+        for (i = 0; i < count - 1; i++) {
+            d->rumble_free[i].next = &d->rumble_free[i + 1];
+        }
+        d->rumble_free[i].next = NULL;
+    }
+    {
+        RumbleStatus init = { 0 };
+        for (i = 0; i < 4; i++) {
+            lbl_8058BB88[i] = init;
         }
     }
 }
