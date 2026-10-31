@@ -143,3 +143,32 @@ void fn_80411A6C(s32 x)
     lbl_80589A80.x3c = x;
     *((u8*) &lbl_80589A80 + 0x54) = 1;
 }
+
+typedef struct VIRMode {
+    u32 w[15];
+} VIRMode;
+
+void fn_804119E4(VIRMode* rm)
+{
+    *(VIRMode*) &lbl_80589A80 = *rm;
+    *((u8*) &lbl_80589A80 + 0x54) = 1;
+}
+
+void fn_804114BC(int idx)
+{
+    s32* status;
+    int en = OSDisableInterrupts();
+    s32 v;
+    status = &((HSD_VIXfb*) &lbl_80589A80)[idx].status;
+    if (*status != 4) {
+        __assert(lbl_805DCC38, 0x2D2, "_p->xfb[idx].status == HSD_VI_XFB_WAITDONE");
+    }
+    {
+        s32 i = findXfb(6);
+        v = 6;
+        if (i != -1)
+            v = 5;
+    }
+    *status = v;
+    OSRestoreInterrupts(en);
+}
