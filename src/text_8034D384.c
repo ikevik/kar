@@ -1,4 +1,7 @@
 /* auto small functions */
+#pragma dont_inline on
+
+
 
 void fn_803589F4(char* p) { *(int*)(p + 0) = 0; }
 
@@ -11,3 +14,43 @@ int fn_8036BF04(void) { return 0; }
 unsigned char fn_8036C064(char* p) { return *(unsigned char*)(p + 112); }
 
 unsigned char fn_8036E8CC(char* p) { return *(unsigned char*)(p + 204); }
+
+int fn_80369010(int a0) {
+    int t0;
+    int t1;
+    int t2;
+    int t3;
+    t0 = *(int*)((a0 + (*(int*)(a0 + 17920) * 280)) + 0);
+    t1 = (a0 + (*(int*)(a0 + 17920) * 280));
+    *(int*)(a0 + 17920) = t0;
+    t2 = (*(int*)(a0 + 17924) - 1);
+    t3 = *(int*)(a0 + 17924);
+    *(int*)(a0 + 17924) = t2;
+    return t1;
+}
+
+int fn_8036B0B8(int a0) {
+    int t0;
+    int t1;
+    int t2;
+    int t3;
+    t0 = *(int*)((a0 + (*(int*)(a0 + 26112) * 408)) + 0);
+    t1 = (a0 + (*(int*)(a0 + 26112) * 408));
+    *(int*)(a0 + 26112) = t0;
+    t2 = (*(int*)(a0 + 26116) - 1);
+    t3 = *(int*)(a0 + 26116);
+    *(int*)(a0 + 26116) = t2;
+    return t1;
+}
+
+void fn_8036E748(int a0, int a1) {
+    float t0;
+    float t1;
+    float t2;
+    t0 = *(float*)(a1 + 28);
+    *(float*)(a0 + 436) = t0;
+    t1 = *(float*)(a1 + 32);
+    *(float*)(a0 + 440) = t1;
+    t2 = *(float*)(a1 + 36);
+    *(float*)(a0 + 444) = t2;
+}
