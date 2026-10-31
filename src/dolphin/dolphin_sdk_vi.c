@@ -28,6 +28,55 @@ u32 CurrTvMode;
 #define VI_SHDW ((u16*)(lbl_8056E3A0 + 0x78))
 #define VI_U32(off) (*(u32*)(lbl_8056E3A0 + (off)))
 
+extern u8 lbl_804FC540[];
+#define TIMING(i) (base + 0x44 + (i) * 0x26)
+
+u8* getTiming(u32 mode)
+{
+    u8* base = lbl_804FC540;
+
+    switch (mode) {
+    case 0:
+        return TIMING(0);
+    case 1:
+        return TIMING(1);
+    case 4:
+        return TIMING(2);
+    case 5:
+        return TIMING(3);
+    case 20:
+        return TIMING(0);
+    case 21:
+        return TIMING(1);
+    case 8:
+        return TIMING(4);
+    case 9:
+        return TIMING(5);
+    case 2:
+        return TIMING(6);
+    case 3:
+        return TIMING(7);
+    case 16:
+        return TIMING(2);
+    case 17:
+        return TIMING(3);
+    case 24:
+        return TIMING(8);
+    case 26:
+        return TIMING(9);
+    default:
+        return NULL;
+    }
+}
+
+extern void fn_803DE1B8(void* hv, void* tfbb, void* bfbb, void* rtfbb, void* rbfbb);
+extern void fn_803DE48C(u16 dispPosY, u16 dispSizeY, u8 equ, u16 acv, u16 prbOdd, u16 prbEven,
+                        u16 psbOdd, u16 psbEven, BOOL black);
+
+u32 lbl_805DDF8C;
+u64 lbl_805DDF90;
+u32 lbl_805DDFB8;
+
 static u32 getCurrentFieldEvenOdd(void);
 
 static inline int cntlzd(u64 x)
@@ -231,4 +280,51 @@ u32 fn_803DF618(void)
     stat = __VIRegs[55] & 3;
     OSRestoreInterrupts(enabled);
     return stat & 1;
+}
+
+void fn_803DF1E8(void)
+{
+    BOOL enabled;
+    s32 regIndex;
+    u8* regs = lbl_8056E3A0;
+
+    enabled = OSDisableInterrupts();
+    lbl_805DDF98 |= lbl_805DDF8C;
+    lbl_805DDF8C = 0;
+    lbl_805DDFA0 |= lbl_805DDF90;
+    while (lbl_805DDF90) {
+        regIndex = cntlzd(lbl_805DDF90);
+        ((u16*)(regs + 0x78))[regIndex] = ((u16*)regs)[regIndex];
+        lbl_805DDF90 &= ~((u64)1 << (63 - regIndex));
+    }
+    lbl_805DDF70 = 1;
+    lbl_805DDFB0 = *(u32*)(regs + 0x120);
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803DF318(void* fb)
+{
+    BOOL enabled;
+    u8* regs = lbl_8056E3A0;
+
+    enabled = OSDisableInterrupts();
+    *(u32*)(regs + 0x120) = (u32)fb;
+    lbl_805DDFB8 = 1;
+    fn_803DE1B8(regs + 0xf0, regs + 0x124, regs + 0x128, regs + 0x13c, regs + 0x140);
+    OSRestoreInterrupts(enabled);
+}
+
+void fn_803DF384(BOOL black)
+{
+    BOOL enabled;
+    u8* regs = lbl_8056E3A0;
+    u8* tm;
+
+    enabled = OSDisableInterrupts();
+    *(u32*)(regs + 0x130) = black;
+    tm = (u8*)*(u32*)(regs + 0x144);
+    fn_803DE48C(*(u16*)(regs + 0xfa), *(u16*)(regs + 0xf6), *(u8*)(tm + 0), *(u16*)(tm + 2),
+                *(u16*)(tm + 4), *(u16*)(tm + 6), *(u16*)(tm + 8), *(u16*)(tm + 10),
+                *(u32*)(regs + 0x130));
+    OSRestoreInterrupts(enabled);
 }
