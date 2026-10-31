@@ -162,6 +162,7 @@ HSD_Chan channel = {
 
 extern Mtx lbl_80503FC0;
 extern f32 lbl_805DC8C0[];
+extern Mtx lbl_80504678;
 
 extern struct {
     u8 x0_pad[0xC];
@@ -275,6 +276,8 @@ void HSD_ShadowStartRender(HSD_Shadow* shadow)
     }
 }
 
+void makeMatrix(HSD_Shadow* shadow);
+
 void HSD_ShadowEndRender(HSD_Shadow* shadow)
 {
     HSD_ImageDesc* imgdesc;
@@ -355,4 +358,42 @@ void HSD_ShadowDeleteObject(HSD_Shadow* shadow, struct _HSD_JObj* jobj)
             shadow->objects = HSD_SListRemove(shadow->objects);
         }
     }
+}
+
+void PSMTXCopy(Mtx src, Mtx dst);
+void PSMTXConcat(Mtx a, Mtx b, Mtx ab);
+void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+s32 HSD_CObjGetProjectionType(struct _HSD_CObj*);
+void HSD_CObjSetAspect(struct _HSD_CObj*, f32);
+void HSD_CObjSetFov(struct _HSD_CObj*, f32);
+void HSD_CObjSetOrtho(struct _HSD_CObj*, f32, f32, f32, f32);
+void HSD_CObjSetFrustum(struct _HSD_CObj*, f32, f32, f32, f32);
+f32 HSD_CObjGetNear(struct _HSD_CObj*);
+double atan2_(double, double);
+
+void makeMatrix(HSD_Shadow* shadow)
+{
+    Mtx mtx;
+
+    if (HSD_CObjGetEyeDistance(shadow->camera) < lbl_805DC8C0[0]) {
+        PSMTXCopy(lbl_80504678, shadow->texture->mtx);
+        return;
+    }
+    switch (HSD_CObjGetProjectionType(shadow->camera)) {
+    case PROJ_PERSPECTIVE:
+        C_MTXLightPerspective(mtx, shadow->camera->projection_param.perspective.fov, shadow->camera->projection_param.perspective.aspect, shadow->scaleS, shadow->scaleT, shadow->transS, shadow->transT);
+        break;
+    case PROJ_FRUSTRUM:
+        C_MTXLightFrustum(mtx, shadow->camera->projection_param.frustrum.top, shadow->camera->projection_param.frustrum.bottom, shadow->camera->projection_param.frustrum.left, shadow->camera->projection_param.frustrum.right, shadow->camera->near, shadow->scaleS, shadow->scaleT, shadow->transS, shadow->transT);
+        break;
+    case PROJ_ORTHO:
+        C_MTXLightOrtho(mtx, shadow->camera->projection_param.ortho.top, shadow->camera->projection_param.ortho.bottom, shadow->camera->projection_param.ortho.left, shadow->camera->projection_param.ortho.right, shadow->scaleS, shadow->scaleT, shadow->transS, shadow->transT);
+        break;
+    default:
+        assert_line(0x2bb, 0);
+        break;
+    }
+    PSMTXConcat(mtx, shadow->camera->view_mtx, shadow->texture->mtx);
 }

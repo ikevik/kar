@@ -29,7 +29,8 @@ typedef struct _HSD_ViewingRect {
     f32 bottom;
     f32 left;
     f32 right;
-    f32 perspective;
+    u8 perspective : 1;
+    u8 invalid : 1;
 } HSD_ViewingRect;
 
 HSD_ObjAllocData* HSD_ShadowGetAllocData(void);
