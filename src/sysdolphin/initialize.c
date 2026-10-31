@@ -14,8 +14,18 @@ void HSD_OSInit();
 void* HSD_AllocateXFB(int nbuffer, GXRenderModeObj* rm);
 void HSD_GXInit(void);
 void HSD_ObjInit(void);
+s32 HSD_GetHeap(void);
+void HSD_ListInitAllocData(void);
+void fn_803FB13C(void);
+void HSD_FObjInitAllocData(void);
+void HSD_IDInitAllocData(void);
+void HSD_VecInitAllocData(void);
+void HSD_MtxInitAllocData(void);
+void HSD_RObjInitAllocData(void);
+void HSD_RenderInitAllocData(void);
+void HSD_ShadowInitAllocData(void);
+void HSD_ZListInitAllocData(void);
 
-char lbl_80503C60[] = "initialize.c";
 
 void HSD_InitComponent(void)
 {
@@ -94,7 +104,7 @@ extern u32 lbl_805DE290;
 extern u32 lbl_805DE294;
 extern u32 lbl_805DE298;
 extern u32 lbl_805DE29C;
-extern u32 lbl_805DE2A0;
+extern s32 lbl_805DE2A0;
 extern u32 lbl_805DE2A4;
 extern u32 lbl_805DE2AC;
 extern s32 lbl_805DE2B4;
@@ -150,4 +160,127 @@ void HSD_GXInit(void)
         GXLoadLightObjImm(&lobj, fn_803FF9D0(i));
     }
     HSD_StateInvalidate(-1);
+}
+
+void* HSD_MemAllocCallback(u32 size)
+{
+    void* addr;
+    if (size == 0) {
+        return NULL;
+    }
+    addr = fn_803D360C(HSD_GetHeap(), size);
+    if (addr == NULL) {
+        __assert("initialize.c", 397, "addr");
+    }
+    return addr;
+}
+
+void HSD_MemFreeCallback(void* ptr)
+{
+    fn_803D3708(HSD_GetHeap(), ptr);
+}
+
+void HSD_MemCheckCallback(void)
+{
+    OSCheckHeap(HSD_GetHeap());
+}
+
+void HSD_MemResetCallback(void)
+{
+    u32 i;
+    OSDestroyHeap(lbl_805DCBB0);
+    if (lbl_805DE298 != 0 && lbl_805DE29C != 0) {
+        lbl_805DE290 = lbl_805DE298;
+        lbl_805DE294 = lbl_805DE29C;
+        lbl_805DE298 = 0;
+        lbl_805DE29C = 0;
+    }
+    if (lbl_805DE2A0 != 0) {
+        for (i = 0; i < (lbl_805DE294 - lbl_805DE290) >> 2; i++) {
+            ((u32*) lbl_805DE290)[i] = lbl_805DE2A4;
+        }
+    }
+    lbl_805DCBB0 = OSCreateHeap((void*) lbl_805DE290, (void*) lbl_805DE294);
+    OSSetCurrentHeap(lbl_805DCBB0);
+}
+
+BOOL HSD_MemInRangeCallback(u32 ptr)
+{
+    BOOL result = FALSE;
+    if (lbl_805DE290 <= ptr && ptr < lbl_805DE294) {
+        result = TRUE;
+    }
+    return result;
+}
+
+s32 HSD_GetHeap(void)
+{
+    if (lbl_805DE2B8 != 0) {
+        __assert("initialize.c", 465, "!iparam_memory_callbacks");
+    }
+    return lbl_805DCBB0;
+}
+
+void HSD_SetHeap(s32 heap)
+{
+    lbl_805DCBB0 = heap;
+}
+
+void HSD_SetUserArena(u32 lo, u32 hi)
+{
+    if (lbl_805DE2B8 != 0) {
+        __assert("initialize.c", 493, "!iparam_memory_callbacks");
+    }
+    if ((lo == 0 && hi != 0) || (lo != 0 && hi == 0)) {
+        OSReport("missing argument.\n");
+    } else {
+        lbl_805DE298 = lo;
+        lbl_805DE29C = hi;
+    }
+}
+
+void HSD_GetArena(u32* lo, u32* hi)
+{
+    if (lbl_805DE2B8 != 0) {
+        __assert("initialize.c", 517, "!iparam_memory_callbacks");
+    }
+    if (lo != NULL) {
+        *lo = lbl_805DE290;
+    }
+    if (hi != NULL) {
+        *hi = lbl_805DE294;
+    }
+}
+
+u32 HSD_GetCurrentRenderPass(void)
+{
+    return lbl_805DE2C4;
+}
+
+void HSD_AddInvalidateFlags(u32 flags)
+{
+    lbl_805DE2C0 |= flags;
+}
+
+void HSD_SetRenderPass(s32 pix_fmt, u32 z_fmt)
+{
+    if (pix_fmt == 2) {
+        __assert("initialize.c", 791, "pix_fmt != GX_PF_RGB565_Z16");
+    }
+    lbl_805DE2AC = pix_fmt;
+    lbl_805DCBB8 = z_fmt;
+}
+
+void HSD_ObjInit(void)
+{
+    HSD_ListInitAllocData();
+    fn_803FB13C();
+    HSD_FObjInitAllocData();
+    HSD_IDInitAllocData();
+    HSD_VecInitAllocData();
+    HSD_MtxInitAllocData();
+    HSD_RObjInitAllocData();
+    HSD_RenderInitAllocData();
+    HSD_ShadowInitAllocData();
+    HSD_ZListInitAllocData();
 }
