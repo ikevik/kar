@@ -917,3 +917,81 @@ void GXSetArray(s32 attr, u32 base, u8 stride) {
         gx->indexStride[idx] = stride;
     }
 }
+
+extern void PPCSync(void);
+
+void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht) {
+    gx->cpTexSrc = 0;
+    gx->cpTexSrc = (gx->cpTexSrc & ~0x3FF) | left;
+    gx->cpTexSrc = (gx->cpTexSrc & ~0xFFC00) | (top << 10);
+    gx->cpTexSrc = (gx->cpTexSrc & 0xFFFFFF) | 0x49000000;
+    gx->cpTexSize = 0;
+    gx->cpTexSize = (gx->cpTexSize & ~0x3FF) | (wd - 1);
+    gx->cpTexSize = (gx->cpTexSize & ~0xFFC00) | ((ht - 1) << 10);
+    gx->cpTexSize = (gx->cpTexSize & 0xFFFFFF) | 0x4A000000;
+}
+
+void fn_803CC5C4(u16 left, u16 top, u16 wd, u16 ht) {
+    gx->cpDispSrc = 0;
+    gx->cpDispSrc = (gx->cpDispSrc & ~0x3FF) | left;
+    gx->cpDispSrc = (gx->cpDispSrc & ~0xFFC00) | (top << 10);
+    gx->cpDispSrc = (gx->cpDispSrc & 0xFFFFFF) | 0x49000000;
+    gx->cpDispSize = 0;
+    gx->cpDispSize = (gx->cpDispSize & ~0x3FF) | (wd - 1);
+    gx->cpDispSize = (gx->cpDispSize & ~0xFFC00) | ((ht - 1) << 10);
+    gx->cpDispSize = (gx->cpDispSize & 0xFFFFFF) | 0x4A000000;
+}
+
+void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht) {
+    u32 lf = left + 0x156;
+    u32 tp = top + 0x156;
+    u32 rt = lf + wd - 1;
+    u32 bm = tp + ht - 1;
+    gx->suScis0 = (gx->suScis0 & ~0x7FF) | tp;
+    gx->suScis0 = (gx->suScis0 & ~0x7FF000) | (lf << 12);
+    gx->suScis1 = (gx->suScis1 & ~0x7FF) | bm;
+    gx->suScis1 = (gx->suScis1 & ~0x7FF000) | (rt << 12);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->suScis0;
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = gx->suScis1;
+    gx->bpSentNot = 0;
+}
+
+#if 0 /* NONMATCHING */
+void fn_803CEFC0(u32 idx, u32 a, u32 b, u32 c, u32 d) {
+    u32* p0 = &gx->tevKsel[idx * 2];
+    u32* p1;
+    *p0 = (*p0 & ~3) | a;
+    *p0 = (*p0 & ~0xC) | (b << 2);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = *p0;
+    p1 = &gx->tevKsel[idx * 2 + 1];
+    *p1 = (*p1 & ~3) | c;
+    *p1 = (*p1 & ~0xC) | (d << 2);
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = *p1;
+    gx->bpSentNot = 0;
+}
+#endif
+
+void fn_803CBDB8(void) {
+    u32 zero = 0;
+    BOOL en = OSDisableInterrupts();
+    GXWGFifo_u8 = 0x61;
+    GXWGFifo_u32 = 0x45000002;
+    if (gx->dirtyState != 0) {
+        fn_803CC214();
+    }
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    GXWGFifo_u32 = zero;
+    PPCSync();
+    lbl_805DDE58 = zero;
+    OSRestoreInterrupts(en);
+}
