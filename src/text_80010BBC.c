@@ -252,3 +252,29 @@ void fn_80048F98(void) { char* g = fn_80047844(); AT(u8, g, 1) = 0x1; AT(u8, g, 
 void fn_80048FD0(void) { char* g = fn_80047844(); AT(u8, g, 1) = 0x1; AT(u8, g, 2) = 0x1d; AT(u8, g, 6) = 0x2; }
 void fn_80049008(void) { char* g = fn_80047844(); AT(u8, g, 1) = 0x1; AT(u8, g, 2) = 0x1e; AT(u8, g, 6) = 0x0; }
 void fn_80049070(void) { char* g = fn_80047844(); AT(u8, g, 1) = 0x1; AT(u8, g, 2) = 0x20; AT(u8, g, 6) = 0x0; }
+
+extern void fn_80113F10(), fn_80133520(), fn_8001ACC4(), fn_8001D74C(), fn_8005E5D0(), fn_8013876C(), fn_801384C8(), fn_8005E788();
+extern void fn_80078E5C(), fn_80138F44(), fn_80281F10(), fn_80281ECC(), HSD_MObjSetFlags(), HSD_MObjClearFlags();
+extern void fn_8005299C(), fn_80052CA4();
+extern char* fn_8040BCA0();
+extern int fn_80005CE0();
+extern int lbl_805DD590;
+void fn_80010FAC(int a, int b, int c) { fn_80113F10(a, 0, c + b * 10); }
+#if 0
+void fn_80010FD8(int i, int c) { fn_80113F10(i, 1, c); ((struct { char pad[0xd0]; int a[1]; }*)lbl_805DD570)->a[i]++; }
+#endif
+void fn_8001AE58(void) { fn_80133520(); fn_8001ACC4(); }
+void fn_8001ECD0(void) { fn_80133520(); fn_8001D74C(); }
+void fn_800461A0(void) { fn_8005E5D0(); fn_8013876C(); }
+void fn_800462A4(void) { fn_801384C8(); fn_8005E788(); }
+void fn_80047F0C(void) { fn_80078E5C(); fn_80138F44(); }
+void fn_8004F39C(void) { fn_80281F10(); fn_80281ECC(7); }
+void fn_8004A10C(void) { lbl_805DD590 = fn_80005CE0(); }
+void fn_80052C58(int* p, int f) { HSD_MObjSetFlags(p ? (void*)p[2] : 0, f); }
+void fn_80052F48(int* p, int f) { HSD_MObjClearFlags(p ? (void*)p[2] : 0, f); }
+void fn_80052F7C(int a, int b) { char* r = fn_8040BCA0(a); if (r != 0) fn_8005299C(r, b); }
+void fn_80053770(int a, int b) { char* r = fn_8040BCA0(a); if (r != 0) fn_80052CA4(r, b); }
+typedef struct { char pad[0x5c1]; u8 a; } B5C1;
+#if 0
+void fn_80042200(int i) { char* g = gmGetClearcheckerP(); g += i * 0x14; ((B5C1*)g)->a = 0; }
+#endif

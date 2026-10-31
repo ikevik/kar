@@ -108,7 +108,9 @@ void fn_80062888(void) { AT(int, lbl_80550CA8, 0xc) = 0; AT(int, lbl_80550CA8, 8
 int fn_80062A68(int i) { return lbl_80550CA8[i].e; }
 #if 0
 #if 0
+#if 0
 float fn_80064E88(float x) { float t = lbl_805DEAD8 * x; t = t * x; t = x * t; return lbl_805DEAD4 * x + t; }
+#endif
 #endif
 #endif
 void fn_80068560(S8* p) { *p = lbl_805D52F8; }
@@ -234,7 +236,9 @@ void fn_80078620(char* p) { lbl_805DD610 = 0; if (AT(int, p, 0x1c) == 0) lbl_805
 typedef struct { int a, b; u8* p; int pad[6]; } S24;
 #if 0
 #if 0
+#if 0
 void fn_80078D58(int i, int j, u8 v) { S24* q = AT(S24*, lbl_8049AB40, 0x60); j[q[i].p] = v; }
+#endif
 #endif
 #endif
 void fn_8007A900(char* p, V3* d) { *d = AT(V3, AT(char*, p, 0x34), 0x24); }
@@ -266,11 +270,15 @@ void fn_80068BA8(VM* p) { p->stack[p->sp++ - 0] = (int)(p->pc + 1); p->stack[p->
 void fn_80068C54(VM* p) { p->pc++; p->stack[p->sp++] = (int)(p->pc + 1); p->pc = (int*)*p->pc; }
 int fn_80068DC4(VM* p) { AT(int, p, 0) = AT(int, p, 0) + (*p->pc & 0x3FFFFFF); p->pc++; return 0; }
 #if 0
+#if 0
 int fn_80068DF0(VM* p) { p->xaa_1 = 0; p->xaa_0 = p->xaa_1; p->xa8 = 0xff; p->pc++; return 0; }
+#endif
 #endif
 int fn_80069E8C(VM* p) { p->xa8 = AT(u8, p->pc, 3); p->fa4 = (float)p->xa8; p->fa0 = lbl_805DEB70; p->pc++; return 0; }
 #if 0
+#if 0
 void fn_8006E03C(u32 id, int v) { Node6E* n; for (n = lbl_80550DC0[0].head; n != 0; n = n->next) { if (n->id == id) break; } if (n != 0) n->x70 = v; }
+#endif
 #endif
 typedef struct { char pad[4]; u16 a[200]; u16 n; } X;
 int fn_8007171C(X* p, u16 v) { u16 n = p->n; if (n < 200) { p->n = n + 1; p->a[n] = v; return 1; } return 0; }
