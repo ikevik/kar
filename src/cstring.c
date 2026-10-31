@@ -1,4 +1,3 @@
-#pragma dont_inline on
 
 typedef unsigned long size_t;
 

@@ -1,13 +1,13 @@
-#pragma dont_inline on
 typedef unsigned char u8;
 typedef unsigned long u32;
 typedef signed long s32;
 
 typedef struct TRKBuffer {
-    u32 pad0;
-    u32 pad4;
+    u32 mutex;
+    u32 isUsed;
     u32 length;
     u32 position;
+    u8 data[0x880];
 } TRKBuffer;
 
 typedef struct TRKEvent {
@@ -36,6 +36,13 @@ extern TRKState gTRKState;
 extern TRKCPUState gTRKCPUState;
 extern DBCommTable gDBCommTable;
 extern u8 lbl_80569E90[];
+extern char lbl_8048BC58[];
+extern void* TRK_memcpy(void*, const void*, u32);
+extern void* TRK_memset(void*, s32, u32);
+extern s32 fn_803BFF28(void*);
+extern s32 fn_803BFF30(void*);
+extern s32 fn_803BFF38(void*);
+extern void fn_803BE624(char*);
 extern u32 lbl_8056B858[];
 extern u8 lbl_8056BDF8[];
 extern s32 lbl_805DDD08;
@@ -58,6 +65,166 @@ extern s32 fn_803F3950(void);
 extern s32 fn_803F3954(void);
 extern s32 fn_803F3CE0(void);
 extern void fn_803C2430(void);
+
+
+static inline s32 ReadBuf(TRKBuffer* buf, void* data, u32 n)
+{
+    s32 err = 0;
+    u32 avail;
+    if (n == 0) {
+        return 0;
+    }
+    avail = buf->length - buf->position;
+    if (n > avail) {
+        err = 0x302;
+        n = avail;
+    }
+    TRK_memcpy(data, buf->data + buf->position, n);
+    buf->position += n;
+    return err;
+}
+
+s32 TRKReadBuffer_ui8(TRKBuffer* buf, u8* data, s32 count)
+{
+    s32 err = 0;
+    s32 i;
+    for (i = 0; err == 0 && i < count; i++) {
+        u32 n = 1;
+        s32 e = 0;
+        u32 avail = buf->length - buf->position;
+        if (n > avail) {
+            e = 0x302;
+            n = avail;
+        }
+        TRK_memcpy(data + i, buf->data + buf->position, n);
+        buf->position += n;
+        err = e;
+    }
+    return err;
+}
+
+static inline s32 AppendByte(TRKBuffer* buf, u8 b)
+{
+    if (buf->position >= 0x880) {
+        return 0x301;
+    }
+    buf->data[buf->position++] = b;
+    buf->length++;
+    return 0;
+}
+
+s32 TRKAppendBuffer_ui8(TRKBuffer* buf, const u8* data, s32 count)
+{
+    s32 i = 0;
+    s32 err = 0;
+    while (err == 0 && i < count) {
+        err = AppendByte(buf, *data);
+        i++;
+        data++;
+    }
+    return err;
+}
+
+s32 TRKReadBuffer(TRKBuffer* buf, void* data, u32 n)
+{
+    s32 err = 0;
+    u32 avail;
+    if (n == 0) {
+        return 0;
+    }
+    avail = buf->length - buf->position;
+    if (n > avail) {
+        err = 0x302;
+        n = avail;
+    }
+    TRK_memcpy(data, buf->data + buf->position, n);
+    buf->position += n;
+    return err;
+}
+
+s32 TRKAppendBuffer(TRKBuffer* buf, const void* data, u32 n)
+{
+    s32 err = 0;
+    u32 room;
+    if (n == 0) {
+        return 0;
+    }
+    room = 0x880 - buf->position;
+    if (room < n) {
+        err = 0x301;
+        n = room;
+    }
+    if (n == 1) {
+        buf->data[buf->position] = *(const u8*)data;
+    } else {
+        TRK_memcpy(buf->data + buf->position, data, n);
+    }
+    buf->position += n;
+    buf->length = buf->position;
+    return err;
+}
+
+void TRKResetBuffer(TRKBuffer* buf, s32 keep)
+{
+    buf->length = 0;
+    buf->position = 0;
+    if (!keep) {
+        TRK_memset(buf->data, 0, 0x880);
+    }
+}
+
+void TRKReleaseBuffer(s32 idx)
+{
+    if (idx != -1 && idx >= 0 && idx < 3) {
+        TRKBuffer* buf = (TRKBuffer*)(lbl_80569E90 + idx * 0x890);
+        fn_803BFF30(buf);
+        buf->isUsed = 0;
+        fn_803BFF28(buf);
+    }
+}
+
+s32 TRKGetFreeBuffer(s32* idxOut, TRKBuffer** bufOut)
+{
+    s32 err = 0x300;
+    s32 i;
+    *bufOut = 0;
+    for (i = 0; i < 3; i++) {
+        TRKBuffer* buf = 0;
+        if (i >= 0 && i < 3) {
+            buf = (TRKBuffer*)(lbl_80569E90 + i * 0x890);
+        }
+        fn_803BFF30(buf);
+        if (buf->isUsed == 0) {
+            buf->length = 0;
+            buf->position = 0;
+            buf->isUsed = 1;
+            err = 0;
+            *bufOut = buf;
+            *idxOut = i;
+            i = 3;
+        }
+        fn_803BFF28(buf);
+    }
+    if (err == 0x300) {
+        fn_803BE624(lbl_8048BC58);
+    }
+    return err;
+}
+
+s32 TRKInitializeMessageBuffers(void)
+{
+    s32 i;
+    TRKBuffer* buf = (TRKBuffer*)lbl_80569E90;
+    for (i = 0; i < 3; i++) {
+        fn_803BFF38(buf);
+        fn_803BFF30(buf);
+        buf->isUsed = 0;
+        fn_803BFF28(buf);
+        buf++;
+    }
+    return 0;
+}
+
 
 void TRKDestructEvent(TRKEvent* event)
 {
@@ -134,17 +301,17 @@ u32 fn_803BF73C(void)
     return lbl_8056B858[0];
 }
 
-s32 fn_803BFF28(void)
+s32 fn_803BFF28(void* p)
 {
     return 0;
 }
 
-s32 fn_803BFF30(void)
+s32 fn_803BFF30(void* p)
 {
     return 0;
 }
 
-s32 fn_803BFF38(void)
+s32 fn_803BFF38(void* p)
 {
     return 0;
 }
@@ -174,6 +341,7 @@ s32 fn_803C046C(void)
     return 0;
 }
 
+#pragma dont_inline on
 void TRKTargetSetStopped(s32 stopped)
 {
     gTRKState.stopped = stopped;
@@ -241,6 +409,7 @@ void ReserveEXI2Port(void)
     gDBCommTable.f[9]();
 }
 
+#pragma dont_inline reset
 void fn_803C2400(void)
 {
     gDBCommTable.f[3]();

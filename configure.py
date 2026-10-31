@@ -326,7 +326,7 @@ config.libs = [
         "Dolphin SDK",
         "sdk",
         [
-            Object(Matching, "abort_exit.c"),
+            Object(Matching, "abort_exit.c", cflags=cflags_runtime),
         ],
     ),
     Lib(
@@ -340,7 +340,7 @@ config.libs = [
         "Dolphin SDK",
         "sdk",
         [
-            Object(NonMatching, "cstring.c"),
+            Object(NonMatching, "cstring.c", cflags=cflags_runtime),
             Object(NonMatching, "dolphin/dolphin_sdk_other.c"),
         ],
     ),
@@ -348,7 +348,7 @@ config.libs = [
         "MetroTRK",
         "sdk",
         [
-            Object(NonMatching, "MetroTRK/TRK_MINNOW_DOLPHIN.c"),
+            Object(NonMatching, "MetroTRK/TRK_MINNOW_DOLPHIN.c", cflags=cflags_runtime),
         ],
     ),
     Lib(
@@ -459,7 +459,7 @@ config.libs = [
         "MetroTRK",
         "sdk",
         [
-            Object(Matching, "TRK_MINNOW_DOLPHIN/mem_TRK.c"),
+            Object(Matching, "TRK_MINNOW_DOLPHIN/mem_TRK.c", cflags=cflags_runtime),
             Object(NonMatching, "TRK_MINNOW_DOLPHIN/__exception.c"),
         ],
     ),
