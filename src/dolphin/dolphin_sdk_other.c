@@ -782,4 +782,69 @@ double fn_803BCF78(double x, int n)
     }
     return x;
 }
+
+extern const double lbl_805E56F0;
+extern const double lbl_805E56F8;
+
+double fn_803BCB64(double x)
+{
+    int i0, i1, j0;
+    unsigned int i, j;
+
+    i0 = *(int*)&x;
+    i1 = *((int*)&x + 1);
+    j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+    if (j0 < 20) {
+        if (j0 < 0) {
+            if (lbl_805E56F0 + x > lbl_805E56F8) {
+                if (i0 < 0) {
+                    i0 = 0x80000000;
+                    i1 = 0;
+                } else if ((i0 | i1) != 0) {
+                    i0 = 0x3ff00000;
+                    i1 = 0;
+                }
+            }
+        } else {
+            i = (0x000fffff) >> j0;
+            if (((i0 & i) | i1) == 0) {
+                return x;
+            }
+            if (lbl_805E56F0 + x > lbl_805E56F8) {
+                if (i0 > 0) {
+                    i0 += (0x00100000) >> j0;
+                }
+                i0 &= (~i);
+                i1 = 0;
+            }
+        }
+    } else if (j0 > 51) {
+        if (j0 == 0x400) {
+            return x + x;
+        }
+        return x;
+    } else {
+        i = ((unsigned int)(0xffffffff)) >> (j0 - 20);
+        if ((i1 & i) == 0) {
+            return x;
+        }
+        if (lbl_805E56F0 + x > lbl_805E56F8) {
+            if (i0 > 0) {
+                if (j0 == 20) {
+                    i0 += 1;
+                } else {
+                    j = i1 + (1 << (52 - j0));
+                    if (j < i1) {
+                        i0 += 1;
+                    }
+                    i1 = j;
+                }
+            }
+            i1 &= (~i);
+        }
+    }
+    *(int*)&x = i0;
+    *((int*)&x + 1) = i1;
+    return x;
+}
 #pragma dont_inline on
