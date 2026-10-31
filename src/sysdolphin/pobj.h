@@ -104,7 +104,7 @@ typedef struct _HSD_ShapeSet {
     u32 nb_normal_index;
     struct _HSD_VtxDescList* normal_desc;
     u8** normal_idx_list;
-    struct {
+    union {
         f32* bp;
         f32 bl;
     } blend;
