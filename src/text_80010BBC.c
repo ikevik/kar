@@ -324,44 +324,51 @@ void fn_801C8A60(u32, u32, float);
 void fn_8000B2B8(void);
 void fn_80072770(void);
 void fn_80073FBC(void);
+u32 fn_8002D0EC(void);
+u32 fn_8002D9E8(void);
+u32 fn_80135D08(u32, u32, u32, float);
+void loadMainMenuMusic(u32, float);
+void debug_memCard_reqSave(void);
+void memset(u32, u32, u32);
+void fn_8002CFD8(u32, u32, u32);
+float fn_8003D03C(void);
+void fn_8003EDEC(u32, float);
 u32 fn_8000CC18(void);
 void fn_8000BC10(void);
 void fn_8000CCB8(void);
 void fn_800088C8(u32);
 void fn_8005A348(void);
+u32 fn_80136AF0(void);
+u32 fn_80136FD8(void);
+u32 fn_80137470(void);
+void fn_80071D7C(u32, float);
 void fn_801377E8(void);
 void fn_8000B884(void);
-void fn_80071D7C(void);
 void fn_80138204(void);
+u32 fn_8000AD48(void);
+u32 fn_8000AE50(void);
 u32 fn_8007863C(void);
 void fn_8007875C(void);
-void __assert(u32, u32, u32);
+u32 __assert(u32, u32, u32);
 void fn_80078720(void);
 u32 fn_80078CC0(void);
 u32 menu_getCurrentMenuID(void);
-void fn_800064F0(void);
+float fn_800064F0(void);
 void fn_80008220(void);
 u32 fn_8042A0A0(u32, u32);
 void fn_80078028(u32, u32, u32, u32);
 void fn_80076F8C(u32, u32, u32, u32, u32, float, float, float, float);
-void func_80428F64(u32);
-void fn_80077A5C(void);
+u32 func_80428F64(u32);
+void fn_80077A5C(u32, float);
 void menuGetNextMenuID(u32);
-void fn_80448220(u32);
-void fn_80077980(void);
-u32 fn_80077B50(u32, u32, u32, u32, u32, u32);
-u32 func_80428F28(u32, u32, u32);
-void HSD_GObj_AddGXLink(u32, u32, u32, u32);
-u32 HSD_CObjLoadDesc(u32);
-void fn_80429C14(u32, u32, u32);
-void fn_80429728(u32, u32, u32);
-void fn_80077ED4(u32, u32);
-void fn_8000A498(u32);
 void fn_8007859C(void);
 u32 fn_8027C830(void);
 void fn_8027C838(void);
+void fn_80077980(void);
 void fn_8006595C(void);
 u32 fn_8027E574(void);
+u32 fn_80077B50(u32, u32, u32, u32, u32, u32);
+void fn_80077ED4(u32, float);
 void fn_8027CCA8(void);
 void lbLoadMusicLocation(u32);
 void fn_800780D0(u32);
@@ -374,6 +381,17 @@ void fn_8005A608(void);
 void fn_8027EF6C(void);
 void fn_8027F5B4(void);
 void fn_8027F610(void);
+void fn_80138D74(void);
+u32 fn_8000AECC(void);
+void fn_801822F4(u32, u32);
+u32 fn_8007B650(u32);
+u32 fn_8000AAC4(void);
+u32 fn_8000AF5C(void);
+u32 plGetPlayerKind(u32);
+u32 fn_8000A300(void);
+u32 fn_8000916C(void);
+void fn_8004D248(u32);
+void fn_8004D5D4(u32, float);
 void fn_802339E4(void);
 void fn_8007ADB8(void);
 void fn_80281660(void);
@@ -382,7 +400,11 @@ void fn_80281BB4(void);
 void fn_802823FC(u32);
 void fn_8005A5B0(void);
 void fn_804119E4(u32);
+u32 HSD_AObjGetFlags(u32);
 void fn_803FCDB8(u32, ...);
+u32 fn_8040BD4C(u32, u32, u32);
+float fn_8040BD64(u32, u32);
+float fn_8040C0D8(u32, u32);
 void fn_80408F88(u32, u32);
 u32 HSD_RObjAlloc(u32, u32);
 void HSD_RObjSetFlags(u32, u32);
@@ -394,22 +416,20 @@ void HSD_RObjAnimAll(u32);
 void HSD_AObjInitEndCallBack(u32);
 void fn_80055DF8(u32);
 void HSD_AObjInvokeCallBacks(void);
-void fn_8040BD64(u32, u32);
-void fn_8040C0D8(u32, u32);
 void HSD_JObjUnref(u32);
 void fn_800571A4(u32, u32, u32, u32, u32);
-void OSDisableInterrupts(u32, u32);
-void HSD_GetHeap(void);
-void HSD_SetHeap(u32);
+u32 OSDisableInterrupts(u32, u32);
+void HSD_GetHeap(u32, float);
+float HSD_SetHeap(u32);
 void HSD_Free(u32);
-void fn_80057A9C(u32, u32);
-void OSRestoreInterrupts(void);
+float fn_80057A9C(u32, u32, float);
+void OSRestoreInterrupts(float);
 void fn_80059CFC(void);
 u32 fn_80058E84(void);
 u32 DVDConvertPathToEntrynum(void);
 u32 DVDFastOpen(u32, u32);
 void OSReport(u32, ...);
-void fn_803C5304(u32);
+void fn_803C5304(u32, float);
 void fn_80058920(u32, u32);
 u32 fn_8007603C(void);
 void fn_80075DC0(void);
@@ -418,18 +438,22 @@ void fn_803D3708(u32, u32);
 void fn_8005FA48(u32);
 void fn_8005FAE4(u32);
 void fn_8005FB64(u32);
-void fn_8005FBDC(u32);
+u32 fn_8005FBDC(u32);
 void fn_8005FD38(u32);
-void fn_8005FD9C(u32);
+float fn_8005FD9C(u32);
 void fn_8005BA38(u32, u32);
-void fn_8005C298(u32, u32, u32);
-void fn_8005B934(u32);
-void fn_80444984(u32, u32);
+float fn_8005C298(u32, u32, u32);
+void fn_8005B934(u32, float);
+u32 fn_80444984(u32, u32);
 void fn_8005BEE4(u32, u32);
+void fn_80448220(u32);
 void fn_804484D0(u32);
+u32 fn_8005C6DC(void);
 void fn_80445A84(u32);
 void fn_80445810(u32, u32);
 void fn_804458D0(u32, u32);
+void fn_8044327C(u32, u32, u32);
+void fn_80443398(u32, u32);
 
 void fn_800153AC(u32 p3) {
     u32 v1;
@@ -448,19 +472,6 @@ void fn_8002DC74(void) {
     fn_8000B2B8();
     fn_80072770();
     fn_80073FBC();
-}
-
-void fn_800444AC(void) {
-    fn_801377E8();
-    fn_8000B884();
-    fn_80071D7C();
-    fn_8005E5D0();
-}
-
-void fn_80045A44(void) {
-    fn_80138204();
-    fn_80071D7C();
-    fn_8005E5D0();
 }
 
 void fn_800483C0(void) {
@@ -653,6 +664,21 @@ void fn_8004F714(void) {
     M8(((u32)(u32)lbl_80537430+16)) = 0;
 }
 
+u32 fn_80054798(u32 p3) {
+    u32 v1;
+    u32 ph1;
+    u32 c0;
+    v1 = M32(((u32)p3+124));
+    ph1 = 0;
+    if ((u32)v1 != (u32)0) {
+        c0 = HSD_AObjGetFlags(v1);
+        if ((s32)(c0&0x40000000) == (s32)0) {
+            ph1 = 1;
+        }
+    }
+    return ph1;
+}
+
 void fn_800550F4(u32 p3, u32 p4) {
     fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjSetFlags, 3, (8192<<16));
 }
@@ -775,20 +801,27 @@ void HasCamera(u32 p3) {
 }
 
 void fn_8005A064(void) {
+    u32 v1;
+    float fph0;
+    float d5;
+    float d10;
     fn_8005FA48(255);
     fn_8005FAE4(255);
     fn_8005FB64(255);
     fn_8005FBDC(255);
     fn_8005FD38(1);
-    fn_8005FD9C(1);
-    if ((s32)(M32(&lbl_80538088[0])) == (s32)0) {
+    d5 = fn_8005FD9C(1);
+    v1 = M32(&lbl_80538088[0]);
+    fph0 = d5;
+    if ((s32)v1 == (s32)0) {
         fn_8005E788();
         fn_8005BA38(0, 17);
         fn_8005C298(17, 0, 1);
         fn_8005BA38(1, 6);
-        fn_8005C298(6, 1, 1);
+        d10 = fn_8005C298(6, 1, 1);
+        fph0 = d10;
     }
-    fn_8005B934(1);
+    fn_8005B934(1, fph0);
     fn_80444984(10, 999);
     fn_80444984(12, 2);
     fn_80444984(13, 2);
@@ -878,6 +911,46 @@ void fn_8005B9D0(u32 p3) {
 
 void fn_8005E184(void) {
     fn_80445A84(1);
+}
+
+void fn_8005F5BC(u32 p3, u32 p4) {
+    u32 ph1;
+    if ((s32)p4 > (s32)255) {
+        ph1 = 255;
+    } else {
+        ph1 = p4;
+        if ((s32)p4 < (s32)0) {
+            ph1 = 0;
+        }
+    }
+    fn_8044327C(p3, (ph1&0xff), 1);
+}
+
+void fn_8005F6A8(u32 p3, u32 p4) {
+    u32 ph1;
+    if ((s32)p4 > (s32)2400) {
+        ph1 = 2400;
+    } else {
+        ph1 = p4;
+        if ((s32)p4 < (s32)-10800) {
+            ph1 = -10800;
+        }
+    }
+    fn_80443398(p3, ((s16)ph1));
+}
+
+u32 fn_8005FBDC(u32 p3) {
+    u32 ph1;
+    if ((s32)p3 > (s32)255) {
+        ph1 = 255;
+    } else {
+        ph1 = p3;
+        if ((s32)p3 < (s32)0) {
+            ph1 = 0;
+        }
+    }
+    M16(((u32)(u32)lbl_80538088+62)) = ph1;
+    return ph1;
 }
 
 
