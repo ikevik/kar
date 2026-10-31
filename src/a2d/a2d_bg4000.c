@@ -94,4 +94,14 @@ u32 fn_8033EB44(u32 p3) {
 
 
 
+
+u32 fn_8033EC00(u32 p3) {
+    return p3 == 0 ? (u32)lbl_804E7614 : (u32)lbl_804E7660;
+}
+
+
+u32 fn_8033EBB0(void) {
+    return M32(fn_803AD760(lbl_805DDBC0, 0, (u32)&lbl_805DAEF8, (u32)&lbl_805DAEF0, 0) + 20) == 1 ? (u32)lbl_804E7614 : (u32)lbl_804E7660;
+}
+
 }

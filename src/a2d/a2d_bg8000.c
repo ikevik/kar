@@ -131,4 +131,14 @@ void fn_8034A080(void) {}
 
 
 
+
+u32 fn_80344B10(u32 p3) {
+    return p3 == 0 ? (u32)lbl_804E91EC : (u32)lbl_804E92B4;
+}
+
+
+u32 fn_80344AC0(void) {
+    return M32(fn_803AD760(lbl_805DDBC0, 0, (u32)&lbl_805DB1C0, (u32)&lbl_805DB1B8, 0) + 20) == 1 ? (u32)lbl_804E91EC : (u32)lbl_804E92B4;
+}
+
 }

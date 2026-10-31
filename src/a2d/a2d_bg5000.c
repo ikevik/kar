@@ -56,4 +56,14 @@ void fn_8034185C(void) {}
 
 
 
+
+u32 fn_80341FE0(u32 p3) {
+    return p3 == 0 ? (u32)lbl_804E83B0 : (u32)lbl_804E8474;
+}
+
+
+u32 fn_80341F90(void) {
+    return M32(fn_803AD760(lbl_805DDBC0, 0, (u32)&lbl_805DB0D0, (u32)&lbl_805DB0C8, 0) + 20) == 1 ? (u32)lbl_804E83B0 : (u32)lbl_804E8474;
+}
+
 }
