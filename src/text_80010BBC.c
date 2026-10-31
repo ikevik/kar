@@ -381,13 +381,17 @@ void fn_8005A608(void);
 void fn_8027EF6C(void);
 void fn_8027F5B4(void);
 void fn_8027F610(void);
+u32 gmGetClearcheckerTypeP(u32, u32);
+u32 fn_8007B650(void);
+void OSReport(u32, ...);
+void fn_8006176C(u32);
 void fn_80138D74(void);
 u32 fn_8000AECC(void);
 void fn_801822F4(u32, u32);
-u32 fn_8007B650(u32);
 u32 fn_8000AAC4(void);
 u32 fn_8000AF5C(void);
 u32 plGetPlayerKind(u32);
+void fn_8004D8A8(u32);
 u32 fn_8000A300(void);
 u32 fn_8000916C(void);
 void fn_8004D248(u32);
@@ -428,7 +432,6 @@ void fn_80059CFC(void);
 u32 fn_80058E84(void);
 u32 DVDConvertPathToEntrynum(void);
 u32 DVDFastOpen(u32, u32);
-void OSReport(u32, ...);
 void fn_803C5304(u32, float);
 void fn_80058920(u32, u32);
 u32 fn_8007603C(void);
@@ -666,17 +669,17 @@ void fn_8004F714(void) {
 
 u32 fn_80054798(u32 p3) {
     u32 v1;
-    u32 ph1;
+    u32 ph2;
     u32 c0;
     v1 = M32(((u32)p3+124));
-    ph1 = 0;
+    ph2 = 0;
     if ((u32)v1 != (u32)0) {
         c0 = HSD_AObjGetFlags(v1);
         if ((s32)(c0&0x40000000) == (s32)0) {
-            ph1 = 1;
+            ph2 = 1;
         }
     }
-    return ph1;
+    return ph2;
 }
 
 void fn_800550F4(u32 p3, u32 p4) {

@@ -539,11 +539,16 @@ void fn_803CF820(u32, u32, u32, u32);
 void fn_803EE8B8(u32, u32);
 void fn_803F28A4(u32);
 void fn_8007744C(u32, u32);
+void fn_8045E978(void);
+void OSEnableInterrupts(u32);
+u32 HSD_Alloc(u32);
+float __assert(u32, u32, u32);
+u32 OSCreateThread(u32, u32, u32, u32, u32, u32, u32, float);
+void OSResumeThread(u32, float);
 u32 HVQM4PlayerExControlExit(u32);
 void fn_80459FBC(u32, u32);
 float fn_80062CA4(u32, u32);
 void fn_80079A60(u32, u32, u32, float);
-float __assert(u32, u32, u32);
 void fn_80052F7C(u32, u32);
 void fn_80052FB8(u32, u32);
 void fn_8048846C(void);
@@ -566,13 +571,22 @@ void fn_80083D20(u32, u32, float);
 float fn_80080858(u32, u32);
 float fn_801957AC(u32);
 void fn_8007E500(u32, u32, u32);
+void fn_801D1048(u32, u32, u32, u32);
 u32 fn_80005D04(u32);
 void gmSetFreezeGameFlag(u32);
 u32 func_80428F28(u32, u32, u32);
 void HSD_GObj_AddGXLink(u32, u32, u32, u32);
+float fn_80085D1C(u32);
+u32 fn_80084FA0(u32, float);
+u32 fn_80085674(u32, float);
+u32 fn_8008A1F8(u32, float);
+void fn_80084D0C(u32, float);
+void fn_80086120(void);
+void fn_80088078(u32, u32);
 void fn_80088110(u32);
 void OSReport(u32, ...);
 u32 fn_80245ED0(u32);
+void fn_80062ECC(u32, u32);
 void fn_80411590(void);
 u32 fn_80411874(void);
 float fn_8009DB18(void);
@@ -1169,12 +1183,44 @@ u32 fn_800822B4(void) {
     return (((M8(&lbl_80552E08[0]))>>7)&0x1);
 }
 
+u32 fn_800822C4(void) {
+    u32 v1;
+    u32 v2;
+    u32 v4;
+    v1 = M32(((u32)(u32)lbl_80552E08+44));
+    v2 = M8((u32)lbl_80552E08);
+    ((BFu8_0_1*)((u32)lbl_80552E08))->f = 0;
+    if ((u32)v1 == (u32)0) {
+    return (u32)lbl_80552E08;
+    }
+    M8(((u32)v1+38)) = ((M8(((u32)v1+38)))|64);
+    v4 = M32(((u32)(u32)lbl_80552E08+44));
+    M8(((u32)v4+38)) = ((M8(((u32)v4+38)))|128);
+    return v4;
+}
+
 void fn_80083644(u32 p3, u32 p4) {
     fn_8007E1A0(p4, ((M32(((u32)p3+44)))+760), ((M32(((u32)p3+44)))+820), ((M32(((u32)p3+44)))+832));
 }
 
 u32 fn_80083714(void) {
     return (((M8(&lbl_80552E40[0]))>>7)&0x1);
+}
+
+u32 fn_80083724(void) {
+    u32 v1;
+    u32 v2;
+    u32 v4;
+    v1 = M32(((u32)(u32)lbl_80552E40+24));
+    v2 = M8((u32)lbl_80552E40);
+    ((BFu8_0_1*)((u32)lbl_80552E40))->f = 0;
+    if ((u32)v1 == (u32)0) {
+    return (u32)lbl_80552E40;
+    }
+    M8(((u32)v1+38)) = ((M8(((u32)v1+38)))|64);
+    v4 = M32(((u32)(u32)lbl_80552E40+24));
+    M8(((u32)v4+38)) = ((M8(((u32)v4+38)))|128);
+    return v4;
 }
 
 u32 fn_800837AC(void) {
@@ -1199,6 +1245,22 @@ void fn_80084B80(void) {
         HSD_GObj_AddGXLink(c0, (u32)fn_800849B8, 36, 1);
     }
     M32(((u32)(u32)lbl_80552F78+48)) = c0;
+}
+
+void fn_80086120(void) {
+    u32 v1;
+    u32 v3;
+    u32 ph1;
+    v1 = M32(((u32)(u32)lbl_80552FB0+68));
+    M8((u32)lbl_80552FB0) = 0;
+    ph1 = (u32)lbl_80552FB0;
+    if ((u32)v1 != (u32)0) {
+        M8(((u32)v1+38)) = ((M8(((u32)v1+38)))|64);
+        v3 = M32(((u32)(u32)lbl_80552FB0+68));
+        M8(((u32)v3+38)) = ((M8(((u32)v3+38)))|128);
+        ph1 = v3;
+    }
+    fn_80088078(ph1, v1);
 }
 
 u32 fn_80086D44(u32 p3, u32 p4, u32 p5, u32 p6) {
