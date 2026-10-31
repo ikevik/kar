@@ -287,3 +287,41 @@ void fn_800726F0(int v) { AT(int, fn_80073F94(), 0x18) = v; }
 void fn_80072720(void) { char* g = fn_80073F94(); AT(int, g, 0x24) = 0x1; }
 void fn_80072748(void) { char* g = fn_80073F94(); AT(int, g, 0x28) = 0x1; }
 void fn_80072770(u8 v) { AT(u8, fn_80073F94(), 0x7c) = v; }
+
+extern int fn_800BBE0C(), fn_800BBFC4(), fn_8006E6D8(), fn_8006EAD8(), fn_8006EE9C(), fn_8006F13C(), fn_80071024();
+extern void HSD_ObjAllocInit(), HSD_ObjFree(), fn_80072EE4(), fn_8007138C(), fn_80071840(), fn_804889C0();
+extern void fn_8006A250();
+extern int fn_80006384(), fn_804533C4(), fn_8045B7F8(), fn_80459C40(), fn_80459D6C(), fn_80079428(), fn_80487C48();
+extern int* HSD_ObjAlloc();
+extern void HSD_ShadowSetActive();
+extern char lbl_80550ED8[], lbl_80550F08[], lbl_80550F38[], lbl_80552A00[], lbl_805529D0[];
+
+void fn_80068CE4(VM* p) { fn_800BBE0C((*(u16*)p->pc >> 2) & 0xFF, *p->pc & 0x3FFFF); p->pc++; }
+void fn_80068D30(VM* p) { fn_800BBFC4(p); p->pc++; }
+int fn_8006EA08(int a, int b) { int r = 0; fn_8006E6D8(a, b, &r); return r; }
+int fn_8006EE6C(int a, int b) { int r = 0; fn_8006EAD8(a, b, &r); return r; }
+int fn_8006F10C(int a, int b, int c) { int r = 0; fn_8006EE9C(a, b, c, &r); return r; }
+int fn_8006F400(int a, int b, int c) { int r = 0; fn_8006F13C(a, b, c, &r); return r; }
+int fn_8006FBF0(int a, int* p) { return fn_80071024(p[0], p[1], p[2], a); }
+void fn_80071224(void) { lbl_805DD5C0 = 0; HSD_ObjAllocInit(lbl_80550ED8, 0x19c, 4); }
+void fn_8007125C(void) { int* p = HSD_ObjAlloc(lbl_80550ED8); p[0] = lbl_805DD5C0; lbl_805DD5C0 = (int)p; }
+void fn_80071E14(int p) { HSD_ObjFree(lbl_80550F08, p); }
+void fn_80072514(void) { HSD_ObjAllocInit(lbl_80550F38, 0xc, 4); }
+void fn_8007ADB8(void) { HSD_ObjAllocInit(lbl_80552A00, 0x24, 4); }
+void fn_80072430(char* p) { fn_8006A250(AT(char*, p, 0x2c) + 0x20); }
+void fn_80072EB4(void) { AT(int, lbl_80550F68, 0x13c4) = 10; fn_80072EE4(); }
+int fn_80075D90(void) { return (u8)fn_80006384() != 0; }
+int fn_80078D24(void) { return fn_804533C4(0) != -3; }
+void fn_800786F8(void) { fn_8045B7F8(0, 0); }
+void fn_80078720(void) { AT(int, lbl_805528F8, 0x20) = 1; fn_80459C40(0, lbl_8049AB40); }
+void fn_80078C7C(void) { AT(int, lbl_805528F8, 0x20) = 1; fn_80459D6C(0); }
+void fn_80079988(void) { int* p = HSD_ObjAlloc(lbl_805529D0); p[0] = lbl_805DD620; lbl_805DD620 = (int)p; }
+void fn_8007A4D0(int a) { fn_80079428(0, a, 0); }
+void fn_8007B66C(void) { AT(int, lbl_80552A30, 0x20) = 0; fn_804889C0(); }
+void fn_80071810(char* p, int a, int b) { AT(short, p, 0x194) = 0; fn_8007138C(p, a, 0, b); }
+void fn_80071C90(char* p, int a, int b, int c) { AT(short, p, 0x194) = 0; fn_80071840(p, a, b, 0, c); }
+typedef struct { void* p0; char pad[0x1c]; u8 a : 1; u8 b : 1; } SH;
+void fn_8007B3C4(char* o) { SH* s = AT(SH*, o, 0x2c); if (s->a) { s->a = 0; HSD_ShadowSetActive(s->p0, 1); } }
+void fn_8007B408(char* o) { SH* s = AT(SH*, o, 0x2c); if (!s->a) { s->a = 1; HSD_ShadowSetActive(s->p0, 0); } }
+void fn_8007B470(char* o) { AT(SH*, o, 0x2c)->b = 1; }
+int fn_8007B954(void) { if (AT(u8, lbl_80552A30, 0x24) != 0) return AT(u8, lbl_80552A30, 0x25); return fn_80487C48(); }
