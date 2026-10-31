@@ -316,7 +316,7 @@ config.libs = [
             Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/NMWException.cpp"),
             Object(NonMatching, "Runtime.PPCEABI.H/MWRTTI.cpp"),
-            Object(NonMatching, "Runtime.PPCEABI.H/runtime.c"),
+            Object(Matching, "Runtime.PPCEABI.H/runtime.c"),
             Object(NonMatching, "__init_cpp_exceptions.cpp"),
             Object(NonMatching, "Runtime.PPCEABI.H/Gecko_ExceptionPPC.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/GCN_mem_alloc.c"),
