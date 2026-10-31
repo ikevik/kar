@@ -10,6 +10,11 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+struct VC2_float_uf { virtual void d0(); virtual void d1(); virtual float m(u32, float); };
+extern "C" {
+extern u8 lbl_804D9BAC[];
+extern u8 lbl_804BDF2C[];
+extern u8 lbl_804BDF70[];
 extern const float lbl_805E3AD0;
 extern u32 lbl_805DDC0C;
 extern u32 lbl_805DDC10;
@@ -35,19 +40,28 @@ float fn_802EF814(u32, u32, float);
 float fn_80289730(u32, u32, float);
 float fn_804087F4(u32, u32, u32, float);
 void fn_8040A64C(u32, float);
-void fn_803FCDB8(u32, ...);
+float fn_803FCDB8(u32, ...);
 float fn_803799B8(u32);
 void fn_8037989C(u32, u32);
-void fn_80379784(u32, u32, u32);
+float fn_80379784(u32, u32, u32);
+float fn_8040BE00(u32, u32, float);
+float fn_802F7718(u32);
+float fn_8037B028(u32, u32, u32, u32, u32, u32, float);
+float fn_8037AFD0(u32, u32, u32, float);
 float fn_802D4678(u32);
 void func_803D2098(u32, u32, u32, float);
+float fn_802D1D84(u32);
 u32 fn_802DE0E4(void);
 u32 fn_8034D1F8(void);
 void __cvt_fp2unsigned(u32, float);
 u32 fn_803AD760(u32, u32, u32, u32, u32);
+float fn_802DF844(u32);
+float fn_8040C174(u32, u32, float);
+void fn_80381D6C(u32, u32, u32, float);
 void fn_80393820(u32);
 void fn_80313AC4(u32);
 void fn_80315C0C(u32, u32, u32, u32, u32);
+u32 fn_8030D510(u32);
 void fn_80391F10(u32);
 float fn_8040C0D8(u32, u32);
 void fn_8031DC48(u32, float);
@@ -90,6 +104,7 @@ void fn_802F189C(u32 p3) {
     }
     fn_80379784((p3+628), ((8<<16)+47), 0);
 }
+
 
 void fn_802F88DC(u32 p3) {
     u32 v1;
@@ -713,7 +728,7 @@ u32 fn_8030D494(void) {
     return 1;
 }
 
-u32 fn_8030D510(void) {
+u32 fn_8030D510(u32 p3) {
     return (u32)lbl_804DD0D8;
 }
 
@@ -928,3 +943,4 @@ void fn_8032115C(void) {}
 
 
 
+}

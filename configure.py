@@ -272,6 +272,7 @@ def MatchingFor(*versions):
 
 
 config.warn_missing_config = True
+cflags_cpp = cflags_base + ["-lang=c++"]
 config.warn_missing_source = False
 config.libs = [
     Lib(
@@ -293,21 +294,21 @@ config.libs = [
             Object(NonMatching, "a2d/a2d_game_lib.c"),
             Object(NonMatching, "text_8028B974.c"),
             Object(NonMatching, "a2d/a2d_gamehistory.c"),
-            Object(NonMatching, "a2d/a2d_gamesession.c"),
-            Object(NonMatching, "a2d/a2d_cpu_kirby.c"),
-            Object(NonMatching, "a2d/a2d_kirbyjointanim.c"),
+            Object(NonMatching, "a2d/a2d_gamesession.c", cflags=cflags_cpp),
+            Object(NonMatching, "a2d/a2d_cpu_kirby.c", cflags=cflags_cpp),
+            Object(NonMatching, "a2d/a2d_kirbyjointanim.c", cflags=cflags_cpp),
             Object(NonMatching, "a2d/a2d_lavabomb.c"),
             Object(NonMatching, "a2d/a2d_grindrail.c"),
-            Object(NonMatching, "a2d/a2d_bg3000.c"),
-            Object(NonMatching, "a2d/a2d_bg4000.c"),
-            Object(NonMatching, "a2d/a2d_bg5000.c"),
-            Object(NonMatching, "a2d/a2d_bg8000.c"),
+            Object(NonMatching, "a2d/a2d_bg3000.c", cflags=cflags_cpp),
+            Object(NonMatching, "a2d/a2d_bg4000.c", cflags=cflags_cpp),
+            Object(NonMatching, "a2d/a2d_bg5000.c", cflags=cflags_cpp),
+            Object(NonMatching, "a2d/a2d_bg8000.c", cflags=cflags_cpp),
             Object(NonMatching, "text_8034D384.c"),
             Object(NonMatching, "a2d/a2d_kurakko.c"),
             Object(NonMatching, "a2d/a2d_game_audio.c"),
             Object(NonMatching, "a2d/a2d_soundhandle.c"),
             Object(NonMatching, "a2d/a2d_game_effect.c"),
-            Object(NonMatching, "a2d/a2d_effecthandle.c"),
+            Object(NonMatching, "a2d/a2d_effecthandle.c", cflags=cflags_cpp),
             Object(NonMatching, "a2d/a2d_wipeeffect.c"),
             Object(NonMatching, "a2d/a2d_effect_slideblur.c"),
             Object(NonMatching, "a2d/a2d_kirbydisp.c"),

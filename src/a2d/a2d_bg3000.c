@@ -10,6 +10,7 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+extern "C" {
 extern const float lbl_805E429C;
 extern const float lbl_805E4288;
 extern const float lbl_805E42C8;
@@ -88,3 +89,4 @@ void fn_803367D4(void) {}
 
 
 
+}

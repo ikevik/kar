@@ -10,6 +10,7 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+extern "C" {
 extern u32 lbl_805DB1C0;
 extern u32 lbl_805DB1B8;
 extern u32 lbl_805DDBC0;
@@ -18,14 +19,22 @@ extern u8 lbl_804E91EC[];
 extern const float lbl_805E456C;
 extern u8 lbl_804E9CA4[];
 extern u8 lbl_804EA548[];
+float fn_80342E98(u32);
+float fn_8037AFD0(u32, u32);
+void fn_8037B028(u32, u32, u32, u32, u32, u32, float);
+float fn_80323D14(u32);
 void fn_80343A94(void);
 float HSD_JObjDispAll(u32, u32, u32, u32);
 u32 fn_803AD760(u32, u32, u32, u32, u32);
+float fn_803FCDB8(u32, ...);
+void fn_80346768(u32, u32, float);
 float __construct_array(u32, u32, u32, u32, u32);
 float fn_80408EDC(u32, float);
 void fn_80347E28(u32, float);
 void fn_80348D2C(u32, u32, u32, u32);
 void fn_8034B37C(u32, u32, u32);
+
+
 
 void fn_80343A74(void) {
     fn_80343A94();
@@ -122,3 +131,4 @@ void fn_8034A080(void) {}
 
 
 
+}

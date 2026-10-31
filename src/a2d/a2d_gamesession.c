@@ -10,11 +10,18 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
-extern u32 lbl_805D8A20;
-extern u8 lbl_804C0EC0[];
+struct VC0_float_uf { virtual float m(u32, float); };
+struct VC12_void_u { virtual void d0(); virtual void d1(); virtual void d2(); virtual void d3(); virtual void d4(); virtual void d5(); virtual void d6(); virtual void d7(); virtual void d8(); virtual void d9(); virtual void d10(); virtual void d11(); virtual void m(u32); };
+struct VC13_u32_ { virtual void d0(); virtual void d1(); virtual void d2(); virtual void d3(); virtual void d4(); virtual void d5(); virtual void d6(); virtual void d7(); virtual void d8(); virtual void d9(); virtual void d10(); virtual void d11(); virtual void d12(); virtual u32 m(void); };
+struct VC15_void_ { virtual void d0(); virtual void d1(); virtual void d2(); virtual void d3(); virtual void d4(); virtual void d5(); virtual void d6(); virtual void d7(); virtual void d8(); virtual void d9(); virtual void d10(); virtual void d11(); virtual void d12(); virtual void d13(); virtual void d14(); virtual void m(void); };
+struct VC17_void_ { virtual void d0(); virtual void d1(); virtual void d2(); virtual void d3(); virtual void d4(); virtual void d5(); virtual void d6(); virtual void d7(); virtual void d8(); virtual void d9(); virtual void d10(); virtual void d11(); virtual void d12(); virtual void d13(); virtual void d14(); virtual void d15(); virtual void d16(); virtual void m(void); };
+struct VC1_void_ { virtual void d0(); virtual void m(void); };
+struct VC2_float_u { virtual void d0(); virtual void d1(); virtual float m(u32); };
+struct VC2_float_uf { virtual void d0(); virtual void d1(); virtual float m(u32, float); };
+struct VC2_void_u { virtual void d0(); virtual void d1(); virtual void m(u32); };
+struct VC8_void_uf { virtual void d0(); virtual void d1(); virtual void d2(); virtual void d3(); virtual void d4(); virtual void d5(); virtual void d6(); virtual void d7(); virtual void m(u32, float); };
+extern "C" {
 extern u8 lbl_804F8404[];
-extern u32 lbl_805D8A28;
-extern u8 lbl_804C1058[];
 extern u8 lbl_804CB3F8[];
 extern u8 lbl_804F52A8[];
 extern u8 lbl_804F526C[];
@@ -22,52 +29,104 @@ extern u8 lbl_804F5230[];
 extern u8 HSD_AObjSetRate[];
 extern const float lbl_805E3690;
 extern u8 lbl_805DC8BC[];
-extern const float lbl_805E3728;
+extern u8 lbl_804BE238[];
+extern u8 lbl_804BE210[];
+extern u8 lbl_804BD820[];
+extern u8 lbl_804BD908[];
+extern u8 lbl_804BD848[];
+extern u8 lbl_804BD870[];
+extern u8 lbl_804BD8C0[];
+extern u8 lbl_804BD724[];
 extern const float lbl_805E3730;
+extern u8 lbl_804F3510[];
+extern const float lbl_805E3750;
+extern const float lbl_805E3754;
+extern u8 lbl_804BD76C[];
+extern const float lbl_805E3758;
+extern const float lbl_805E3728;
+extern const float lbl_805E375C;
+extern u8 lbl_804BDF2C[];
+extern u8 lbl_804BDF70[];
 extern u8 HSD_AObjSetCurrentFrame[];
 extern u8 HSD_AObjSetFlags[];
+extern u32 lbl_805D9098;
+extern u32 lbl_805D90F0;
 extern const float lbl_805E3788;
 extern const float lbl_805E3780;
 extern u32 lbl_805DD96C;
 extern u8 lbl_804D40F0[];
 extern const float lbl_805E3874;
 u32 fn_80289138(void);
+float fn_802B57F4(u32);
+float fn_802BA9C8(u32, u32, u32, float);
+float fn_802BA92C(u32, float);
+float fn_803AA808(u32, float);
 u32 fn_802BA97C(u32, u32);
-void fn_802B57F4(u32);
 void fn_802B585C(u32);
 u32 fn_803AD760(u32, u32, u32, u32, u32);
 u32 fn_8039A7BC(u32, u32, float);
 u32 fn_8030D510(u32, float);
 void fn_8030D51C(u32, float);
+u32 fn_802BE1B8(u32, u32, u32, u32, float, float);
+u32 fn_80381A44(u32, u32, float);
+float HSD_StartRender(u32);
+float fn_8040F83C(u32, u32, float);
+void HSD_IsEFBCopyPass(u32, float);
+u32 fn_8034D1F8(u32, u32, float);
+float fn_802C5F14(u32, u32, u32, float);
+float fn_802C601C(u32, float);
+float fn_802C6130(u32, float);
 void fn_8040A64C(u32);
 float fn_803FCDB8(u32, ...);
 u32 fn_803919FC(u32, u32);
 void fn_80391644(u32, u32, float);
+void fn_8037B028(u32, u32, u32, u32, u32, u32, float);
 u32 fn_80296264(u32, float);
 float fn_802D4C30(u32, float);
 void fn_80409480(u32, u32, u32, u32, float);
 float fn_80409250(u32, float);
 void fn_8037B33C(u32, u32, float);
+float fn_802D8AC8(u32, u32, float);
+void fn_802F4068(u32, u32, float);
+void fn_802FA16C(u32, u32, float);
+void fn_802F53DC(u32, u32, u32, float);
+void fn_802F4A48(u32, u32, u32, u32, float);
+void fn_802F7718(u32, u32, u32, u32, u32, float);
+void fn_802F7B28(u32, u32, u32, u32, u32, float);
+void fn_802F7F24(u32, u32, float);
+void fn_802F858C(u32, u32, u32, float);
+void fn_802FAA88(u32, u32, u32, float);
+void fn_802FBAF0(u32, u32, u32, u32, u32, float);
+void fn_802FF98C(u32, u32, u32, u32, float);
+void fn_802F3128(u32, u32, float);
 u32 fn_802DE0E4(u32);
 u32 fn_8029626C(u32, float);
+void fn_802D9308(u32, u32, float);
 float fn_802DF844(u32);
 float fn_80379784(u32, u32, u32, float);
 float fn_802D9394(u32, u32, float);
 void fn_80381D6C(u32, u32, u32, float);
 float fn_802D4C3C(u32, float);
+float fn_802F1828(u32, u32);
+float fn_802F189C(u32);
+void fn_802F39A0(u32, u32, u32, float);
 void fn_803120C0(u32);
 void fn_802DB510(u32, u32);
+float fn_80369C9C(u32);
+float fn_8036B188(u32, float);
+float fn_8036C06C(u32, float);
+float fn_8036E8D4(u32, float);
+float fn_8037103C(u32);
+float fn_803CF8CC(u32, u32, u32, float);
+float fn_8034C988(u32, float);
+void HSD_StateInvalidate(u32, float);
 u32 fn_802E4A4C(u32, u32, float, float, float, float);
 void fn_803839BC(u32, u32, u32);
 void fn_80393820(u32);
 
 
-u32 fn_802BA92C(u32 p3) {
-    fn_802BA97C(p3, (u32)&lbl_805D8A20);
-    M32(p3) = (u32)lbl_804C0EC0;
-    M32(((u32)p3+8)) = ((u32)lbl_804C0EC0+16);
-    M32(((u32)p3+56)) = ((u32)lbl_804C0EC0+88);
-    return p3;
+void fn_802BA850(u32 p3) {
+    ((VC12_void_u*)(p3))->m(10);
 }
 
 u32 fn_802BA97C(u32 p3, u32 p4) {
@@ -75,14 +134,6 @@ u32 fn_802BA97C(u32 p3, u32 p4) {
     M32(p3) = (u32)lbl_804F8404;
     M32(((u32)p3+8)) = ((u32)lbl_804F8404+16);
     M32(((u32)p3+56)) = ((u32)lbl_804F8404+88);
-    return p3;
-}
-
-u32 fn_802BA9C8(u32 p3) {
-    fn_802BA97C(p3, (u32)&lbl_805D8A28);
-    M32(p3) = (u32)lbl_804C1058;
-    M32(((u32)p3+8)) = ((u32)lbl_804C1058+16);
-    M32(((u32)p3+56)) = ((u32)lbl_804C1058+88);
     return p3;
 }
 
@@ -150,6 +201,29 @@ u32 fn_802D3CF0(u32 p3, u32 p4) {
         }
     }
     return 0;
+}
+
+u32 fn_802D3D6C(u32 p3) {
+    M32(p3) = (u32)lbl_804BE238;
+    M32(((u32)p3+4)) = 0;
+    M32(((u32)p3+8)) = 0;
+    ((VC2_void_u*)(p3))->m((u32)lbl_804BE238);
+    M32(p3) = (u32)lbl_804BE210;
+    M32(((u32)p3+12)) = -1;
+    return p3;
+}
+
+
+
+u32 fn_802D4184(u32 p3) {
+    float d0;
+    M32(p3) = (u32)lbl_804BDF2C;
+    M32(((u32)p3+4)) = 0;
+    M32(((u32)p3+8)) = 0;
+    d0 = ((VC2_float_u*)(p3))->m((u32)lbl_804BDF2C);
+    M32(p3) = (u32)lbl_804BDF70;
+    fn_8037B028(p3, -1, 0, 0, 0, 0, d0);
+    return p3;
 }
 
 void fn_802D4338(u32 p3) {
@@ -260,6 +334,8 @@ u32 fn_802D4D5C(u32 p3) {
     return v1;
 }
 
+
+
 u32 fn_802D6D48(u32 p3) {
     u32 v1;
     v1 = M8(((u32)p3+63));
@@ -269,6 +345,7 @@ u32 fn_802D6D48(u32 p3) {
 void fn_802D7D44(u32 p3, float q1) {
     MF(((u32)p3+36)) = q1;
 }
+
 
 
 u32 fn_802D96C0(void) {
@@ -418,6 +495,8 @@ void fn_802D9E4C(u32 p3, float q1) {
 void fn_802D9E54(u32 p3, float q1) {
     MF(((u32)p3+200)) = q1;
 }
+
+
 
 
 
@@ -583,3 +662,4 @@ void fn_802DA578(void) {}
 
 
 
+}

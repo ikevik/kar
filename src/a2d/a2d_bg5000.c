@@ -10,6 +10,7 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+extern "C" {
 extern u32 lbl_805DB0D0;
 extern u32 lbl_805DB0C8;
 extern u32 lbl_805DDBC0;
@@ -55,3 +56,4 @@ void fn_8034185C(void) {}
 
 
 
+}

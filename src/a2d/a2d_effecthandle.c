@@ -10,18 +10,30 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+struct VC2_float_uuuu { virtual void d0(); virtual void d1(); virtual float m(u32, u32, u32, u32); };
+extern "C" {
 void fn_8037B908(void);
 void fn_8037C660(void);
+extern u8 lbl_804BDF2C[];
+extern u8 lbl_804BDF70[];
+void fn_8037CCDC(void);
+extern u8 fn_8028DF40[];
+void fn_8037CB44(void);
 extern u32 lbl_805DBCF8;
 extern u32 lbl_805DBCF0;
 extern u32 lbl_805DDB90;
 u32 fn_80437CD8(u32, u32);
 float fn_8037AFD0(u32, u32);
-void fn_8037B028(u32, u32, u32, u32, u32, u32, float);
+float fn_8037B028(u32, u32, u32, u32, u32, u32, float);
 u32 fn_8037D094(void);
+void __construct_array(u32, u32, u32, u32, u32, float);
 u32 fn_8037D05C(void);
 u32 fn_8037D024(void);
 u32 fn_803AD760(u32, u32, u32, u32, u32);
+u32 HSD_JObjLoadJoint(u32, float);
+void __assert(u32, u32, u32, float);
+void fn_8040BE00(u32, u32);
+void fn_802894BC(u32, u32, u32);
 
 
 u32 fn_8037B574(u32 p3, u32 p4) {
@@ -90,6 +102,7 @@ void fn_8037C80C(u32 p3) {
 void fn_8037CAF8(void) {
     fn_8037D094();
 }
+
 
 void fn_8037CE9C(void) {
     fn_8037D05C();
@@ -289,3 +302,4 @@ u32 fn_8037CF54(u32 i)
     return 0;
 }
 
+}
