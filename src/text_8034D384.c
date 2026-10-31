@@ -135,3 +135,25 @@ if ((unsigned)a1 != (unsigned)0) {
 fn_8036A408(a1, a2);
 }
 }
+int fn_803683A4();
+int fn_803690D8();
+
+
+int fn_803683A4(r3) int r3; {
+int r0;
+r0 = __cntlzw(*(unsigned short*)(r3 + 98));
+r3 = ((unsigned)r0 >> 5);
+return r3;
+}
+
+int fn_803690D8(r3) int r3; {
+int r0;
+int r4;
+r4 = __cntlzw(*(int*)(r3 + 244));
+r0 = ((unsigned)r4 >> 5);
+if ((((unsigned)r4 >> 5) & 0xff) == 0) goto L_803690F8;
+r0 = ((unsigned)__cntlzw(*(int*)(r3 + 224)) >> 5);
+L_803690F8:
+r3 = r0;
+return r3;
+}
