@@ -67,7 +67,7 @@ typedef struct TRKReply {
     u8 cmd;
     u8 pad[3];
     u8 err;
-    u8 rest[0x33];
+    u8 rest[0x37];
 } TRKReply;
 
 extern void* memset(void*, s32, u32);
