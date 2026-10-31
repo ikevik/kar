@@ -118,6 +118,7 @@ void stateMotorStopped(void)
     DVDLowWaitCoverClose(cbForStateMotorStopped);
 }
 
+#if 0
 int DVDLowWaitCoverClose(DVDLowCallback callback)
 {
     Callback = callback;
@@ -126,6 +127,7 @@ int DVDLowWaitCoverClose(DVDLowCallback callback)
     __DIRegs[1] = 2;
     return 1;
 }
+#endif
 
 void cbForReadAsync(s32 result, DVDFileInfo* fileInfo)
 {
@@ -215,6 +217,7 @@ int DVDLowBreak(void)
     return 1;
 }
 
+#if 0
 DVDLowCallback DVDLowClearCallback(void)
 {
     DVDLowCallback old;
@@ -223,6 +226,7 @@ DVDLowCallback DVDLowClearCallback(void)
     Callback = 0;
     return old;
 }
+#endif
 
 int fn_803C5304(DVDCommandBlock* block)
 {
@@ -238,6 +242,7 @@ void __DVDLowSetWAType(int type, u32 location)
     OSRestoreInterrupts(enabled);
 }
 
+#if 0
 void DVDReset(void)
 {
     DVDLowReset();
@@ -246,6 +251,7 @@ void DVDReset(void)
     ResetRequired = 0;
     ResumeFromHere = 0;
 }
+#endif
 
 s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
 {
@@ -260,6 +266,7 @@ s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
     return retVal;
 }
 
+#if 0
 void fn_803C78BC(void)
 {
     int enabled = OSDisableInterrupts();
@@ -270,7 +277,9 @@ void fn_803C78BC(void)
     }
     OSRestoreInterrupts(enabled);
 }
+#endif
 
+#if 0
 int DVDLowStopMotor(DVDLowCallback callback)
 {
     vu32* regs = __DIRegs;
@@ -281,7 +290,9 @@ int DVDLowStopMotor(DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int DVDLowRequestError(DVDLowCallback callback)
 {
     Callback = callback;
@@ -291,7 +302,9 @@ int DVDLowRequestError(DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int fn_803C4898(u32 offset, DVDLowCallback callback)
 {
     Callback = callback;
@@ -302,7 +315,9 @@ int fn_803C4898(u32 offset, DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
 {
     Callback = callback;
@@ -312,7 +327,9 @@ int DVDLowRequestAudioStatus(u32 subcmd, DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
 {
     Callback = callback;
@@ -324,7 +341,9 @@ int fn_803C4BB0(u32 mode, u32 length, u32 offset, DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int fn_803C4B14(void* addr, DVDLowCallback callback)
 {
     Callback = callback;
@@ -337,7 +356,9 @@ int fn_803C4B14(void* addr, DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int fn_803C4958(void* addr, DVDLowCallback callback)
 {
     Callback = callback;
@@ -351,7 +372,9 @@ int fn_803C4958(void* addr, DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif
 
+#if 0
 int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
 {
     Callback = callback;
@@ -361,3 +384,4 @@ int DVDLowAudioBufferConfig(int enable, u32 size, DVDLowCallback callback)
     SET_TIMEOUT();
     return 1;
 }
+#endif

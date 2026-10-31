@@ -41,11 +41,13 @@ u16 __CARDGetFontEncode(void)
     return lbl_805DE048;
 }
 
+#if 0
 void __CARDSetDiskID(void* diskID)
 {
     *(void**)(lbl_8056E4E8 + 0x10c) = diskID ? diskID : lbl_8056E4E8 + 0x220;
     *(void**)(lbl_8056E4E8 + 0x21c) = diskID ? diskID : lbl_8056E4E8 + 0x220;
 }
+#endif
 
 s32 __CARDPutControlBlock(u8* card, s32 result)
 {

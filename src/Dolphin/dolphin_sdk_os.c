@@ -108,6 +108,7 @@ extern void* __OSArenaLo;
 extern char lbl_805DC974[4];
 extern int lbl_805DC978;
 
+#if 0
 #pragma peephole off
 u32 OSGetConsoleType(void)
 {
@@ -117,6 +118,7 @@ u32 OSGetConsoleType(void)
     }
     return type;
 }
+#endif
 
 #pragma dont_inline on
 #pragma peephole off
@@ -148,11 +150,13 @@ OSInterruptHandler __OSGetInterruptHandler(s16 interrupt)
     return InterruptHandlerTable[interrupt];
 }
 
+#if 0
 #pragma peephole on
 u8 __OSGetDIConfig(void)
 {
     return *(u32*)0xCC006024 & 0xFF;
 }
+#endif
 
 #pragma peephole off
 void OSRegisterVersion(const char* version)
@@ -464,6 +468,7 @@ void OSSleepThread(OSThreadQueue* queue)
     OSRestoreInterrupts(enabled);
 }
 
+#if 0
 #pragma peephole on
 void OSWakeupThread(OSThreadQueue* queue)
 {
@@ -501,6 +506,7 @@ void OSWakeupThread(OSThreadQueue* queue)
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }
+#endif
 
 #pragma peephole on
 asm void __OSDBJump(void)
@@ -1021,6 +1027,7 @@ void OSClearContext(OSContext* context)
     }
 }
 
+#if 0
 #pragma peephole off
 void OSSetCurrentContext(OSContext* context)
 {
@@ -1048,7 +1055,9 @@ void OSSetCurrentContext(OSContext* context)
         asm { isync }
     }
 }
+#endif
 
+#if 0
 #pragma peephole off
 void __OSModuleInit(void)
 {
@@ -1056,6 +1065,7 @@ void __OSModuleInit(void)
     *(u32*)0x800030C8 = 0;
     *(u32*)0x800030D0 = 0;
 }
+#endif
 
 #pragma peephole on
 int __OSCheckDeadLock(OSThread* thread)
@@ -1084,6 +1094,7 @@ s32 __OSGetEffectivePriority(OSThread* thread)
     return priority;
 }
 
+#if 0
 #pragma peephole off
 int OSOnReset(int final)
 {
@@ -1093,9 +1104,11 @@ int OSOnReset(int final)
     }
     return 1;
 }
+#endif
 
 extern u16 lbl_805DC998;
 
+#if 0
 #pragma peephole on
 u16 OSGetFontEncode(void)
 {
@@ -1112,7 +1125,9 @@ u16 OSGetFontEncode(void)
     }
     return lbl_805DC998;
 }
+#endif
 
+#if 0
 #pragma peephole on
 void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
 {
@@ -1133,6 +1148,7 @@ void* OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
     lbl_805DDEB8 = arenaStart;
     return arenaStart;
 }
+#endif
 
 #pragma peephole on
 int OSCreateHeap(void* start, void* end)

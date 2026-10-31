@@ -326,6 +326,7 @@ double fn_803BCCA8(double x, double y)
     return x;
 }
 
+#if 0
 int strcmp(const char* str1, const char* str2)
 {
     const unsigned char* p1 = (const unsigned char*)str1;
@@ -393,3 +394,4 @@ bytes:
         }
     }
 }
+#endif
