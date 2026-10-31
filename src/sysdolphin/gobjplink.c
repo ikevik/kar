@@ -127,18 +127,19 @@ void func_80428F64(HSD_GObj* gobj)
 }
 
 
-#if 0 /* 99.7%: register allocation differs in final loop */
 extern s32 lbl_805DE344;
 extern void fn_804287DC(HSD_GObjProc*);
 extern void fn_80428684(HSD_GObjProc*);
 
 void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* position)
 {
-    HSD_GObjProc* next;
-    HSD_GObjProc* rev;
-    HSD_GObjProc* proc;
     s32 lvl;
     s32 prev_lvl;
+    HSD_GObjProc* rev;
+    HSD_GObjProc* proc2;
+    HSD_GObjProc* next2;
+    HSD_GObjProc* next;
+    HSD_GObjProc* proc;
 
     if (!(p_link <= HSD_GObjLibInitData.p_link_max))
         __assert(lbl_80504DD8, 0x19F, lbl_80504DE4);
@@ -200,14 +201,13 @@ void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* po
     prev_lvl = 2;
     if (lvl != 0)
         prev_lvl = lvl - 1;
-    proc = rev;
-    while (proc != NULL) {
-        next = proc->child;
-        fn_80428684(proc);
-        if (proc->flags_3 == prev_lvl)
-            proc->flags_3 = (u8) lvl;
-        proc = next;
+    proc2 = rev;
+    while (proc2 != NULL) {
+        next2 = proc2->child;
+        fn_80428684(proc2);
+        if (proc2->flags_3 == prev_lvl)
+            proc2->flags_3 = (u8) lvl;
+        proc2 = next2;
     }
 }
 
-#endif
