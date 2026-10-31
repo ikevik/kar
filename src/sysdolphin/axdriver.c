@@ -214,7 +214,6 @@ s32 fn_80443C14(s32 prio, s32 sel, s32 c)
 
 s32 fn_80443CDC(s32 id)
 {
-    s32 ret;
     s32 intr;
     AXVoice* v;
     s32 idx = id & lbl_805DE494;
@@ -227,9 +226,11 @@ s32 fn_80443CDC(s32 id)
         OSRestoreInterrupts(intr);
         return 0;
     }
-    ret = fn_80449AE4(v->pid) != -1;
-    OSRestoreInterrupts(intr);
-    return ret;
+    {
+        s32 ret = fn_80449AE4(v->pid) != -1;
+        OSRestoreInterrupts(intr);
+        return ret;
+    }
 }
 
 s32 fn_80443D8C(s32 prio)
@@ -237,17 +238,17 @@ s32 fn_80443D8C(s32 prio)
     s32 count = 0;
     s32 intr;
     AXVoice* v;
-    if (prio < 0 || prio > 0x3f) {
-        return -1;
-    }
-    intr = OSDisableInterrupts();
-    for (v = lbl_805DE480; v != NULL; v = v->next) {
-        if ((v->flags & 0xc0000000) != 0 && v->prio == prio) {
-            count += fn_80443CDC(v->id);
+    if (prio >= 0 && prio <= 0x3f) {
+        intr = OSDisableInterrupts();
+        for (v = lbl_805DE480; v != NULL; v = v->next) {
+            if ((v->flags & 0xc0000000) != 0 && v->prio == prio) {
+                count += fn_80443CDC(v->id);
+            }
         }
+        OSRestoreInterrupts(intr);
+        return count;
     }
-    OSRestoreInterrupts(intr);
-    return count;
+    return -1;
 }
 
 s32 fn_80443E9C(s32 vid)
@@ -255,17 +256,17 @@ s32 fn_80443E9C(s32 vid)
     s32 count = 0;
     s32 intr;
     AXVoice* v;
-    if (vid < 0 || vid > lbl_805DE444) {
-        return -1;
-    }
-    intr = OSDisableInterrupts();
-    for (v = lbl_805DE480; v != NULL; v = v->next) {
-        if ((v->flags & 0xc0000000) != 0 && v->vid == vid) {
-            count += fn_80443CDC(v->id);
+    if (vid >= 0 && vid <= lbl_805DE444) {
+        intr = OSDisableInterrupts();
+        for (v = lbl_805DE480; v != NULL; v = v->next) {
+            if ((v->flags & 0xc0000000) != 0 && v->vid == vid) {
+                count += fn_80443CDC(v->id);
+            }
         }
+        OSRestoreInterrupts(intr);
+        return count;
     }
-    OSRestoreInterrupts(intr);
-    return count;
+    return -1;
 }
 
 s32 fn_80444868(s32 type, u8* p)
@@ -278,20 +279,20 @@ s32 fn_80444868(s32 type, u8* p)
         break;
     case 1:
         p[0x1c4] = 0;
-        *(f32*) (p + 0x1c8) = lbl_805E613C;
-        *(f32*) (p + 0x1cc) = lbl_805E613C;
         *(f32*) (p + 0x1d0) = lbl_805E6134;
-        *(f32*) (p + 0x1d4) = lbl_805E613C;
         *(f32*) (p + 0x1d8) = lbl_805E6138;
+        *(f32*) (p + 0x1d4) = lbl_805E613C;
+        *(f32*) (p + 0x1c8) = lbl_805E613C;
         *(f32*) (p + 0x1dc) = lbl_805E6140;
+        *(f32*) (p + 0x1cc) = lbl_805E613C;
         break;
     case 2:
         p[0x13c] = 0;
+        *(f32*) (p + 0x148) = lbl_805E6144;
+        *(f32*) (p + 0x150) = lbl_805E6148;
+        *(f32*) (p + 0x14c) = lbl_805E614C;
         *(f32*) (p + 0x140) = lbl_805E613C;
         *(f32*) (p + 0x144) = lbl_805E6110;
-        *(f32*) (p + 0x148) = lbl_805E6144;
-        *(f32*) (p + 0x14c) = lbl_805E614C;
-        *(f32*) (p + 0x150) = lbl_805E6148;
         break;
     case 3:
         *(s32*) (p + 0x90) = 0xf;
