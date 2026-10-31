@@ -325,3 +325,71 @@ double fn_803BCCA8(double x, double y)
     *(int*)&x = (*(int*)&x & 0x7fffffff) | (*(int*)&y & 0x80000000);
     return x;
 }
+
+int strcmp(const char* str1, const char* str2)
+{
+    const unsigned char* p1 = (const unsigned char*)str1;
+    const unsigned char* p2 = (const unsigned char*)str2;
+    unsigned long c1, k, c2;
+    unsigned long w1, w2;
+    unsigned long align;
+
+    c1 = *p1;
+    c2 = *p2;
+    if ((k = c1 - c2) != 0) {
+        return k;
+    }
+    align = (unsigned long)p1 & 3;
+    if (((unsigned long)p2 & 3) != align) {
+        goto bytes;
+    }
+    if (align != 0) {
+        if (c1 == 0) {
+            return 0;
+        }
+        for (k = 3 - align; k > 0; k--) {
+            c1 = *++p1;
+            c2 = *++p2;
+            if ((c1 - c2) != 0) {
+                return c1 - c2;
+            }
+            if (c1 == 0) {
+                return 0;
+            }
+        }
+        p1++;
+        p2++;
+    }
+    w1 = *(unsigned long*)p1;
+    w2 = *(unsigned long*)p2;
+    if (((w1 - 0x01010101) & 0x80808080) == 0) {
+        while (w1 == w2) {
+            w1 = *(unsigned long*)(p1 += 4);
+            w2 = *(unsigned long*)(p2 += 4);
+            if (((w1 - 0x01010101) & 0x80808080) != 0) {
+                goto fix;
+            }
+        }
+        return (w1 > w2) ? 1 : -1;
+    }
+fix:
+    c1 = *p1;
+    c2 = *p2;
+    if ((k = c1 - c2) != 0) {
+        return k;
+    }
+bytes:
+    if (c1 == 0) {
+        return 0;
+    }
+    for (;;) {
+        c1 = *++p1;
+        c2 = *++p2;
+        if ((k = c1 - c2) != 0) {
+            return k;
+        }
+        if (c1 == 0) {
+            return 0;
+        }
+    }
+}
