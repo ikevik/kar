@@ -11,6 +11,12 @@ extern void* memcpy(void*, const void*, unsigned long);
 extern HSD_ClassInfo* hsdSearchClassInfo(char* class_name);
 extern void HSD_AObjInterpretAnim(struct _HSD_AObj* aobj, void* obj, void* update);
 extern void fn_804105F0(s32);
+extern void HSD_Panic(const char* file, int line, const char* msg);
+extern void OSReport(const char* fmt, ...);
+extern char lbl_80501F30[];
+extern char lbl_8050219C[];
+extern char lbl_8050223C[];
+extern char lbl_805DCA74[4];
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void* hsdAllocMemPiece(s32 size);
 extern void HSD_Free(void*);
@@ -211,6 +217,185 @@ HSD_TObj* _HSD_TObjGetCurrentByType(HSD_TObj* from, u32 mapping)
             return tobj;
     }
     return NULL;
+}
+
+u32 HSD_TexMapID2PTTexMtx(u32 x)
+{
+    switch (x) {
+    case 0:
+        return 0x40;
+    case 1:
+        return 0x43;
+    case 2:
+        return 0x46;
+    case 3:
+        return 0x49;
+    case 4:
+        return 0x4c;
+    case 5:
+        return 0x4f;
+    case 6:
+        return 0x52;
+    case 7:
+        return 0x55;
+    }
+    HSD_Panic(lbl_805DCA50, 0x297, lbl_80501F30);
+    return 0;
+}
+
+u32 HSD_TGTex2Index(u32 x)
+{
+    switch (x) {
+    case 4:
+        return 0;
+    case 5:
+        return 1;
+    case 6:
+        return 2;
+    case 7:
+        return 3;
+    case 8:
+        return 4;
+    case 9:
+        return 5;
+    case 10:
+        return 6;
+    case 11:
+        return 7;
+    }
+    __assert(lbl_805DCA50, 0x6FE, "0");
+    return 4;
+}
+
+u32 HSD_TexCoordID2TexGenSrc(u32 x)
+{
+    switch (x) {
+    case 0:
+        return 0xc;
+    case 1:
+        return 0xd;
+    case 2:
+        return 0xe;
+    case 3:
+        return 0xf;
+    case 4:
+        return 0x10;
+    case 5:
+        return 0x11;
+    case 6:
+        return 0x12;
+    }
+    __assert(lbl_805DCA50, 0x723, "0");
+    return 0xC;
+}
+
+u32 fn_803F7558(u32 x)
+{
+    switch (x) {
+    case 0:
+        return 0;
+    case 1:
+        return 1;
+    case 2:
+        return 2;
+    case 3:
+        return 3;
+    case 4:
+        return 4;
+    case 5:
+        return 5;
+    case 6:
+        return 6;
+    case 7:
+        return 7;
+    }
+    __assert(lbl_805DCA50, 0x749, "0");
+    return 0;
+}
+
+u32 HSD_TexMtx2Index(u32 x)
+{
+    switch (x) {
+    case 0x1e:
+        return 0;
+    case 0x21:
+        return 1;
+    case 0x24:
+        return 2;
+    case 0x27:
+        return 3;
+    case 0x2a:
+        return 4;
+    case 0x2d:
+        return 5;
+    case 0x30:
+        return 6;
+    case 0x33:
+        return 7;
+    case 0x36:
+        return 8;
+    case 0x39:
+        return 9;
+    case 0x3c:
+        return 10;
+    }
+    HSD_Panic(lbl_805DCA50, 0x790, lbl_8050219C);
+    return -1;
+}
+
+u32 HSD_Index2TexMtx(u32 x)
+{
+    switch (x) {
+    case 0:
+        return 0x1e;
+    case 1:
+        return 0x21;
+    case 2:
+        return 0x24;
+    case 3:
+        return 0x27;
+    case 4:
+        return 0x2a;
+    case 5:
+        return 0x2d;
+    case 6:
+        return 0x30;
+    case 7:
+        return 0x33;
+    case 8:
+        return 0x36;
+    case 9:
+        return 0x39;
+    case 10:
+        return 0x3c;
+    }
+    OSReport(lbl_8050223C, x);
+    HSD_Panic(lbl_805DCA50, 0x7B0, lbl_805DCA74);
+    return 0x3C;
+}
+
+u32 fn_803F7754(u32 x)
+{
+    switch (x) {
+    case 0:
+        return 0;
+    case 1:
+        return 1;
+    case 2:
+        return 2;
+    case 3:
+        return 3;
+    case 4:
+        return 4;
+    case 5:
+        return 5;
+    case 6:
+        return 6;
+    case 7:
+        return 7;
+    }
+    __assert(lbl_805DCA50, 0x7F0, "0");
+    return 0;
 }
 
 void HSD_TObjRemoveAll(HSD_TObj* tobj)
