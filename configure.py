@@ -423,7 +423,7 @@ config.libs = [
             Object(NonMatching, "sysdolphin/texpdag.c"),
             Object(NonMatching, "sysdolphin/debug.c"),
             Object(NonMatching, "sysdolphin/gobjproc.c"),
-            Object(NonMatching, "sysdolphin/gobjplink.c"),
+            Object(Matching, "sysdolphin/gobjplink.c"),
             Object(Matching, "sysdolphin/gobjgxlink.c"),
             Object(NonMatching, "sysdolphin/gobjobject_gobjuserdata.c"),
             Object(Matching, "sysdolphin/gobj.c"),

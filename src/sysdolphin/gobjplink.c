@@ -49,15 +49,13 @@ static inline void gobj_first_higher_prio(HSD_GObj* gobj)
 }
 
 // CreateGObj
-extern char lbl_80504DD8[];
-extern char lbl_80504DE4[]; // = "p_link <= HSD_GObjLibInitData.p_link_max"
 HSD_GObj* CreateGObj(s32 where, u16 classifier, u8 p_link, u8 priority, HSD_GObj* position)
 {
     HSD_GObj* gobj;
 
     //assert_line(0xA8, p_link <= HSD_GObjLibInitData.p_link_max);
     if (!(p_link <= HSD_GObjLibInitData.p_link_max))
-        __assert(lbl_80504DD8, 0xA8, lbl_80504DE4);
+        __assert("gobjplink.c", 0xA8, "p_link <= HSD_GObjLibInitData.p_link_max");
 
     if ((gobj = gobj_allocate()) == NULL) {
         return NULL;
@@ -142,7 +140,7 @@ void fn_8042904C(s32 where, HSD_GObj* gobj, u8 p_link, u8 priority, HSD_GObj* po
     HSD_GObjProc* proc;
 
     if (!(p_link <= HSD_GObjLibInitData.p_link_max))
-        __assert(lbl_80504DD8, 0x19F, lbl_80504DE4);
+        __assert("gobjplink.c", 0x19F, "p_link <= HSD_GObjLibInitData.p_link_max");
 
     if (!lbl_8058C1F4.b0 && gobj == lbl_805DE324) {
         lbl_8058C1F4.type = where;
