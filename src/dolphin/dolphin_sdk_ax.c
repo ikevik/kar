@@ -565,6 +565,7 @@ void fn_803EF060(u8* p, f32 ratio)
     OSRestoreInterrupts(old);
 }
 
+#pragma peephole off
 int fn_803EFE30(u8* p)
 {
     int r;
@@ -574,6 +575,7 @@ int fn_803EFE30(u8* p)
     OSRestoreInterrupts(old);
     return r;
 }
+#pragma peephole reset
 
 void fn_803EDBA4(u8* p)
 {
