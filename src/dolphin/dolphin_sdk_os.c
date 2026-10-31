@@ -1252,6 +1252,7 @@ static asm void PPCMtmsr(register u32 val)
 }
 
 #pragma peephole off
+#pragma dont_inline on
 void OSClearContext(OSContext* context)
 {
     context->mode = 0;
@@ -1260,6 +1261,7 @@ void OSClearContext(OSContext* context)
         *(OSContext**)0x800000D8 = 0;
     }
 }
+#pragma dont_inline reset
 
 #if 1
 #pragma peephole off
@@ -1500,6 +1502,7 @@ int OSCreateHeap(void* start, void* end)
 }
 
 #pragma peephole on
+#pragma dont_inline on
 void __OSUnlockAllMutex(OSThread* thread)
 {
     OSMutex* mutex;
@@ -1519,6 +1522,8 @@ void __OSUnlockAllMutex(OSThread* thread)
         OSWakeupThread(&mutex->queue);
     }
 }
+
+#pragma dont_inline reset
 
 #define AddTail(queue, thread, link) \
     do { \
@@ -1653,6 +1658,92 @@ s32 OSResumeThread(OSThread* thread)
     }
     OSRestoreInterrupts(enabled);
     return suspendCount;
+}
+
+#define DequeueActive(thread) \
+    do { \
+        OSThread* next = thread->linkActive.next; \
+        OSThread* prev = thread->linkActive.prev; \
+        if (next == 0) { \
+            *(OSThread**)0x800000E0 = prev; \
+        } else { \
+            next->linkActive.prev = prev; \
+        } \
+        if (prev == 0) { \
+            *(OSThread**)0x800000DC = next; \
+        } else { \
+            prev->linkActive.next = next; \
+        } \
+    } while (0)
+
+#pragma peephole on
+void OSExitThread(void* val)
+{
+    OSThread* currentThread;
+    int enabled;
+    enabled = OSDisableInterrupts();
+    currentThread = *(OSThread**)0x800000E4;
+    OSClearContext(&currentThread->context);
+    if (currentThread->attr & 1) {
+        DequeueActive(currentThread);
+        currentThread->state = 0;
+    } else {
+        currentThread->state = 8;
+    }
+    currentThread->val = val;
+    __OSUnlockAllMutex(currentThread);
+    OSWakeupThread(&currentThread->queueJoin);
+    RunQueueHint = 1;
+    __OSReschedule();
+    OSRestoreInterrupts(enabled);
+}
+
+#pragma peephole on
+void OSCancelThread(OSThread* thread)
+{
+    int enabled = OSDisableInterrupts();
+    switch (thread->state) {
+    case 1:
+        if (!(0 < thread->suspend)) {
+            UnsetRun(thread);
+        }
+        break;
+    case 2:
+        RunQueueHint = 1;
+        break;
+    case 4:
+        RemoveItem(thread->queue, thread, link);
+        thread->queue = 0;
+        if (!(0 < thread->suspend) && thread->mutex) {
+            OSThread* owner = thread->mutex->thread;
+            do {
+                s32 priority;
+                if (owner->suspend > 0) {
+                    break;
+                }
+                priority = __OSGetEffectivePriority(owner);
+                if (owner->priority == priority) {
+                    break;
+                }
+                owner = SetEffectivePriority(owner, priority);
+            } while (owner);
+        }
+        break;
+    default:
+        OSRestoreInterrupts(enabled);
+        return;
+    }
+    OSClearContext(&thread->context);
+    if (thread->attr & 1) {
+        DequeueActive(thread);
+        thread->state = 0;
+    } else {
+        thread->state = 8;
+    }
+    __OSUnlockAllMutex(thread);
+    OSWakeupThread(&thread->queueJoin);
+    __OSReschedule();
+    OSRestoreInterrupts(enabled);
 }
 
 #pragma peephole on
