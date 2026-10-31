@@ -9,7 +9,9 @@ typedef struct AXVoice {
     s32 pid; // 0x10
     u8 pad14[0x1a - 0x14];
     u16 vid; // 0x1a
-    u8 pad1c[0x3d - 0x1c];
+    u8 pad1c[0x34 - 0x1c];
+    s16 detune[2]; // 0x34
+    u8 pad38[0x3d - 0x38];
     u8 prio; // 0x3d
     u8 pad3e[0x48 - 0x3e];
 } AXVoice;
@@ -27,6 +29,10 @@ extern void fn_80443FB0(s32, s32, s32);
 extern void fn_804438C4(s32, s32, s32);
 extern s32 fn_80449AE4(s32);
 extern void fn_80449648(s32);
+extern double fn_803BD468(double, double);
+extern void fn_8044A250(s32, f32, s32);
+extern const double lbl_805E6118;
+extern const f32 lbl_805E6120;
 extern void fn_80449BA0(s32, u8, u16, s32, s32);
 extern void fn_80449DC0(s32, u8, s32);
 extern void fn_80449E98(s32, u8, s32);
@@ -379,6 +385,100 @@ s32 fn_80442E30(s32 prio, s32 vol)
         return 1;
     }
     return 0;
+}
+
+s32 fn_80443398(s32 id, s32 detune)
+{
+    s32 idx;
+    AXVoice* v;
+    s32 intr;
+    idx = id & lbl_805DE494;
+    if (id < 0 || idx > lbl_805DE49C) {
+        return 0;
+    }
+    intr = OSDisableInterrupts();
+    v = &lbl_805DE48C[idx];
+    if (v->id != id || (v->flags & SMSTATE_MASK) == 0) {
+        OSRestoreInterrupts(intr);
+        return 0;
+    }
+    if (MIN((s16) detune, 0x960) < -0x2a30) {
+        detune = -0x2a30;
+    } else {
+        s32 t = (s16) detune;
+        detune = 0x960;
+        if (t < 0x960) {
+            detune = t;
+        }
+    }
+    if (v->pid != -1) {
+        v->detune[0] = detune;
+        {
+            s32 sum = v->detune[0] + v->detune[1];
+            s32 p;
+            if (MIN(sum, 0x960) < -0x2a30) {
+                p = -0x2a30;
+            } else {
+                p = MIN(sum, 0x960);
+            }
+            fn_8044A250(v->pid, fn_803BD468(lbl_805E6118, (f32) p / lbl_805E6120), 1);
+        }
+    } else {
+        if ((v->flags & SMSTATE_MASK) != SMSTATE_ACTIVE) {
+            __assert(__FILE__, 0x6b9, "(v->flags&SMSTATE_MASK) == SMSTATE_ACTIVE");
+        }
+        v->detune[0] = detune;
+        v->flags |= 0x80000;
+    }
+    OSRestoreInterrupts(intr);
+    return 1;
+}
+
+s32 fn_8044353C(s32 id, s32 detune)
+{
+    s32 idx;
+    AXVoice* v;
+    s32 intr;
+    idx = id & lbl_805DE494;
+    if (id < 0 || idx > lbl_805DE49C) {
+        return 0;
+    }
+    intr = OSDisableInterrupts();
+    v = &lbl_805DE48C[idx];
+    if (v->id != id || (v->flags & SMSTATE_MASK) == 0) {
+        OSRestoreInterrupts(intr);
+        return 0;
+    }
+    if (MIN((s16) detune, 0x960) < -0x2a30) {
+        detune = -0x2a30;
+    } else {
+        s32 t = (s16) detune;
+        detune = 0x960;
+        if (t < 0x960) {
+            detune = t;
+        }
+    }
+    if (v->pid != -1) {
+        v->detune[1] = detune;
+        {
+            s32 sum = v->detune[0] + v->detune[1];
+            s32 p;
+            if (MIN(sum, 0x960) < -0x2a30) {
+                p = -0x2a30;
+            } else {
+                p = MIN(sum, 0x960);
+            }
+            fn_8044A250(v->pid, fn_803BD468(lbl_805E6118, (f32) p / lbl_805E6120), 1);
+        }
+    } else {
+        if ((v->flags & SMSTATE_MASK) != SMSTATE_ACTIVE) {
+            __assert(__FILE__, 0x6b9, "(v->flags&SMSTATE_MASK) == SMSTATE_ACTIVE");
+        }
+        v->detune[1] = detune;
+        v->flags |= 0x80000;
+    }
+    OSRestoreInterrupts(intr);
+    return 1;
 }
 
 s32 fn_80443C14(s32 prio, s32 sel, s32 c)
