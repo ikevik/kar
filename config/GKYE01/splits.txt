@@ -722,13 +722,22 @@ sysdolphin/axdriver.c:
 	.sdata2     start:0x805E60E8 end:0x805E6150
 
 text_804452A0.c:
-	.text       start:0x804452A0 end:0x8047A634
-	.rodata     start:0x8048C5A0 end:0x8048C610
-	.data       start:0x80508BC8 end:0x80534238
-	.bss        start:0x8058EC80 end:0x805C1CB0
-	.sdata      start:0x805DD148 end:0x805DD238
-	.sbss       start:0x805DE4A0 end:0x805DE668
-	.sdata2     start:0x805E6150 end:0x805E62B8
+	.text       start:0x804452A0 end:0x80465F54
+	.rodata     start:0x8048C5A0 end:0x8048C5C8
+	.data       start:0x80508BC8 end:0x80534018
+	.bss        start:0x8058EC80 end:0x805B5460
+	.sdata      start:0x805DD148 end:0x805DD1D8
+	.sbss       start:0x805DE4A0 end:0x805DE598
+	.sdata2     start:0x805E6150 end:0x805E6290
+
+text_80465F54.c:
+	.text       start:0x80465F54 end:0x8047A634
+	.rodata     start:0x8048C5C8 end:0x8048C610
+	.data       start:0x80534018 end:0x80534238
+	.bss        start:0x805B5460 end:0x805C1CB0
+	.sdata      start:0x805DD1D8 end:0x805DD238
+	.sbss       start:0x805DE598 end:0x805DE668
+	.sdata2     start:0x805E6290 end:0x805E62B8
 
 IPSocket.c:
 	.text       start:0x8047A634 end:0x8047DB6C
