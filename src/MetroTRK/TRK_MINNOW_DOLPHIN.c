@@ -718,6 +718,8 @@ void TRKNubMainLoop(void)
         if (TRKGetNextEvent(&event)) {
             inputOK = 0;
             switch (event.type) {
+            case 0:
+                break;
             case 2:
                 TRKDispatchMessage(TRKGetBuffer(event.msgBufID));
                 break;
@@ -766,29 +768,31 @@ TRKBuffer* TRKGetBuffer(s32 idx)
 
 s32 TRKInitializeSerialHandler(void)
 {
+    char* str = lbl_8048BC78;
     lbl_8056B840[0] = -1;
     lbl_8056B840[2] = 0;
     lbl_8056B840[3] = 0;
-    MWTRACE(1, lbl_8048BC78, 0x40);
-    MWTRACE(1, lbl_8048BC78 + 0x24, 0x40);
-    MWTRACE(1, lbl_8048BC78 + 0x48, 0x40);
-    MWTRACE(1, lbl_8048BC78 + 0x6c, 0x40);
-    MWTRACE(1, lbl_8048BC78 + 0x8c, 0x40);
-    MWTRACE(1, lbl_8048BC78 + 0xac, 0x40);
+    MWTRACE(1, str, 0x40);
+    MWTRACE(1, str + 0x24, 0x40);
+    MWTRACE(1, str + 0x48, 0x40);
+    MWTRACE(1, str + 0x6c, 0x40);
+    MWTRACE(1, str + 0x8c, 0x40);
+    MWTRACE(1, str + 0xac, 0x40);
     return 0;
 }
 
 s32 TRKDoSetOption(TRKBuffer* buf)
 {
     TRKReply reply;
+    char* str = lbl_8048BE48;
     u8 type = *((u8*)buf + 0x18);
     u8 value = *((u8*)buf + 0x1c);
     if (type == 1) {
-        fn_803BE624(lbl_8048BE48);
+        fn_803BE624(str);
         if (value != 0) {
-            fn_803BE624(lbl_8048BE48 + 0x20);
+            fn_803BE624(str + 0x20);
         } else {
-            fn_803BE624(lbl_8048BE48 + 0x28);
+            fn_803BE624(str + 0x28);
         }
         _SetUseSerialIO(value);
     }
