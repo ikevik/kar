@@ -294,3 +294,34 @@ double tan(double x)
         return fn_803BC738(y[0], y[1], 1 - ((n & 1) << 1));
     }
 }
+
+extern const float lbl_805E5758;
+extern const double lbl_805E5760;
+extern const double lbl_805E5768;
+
+#pragma fp_contract on
+float fn_803BD490(float x)
+{
+    volatile float y;
+    if (x > lbl_805E5758) {
+        double guess = __frsqrte((double)x);
+        guess = lbl_805E5760 * guess * (lbl_805E5768 - guess * guess * x);
+        guess = lbl_805E5760 * guess * (lbl_805E5768 - guess * guess * x);
+        guess = lbl_805E5760 * guess * (lbl_805E5768 - guess * guess * x);
+        y = (float)(x * guess);
+        return y;
+    }
+    return x;
+}
+#pragma fp_contract off
+
+double fn_803BD488(double x)
+{
+    return __fabs(x);
+}
+
+double fn_803BCCA8(double x, double y)
+{
+    *(int*)&x = (*(int*)&x & 0x7fffffff) | (*(int*)&y & 0x80000000);
+    return x;
+}
