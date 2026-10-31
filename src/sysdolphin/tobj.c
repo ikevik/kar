@@ -17,6 +17,28 @@ extern char lbl_80501F30[];
 extern char lbl_8050219C[];
 extern char lbl_8050223C[];
 extern char lbl_805DCA74[4];
+extern void GXSetTexCopySrc(u16 left, u16 top, u16 width, u16 height);
+extern void GXSetTexCopyDst(u16 width, u16 height, u32 format, u8 mipmap);
+extern void GXCopyTex(void* dest, u8 clear);
+extern void GXPixModeSync(void);
+extern void GXInvalidateTexAll(void);
+extern void fn_803F85C8(s32, s32, s32);
+typedef struct TevCfg {
+    u8 pad0[8];
+    s32 stage;    // 0x8
+    s32 coord;    // 0xC
+    s32 id;       // 0x10
+    s32 pad14;
+    s32 x18;
+    u8 pad1c[0x34 - 0x1C];
+    u8 x34;
+    u8 pad35[7];
+    s32 x3c;
+} TevCfg;
+extern TevCfg lbl_80502050;
+extern TevCfg lbl_80501FDC;
+extern s32 fn_803F903C(void);
+extern void fn_803F908C(TevCfg*);
 extern void* hsdNew(HSD_ClassInfo* info);
 extern void* hsdAllocMemPiece(s32 size);
 extern void HSD_Free(void*);
@@ -243,6 +265,44 @@ u32 HSD_TexMapID2PTTexMtx(u32 x)
     return 0;
 }
 
+void HSD_TObjSetupVolatileTev(HSD_TObj* tobj, u32 rendermode);
+#if 0 /* not yet matching */
+void HSD_TObjSetupVolatileTev(HSD_TObj* tobj, u32 rendermode)
+{
+    TevCfg* p = &lbl_80502050;
+    for (; tobj != NULL; tobj = tobj->next) {
+        if ((s32) tobj->id == 0xFF)
+            continue;
+        if (tobj_bump(tobj)) {
+            p->stage = fn_803F903C();
+            p->coord = tobj->coord;
+            p->id = tobj->id;
+            p->x18 = 0;
+            p->x3c = 0;
+            p->x34 = 0;
+            fn_803F908C(&lbl_80502050);
+            p->stage = fn_803F903C();
+            p->x18 = 1;
+            p->coord = tobj->coord + 1;
+            p->x3c = 1;
+            p->x34 = 1;
+            fn_803F908C(&lbl_80502050);
+        }
+        if (tobj_lightmap(tobj) & TEX_LIGHTMAP_SHADOW) {
+            TevCfg* q = &lbl_80501FDC;
+            HSD_TObj* tp = tobj;
+            for (; tp != NULL && tobj_coord(tp) == TEX_COORD_SHADOW; tp = tp->next) {
+                q->stage = fn_803F903C();
+                q->coord = tp->coord;
+                q->id = tp->id;
+                fn_803F908C(q);
+            }
+            break;
+        }
+    }
+}
+#endif
+
 u32 HSD_TGTex2Index(u32 x)
 {
     switch (x) {
@@ -417,6 +477,8 @@ HSD_TObj* HSD_TObjGetNext(HSD_TObj* tobj)
     return tobj->next;
 }
 
+void fn_803F7870(HSD_TObj* tobj, HSD_TObj* new_tobj);
+#if 0 /* not yet matching */
 void fn_803F7870(HSD_TObj* tobj, HSD_TObj* new_tobj)
 {
     if (tobj == NULL)
@@ -426,6 +488,7 @@ void fn_803F7870(HSD_TObj* tobj, HSD_TObj* new_tobj)
         tobj->next = new_tobj;
     }
 }
+#endif
 
 HSD_TObj* HSD_TObjAlloc(void)
 {
@@ -477,6 +540,21 @@ HSD_ImageDesc* HSD_ImageDescAlloc(void)
 void HSD_ImageDescFree(HSD_ImageDesc* idesc)
 {
     hsdFreeMemPiece(idesc, sizeof(HSD_ImageDesc));
+}
+
+void HSD_ImageDescCopyFromEFB(HSD_ImageDesc* idesc, u16 origx, u16 origy, u8 clear, s32 sync)
+{
+    if (idesc != NULL) {
+        GXSetTexCopySrc(origx, origy, idesc->width, idesc->height);
+        GXSetTexCopyDst(idesc->width, idesc->height, idesc->format, idesc->mipmap != 0);
+        if (clear)
+            fn_803F85C8(1, 3, 1);
+        GXCopyTex(idesc->img_ptr, clear);
+        if (sync != 0) {
+            GXPixModeSync();
+            GXInvalidateTexAll();
+        }
+    }
 }
 
 int TObjInit(HSD_TObj* tobj)
