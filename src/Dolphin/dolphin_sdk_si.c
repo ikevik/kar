@@ -29,6 +29,17 @@ extern void OSReport(const char* msg, ...);
 extern u32 SIGetType(s32 chan);
 extern u32 SISetXY(u32 x, u32 y);
 
+static XY XYNTSC[12] = {
+    {246, 2}, {15, 18}, {30, 9}, {44, 6}, {52, 5}, {65, 4},
+    {87, 3},  {87, 3},  {87, 3}, {131, 2}, {131, 2}, {131, 2},
+};
+static XY XYPAL[12] = {
+    {296, 2}, {15, 21}, {29, 11}, {45, 7}, {52, 6}, {63, 5},
+    {78, 4},  {104, 3}, {104, 3}, {104, 3}, {104, 3}, {156, 2},
+};
+
+static char sSamplingMsg[] = "SISetSamplingRate: unknown TV format. Use default.\n";
+
 static struct {
     s32 chan;
     u32 poll;
@@ -38,15 +49,6 @@ static struct {
 } Si = {-1, 0, 0, NULL, NULL};
 
 static u32 Type[4] = {8, 8, 8, 8};
-
-static XY XYNTSC[12] = {
-    {246, 2}, {15, 18}, {30, 9}, {44, 6}, {52, 5}, {65, 4},
-    {87, 3},  {87, 3},  {87, 3}, {131, 2}, {131, 2}, {131, 2},
-};
-static XY XYPAL[12] = {
-    {296, 2}, {15, 21}, {29, 11}, {45, 7}, {52, 6}, {63, 5},
-    {78, 4},  {104, 3}, {104, 3}, {104, 3}, {104, 3}, {156, 2},
-};
 
 static SIPacket Packet[4];
 typedef struct {
@@ -68,7 +70,7 @@ BOOL fn_803E876C(void)
 
 BOOL fn_803E878C(s32 chan)
 {
-    return ((Packet[chan].chan != -1) || (Si.chan == chan)) ? TRUE : FALSE;
+    return ((Packet[chan].chan != -1) || (Si.chan == chan));
 }
 
 void fn_803E939C(s32 chan, u32 command)
@@ -81,6 +83,7 @@ void fn_803E93B0(void)
     __SIRegs[14] = 0x80000000;
 }
 
+#pragma dont_inline on
 u32 SISetXY(u32 x, u32 y)
 {
     u32 poll;
@@ -97,6 +100,7 @@ u32 SISetXY(u32 x, u32 y)
     OSRestoreInterrupts(enabled);
     return poll;
 }
+#pragma dont_inline reset
 
 u32 fn_803E942C(u32 poll)
 {
@@ -187,12 +191,12 @@ void SISetSamplingRate(u32 msec)
         xy = XYPAL;
         break;
     default:
-        OSReport("SISetSamplingRate: unknown TV format. Use default.\n");
+        OSReport(sSamplingMsg);
         msec = 0;
         xy = XYNTSC;
         break;
     }
-    SISetXY(xy[msec].line * ((__VIRegs[54] & 1) ? 2 : 1), xy[msec].count);
+    SISetXY(((__VIRegs[54] & 1) ? 2 : 1) * xy[msec].line, xy[msec].count);
     OSRestoreInterrupts(enabled);
 }
 
