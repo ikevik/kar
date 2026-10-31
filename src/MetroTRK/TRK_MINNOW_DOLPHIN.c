@@ -1,5 +1,6 @@
 #pragma dont_inline on
 typedef unsigned char u8;
+typedef unsigned short u16;
 typedef unsigned long u32;
 typedef signed long s32;
 
@@ -80,6 +81,12 @@ extern s32 fn_803C089C(TRKBuffer*);
 extern s32 fn_803C0818(TRKBuffer*);
 extern s32 fn_803BFB08(TRKBuffer*, s32*, s32, s32, s32);
 extern s32 TRKGetFreeBuffer(s32*, TRKBuffer**);
+extern char lbl_8048BE7C[];
+extern char lbl_8048C024[];
+extern char lbl_8048C02C[];
+extern u32 gTRKExceptionStatus[];
+extern s32 fn_803C16CC(u32*);
+extern s32 TRKAppendBuffer_ui8(TRKBuffer*, const u8*, s32);
 extern TRKState gTRKState;
 extern TRKCPUState gTRKCPUState;
 extern DBCommTable gDBCommTable;
@@ -947,4 +954,75 @@ L_end:
     mtmsr r8
     sync
     blr
+}
+
+typedef struct TRKReply2 {
+    u32 len;
+    u8 cmd;
+    u8 pad[3];
+    u32 f8;
+    u32 fc;
+    u32 f10;
+    u8 rest[0x2c];
+} TRKReply2;
+
+s32 fn_803BEB94(void)
+{
+    TRKReply reply;
+    TRKReply reply2;
+    MWTRACE(1, lbl_8048BE7C);
+    if (TRKTargetStopped() == 0) {
+        memset(&reply, 0, 0x40);
+        reply.cmd = 0x80;
+        reply.len = 0x40;
+        reply.err = 0x16;
+        fn_803C2388(&reply, 0x40);
+        return 0;
+    }
+    memset(&reply2, 0, 0x40);
+    reply2.cmd = 0x80;
+    reply2.len = 0x40;
+    reply2.err = 0;
+    fn_803C2388(&reply2, 0x40);
+    return TRKTargetContinue();
+}
+
+s32 fn_803C0818(TRKBuffer* buf)
+{
+    u32 tmp;
+    TRKReply2 reply;
+    memset(&reply, 0, 0x40);
+    reply.len = 0x40;
+    reply.cmd = 0x91;
+    reply.f8 = gTRKExceptionStatus[0];
+    fn_803C16CC(&tmp);
+    reply.fc = tmp;
+    reply.f10 = *(u16*)((u8*)gTRKExceptionStatus + 8);
+    return TRKAppendBuffer_ui8(buf, (u8*)&reply, 0x40);
+}
+
+s32 fn_803C089C(TRKBuffer* buf)
+{
+    u32 tmp;
+    TRKReply2 reply;
+    memset(&reply, 0, 0x40);
+    reply.len = 0x40;
+    reply.cmd = 0x90;
+    reply.f8 = *(u32*)((u8*)&gTRKCPUState + 0x80);
+    fn_803C16CC(&tmp);
+    reply.fc = tmp;
+    reply.f10 = (u16)*(u32*)((u8*)&gTRKCPUState + 0x2f8);
+    return TRKAppendBuffer_ui8(buf, (u8*)&reply, 0x40);
+}
+
+void fn_803BF74C(u8* p, s32 n)
+{
+    s32 i;
+    for (i = 0; i < n; i++, p++) {
+        MWTRACE(8, lbl_8048C024, *p);
+        if (i % 16 == 15) {
+            MWTRACE(8, lbl_8048C02C);
+        }
+    }
+    MWTRACE(8, lbl_8048C02C);
 }
