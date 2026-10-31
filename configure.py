@@ -233,7 +233,7 @@ cflags_runtime = [
     "-inline auto",
 ]
 
-cflags_dolphin = [f if f != "-proc gekko" else "-proc gekko" for f in cflags_base]
+cflags_dolphin = [f if f != "-proc gekko" else "-proc gekko" for f in cflags_base] + ["-str", "reuse,pool"]
 
 # REL flags
 cflags_rel = [
