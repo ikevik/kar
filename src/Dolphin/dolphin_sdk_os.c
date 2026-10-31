@@ -108,6 +108,7 @@ extern void* __OSArenaLo;
 extern char lbl_805DC974[4];
 extern int lbl_805DC978;
 
+#pragma peephole on
 u32 OSGetConsoleType(void)
 {
     u32 type;
@@ -125,16 +126,15 @@ OSExceptionHandler __OSSetExceptionHandler(u8 exception, OSExceptionHandler hand
     OSExceptionTable[exception] = handler;
     return old;
 }
-#pragma peephole on
 
 #pragma peephole off
 OSExceptionHandler __OSGetExceptionHandler(u8 exception)
 {
     return OSExceptionTable[exception];
 }
-#pragma peephole on
 #pragma dont_inline reset
 
+#pragma peephole on
 OSInterruptHandler __OSSetInterruptHandler(s16 interrupt, OSInterruptHandler handler)
 {
     OSInterruptHandler old = InterruptHandlerTable[interrupt];
@@ -142,11 +142,13 @@ OSInterruptHandler __OSSetInterruptHandler(s16 interrupt, OSInterruptHandler han
     return old;
 }
 
+#pragma peephole on
 OSInterruptHandler __OSGetInterruptHandler(s16 interrupt)
 {
     return InterruptHandlerTable[interrupt];
 }
 
+#pragma peephole on
 u8 __OSGetDIConfig(void)
 {
     return *(u32*)0xCC006024 & 0xFF;
@@ -157,14 +159,15 @@ void OSRegisterVersion(const char* version)
 {
     OSReport(lbl_805DC974, version);
 }
-#pragma peephole on
 
+#pragma peephole on
 void OSCreateAlarm(OSAlarm* alarm)
 {
     alarm->handler = 0;
     alarm->tag = 0;
 }
 
+#pragma peephole on
 int OSSetCurrentHeap(int heap)
 {
     int old = lbl_805DC978;
@@ -172,26 +175,31 @@ int OSSetCurrentHeap(int heap)
     return old;
 }
 
+#pragma peephole on
 void OSDestroyHeap(int heap)
 {
     lbl_805DDEB0[heap].size = -1;
 }
 
+#pragma peephole on
 void* OSGetArenaHi(void)
 {
     return __OSArenaHi;
 }
 
+#pragma peephole on
 void* OSGetArenaLo(void)
 {
     return __OSArenaLo;
 }
 
+#pragma peephole on
 void OSSetArenaHi(void* newHi)
 {
     __OSArenaHi = newHi;
 }
 
+#pragma peephole on
 void OSSetArenaLo(void* newLo)
 {
     __OSArenaLo = newLo;
@@ -200,6 +208,7 @@ void OSSetArenaLo(void* newLo)
 #define OSRoundUp(x, a) (((u32)(x) + (a)-1) & ~((a)-1))
 #define OSRoundDown(x, a) ((u32)(x) & ~((a)-1))
 
+#pragma peephole on
 void* fn_803D3C04(u32 size, u32 align)
 {
     void* ptr;
@@ -213,6 +222,7 @@ void* fn_803D3C04(u32 size, u32 align)
     return ptr;
 }
 
+#pragma peephole on
 void* fn_803D3C30(u32 size, u32 align)
 {
     void* ptr;
@@ -226,26 +236,31 @@ void* fn_803D3C30(u32 size, u32 align)
     return ptr;
 }
 
+#pragma peephole on
 u32 OSGetPhysicalMemSize(void)
 {
     return *(u32*)0x80000028;
 }
 
+#pragma peephole on
 u32 OSGetConsoleSimulatedMemSize(void)
 {
     return *(u32*)0x800000F0;
 }
 
+#pragma peephole on
 void* OSGetCurrentContext(void)
 {
     return *(void**)0x800000D4;
 }
 
+#pragma peephole on
 OSThread* OSGetCurrentThread(void)
 {
     return *(OSThread**)0x800000E4;
 }
 
+#pragma peephole on
 void fn_803D7E20(OSMutex* mutex)
 {
     OSInitThreadQueue(&mutex->queue);
@@ -253,42 +268,50 @@ void fn_803D7E20(OSMutex* mutex)
     mutex->count = 0;
 }
 
+#pragma peephole on
 void OSInitThreadQueue(OSThreadQueue* queue)
 {
     queue->tail = 0;
     queue->head = 0;
 }
 
+#pragma peephole on
 void fn_803D8228(void)
 {
     lbl_805DDEF8 = 1;
 }
 
+#pragma peephole on
 void fn_803D997C(void)
 {
 }
 
 
+#pragma peephole on
 u32 __OSSyncSram(void)
 {
     return *(u32*)(Scb + 0x4C);
 }
 
+#pragma peephole on
 void __OSUnlockSram(int commit)
 {
     UnlockSram(commit, 0);
 }
 
+#pragma peephole on
 void __OSUnlockSramEx(int commit)
 {
     UnlockSram(commit, 0x14);
 }
 
+#pragma peephole on
 int OSGetResetSwitchState(void)
 {
     return OSGetResetButtonState();
 }
 
+#pragma peephole on
 int fn_803D9AF4(OSThread* thread)
 {
     if (thread->suspend > 0) {
@@ -302,6 +325,7 @@ static inline int IsDead(OSThread* thread)
     return thread->state == 8 || thread->state == 0;
 }
 
+#pragma peephole on
 int fn_803D9B10(OSThread* thread)
 {
     if (IsDead(thread)) {
@@ -310,6 +334,7 @@ int fn_803D9B10(OSThread* thread)
     return 0;
 }
 
+#pragma peephole on
 s32 OSDisableScheduler(void)
 {
     int enabled = OSDisableInterrupts();
@@ -318,6 +343,7 @@ s32 OSDisableScheduler(void)
     return count;
 }
 
+#pragma peephole on
 s32 OSEnableScheduler(void)
 {
     int enabled = OSDisableInterrupts();
@@ -326,6 +352,7 @@ s32 OSEnableScheduler(void)
     return count;
 }
 
+#pragma peephole on
 void __OSReschedule(void)
 {
     if (RunQueueHint) {
@@ -355,6 +382,7 @@ extern RunQ RunQueue[32];
 extern void __OSUnlockAllMutex(OSThread* thread);
 extern void OSWakeupThread(OSThreadQueue* queue);
 
+#pragma peephole on
 void OSInitAlarm(void)
 {
     if (__OSGetExceptionHandler(8) != DecrementerExceptionHandler) {
@@ -363,6 +391,7 @@ void OSInitAlarm(void)
     }
 }
 
+#pragma peephole on
 void OSSetAlarm(OSAlarm* alarm, s64 tick, OSAlarmHandler handler)
 {
     int enabled = OSDisableInterrupts();
@@ -380,7 +409,6 @@ s64 __OSGetSystemTime(void)
     OSRestoreInterrupts(enabled);
     return result;
 }
-#pragma peephole on
 
 #pragma peephole off
 s64 __OSTimeToSystemTime(s64 time)
@@ -391,9 +419,9 @@ s64 __OSTimeToSystemTime(s64 time)
     OSRestoreInterrupts(enabled);
     return result;
 }
+
+
 #pragma peephole on
-
-
 void OSSleepThread(OSThreadQueue* queue)
 {
     int enabled;
@@ -436,6 +464,7 @@ void OSSleepThread(OSThreadQueue* queue)
     OSRestoreInterrupts(enabled);
 }
 
+#pragma peephole on
 void OSWakeupThread(OSThreadQueue* queue)
 {
     int enabled;
@@ -472,14 +501,15 @@ void OSWakeupThread(OSThreadQueue* queue)
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }
-#pragma peephole on
 
+#pragma peephole on
 asm void __OSDBJump(void)
 {
     nofralloc
     bla 0x60
 }
 
+#pragma peephole on
 asm void __OSDBIntegrator(void)
 {
     nofralloc
@@ -494,6 +524,7 @@ asm void __OSDBIntegrator(void)
     blr
 }
 
+#pragma peephole on
 asm void DCEnable(void)
 {
     nofralloc
@@ -504,6 +535,7 @@ asm void DCEnable(void)
     blr
 }
 
+#pragma peephole on
 asm void DCInvalidateRange(register void* addr, register u32 nBytes)
 {
     nofralloc
@@ -521,6 +553,7 @@ _dcbi:
     blr
 }
 
+#pragma peephole on
 asm void DCFlushRange(register void* addr, register u32 nBytes)
 {
     nofralloc
@@ -539,6 +572,7 @@ _dcbf:
     blr
 }
 
+#pragma peephole on
 asm void fn_803D3F54(register void* addr, register u32 nBytes)
 {
     nofralloc
@@ -557,6 +591,7 @@ _dcbst:
     blr
 }
 
+#pragma peephole on
 asm void DCFlushRangeNoSync(register void* addr, register u32 nBytes)
 {
     nofralloc
@@ -574,6 +609,7 @@ _dcbf:
     blr
 }
 
+#pragma peephole on
 asm void ICInvalidateRange(register void* addr, register u32 nBytes)
 {
     nofralloc
@@ -593,6 +629,7 @@ _icbi:
     blr
 }
 
+#pragma peephole on
 asm void ICFlashInvalidate(void)
 {
     nofralloc
@@ -602,6 +639,7 @@ asm void ICFlashInvalidate(void)
     blr
 }
 
+#pragma peephole on
 asm void ICEnable(void)
 {
     nofralloc
@@ -612,6 +650,7 @@ asm void ICEnable(void)
     blr
 }
 
+#pragma peephole on
 asm void LCDisable(void)
 {
     nofralloc
@@ -628,6 +667,7 @@ _lcdbi:
     blr
 }
 
+#pragma peephole on
 asm void OSSaveFPUContext(register OSContext* fpuContext)
 {
     nofralloc
@@ -635,6 +675,7 @@ asm void OSSaveFPUContext(register OSContext* fpuContext)
     b __OSSaveFPUContext
 }
 
+#pragma peephole on
 asm void* OSGetStackPointer(void)
 {
     nofralloc
@@ -642,6 +683,7 @@ asm void* OSGetStackPointer(void)
     blr
 }
 
+#pragma peephole on
 asm void fn_803D4738(register void* fn, register void* stk)
 {
     nofralloc
@@ -659,6 +701,7 @@ asm void fn_803D4738(register void* fn, register void* stk)
     blr
 }
 
+#pragma peephole on
 asm int OSDisableInterrupts(void)
 {
     nofralloc
@@ -669,6 +712,7 @@ asm int OSDisableInterrupts(void)
     blr
 }
 
+#pragma peephole on
 asm int OSEnableInterrupts(void)
 {
     nofralloc
@@ -679,6 +723,7 @@ asm int OSEnableInterrupts(void)
     blr
 }
 
+#pragma peephole on
 asm int OSRestoreInterrupts(register int level)
 {
     nofralloc
@@ -695,6 +740,7 @@ _restore:
     blr
 }
 
+#pragma peephole on
 asm void RealMode(register u32 addr)
 {
     nofralloc
@@ -706,6 +752,7 @@ asm void RealMode(register u32 addr)
     rfi
 }
 
+#pragma peephole on
 asm void fn_803D8218(register void* addr)
 {
     nofralloc
@@ -715,6 +762,7 @@ asm void fn_803D8218(register void* addr)
     blr
 }
 
+#pragma peephole on
 asm s64 OSGetTime(void)
 {
     nofralloc
@@ -726,6 +774,7 @@ asm s64 OSGetTime(void)
     blr
 }
 
+#pragma peephole on
 asm u32 OSGetTick(void)
 {
     nofralloc
@@ -734,6 +783,7 @@ asm u32 OSGetTick(void)
 }
 
 extern void __OSSystemCallVectorEnd(void);
+#pragma peephole on
 asm void SystemCallVector(void)
 {
     nofralloc
@@ -748,6 +798,7 @@ entry __OSSystemCallVectorEnd
     nop
 }
 
+#pragma peephole on
 asm int OSSaveContext(register OSContext* context)
 {
     nofralloc
@@ -785,6 +836,7 @@ asm int OSSaveContext(register OSContext* context)
     blr
 }
 
+#pragma peephole on
 asm void OSLoadContext(register OSContext* context)
 {
     nofralloc
@@ -847,6 +899,7 @@ _803D46AC:
     rfi
 }
 
+#pragma peephole on
 asm void OSInitContext(register OSContext* context, register u32 pc, register u32 sp)
 {
     nofralloc
@@ -899,6 +952,7 @@ asm void OSInitContext(register OSContext* context, register u32 pc, register u3
     b OSClearContext
 }
 
+#pragma peephole on
 asm void OSSwitchFPUContext(register u8 exception, register OSContext* context)
 {
     nofralloc
@@ -939,3 +993,168 @@ _803D4B30:
     rfi
 }
 
+
+
+#pragma peephole on
+static asm u32 PPCMfmsr(void)
+{
+    nofralloc
+    mfmsr r3
+    blr
+}
+
+#pragma peephole on
+static asm void PPCMtmsr(register u32 val)
+{
+    nofralloc
+    mtmsr val
+    blr
+}
+
+#pragma peephole on
+void OSClearContext(OSContext* context)
+{
+    context->mode = 0;
+    context->state = 0;
+    if (context == *(OSContext**)0x800000D8) {
+        *(OSContext**)0x800000D8 = 0;
+    }
+}
+
+#pragma peephole on
+void OSSetCurrentContext(OSContext* context)
+{
+    *(OSContext**)0x800000D4 = context;
+    *(u32*)0x800000C0 = (u32)context & 0x3FFFFFFF;
+    if (context == *(OSContext**)0x800000D8) {
+        context->srr1 |= 0x2000;
+        PPCMtmsr(PPCMfmsr() | 2);
+    } else {
+        context->srr1 &= ~0x2000;
+        PPCMtmsr((PPCMfmsr() & ~0x2000) | 2);
+        asm { isync }
+    }
+}
+
+#pragma peephole on
+void __OSModuleInit(void)
+{
+    *(u32*)0x800030CC = 0;
+    *(u32*)0x800030C8 = 0;
+    *(u32*)0x800030D0 = 0;
+}
+
+#pragma peephole on
+int __OSCheckDeadLock(OSThread* thread)
+{
+    OSMutex* mutex = thread->mutex;
+    while (mutex && mutex->thread) {
+        if (mutex->thread == thread) {
+            return 1;
+        }
+        mutex = mutex->thread->mutex;
+    }
+    return 0;
+}
+
+#pragma peephole on
+s32 __OSGetEffectivePriority(OSThread* thread)
+{
+    s32 priority = thread->base;
+    OSMutex* mutex;
+    for (mutex = thread->queueMutex.head; mutex; mutex = mutex->link.next) {
+        OSThread* blocked = mutex->queue.head;
+        if (blocked && blocked->priority < priority) {
+            priority = blocked->priority;
+        }
+    }
+    return priority;
+}
+
+#pragma peephole on
+int OSOnReset(int final)
+{
+    if (final) {
+        *(vu16*)0xCC004010 = 0xFF;
+        __OSMaskInterrupts(0xF0000000);
+    }
+    return 1;
+}
+
+extern u16 lbl_805DC998;
+
+#pragma peephole on
+u16 OSGetFontEncode(void)
+{
+    if (lbl_805DC998 <= 1) {
+        return lbl_805DC998;
+    }
+    switch (*(s32*)0x800000CC) {
+    case 0:
+        lbl_805DC998 = (*(vu16*)0xCC00206E & 2) ? 1 : 0;
+        break;
+    default:
+        lbl_805DC998 = 0;
+        break;
+    }
+    return lbl_805DC998;
+}
+
+#pragma peephole on
+void OSInitAlloc(void* arenaStart, void* arenaEnd, int maxHeaps)
+{
+    int i;
+    lbl_805DDEB0 = arenaStart;
+    lbl_805DDEB4 = maxHeaps;
+    for (i = 0; i < lbl_805DDEB4; i++) {
+        HeapDesc* hd = &lbl_805DDEB0[i];
+        hd->size = -1;
+        hd->free = hd->allocated = 0;
+    }
+    lbl_805DDEBC = (u32)arenaEnd & ~31;
+    lbl_805DC978 = -1;
+    lbl_805DDEB8 = (void*)(((u32)(lbl_805DDEB0 + maxHeaps) + 31) & ~31);
+}
+
+#pragma peephole on
+int OSCreateHeap(void* start, void* end)
+{
+    int heap;
+    HeapDesc* hd;
+    start = (void*)(((u32)start + 31) & ~31);
+    end = (void*)((u32)end & ~31);
+    for (heap = 0; heap < lbl_805DDEB4; heap++) {
+        hd = &lbl_805DDEB0[heap];
+        if (hd->size < 0) {
+            hd->size = (u8*)end - (u8*)start;
+            ((u32*)start)[0] = 0;
+            ((u32*)start)[1] = 0;
+            ((u32*)start)[2] = hd->size;
+            hd->free = start;
+            hd->allocated = 0;
+            return heap;
+        }
+    }
+    return -1;
+}
+
+#pragma peephole on
+void __OSUnlockAllMutex(OSThread* thread)
+{
+    OSMutex* mutex;
+    OSMutex* next;
+    OSMutex* prev;
+    while (thread->queueMutex.head) {
+        mutex = thread->queueMutex.head;
+        next = mutex->link.next;
+        if (next == 0) {
+            thread->queueMutex.tail = 0;
+        } else {
+            next->link.prev = 0;
+        }
+        thread->queueMutex.head = next;
+        mutex->count = 0;
+        mutex->thread = 0;
+        OSWakeupThread(&mutex->queue);
+    }
+}
