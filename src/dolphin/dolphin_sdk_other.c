@@ -711,3 +711,75 @@ double fn_803BCDA4(double x)
     *((int*)&x + 1) = i1;
     return x;
 }
+
+extern const double lbl_805E5720;
+extern const double lbl_805E5728;
+extern const double lbl_805E5730;
+extern const double lbl_805E5738;
+extern const double lbl_805E5740;
+
+#pragma dont_inline reset
+static inline int fpclassify_d(double x)
+{
+    switch (*(int*)&x & 0x7ff00000) {
+    case 0x7ff00000:
+        if ((*(int*)&x & 0x000fffff) || *((int*)&x + 1)) {
+            return 1;
+        }
+        return 2;
+    case 0:
+        if ((*(int*)&x & 0x000fffff) || *((int*)&x + 1)) {
+            return 5;
+        }
+        return 3;
+    default:
+        return 4;
+    }
+}
+
+double fn_803BCF78(double x, int n)
+{
+    int k, hx, lx;
+
+    if (fpclassify_d(x) <= 2 || lbl_805E5720 == x) {
+        return x;
+    }
+    {
+        hx = *(int*)&x;
+        lx = *((int*)&x + 1);
+        k = (hx & 0x7ff00000) >> 20;
+        if (k == 0) {
+            if ((lx | (hx & 0x7fffffff)) == 0) {
+                return x;
+            }
+            x *= lbl_805E5728;
+            hx = *(int*)&x;
+            k = ((hx & 0x7ff00000) >> 20) - 54;
+            if (n < -50000) {
+                return lbl_805E5730 * x;
+            }
+        }
+        if (k == 0x7ff) {
+            return x + x;
+        }
+        k = k + n;
+        if (k > 0x7fe) {
+            return lbl_805E5738 * fn_803BCCA8(lbl_805E5738, x);
+        }
+        if (k > 0) {
+            *(int*)&x = (hx & 0x800fffff) | (k << 20);
+            return x;
+        }
+        if (k <= -54) {
+            if (n > 50000) {
+                return lbl_805E5738 * fn_803BCCA8(lbl_805E5738, x);
+            }
+            return lbl_805E5730 * fn_803BCCA8(lbl_805E5730, x);
+        }
+        k += 54;
+        *(int*)&x = (hx & 0x800fffff) | (k << 20);
+        return lbl_805E5740 * x;
+    }
+    return x;
+}
+#pragma dont_inline on
