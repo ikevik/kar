@@ -127,6 +127,7 @@ void stateMotorStopped(void)
 }
 
 #if 1
+#pragma peephole off
 int DVDLowWaitCoverClose(DVDLowCallback callback)
 {
     Callback = callback;
@@ -135,6 +136,7 @@ int DVDLowWaitCoverClose(DVDLowCallback callback)
     __DIRegs[1] = 2;
     return 1;
 }
+#pragma peephole on
 #endif
 
 void cbForReadAsync(s32 result, DVDFileInfo* fileInfo)
@@ -283,6 +285,7 @@ s32 DVDGetCommandBlockStatus(DVDCommandBlock* block)
 #pragma dont_inline on
 
 #if 1
+#pragma peephole off
 void fn_803C78BC(void)
 {
     int enabled;
@@ -294,6 +297,7 @@ void fn_803C78BC(void)
     }
     OSRestoreInterrupts(enabled);
 }
+#pragma peephole on
 #endif
 
 #if 1
