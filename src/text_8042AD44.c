@@ -553,3 +553,100 @@ void fn_80430044(p) char* p; {
 
 
 #endif /* w3f near misses */
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+typedef struct { u8 :2; u8 f:1; } BFu8_2_1;
+extern u8 lbl_80507308[];
+extern u32 lbl_805DD028;
+extern u32 lbl_805DD030;
+extern u32 lbl_805DD038;
+extern u32 lbl_805DD040;
+extern u32 lbl_805DD048;
+extern u32 lbl_805DD050;
+extern u32 lbl_805DD054;
+extern u32 lbl_805DD05C;
+extern u32 lbl_805DD064;
+extern u32 lbl_805DD06C;
+extern u32 lbl_805DD070;
+void OSReport(u32, ...);
+
+void fn_8043A850(u32 p3) {
+    OSReport(((u32)lbl_80507308+2364), (M32(((u32)p3+404))));
+    if ((s32)((M32(((u32)p3+404)))&0x20000000) != (s32)0) {
+        OSReport(((u32)lbl_80507308+2380));
+        if ((s32)((M32(((u32)p3+404)))&0x1000000) != (s32)0) {
+            OSReport((u32)&lbl_805DD028);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x800000) != (s32)0) {
+            OSReport((u32)&lbl_805DD030);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x400000) != (s32)0) {
+            OSReport((u32)&lbl_805DD038);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x200000) != (s32)0) {
+            OSReport((u32)&lbl_805DD040);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x100000) != (s32)0) {
+            OSReport((u32)&lbl_805DD048);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x80000) != (s32)0) {
+            OSReport((u32)&lbl_805DD050);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x400) != (s32)0) {
+            OSReport((u32)&lbl_805DD054);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x200) != (s32)0) {
+            OSReport((u32)&lbl_805DD05C);
+        }
+        if ((s32)((M32(((u32)p3+404)))&0x100) != (s32)0) {
+            OSReport((u32)&lbl_805DD064);
+        }
+        OSReport((u32)&lbl_805DD06C);
+    }
+    if ((s32)((M32(((u32)p3+404)))&0x10000000) != (s32)0) {
+        OSReport(((u32)lbl_80507308+2404));
+    }
+    if ((s32)((M32(((u32)p3+404)))&0x8000000) != (s32)0) {
+        OSReport(((u32)lbl_80507308+2416));
+    }
+    if ((s32)((M32(((u32)p3+404)))&0x4000000) != (s32)0) {
+        OSReport(((u32)lbl_80507308+2428));
+    }
+    if ((s32)((M32(((u32)p3+404)))&0x2000000) != (s32)0) {
+        OSReport(((u32)lbl_80507308+2444));
+    }
+    OSReport((u32)&lbl_805DD070);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
