@@ -10,7 +10,13 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+#define MD(a) (*(double*)(a))
 struct VC2_float_uuuu { virtual void d0(); virtual void d1(); virtual float m(u32, u32, u32, u32); };
+typedef struct Nd {
+    struct Nd* next;
+    u8 pad[0x18];
+    u16 h1c;
+} Nd;
 extern "C" {
 void fn_8037B908(void);
 void fn_8037C660(void);
@@ -34,7 +40,161 @@ u32 HSD_JObjLoadJoint(u32, float);
 void __assert(u32, u32, u32, float);
 void fn_8040BE00(u32, u32);
 void fn_802894BC(u32, u32, u32);
+extern const float lbl_805E4B64;
+extern const float lbl_805E4B7C;
+extern const float lbl_805E4B80;
+extern Nd* lbl_805DE378;
+float __fabsf(float);
+typedef struct { u8 p[4]; u32 f; } A8_4_u32;
+extern const float lbl_805E4BA8;
+extern const float lbl_805E4BB0;
+extern const float lbl_805E4BDC;
+extern const float lbl_805E4BC0;
+extern const float lbl_805E4C04;
+extern const float lbl_805E4C10;
+extern u8 lbl_804F3424[];
+extern const float lbl_805E4C30;
+extern const float lbl_805E4C34;
+extern const float lbl_805E4C38;
+void fn_803D1978(u32, float, float, float);
 
+u32 fn_8037B3DC(u32 p3, u32 p4) {
+    u32 v1;
+    float v2;
+    float v3;
+    float v4;
+    v1 = M32(((u32)p3+16));
+    if ((s32)v1 == (s32)2) {
+        v2 = MF(p4);
+        MF(((u32)p3+24)) = v2;
+        v3 = MF(((u32)p4+4));
+        MF(((u32)p3+28)) = v3;
+        v4 = MF(((u32)p4+8));
+        MF(((u32)p3+32)) = v4;
+        M8(((u32)p3+57)) = 1;
+        return 1;
+    }
+    return 0;
+}
+
+void fn_8037B614(u32 p3, u32 p4) {
+    M32(((u32)p3+44)) = p4;
+}
+
+float fn_8037C7DC(u32 p3) {
+    float v1;
+    float v2;
+    M32(p3) = 30001;
+    v1 = lbl_805E4BA8;
+    M32(((u32)p3+4)) = -1;
+    v2 = lbl_805E4BB0;
+    M32(((u32)p3+8)) = 0;
+    MF(((u32)p3+16)) = v1;
+    MF(((u32)p3+20)) = v1;
+    MF(((u32)p3+12)) = v2;
+    return v1;
+}
+
+u32 fn_8037CAF0(void) {
+    return 0;
+}
+
+void fn_8037CAF8(void) {
+    fn_8037D094();
+}
+
+float fn_8037CB18(u32 p3, u32 p4) {
+    float v1;
+    float v2;
+    float v3;
+    float v4;
+    v1 = lbl_805E4BDC;
+    v2 = lbl_805E4BC0;
+    MF(p4) = v1;
+    MF(((u32)p4+4)) = v2;
+    v3 = MF(((u32)p3+96));
+    MF(((u32)p4+8)) = v3;
+    MF(((u32)p4+12)) = v2;
+    MF(((u32)p4+16)) = v1;
+    v4 = MF(((u32)p3+96));
+    MF(((u32)p4+20)) = v4;
+    return v2;
+}
+
+void fn_8037CE94(u32 p3, u32 p4) {
+    M32(((u32)p3+1204)) = p4;
+}
+
+void fn_8037CE9C(void) {
+    fn_8037D05C();
+}
+
+void fn_8037CEBC(void) {
+    fn_8037D024();
+}
+
+void fn_8037CEDC(u32 p3, u32 p4) {
+    float v4;
+    float v3;
+    float v2;
+    float v1;
+    v1 = lbl_805E4C04;
+    v2 = MF(((u32)p3+96));
+    fn_803D1978(p4, v1, v2, v1);
+    v3 = MF(((u32)p3+96));
+    v4 = MF(((u32)p3+100));
+    MF(((u32)p3+96)) = (v3+v4);
+}
+
+float fn_8037CF28(u32 p3, u32 p4) {
+    float v1;
+    float v2;
+    float v3;
+    float v4;
+    v1 = lbl_805E4C10;
+    v2 = lbl_805E4C04;
+    MF(p4) = v1;
+    MF(((u32)p4+4)) = v2;
+    v3 = MF(((u32)p3+104));
+    MF(((u32)p4+8)) = v3;
+    MF(((u32)p4+12)) = v2;
+    MF(((u32)p4+16)) = v1;
+    v4 = MF(((u32)p3+104));
+    MF(((u32)p4+20)) = v4;
+    return v2;
+}
+
+u32 fn_8037CF54(u32 p3) {
+    A8_4_u32* v1;
+    u32 v2;
+    if ((u32)p3 < (u32)7) {
+        v1 = (A8_4_u32*)((u32)lbl_804F3424);
+        v2 = v1[p3].f;
+        return v2;
+    }
+    return 0;
+}
+
+float fn_8037D528(u32 p3, u32 p4) {
+    float v3;
+    float v2;
+    float v1;
+    v1 = lbl_805E4C30;
+    v2 = lbl_805E4C34;
+    MF(p4) = v1;
+    v3 = lbl_805E4C38;
+    MF(((u32)p4+4)) = v2;
+    MF(((u32)p4+8)) = v3;
+    MF(((u32)p4+12)) = v2;
+    MF(((u32)p4+16)) = v1;
+    MF(((u32)p4+20)) = v3;
+    return v2;
+}
+
+void fn_8037E374(u32 p3, u32 p4) {
+    M8(((u32)p3+12)) = 1;
+    M32(((u32)p3+16)) = p4;
+}
 
 u32 fn_8037B574(u32 p3, u32 p4) {
     u32 v1;
@@ -97,19 +257,6 @@ void fn_8037C80C(u32 p3) {
     }
     M32(((u32)p3+848)) = (u32)fn_8037C660;
     M32(((u32)p3+852)) = p3;
-}
-
-void fn_8037CAF8(void) {
-    fn_8037D094();
-}
-
-
-void fn_8037CE9C(void) {
-    fn_8037D05C();
-}
-
-void fn_8037CEBC(void) {
-    fn_8037D024();
 }
 
 u32 fn_8037CF7C(void) {
@@ -181,125 +328,4 @@ u32 fn_8037D0CC(void) {
     v2 = M32(((u32)c0+84));
     return v2;
 }
-
-
-
-void fn_8037B614(u32* p, u32 v) { p[0x2c / 4] = v; }
-s32 fn_8037CAF0(void) { return 0; }
-void fn_8037CE94(u32* p, u32 v) { p[0x4b4 / 4] = v; }
-void fn_8037E374(u8* p, u32 v)
-{
-    p[0xc] = 1;
-    *(u32*)(p + 0x10) = v;
-}
-
-extern const float lbl_805E4C30;
-extern const float lbl_805E4C34;
-extern const float lbl_805E4C38;
-
-void fn_8037D528(void* a, float* q)
-{
-    q[0] = lbl_805E4C30;
-    q[1] = lbl_805E4C34;
-    q[2] = lbl_805E4C38;
-    q[3] = lbl_805E4C34;
-    q[4] = lbl_805E4C30;
-    q[5] = lbl_805E4C38;
-}
-
-extern const float lbl_805E4B64;
-extern const float lbl_805E4B7C;
-extern const float lbl_805E4B80;
-extern const float lbl_805E4BA8;
-extern const float lbl_805E4BB0;
-extern const float lbl_805E4BDC;
-extern const float lbl_805E4BC0;
-extern const float lbl_805E4C10;
-extern const float lbl_805E4C04;
-typedef struct Nd {
-    struct Nd* next;
-    u8 pad[0x18];
-    u16 h1c;
-} Nd;
-extern Nd* lbl_805DE378;
-extern u32 lbl_804F3424[];
-
-s32 fn_8037B3DC(char* p, float* q)
-{
-    if (*(s32*)(p + 0x10) == 2) {
-        *(float*)(p + 0x18) = q[0];
-        *(float*)(p + 0x1c) = q[1];
-        *(float*)(p + 0x20) = q[2];
-        p[0x39] = 1;
-        return 1;
-    }
-    return 0;
-}
-
-s32 fn_8037B61C(char* p)
-{
-    Nd* n;
-    u16 h;
-    h = *(u16*)(p + 0x48);
-    n = lbl_805DE378;
-    while (n != 0) {
-        if (n->h1c == h) {
-            return 1;
-        }
-        n = n->next;
-    }
-    return 0;
-}
-
-s32 fn_8037B694(float* p)
-{
-    float f = p[2];
-    if (f >= lbl_805E4B64) {
-        p[2] = f - lbl_805E4B64;
-        return 1;
-    }
-    if (f < lbl_805E4B7C) {
-        p[2] = lbl_805E4B80;
-    }
-    return 0;
-}
-
-void fn_8037C7DC(s32* p)
-{
-    p[0] = 0x7531;
-    p[1] = -1;
-    p[2] = 0;
-    ((float*)p)[4] = lbl_805E4BA8;
-    ((float*)p)[5] = lbl_805E4BA8;
-    ((float*)p)[3] = lbl_805E4BB0;
-}
-
-void fn_8037CB18(char* p, float* q)
-{
-    q[0] = lbl_805E4BDC;
-    q[1] = lbl_805E4BC0;
-    q[2] = *(float*)(p + 0x60);
-    q[3] = lbl_805E4BC0;
-    q[4] = lbl_805E4BDC;
-    q[5] = *(float*)(p + 0x60);
-}
-
-void fn_8037CF28(char* p, float* q)
-{
-    q[0] = lbl_805E4C10;
-    q[1] = lbl_805E4C04;
-    q[2] = *(float*)(p + 0x68);
-    q[3] = lbl_805E4C04;
-    q[4] = lbl_805E4C10;
-    q[5] = *(float*)(p + 0x68);
-}
-
-u32 fn_8037CF54(u32 i)
-{
-    if (i < 7) {
-        return lbl_804F3424[i * 2 + 1];
-    }
-    return 0;
-}
-
 }

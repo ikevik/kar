@@ -10,12 +10,13 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+#define MD(a) (*(double*)(a))
+
 extern "C" {
 extern u8 lbl_804BD254[];
 extern u8 lbl_804C0544[];
 extern u8 lbl_804BF9DC[];
 extern u8 lbl_804D25E0[];
-extern u8 lbl_804D7F48[];
 extern u32 lbl_805D96F0;
 extern u32 lbl_805D96E8;
 extern u32 lbl_805D96E0;
@@ -26,20 +27,17 @@ extern u32 lbl_805D96B8;
 extern u32 lbl_805D96B0;
 void fn_802EED00(u32, u32, u32, u32, u32, u32, u32);
 void fn_803AD760(u32, u32, u32, u32, u32);
+float __fabsf(float);
+extern u8 lbl_804D7F48[];
 
 
 u32 fn_802EA65C(void) {
     return (u32)lbl_804D7F48;
 }
 
-
-
-
-
 u32 fn_802EF80C(void) {
     return 0;
 }
-
 
 
 }
