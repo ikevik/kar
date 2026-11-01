@@ -472,3 +472,362 @@ void fn_8046DA8C(a, v) char* a; int v; {
 
 
 #endif /* w3f near misses */
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef signed char s8;
+typedef short s16;
+typedef int s32;
+#define M8(a) (*(u8*)(a))
+#define M16(a) (*(u16*)(a))
+#define M32(a) (*(u32*)(a))
+#define MF(a) (*(float*)(a))
+#define MS16(a) (*(s16*)(a))
+void fn_804701B4(u32, u32);
+void fn_804702B8(void);
+void fn_8046C6A8(u32, u32);
+
+u32 fn_80477D60(u32 p3) {
+    u32 s31;
+    u32 s30;
+    u32 s29;
+    u32 v1;
+    u32 c0;
+    u32 c1;
+    s29 = p3;
+    c0 = OSDisableInterrupts();
+    v1 = M32((s29+1360));
+    s30 = (c0+0);
+    if ((s32)v1 > (s32)0) {
+        s31 = -1;
+    } else {
+        c1 = fn_8047033C(s29);
+        s31 = c1;
+    }
+    if ((s32)s31 >= (s32)0) {
+        OSCancelAlarm((s29+264));
+        OSWakeupThread((s29+1364));
+    }
+    OSRestoreInterrupts(s30);
+    return s31;
+}
+
+void fn_80479948(u32 p3) {
+    u32 s31;
+    u32 s30;
+    s31 = (p3+0);
+    s30 = (s31+984);
+    fn_804702B8();
+    OSCancelAlarm((s31+808));
+    M32((s31+804)) = 0;
+    OSCancelAlarm((s31+848));
+    OSCancelAlarm((s31+888));
+    OSCancelAlarm((s31+928));
+    s31 = (u32)lbl_805BE430;
+    memcpy((s31+12), (s30+0), 4);
+    fn_8046C6A8((u32)lbl_805BDD20, (s31+0));
+}
+
+extern u8 lbl_805BDDF8[];
+u32 fn_8046A9B4(u32, u32, u32, u32);
+void memmove(u32, u32, u32);
+
+u32 fn_8046F320(u32 p3, u32 p4) {
+    u32 s31;
+    u32 ph0;
+    u32 c1;
+    s31 = OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        p4 = -12;
+    } else {
+        if ((s32)((M32((p3+40)))&0x10000) != (s32)0) {
+            ph0 = 1;
+        } else {
+            ph0 = 0;
+        }
+        c1 = fn_8046A9B4((u32)&lbl_805DE628, p3, p4, ph0);
+        p4 = c1;
+    }
+    OSRestoreInterrupts(s31);
+    return p4;
+}
+
+u32 fn_8046F42C(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+216)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+212)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_8046F4B8(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        s31 = -12;
+    } else {
+        M32((p3+212)) = p4;
+        s31 = 0;
+        M32((p3+216)) = p5;
+        M32((p3+220)) = p4;
+        M32((p3+224)) = 0;
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_8046F538(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)17) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+232)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+228)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_80475608(u32 p3, u32 p4) {
+    u32 s31;
+    u32 c1;
+    s31 = OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        p4 = -12;
+    } else {
+        c1 = fn_8046AE54(p3, p4);
+        p4 = c1;
+    }
+    OSRestoreInterrupts(s31);
+    return p4;
+}
+
+u32 fn_8047567C(u32 p3, u32 p4) {
+    u32 s31;
+    u32 ph0;
+    u32 c1;
+    s31 = OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        p4 = -12;
+    } else {
+        if ((s32)(M32((p3+140))) != (s32)0) {
+            p4 = -12;
+        } else {
+            if ((s32)((M8((p4+4)))&0xf0) == (s32)224) {
+                p4 = -13;
+            } else {
+                if ((s32)((M32((p3+144)))&0x10000) != (s32)0) {
+                    ph0 = 1;
+                } else {
+                    ph0 = 0;
+                }
+                c1 = fn_8046A9B4((u32)&lbl_805DE650, p3, p4, ph0);
+                p4 = c1;
+            }
+        }
+    }
+    OSRestoreInterrupts(s31);
+    return p4;
+}
+
+u32 fn_80475AC0(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+288)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+284)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_80475B4C(u32 p3, u32 p4, u32 p5) {
+    u32 s31;
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        s31 = -12;
+    } else {
+        s31 = 0;
+        if ((u32)p5 != (u32)0) {
+            M32(p5) = (M32((p3+420)));
+        }
+        if ((u32)p4 != (u32)0) {
+            M32(p4) = (M32((p3+416)));
+        }
+    }
+    OSRestoreInterrupts();
+    return s31;
+}
+
+u32 fn_80477450(u32 p3, u32 p4, u32 p5, u32 p6) {
+    OSDisableInterrupts();
+    if ((u32)(M8(p3)) != (u32)6) {
+        p6 = -12;
+    } else {
+        M32((p3+500)) = p6;
+        p6 = 0;
+        M32((p3+496)) = p5;
+    }
+    OSRestoreInterrupts();
+    return p6;
+}
+
+u32 fn_80479E2C(u32 p3) {
+    u32 s31;
+    u32 s30;
+    u32 s29;
+    s31 = (u32)lbl_805BDDF8;
+    s30 = OSDisableInterrupts();
+    s29 = M32((s31+240));
+    if ((u32)p3 != (u32)0) {
+        memmove(p3, (s31+984), 300);
+    }
+    OSRestoreInterrupts(s30);
+    return s29;
+}
+
+u32 fn_8046F7FC(u32, u32, u32, u32, u32, u32);
+void OSSleepThread(u32);
+u32 fn_804763E4(u32, u32, u32, u32, u32, u32);
+u32 fn_80476768(u32, u32, u32);
+u32 fn_80476D1C(u32, u32, u32, u32, u32, u32);
+
+u32 fn_8046FC98(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 loc24[2];
+    u32 s31;
+    u32 c0;
+    c0 = fn_8046F7FC(p3, p4, p5, p6, (u32)fn_8046F254, ((u32)loc24));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc24))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc24)));
+}
+
+u32 fn_8047013C(u32 p3, u32 p4, u32 p5, u32 p6, u32 p7, u32 p8) {
+    u32 loc32[2];
+    u32 s31;
+    u32 c0;
+    c0 = fn_8046FD10(p3, p4, p5, p6, p7, p8, (u32)fn_8046F254, ((u32)loc32));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc32))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc32)));
+}
+
+u32 fn_804762EC(u32 p3, u32 p4, u32 p5) {
+    u32 loc20[1];
+    u32 s31;
+    u32 c0;
+    c0 = fn_80476038(p3, p4, p5, 0, (u32)fn_80475590, ((u32)loc20));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc20))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc20)));
+}
+
+u32 fn_80476368(u32 p3, u32 p4, u32 p5) {
+    u32 loc20[1];
+    u32 s31;
+    u32 c0;
+    c0 = fn_80476038(p3, p4, p5, 1, (u32)fn_80475590, ((u32)loc20));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc20))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc20)));
+}
+
+u32 fn_804766F0(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 loc24[2];
+    u32 s31;
+    u32 c0;
+    c0 = fn_804763E4(p3, p4, p5, p6, (u32)fn_80475590, ((u32)loc24));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc24))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc24)));
+}
+
+u32 fn_80476904(u32 p3) {
+    u32 loc12[1];
+    u32 s31;
+    u32 c0;
+    c0 = fn_80476768(p3, (u32)fn_80475590, ((u32)loc12));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc12))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc12)));
+}
+
+u32 fn_80476FB0(u32 p3, u32 p4, u32 p5, u32 p6) {
+    u32 loc24[2];
+    u32 s31;
+    u32 c0;
+    c0 = fn_80476D1C(p3, p4, p5, p6, (u32)fn_80475590, ((u32)loc24));
+    if ((s32)c0 < (s32)0) {
+        return c0;
+    }
+    s31 = OSDisableInterrupts();
+    while ((s32)(M32(((u32)loc24))) == (s32)-1) {
+        OSSleepThread((p3+32));
+    }
+    OSRestoreInterrupts(s31);
+    return (M32(((u32)loc24)));
+}
+
+
+
+
