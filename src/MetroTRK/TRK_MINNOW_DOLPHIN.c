@@ -1099,7 +1099,7 @@ void TRK_main(void)
 {
     MWTRACE(1, lbl_8048C170);
     TRK_mainError[0] = TRKInitializeNub();
-    if (TRK_mainError[0] == 0) {
+    if ((s32)TRK_mainError[0] == 0) {
         TRKNubWelcome();
         TRKNubMainLoop();
     }
