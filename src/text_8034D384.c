@@ -8,10 +8,10 @@ unsigned char fn_8036E8CC();
 int fn_80369010();
 int fn_8036B0B8();
 void fn_8036E748();
-void fn_80368DB4();
+float fn_80368DB4();
 int fn_80369B14();
 void fn_8036ABD4();
-void fn_8036AF10();
+float fn_8036AF10();
 typedef struct { int w[2]; } KS2;
 typedef struct { int w[3]; } KS3;
 typedef struct { int w[4]; } KS4;
@@ -99,7 +99,7 @@ void fn_8036E748(a0, a1) int a0; int a1; {
     *(float*)(a0 + 444) = t2;
 }
 
-void fn_80368DB4(a0, a1, a2) int a0; int a1; int a2; {
+float fn_80368DB4(a0, a1, a2) int a0; int a1; int a2; {
 if ((unsigned)a1 != (unsigned)0) {
 fn_80368DE4(a1, a2);
 }
@@ -130,7 +130,7 @@ m0 = t0;
 }
 }
 
-void fn_8036AF10(a0, a1, a2) int a0; int a1; int a2; {
+float fn_8036AF10(a0, a1, a2) int a0; int a1; int a2; {
 if ((unsigned)a1 != (unsigned)0) {
 fn_8036A408(a1, a2);
 }
@@ -158,6 +158,96 @@ r3 = r0;
 return r3;
 }
 extern int lbl_805DD994;
+extern char lbl_804BD56C[];
+extern char lbl_804BD578[];
+extern char lbl_804C12E4[];
+extern char lbl_804C148C[];
+extern char lbl_804C1CA8[];
+extern char lbl_804EBCB0[];
+extern char lbl_804EF9F4[];
+extern char lbl_804EFA04[];
+extern char lbl_804EFAA8[];
+extern char lbl_804EFCCC[];
+extern char lbl_804EFCD8[];
+extern char lbl_804F0278[];
+extern char lbl_804F0334[];
+extern char lbl_804F0344[];
+extern char lbl_804F04EC[];
+extern char lbl_804F07EC[];
+extern char lbl_805DB580;
+extern char lbl_805DB668;
+extern char lbl_805DB66C;
+extern char lbl_805DB808;
+extern char lbl_805DB80C;
+extern int lbl_805DD984;
+extern int lbl_805DDB64;
+extern unsigned char lbl_805DDCB0;
+extern float lbl_805E4710;
+extern float lbl_805E4730;
+extern float lbl_805E4744;
+extern float lbl_805E4778;
+void PSVECSubtract();
+float fn_80296D3C();
+float fn_8029B2A4();
+float fn_8029B310();
+void fn_802B57F4();
+void fn_802BE1B8();
+int fn_8034D1F8();
+float fn_80367110();
+float fn_80367F3C();
+float fn_80368050();
+void fn_80368BA0();
+float fn_80368D00();
+float fn_80369048();
+void fn_803696C8();
+float fn_80369830();
+void fn_80369B3C();
+float fn_80369C04();
+void fn_80369D5C();
+void fn_8036A89C();
+float fn_8036AD58();
+float fn_8036AE5C();
+void fn_8036AF40();
+int fn_8036B00C();
+float fn_8036B0F0();
+void fn_8036B9A4();
+void fn_8036BE48();
+float fn_8036BF0C();
+float fn_8036BFD4();
+void fn_8036DBF8();
+float fn_8036E764();
+float fn_8036E82C();
+void fn_8036FA8C();
+float fn_80370E24();
+int fn_8038BBE8();
+int fn_8038CB28();
+void fn_8038CB78();
+void fn_80391644();
+int fn_803919FC();
+int fn_803B7E70();
+float fn_80369CE8(int, int, int, int, float);
+float fn_8036B188(int, float);
+float fn_8036C06C(int, float);
+float fn_8036E8D4(int, float);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
