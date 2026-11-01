@@ -29,15 +29,23 @@ struct DSPTaskInfo {
 
 extern void __DSP_debug_printf(const char* fmt, ...);
 
-const char* __DSPVersion = "<< Dolphin SDK - DSP\trelease build: Sep  5 2002 05:35:13 (0x2301) >>\0\0\0";
+static char __DSP_init_strs[] =
+    "<< Dolphin SDK - DSP\trelease build: Sep  5 2002 05:35:13 (0x2301) >>\0\0\0\0"
+    "DSPInit(): Build Date: %s %s\n\0\0\0"
+    "Sep  5 2002\0"
+    "05:35:13\0\0\0";
 
-static BOOL __DSP_init_flag;
-BOOL __DSP_rude_task_pending;
-DSPTaskInfo* __DSP_rude_task;
-DSPTaskInfo* __DSP_tmp_task;
-DSPTaskInfo* __DSP_last_task;
-DSPTaskInfo* __DSP_first_task;
+const char* __DSPVersion_a[2] = { __DSP_init_strs, 0 };
+#define __DSPVersion __DSPVersion_a[0]
+
+static BOOL __DSP_init_flag_a[2];
+#define __DSP_init_flag __DSP_init_flag_a[0]
 DSPTaskInfo* __DSP_curr_task;
+DSPTaskInfo* __DSP_first_task;
+DSPTaskInfo* __DSP_last_task;
+DSPTaskInfo* __DSP_tmp_task;
+DSPTaskInfo* __DSP_rude_task;
+BOOL __DSP_rude_task_pending;
 
 static void __DSPHandler(s16 interrupt, OSContext* context);
 void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next);
@@ -71,7 +79,7 @@ void DSPInit(void)
     BOOL old;
     u16 tmp;
 
-    __DSP_debug_printf("DSPInit(): Build Date: %s %s\n\0\0", "Sep  5 2002", "05:35:13\0\0\0");
+    __DSP_debug_printf(__DSP_init_strs + 0x48, __DSP_init_strs + 0x68, __DSP_init_strs + 0x74);
 
     if (__DSP_init_flag == TRUE) {
         return;
@@ -302,13 +310,13 @@ void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next)
 }
 
 static char __DSP_boot_strs[] =
-    "DSP is booting task: 0x%08X\n\0\0\0"
-    "__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\0\0\0"
-    "__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\0\0\0"
-    "__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n\0\0\0"
-    "__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n\0\0\0"
-    "__DSP_boot_task()  : Start Vector  : 0x%08X\n\0\0\0"
-    "__DSP_add_task() : Added task    : 0x%08X\n\0\0\0\0";
+    "DSP is booting task: 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
+    "__DSP_boot_task()  : Start Vector  : 0x%08X\n\0\0\0\0"
+    "__DSP_add_task() : Added task    : 0x%08X\n\0\0\0\0\0";
 
 void __DSP_boot_task(DSPTaskInfo* task)
 {
