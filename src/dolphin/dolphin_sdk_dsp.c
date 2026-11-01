@@ -309,7 +309,7 @@ void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next)
     }
 }
 
-static char __DSP_boot_strs[] =
+char __DSP_boot_strs[] =
     "DSP is booting task: 0x%08X\n\0\0\0\0"
     "__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
     "__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\0\0\0\0"
@@ -337,7 +337,7 @@ void __DSP_boot_task(DSPTaskInfo* task)
     SEND_MAIL(0x80F3D001);
     SEND_MAIL(task->dsp_init_vector);
 
-    __DSP_debug_printf(__DSP_boot_strs, task);
+    { char* f = __DSP_boot_strs; __DSP_debug_printf(f, task); }
     __DSP_debug_printf(__DSP_boot_strs + 0x20, task->iram_mmem_addr);
     __DSP_debug_printf(__DSP_boot_strs + 0x50, task->iram_addr);
     __DSP_debug_printf(__DSP_boot_strs + 0x80, task->iram_length);
