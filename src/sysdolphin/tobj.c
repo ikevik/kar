@@ -345,6 +345,8 @@ u32 HSD_TexCoordID2TexGenSrc(u32 x)
         return 0x11;
     case 6:
         return 0x12;
+    case 7:
+        break;
     }
     __assert(lbl_805DCA50, 0x723, "0");
     return 0xC;
