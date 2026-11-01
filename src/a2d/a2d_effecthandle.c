@@ -81,6 +81,34 @@ void fn_8037B614(u32 p3, u32 p4) {
     M32(((u32)p3+44)) = p4;
 }
 
+s32 fn_8037B61C(char* p)
+{
+    Nd* n;
+    u16 h;
+    h = *(u16*)(p + 0x48);
+    n = lbl_805DE378;
+    while (n != 0) {
+        if (n->h1c == h) {
+            return 1;
+        }
+        n = n->next;
+    }
+    return 0;
+}
+
+s32 fn_8037B694(float* p)
+{
+    float f = p[2];
+    if (f >= lbl_805E4B64) {
+        p[2] = f - lbl_805E4B64;
+        return 1;
+    }
+    if (f < lbl_805E4B7C) {
+        p[2] = lbl_805E4B80;
+    }
+    return 0;
+}
+
 float fn_8037C7DC(u32 p3) {
     float v1;
     float v2;

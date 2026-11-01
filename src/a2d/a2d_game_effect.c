@@ -78,4 +78,18 @@ void fn_8037AF90(u32 p3) {
     M32(((u32)p3+44)) = 0;
 }
 
+void fn_8037AFD0(E2* p, u8 flag)
+{
+    u32* q = p->f3c;
+    if (q != 0) {
+        if (q[0x10 / 4] != 0) {
+            flag = 1;
+        }
+        if (flag) {
+            fn_8042B840(p->h48, 0);
+        } else {
+            fn_80430394(p->h48);
+        }
+    }
+}
 

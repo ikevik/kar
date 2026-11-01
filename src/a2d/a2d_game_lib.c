@@ -37,6 +37,11 @@ extern void HSD_AObjSetCurrentFrame();
 extern void HSD_AObjSetRate();
 extern char lbl_805D7610[4];
 
+void fn_80289590(void* obj, s32 mask, float f)
+{
+    fn_803FCDB8((u32)obj, 6, mask, (u32)HSD_AObjReqAnim, 1, f);
+}
+
 void fn_802895C8(u32 p3, u32 p4, float q1, float q2) {
     fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjClearFlags, 3, (8192<<16));
     fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjSetRewindFrame, 1, q1);
@@ -47,6 +52,16 @@ void fn_8028967C(u32 p3, u32 p4, float q1, float q2) {
     fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjSetFlags, 3, (8192<<16));
     fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjSetRewindFrame, 1, q1);
     fn_803FCDB8(p3, 6, p4, (u32)HSD_AObjSetEndFrame, 1, q2);
+}
+
+void fn_80289730(void* obj, s32 mask, float f)
+{
+    fn_803FCDB8((u32)obj, 6, mask, (u32)HSD_AObjSetCurrentFrame, 1, f);
+}
+
+void fn_80289768(void* obj, s32 mask, float f)
+{
+    fn_803FCDB8((u32)obj, 6, mask, (u32)HSD_AObjSetRate, 1, f);
 }
 
 u32 fn_802897A0(u32 p3, u32 p4) {
@@ -145,6 +160,20 @@ float fn_802899D0(u32 p3) {
     fn_803FCDB8(p3, 6, ((1<<16)-1), (u32)fn_80289974, 2, (u32)((u8*)stk+0));
     v2 = MF((u8*)stk+0);
     return v2;
+}
+
+char* fn_80289D64(char** p)
+{
+    char* q = p[-1];
+    if (q != 0) return q;
+    return lbl_805D7610;
+}
+
+char* fn_8028A10C(char** p)
+{
+    char* q = p[-1];
+    if (q != 0) return q;
+    return lbl_805D7610;
 }
 
 void fn_8028AC78(void) {
