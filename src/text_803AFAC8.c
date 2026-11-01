@@ -168,3 +168,14 @@ u32 fseek(u32 p3, u32 p4, u32 p5) {
 
 
 
+
+#define MD(a) (*(double*)(a))
+float __fabsf(float);
+typedef struct { u8 f:3; } BFu8_0_3;
+extern u32 lbl_805DDCE0;
+u32 fn_803B3E40();
+u32 fn_803B12B8();
+u32 fn_803B42A4();
+u32 __flush_buffer();
+u32 fn_803B4584();
+

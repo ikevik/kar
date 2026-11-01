@@ -199,3 +199,14 @@ typedef int s32;
 
 
 
+
+#define MD(a) (*(double*)(a))
+float __fabsf(float);
+void fn_800D4BF4(u32, u32, float);
+u32 PSVECMag(u32, float, float);
+void fn_80062CA4();
+u32 plGetPlayerKind();
+u32 fn_800F7A64();
+void fn_8010757C();
+void fn_801080EC();
+
