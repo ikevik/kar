@@ -85,7 +85,7 @@ extern char lbl_8048BE7C[];
 extern char lbl_8048C024[];
 extern char lbl_8048C02C[];
 extern u32 gTRKExceptionStatus[];
-extern s32 fn_803C16CC(u32*);
+extern s32 fn_803C16CC(u32*, u32);
 extern s32 TRKAppendBuffer_ui8(TRKBuffer*, const u8*, s32);
 extern TRKState gTRKState;
 extern TRKCPUState gTRKCPUState;
@@ -997,7 +997,7 @@ s32 fn_803C0818(TRKBuffer* buf)
     reply.len = 0x40;
     reply.cmd = 0x91;
     reply.f8 = gTRKExceptionStatus[0];
-    fn_803C16CC(&tmp);
+    fn_803C16CC(&tmp, reply.f8);
     reply.fc = tmp;
     reply.f10 = *(u16*)((u8*)gTRKExceptionStatus + 8);
     return TRKAppendBuffer_ui8(buf, (u8*)&reply, 0x40);
@@ -1011,7 +1011,7 @@ s32 fn_803C089C(TRKBuffer* buf)
     reply.len = 0x40;
     reply.cmd = 0x90;
     reply.f8 = *(u32*)((u8*)&gTRKCPUState + 0x80);
-    fn_803C16CC(&tmp);
+    fn_803C16CC(&tmp, reply.f8);
     reply.fc = tmp;
     reply.f10 = (u16)*(u32*)((u8*)&gTRKCPUState + 0x2f8);
     return TRKAppendBuffer_ui8(buf, (u8*)&reply, 0x40);
@@ -1027,4 +1027,223 @@ void fn_803BF74C(u8* p, s32 n)
         }
     }
     MWTRACE(8, lbl_8048C02C);
+}
+
+extern char lbl_8048BC00[];
+extern char lbl_8048C170[];
+extern char lbl_8048C180[];
+extern u8 TRK_Use_BBA[];
+extern u32 lbl_8056BDE0[];
+extern u32 TRK_mainError[];
+extern void OSEnableScheduler(void);
+extern void TRKLoadContext(void* ctx, u32 vec);
+extern s32 fn_803C1718(void*, u32, u32*, s32, s32);
+extern u32 fn_803C00C8(void);
+extern s32 TRKInitializeNub(void);
+extern void ICInvalidateRange(void*, u32);
+extern void DCFlushRange(void*, u32);
+extern u8 PPCHalt[];
+extern void TRKPostInterruptEvent(void);
+
+void TRKNubWelcome(void)
+{
+    TRK_board_display(lbl_8048BC00);
+}
+
+void TRKEXICallBack(s32 a, void* ctx)
+{
+    OSEnableScheduler();
+    TRKLoadContext(ctx, 0x500);
+}
+
+s32 fn_803C23C4(u32 a, u32 b)
+{
+    return ((s32 (*)(void))gDBCommTable.f[4])() != 0 ? -1 : 0;
+}
+
+void fn_803C2430(void)
+{
+    if (TRK_Use_BBA[0] == 0) {
+        if (gDBCommTable.f[1] != 0) {
+            gDBCommTable.f[1]();
+        }
+    }
+}
+
+s32 fn_803C16CC(u32* dest, u32 src)
+{
+    u32 len = 4;
+    s32 err = fn_803C1718(dest, src, &len, 0, 1);
+    if (err == 0 && len != 4) {
+        err = 0x700;
+    }
+    return err;
+}
+
+s32 TRKInitializeTarget(void)
+{
+    gTRKState.stopped = 1;
+    *(u32*)((u8*)&gTRKState + 0x8c) = fn_803C00C8();
+    lbl_8056BDE0[0] = 0xE0000000;
+    return 0;
+}
+
+s32 TRKInitializeIntDrivenUART(u32 a, u32 b, u32 c, void* d)
+{
+    ((void (*)(void*, void*))gDBCommTable.f[0])(d, TRKEXICallBack);
+    gDBCommTable.f[6]();
+    return 0;
+}
+
+void TRK_main(void)
+{
+    MWTRACE(1, lbl_8048C170);
+    TRK_mainError[0] = TRKInitializeNub();
+    if (TRK_mainError[0] == 0) {
+        TRKNubWelcome();
+        TRKNubMainLoop();
+    }
+    TRK_mainError[0] = TRKTerminateNub();
+}
+
+void InitializeProgramEndTrap(void)
+{
+    u8* p = PPCHalt;
+    TRK_memcpy(p + 4, lbl_8048C180, 4);
+    ICInvalidateRange(p + 4, 4);
+    DCFlushRange(p + 4, 4);
+}
+
+#pragma dont_inline reset
+extern s32 gTRKBigEndian[];
+typedef unsigned long long u64;
+
+static inline s32 AppendBuf(TRKBuffer* buf, const void* data, u32 n)
+{
+    s32 err = 0;
+    u32 room;
+    if (n == 0) {
+        return 0;
+    }
+    room = 0x880 - buf->position;
+    if (room < n) {
+        err = 0x301;
+        n = room;
+    }
+    if (n == 1) {
+        buf->data[buf->position] = *(const u8*)data;
+    } else {
+        TRK_memcpy(buf->data + buf->position, data, n);
+    }
+    buf->position += n;
+    buf->length = buf->position;
+    return err;
+}
+
+static inline s32 TRKReadBuffer1_ui32(TRKBuffer* buf, u32* data)
+{
+    u32 value;
+    u8* p = gTRKBigEndian[0] ? (u8*)data : (u8*)&value;
+    s32 err = 0;
+    u32 n = 4;
+    u32 avail = buf->length - buf->position;
+    if (n > avail) {
+        err = 0x302;
+        n = avail;
+    }
+    TRK_memcpy(p, buf->data + buf->position, n);
+    buf->position += n;
+    if (gTRKBigEndian[0] == 0 && err == 0) {
+        ((u8*)data)[0] = p[3];
+        ((u8*)data)[1] = p[2];
+        ((u8*)data)[2] = p[1];
+        ((u8*)data)[3] = p[0];
+    }
+    return err;
+}
+
+s32 TRKReadBuffer_ui32(TRKBuffer* buf, u32* data, s32 count)
+{
+    s32 err = 0;
+    s32 i;
+    for (i = 0; err == 0 && i < count; i++) {
+        err = TRKReadBuffer1_ui32(buf, data);
+        data++;
+    }
+    return err;
+}
+
+s32 TRKReadBuffer1_ui64(TRKBuffer* buf, u64* data)
+{
+    u64 value;
+    u8* p = gTRKBigEndian[0] ? (u8*)data : (u8*)&value;
+    s32 err = 0;
+    u32 n = 8;
+    u32 avail = buf->length - buf->position;
+    if (n > avail) {
+        err = 0x302;
+        n = avail;
+    }
+    TRK_memcpy(p, buf->data + buf->position, n);
+    buf->position += n;
+    if (gTRKBigEndian[0] == 0 && err == 0) {
+        ((u8*)data)[0] = p[7];
+        ((u8*)data)[1] = p[6];
+        ((u8*)data)[2] = p[5];
+        ((u8*)data)[3] = p[4];
+        ((u8*)data)[4] = p[3];
+        ((u8*)data)[5] = p[2];
+        ((u8*)data)[6] = p[1];
+        ((u8*)data)[7] = p[0];
+    }
+    return err;
+}
+
+static inline s32 TRKAppendBuffer1_ui32(TRKBuffer* buf, u32 data)
+{
+    u8 tmp[4];
+    u8* p;
+    if (gTRKBigEndian[0]) {
+        p = (u8*)&data;
+    } else {
+        u8* q = (u8*)&data;
+        tmp[0] = q[3];
+        tmp[1] = q[2];
+        tmp[2] = q[1];
+        tmp[3] = q[0];
+        p = tmp;
+    }
+    return AppendBuf(buf, p, 4);
+}
+
+s32 TRKAppendBuffer_ui32(TRKBuffer* buf, const u32* data, s32 count)
+{
+    s32 err = 0;
+    s32 i;
+    for (i = 0; err == 0 && i < count; i++) {
+        err = TRKAppendBuffer1_ui32(buf, *data);
+        data++;
+    }
+    return err;
+}
+
+s32 TRKAppendBuffer1_ui64(TRKBuffer* buf, u64 data)
+{
+    u8 tmp[8];
+    u8* p;
+    if (gTRKBigEndian[0]) {
+        p = (u8*)&data;
+    } else {
+        u8* q = (u8*)&data;
+        tmp[0] = q[7];
+        tmp[1] = q[6];
+        tmp[2] = q[5];
+        tmp[3] = q[4];
+        tmp[4] = q[3];
+        tmp[5] = q[2];
+        tmp[6] = q[1];
+        tmp[7] = q[0];
+        p = tmp;
+    }
+    return AppendBuf(buf, p, 8);
 }

@@ -319,3 +319,109 @@ s32 fn_803E3024(s32 chan)
     return result;
 }
 #pragma dont_inline on
+
+#pragma dont_inline reset
+extern int EXISelect(s32 chan, u32 dev, u32 freq);
+extern int EXIImm(s32 chan, void* buf, s32 len, u32 type, void* cb);
+extern int EXISync(s32 chan);
+extern int EXIDeselect(s32 chan);
+extern int EXIUnlock(s32 chan);
+extern int EXIProbe(s32 chan);
+extern void* EXISetExiCallback(s32 chan, void* cb);
+extern void OSRegisterVersion(const char* v);
+extern void DSPInit(void);
+extern void OSInitAlarm(void);
+extern void OSInitThreadQueue(void* q);
+extern void OSCreateAlarm(void* alarm);
+extern void OSRegisterResetFunction(void* info);
+extern u16 OSGetFontEncode(void);
+extern char lbl_804FCA30[];
+extern const char* lbl_805DC9F0;
+
+typedef struct CARDControlW {
+    s32 attached;
+    s32 result;
+    u8 pad8[0x8c - 8];
+    u8 threadQueue[8];
+    u8 pad94[0xc8 - 0x94];
+    CARDCallback txCallback;
+    CARDCallback exiCallback;
+    u8 padd0[0xe0 - 0xd0];
+    u8 alarm[0x28];
+    u8 pad108[4];
+    void* diskID;
+} CARDControlW;
+#define CARDBLK ((CARDControlW*)lbl_8056E4E8)
+
+s32 __CARDClearStatus(s32 chan)
+{
+    u32 cmd;
+    int err;
+    if (!EXISelect(chan, 0, 4)) {
+        return -3;
+    }
+    cmd = 0x89000000;
+    err = !EXIImm(chan, &cmd, 1, 1, 0);
+    err |= !EXISync(chan);
+    err |= !EXIDeselect(chan);
+    if (err) {
+        return -3;
+    }
+    return 0;
+}
+
+void CARDInit(void)
+{
+    CARDControlW* card;
+    s32 chan;
+    card = CARDBLK;
+    if (card[0].diskID && card[1].diskID) {
+        return;
+    }
+    lbl_805DE048 = OSGetFontEncode();
+    OSRegisterVersion(lbl_805DC9F0);
+    DSPInit();
+    OSInitAlarm();
+    for (chan = 0; chan < 2; chan++, card++) {
+        card->result = -3;
+        OSInitThreadQueue(card->threadQueue);
+        OSCreateAlarm(card->alarm);
+    }
+    __CARDSetDiskID((void*)0x80000000);
+    OSRegisterResetFunction(lbl_804FCA30);
+}
+
+void __CARDTxHandler(s32 chan)
+{
+    CARDControlW* card = &CARDBLK[chan];
+    int err;
+    CARDCallback callback;
+    err = !EXIDeselect(chan);
+    EXIUnlock(chan);
+    callback = card->txCallback;
+    if (callback) {
+        card->txCallback = 0;
+        callback(chan, (!err && EXIProbe(chan)) ? 0 : -3);
+    }
+}
+
+void TimeoutHandler(void* alarm, void* context)
+{
+    s32 chan;
+    CARDControlW* card;
+    CARDCallback callback;
+    for (chan = 0; chan < 2; chan++) {
+        card = &CARDBLK[chan];
+        if (alarm == card->alarm) {
+            break;
+        }
+    }
+    if (card->attached) {
+        EXISetExiCallback(chan, 0);
+        callback = card->exiCallback;
+        if (callback) {
+            card->exiCallback = 0;
+            callback(chan, -5);
+        }
+    }
+}
