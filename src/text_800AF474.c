@@ -1420,6 +1420,9 @@ u32 fn_8018DB10(u32, u32, float);
 u32 fn_80068D74();
 u32 fn_80252F28();
 typedef struct { u32 w[4]; } S16;
+extern u16 lbl_805DD708;
+typedef struct { u32 w[8]; } S32;
+typedef struct { u32 w[6]; } S24;
 u32 fn_800AF474(u32 p3) {
     u32 v1;
     u32 c0;
