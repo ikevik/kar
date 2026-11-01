@@ -1099,7 +1099,7 @@ void TRK_main(void)
 {
     MWTRACE(1, lbl_8048C170);
     TRK_mainError[0] = TRKInitializeNub();
-    if (TRK_mainError[0] == 0) {
+    if ((s32)TRK_mainError[0] == 0) {
         TRKNubWelcome();
         TRKNubMainLoop();
     }
@@ -1218,11 +1218,10 @@ static inline s32 TRKAppendBuffer1_ui32(TRKBuffer* buf, u32 data)
 
 s32 TRKAppendBuffer_ui32(TRKBuffer* buf, const u32* data, s32 count)
 {
-    s32 err = 0;
     s32 i;
-    for (i = 0; err == 0 && i < count; i++) {
+    s32 err = 0;
+    for (i = 0; err == 0 && i < count; i++, data++) {
         err = TRKAppendBuffer1_ui32(buf, *data);
-        data++;
     }
     return err;
 }
