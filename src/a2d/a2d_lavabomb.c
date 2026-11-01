@@ -40,6 +40,15 @@ u32 fn_8032188C(u32 p3, u32 p4) {
     return p3;
 }
 
+s32 fn_80321CC0(Node* n)
+{
+    s32 r = 0;
+    if (n->prev != 0 || n->next != 0 || (Node*)lbl_805DD9B0 == n) {
+        r = 1;
+    }
+    return r;
+}
+
 u32 fn_80321CF4(u32 p3) {
     u32 v1;
     u32 v2;

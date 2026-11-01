@@ -36,18 +36,17 @@ u32 fn_80383458(void) {
     return ((u32)lbl_804F43D0+132);
 }
 
-void fn_803834B4(void) {
-    u32 v1;
-    v1 = lbl_805DDC80;
-    if ((s32)v1 >= (s32)4) goto L11;
-    if ((s32)v1 >= (s32)2) goto L9;
-    goto L11;
-    L9:;
-    fn_80383C98();
-    goto L12;
-    L11:;
-    HSD_DObjDisp();
-    L12:;
+void fn_803834B4(void)
+{
+    switch (lbl_805DDC80) {
+    case 2:
+    case 3:
+        fn_80383C98();
+        break;
+    default:
+        HSD_DObjDisp();
+        break;
+    }
 }
 
 u32 fn_803834F4(void) {
@@ -76,55 +75,31 @@ void fn_803835F8(void) {
     HSD_PObjSetDefaultClass(0);
 }
 
-u32 fn_80383634(u32 p3) {
-    u32 stk[1];
-    u32 v1;
-    u32 v2;
-    u32 v3;
-    u32 v4;
-    u32 v5;
-    u32 v6;
-    u32 v7;
-    u32 v8;
-    u32 v9;
-    u32 v10;
-    u32 v11;
-    v1 = M32(((u32)p3+12));
-    lbl_805DDC80 = v1;
-    v2 = M32(((u32)p3+12));
-    if ((s32)v2 == (s32)4) goto L24;
-    if ((s32)v2 >= (s32)4) {
-        v11 = p3;
-        goto L36;
+typedef struct { u8 r, g, b, a; } Col;
+typedef struct { u8 pad[0xc]; s32 kind; Col c0; u8 c1[4]; } P;
+#define LC (*(Col*)&lbl_805DDC84)
+void fn_80383634(P* p)
+{
+    lbl_805DDC80 = p->kind;
+    switch (p->kind) {
+    case 2:
+    case 3:
+        LC.r = p->c0.r;
+        LC.g = p->c0.g;
+        LC.b = p->c0.b;
+        LC.a = p->c0.a;
+        break;
+    case 1:
+    case 4: {
+        Col t;
+        fn_8038397C(&t, p->c1);
+        LC.r = t.r;
+        LC.g = t.g;
+        LC.b = t.b;
+        LC.a = t.a;
+        break;
     }
-    if ((s32)v2 == (s32)1) goto L24;
-    if ((s32)v2 >= (s32)1) goto L14;
-    v11 = p3;
-    goto L36;
-    L14:;
-    v3 = M8(((u32)p3+16));
-    lbl_805DDC84 = v3;
-    v4 = M8(((u32)p3+17));
-    M8(((u32)(u32)&lbl_805DDC84+1)) = v4;
-    v5 = M8(((u32)p3+18));
-    M8(((u32)(u32)&lbl_805DDC84+2)) = v5;
-    v6 = M8(((u32)p3+19));
-    M8(((u32)(u32)&lbl_805DDC84+3)) = v6;
-    v11 = (u32)&lbl_805DDC84;
-    goto L36;
-    L24:;
-    fn_8038397C((u32)((u8*)stk+0), (p3+20));
-    v7 = M8((u8*)stk+0);
-    v8 = M8((u8*)stk+1);
-    v9 = M8((u8*)stk+2);
-    v10 = M8((u8*)stk+3);
-    lbl_805DDC84 = v7;
-    M8(((u32)(u32)&lbl_805DDC84+1)) = v8;
-    M8(((u32)(u32)&lbl_805DDC84+2)) = v9;
-    M8(((u32)(u32)&lbl_805DDC84+3)) = v10;
-    v11 = v9;
-    L36:;
-    return v11;
+    }
 }
 
 u32 fn_803836D4(u32 p3) {

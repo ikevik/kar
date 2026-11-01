@@ -59,6 +59,16 @@ void fn_80348024(u32 p3) {
     M32(((u32)p3+100)) = 0;
 }
 
+void fn_80348D2C(u32, u32, u32, u32);
+u32 fn_80348CE4(u32 p3, u32 p4, u32 p5, u32 p6) {
+    M32(p3) = (u32)lbl_804E9CA4;
+    M32(((u32)p3+4)) = p4;
+    M32(((u32)p3+8)) = p5;
+    M32(((u32)p3+12)) = p6;
+    fn_80348D2C(p3, p4, p5, p6);
+    return p3;
+}
+
 u32 fn_8034AABC(u32 p3) {
     u32 v1;
     u32 v2;
@@ -95,7 +105,7 @@ void fn_80344ABC(void) {}
 
 void fn_80347C40(void) {}
 
-void fn_80348D2C(void) {}
+void fn_80348D2C(u32 p3, u32 p4, u32 p5, u32 p6) {}
 
 void fn_8034A07C(void) {}
 
