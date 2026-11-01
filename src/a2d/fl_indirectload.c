@@ -349,7 +349,7 @@ void fn_803774B4();
 void fn_802AAA38();
 u32 fn_803AAB58();
 void fn_802AAB18();
-u32 fn_803AB968(u32, u32, u32, u32);
+u32 fn_803AB968(u32, u32, u32, u32, u32, u32, u32, u32, float);
 u32 fn_80378568();
 float fn_80395FBC(u32, float, float);
 u32 fn_8039A704(u32, u32, float);
@@ -1251,22 +1251,6 @@ void fn_803AA3D4(u32 p3) {
 #pragma fp_contract on
 
 #pragma fp_contract off
-
-u32 fn_803AB968(u32 p3, u32 p4, u32 p5, u32 p6) {
-    u32 v1;
-    u32 v2;
-    fn_803A2BE4();
-    M32(p3) = (u32)lbl_804F8660;
-    M32(((u32)p3+68)) = p5;
-    M32(((u32)p3+72)) = p6;
-    M8(((u32)p3+76)) = 0;
-    M32(((u32)p3+80)) = 0;
-    v1 = M32(p4);
-    M32(((u32)p3+84)) = v1;
-    v2 = M32(((u32)p4+4));
-    M32(((u32)p3+88)) = v2;
-    return p3;
-}
 
 void fn_803ACA64(u32 p3, float q1, float q2) {
     fn_80395FBC((p3+84), q1, q2);
