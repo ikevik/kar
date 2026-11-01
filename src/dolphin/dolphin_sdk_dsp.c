@@ -29,13 +29,7 @@ struct DSPTaskInfo {
 
 extern void __DSP_debug_printf(const char* fmt, ...);
 
-static char __DSP_init_strs[] =
-    "<< Dolphin SDK - DSP\trelease build: Sep  5 2002 05:35:13 (0x2301) >>\0\0\0\0"
-    "DSPInit(): Build Date: %s %s\n\0\0\0"
-    "Sep  5 2002\0"
-    "05:35:13\0\0\0";
-
-const char* __DSPVersion_a[2] = { __DSP_init_strs, 0 };
+const char* __DSPVersion_a[2] = { "<< Dolphin SDK - DSP\trelease build: Sep  5 2002 05:35:13 (0x2301) >>\0\0\0", 0 };
 #define __DSPVersion __DSPVersion_a[0]
 
 static BOOL __DSP_init_flag_a[2];
@@ -79,7 +73,7 @@ void DSPInit(void)
     BOOL old;
     u16 tmp;
 
-    __DSP_debug_printf(__DSP_init_strs + 0x48, __DSP_init_strs + 0x68, __DSP_init_strs + 0x74);
+    __DSP_debug_printf("DSPInit(): Build Date: %s %s\n\0\0", "Sep  5 2002", "05:35:13\0\0\0");
 
     if (__DSP_init_flag == TRUE) {
         return;
@@ -309,14 +303,14 @@ void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next)
     }
 }
 
-char __DSP_boot_strs[] =
-    "DSP is booting task: 0x%08X\n\0\0\0\0"
-    "__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
-    "__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\0\0\0\0"
-    "__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n\0\0\0\0"
-    "__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n\0\0\0\0"
-    "__DSP_boot_task()  : Start Vector  : 0x%08X\n\0\0\0\0"
-    "__DSP_add_task() : Added task    : 0x%08X\n\0\0\0\0\0";
+static char __DSP_boot_strs[] =
+    "DSP is booting task: 0x%08X\n\0\0\0"
+    "__DSP_boot_task()  : IRAM MMEM ADDR: 0x%08X\n\0\0\0"
+    "__DSP_boot_task()  : IRAM DSP ADDR : 0x%08X\n\0\0\0"
+    "__DSP_boot_task()  : IRAM LENGTH   : 0x%08X\n\0\0\0"
+    "__DSP_boot_task()  : DRAM MMEM ADDR: 0x%08X\n\0\0\0"
+    "__DSP_boot_task()  : Start Vector  : 0x%08X\n\0\0\0"
+    "__DSP_add_task() : Added task    : 0x%08X\n\0\0\0\0";
 
 void __DSP_boot_task(DSPTaskInfo* task)
 {
@@ -337,7 +331,7 @@ void __DSP_boot_task(DSPTaskInfo* task)
     SEND_MAIL(0x80F3D001);
     SEND_MAIL(task->dsp_init_vector);
 
-    { char* f = __DSP_boot_strs; __DSP_debug_printf(f, task); }
+    __DSP_debug_printf(__DSP_boot_strs, task);
     __DSP_debug_printf(__DSP_boot_strs + 0x20, task->iram_mmem_addr);
     __DSP_debug_printf(__DSP_boot_strs + 0x50, task->iram_addr);
     __DSP_debug_printf(__DSP_boot_strs + 0x80, task->iram_length);
