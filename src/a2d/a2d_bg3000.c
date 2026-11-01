@@ -10,17 +10,15 @@ typedef int s32;
 #define M32(a) (*(u32*)(a))
 #define MF(a) (*(float*)(a))
 #define MS16(a) (*(s16*)(a))
+#define MD(a) (*(double*)(a))
+
 extern "C" {
-extern const float lbl_805E429C;
-extern const float lbl_805E4288;
 extern const float lbl_805E42C8;
 extern u32 lbl_805DADE8;
 extern u32 lbl_805DADE0;
 extern u32 lbl_805DDBC0;
 extern u8 lbl_804E63A4[];
 extern u8 lbl_804E6320[];
-void fn_80289768(u32, u32, float);
-void fn_80289730(u32, u32, float);
 float fn_80337848(u32, u32);
 float fn_8033A40C(u32, u32, float);
 void fn_80338DEC(u32, u32, float);
@@ -29,6 +27,11 @@ void fn_8033A61C(u32, u32, float);
 void fn_8028967C(u32, u32, float, float);
 void fn_80289590(u32, u32, float);
 u32 fn_803AD760(u32, u32, u32, u32, u32);
+float __fabsf(float);
+extern const float lbl_805E429C;
+extern const float lbl_805E4288;
+void fn_80289768(u32, u32, float);
+void fn_80289730(u32, u32, float);
 
 void fn_80335A1C(u32 p3) {
     float v1;
@@ -42,6 +45,8 @@ void fn_80335A1C(u32 p3) {
     v4 = lbl_805E4288;
     fn_80289730(v3, ((1<<16)-1), v4);
 }
+
+void fn_803367D4(void) {}
 
 void fn_803367D8(u32 p3, u32 p4) {
     u32 v1;
@@ -83,20 +88,11 @@ void fn_80336D94(u32 p3) {
     M32(((u32)p3+52)) = 0;
 }
 
-
-
-void fn_803367D4(void) {}
-
-
-
-
-u32 fn_8033AB50(u32 p3) {
-    return p3 == 0 ? (u32)lbl_804E6320 : (u32)lbl_804E63A4;
-}
-
-
 u32 fn_8033AB00(void) {
     return M32(fn_803AD760(lbl_805DDBC0, 0, (u32)&lbl_805DADE8, (u32)&lbl_805DADE0, 0) + 20) == 1 ? (u32)lbl_804E6320 : (u32)lbl_804E63A4;
 }
 
+u32 fn_8033AB50(u32 p3) {
+    return p3 == 0 ? (u32)lbl_804E6320 : (u32)lbl_804E63A4;
+}
 }
