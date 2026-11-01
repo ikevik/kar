@@ -2089,4 +2089,13 @@ void fn_800685AC();
 u32 GXSetScissor();
 void fn_80068588();
 void fn_80068574();
+extern const float lbl_805DFB74;
+extern const float lbl_805DFB70;
+extern const float lbl_805DFB6C;
+extern const float lbl_805DFB78;
+void fn_80129DDC();
+u32 fn_800092FC();
+u32 fn_800419B8();
+u32 fn_800097D0();
+void fn_80129F7C();
 

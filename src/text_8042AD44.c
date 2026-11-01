@@ -788,11 +788,159 @@ void fn_804394A4();
 u32 OSGetPhysicalMemSize();
 void sprintf(u32, ...);
 u32 fn_80440240();
-u32 fn_8043F0A4();
 u32 OSGetResetSwitchState();
 void OSResetSystem();
 void memcpy();
 void fn_803DC8E8();
 void PADClamp();
 void fn_803DC4CC();
+extern u8 lbl_8058CCB4[];
+extern u32 lbl_805DE3D0;
+extern const float lbl_805E6038;
+extern const float lbl_805E603C;
+extern u8 lbl_80508248[];
+void HSD_JObjSetMtxDirtySub();
+void fn_80433E54();
+void fn_803CC474(u32, u32, float);
+typedef struct { u32 w[2]; } S8;
+
+void fn_8043F0A4(u32 p3) {
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    u32 v6;
+    u32 v7;
+    u32 v8;
+    u32 v9;
+    u32 v10;
+    u32 v11;
+    u32 v12;
+    u32 v13;
+    u32 v14;
+    u32 v15;
+    u32 v16;
+    u32 v17;
+    u32 v18;
+    u32 v19;
+    u32 v20;
+    u32 v21;
+    u32 v22;
+    u32 v23;
+    u32 v24;
+    u32 v25;
+    u32 v26;
+    u32 v27;
+    u32 v28;
+    if ((s32)p3 != (s32)0) {
+        v1 = M32(p3);
+        if ((u32)v1 != (u32)0) {
+            if ((u32)v1 != (u32)0) {
+                v2 = M32(v1);
+                if ((u32)v2 != (u32)0) {
+                    if ((u32)v2 != (u32)0) {
+                        v3 = M32(v2);
+                        if ((u32)v3 != (u32)0) {
+                            if ((u32)v3 != (u32)0) {
+                                v4 = M32(v3);
+                                if ((u32)v4 != (u32)0) {
+                                    if ((u32)v4 != (u32)0) {
+                                        v5 = M32(v4);
+                                        if ((u32)v5 != (u32)0) {
+                                            if ((u32)v5 != (u32)0) {
+                                                v6 = M32(v5);
+                                                if ((u32)v6 != (u32)0) {
+                                                    if ((u32)v6 != (u32)0) {
+                                                        v7 = M32(v6);
+                                                        if ((u32)v7 != (u32)0) {
+                                                            if ((u32)v7 != (u32)0) {
+                                                                v8 = M32(v7);
+                                                                if ((u32)v8 != (u32)0) {
+                                                                    if ((u32)v8 != (u32)0) {
+                                                                        v9 = M32(v8);
+                                                                        if ((u32)v9 != (u32)0) {
+                                                                            fn_8043F0A4(v9);
+                                                                        } else {
+                                                                        }
+                                                                        v11 = M32(((u32)v8+8));
+                                                                        if ((u32)v11 != (u32)0) {
+                                                                            ((void (*)(u32))(v11))(v8);
+                                                                        } else {
+                                                                        }
+                                                                    } else {
+                                                                    }
+                                                                } else {
+                                                                }
+                                                                v13 = M32(((u32)v7+8));
+                                                                if ((u32)v13 != (u32)0) {
+                                                                    ((void (*)(u32))(v13))(v7);
+                                                                } else {
+                                                                }
+                                                            } else {
+                                                            }
+                                                        } else {
+                                                        }
+                                                        v15 = M32(((u32)v6+8));
+                                                        if ((u32)v15 != (u32)0) {
+                                                            ((void (*)(u32))(v15))(v6);
+                                                        } else {
+                                                        }
+                                                    } else {
+                                                    }
+                                                } else {
+                                                }
+                                                v17 = M32(((u32)v5+8));
+                                                if ((u32)v17 != (u32)0) {
+                                                    ((void (*)(u32))(v17))(v5);
+                                                } else {
+                                                }
+                                            } else {
+                                            }
+                                        } else {
+                                        }
+                                        v19 = M32(((u32)v4+8));
+                                        if ((u32)v19 != (u32)0) {
+                                            ((void (*)(u32))(v19))(v4);
+                                        } else {
+                                        }
+                                    } else {
+                                    }
+                                } else {
+                                }
+                                v21 = M32(((u32)v3+8));
+                                if ((u32)v21 != (u32)0) {
+                                    ((void (*)(u32))(v21))(v3);
+                                } else {
+                                }
+                            } else {
+                            }
+                        } else {
+                        }
+                        v23 = M32(((u32)v2+8));
+                        if ((u32)v23 != (u32)0) {
+                            ((void (*)(u32))(v23))(v2);
+                        } else {
+                        }
+                    } else {
+                    }
+                } else {
+                }
+                v25 = M32(((u32)v1+8));
+                if ((u32)v25 != (u32)0) {
+                    ((void (*)(u32))(v25))(v1);
+                } else {
+                }
+            } else {
+            }
+        } else {
+        }
+        v27 = M32(((u32)p3+8));
+        if ((u32)v27 != (u32)0) {
+            ((void (*)(u32))(v27))(p3);
+        } else {
+        }
+    } else {
+    }
+}
 
